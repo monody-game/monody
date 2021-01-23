@@ -7,8 +7,9 @@
         <link rel="stylesheet" href="{{ mix('/css/style.css') }}" type="text/css">
     </head>
     <body>
-        <div id="app"></div>
-
-        <script src="{{ mix('/js/app.js') }} defer"> 
+        <div class="container">
+            <div id="app"></div>
+        </div>
+        <script src="{{ mix('/js/app.js') }}" defer></script>
     </body>
 </html>

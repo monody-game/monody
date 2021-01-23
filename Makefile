@@ -38,13 +38,12 @@ seed: migrate
 	vendor\bin\phinx seed:run
 
 .PHONY: compile
-compile: 
+compile:
 	sass assets/scss/style.scss public/style.css --no-source-map --watch
 
 .PHONY: lint
 lint: vendor/autoload.php install
 	vendor\bin\phpstan analyse --memory-limit=32
-	npx prettier-standard --lint
 
 .PHONY: tests
 tests: install

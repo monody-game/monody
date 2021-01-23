@@ -5,4 +5,6 @@ parameters:
 	level: 8
 	paths:
 		- app
+	excludes_analyse:
+		- app/Http/Middleware/*
 	checkMissingIterableValueType: false
