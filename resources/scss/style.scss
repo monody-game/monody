@@ -4,20 +4,51 @@
     box-sizing: border-box;
 }
 
-@import './tools/reset';
+// Tools
+@import 'tools/_reset';
+@import 'tools/_functions';
 
-body {
-    font-family: 'Roboto', sans-serif;
-    color: #000;
-    display: flex;
-    flex-direction: column;
+html {
     height: 100%;
 }
 
-.container {
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    margin-top: 16px;
+body {
+    font-family: 'Sen', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--dark-background);
+
+    & > * {
+        height: 100%;
+    }
 }
+
+a {
+    text-decoration: none;
+}
+
+:root {
+    --space: 8px;
+    --danger: #b40000;
+    --info: #009EC0;
+    --dark-background: #0F1127;
+    --dark-background-lighter: #111433;
+    --light-background: #FFFCF1;
+}
+
+// Pages
+@import "./pages/game-page";
+@import "./pages/home-page";
+@import "./pages/play-page";
+@import "./pages/login-page";
+
+// Components
+@import "./components/_counter";
+@import "./components/_langswitcher";
+@import "./components/_chat";
+@import "./components/_buttons";
+@import "./components/_player";

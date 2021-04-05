@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from '@/App.vue'
 import router from '@/Router/Router'
 
-require('./bootstrap')
+require('./bootstrap.js')
 
 new Vue({
     router,

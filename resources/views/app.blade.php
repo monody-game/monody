@@ -3,13 +3,16 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <title>Monody</title>
-        <link rel="stylesheet" href="{{ mix('/css/style.css') }}" type="text/css">
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ mix('css/style.css') }}" type="text/css">
     </head>
     <body>
-        <div class="container">
-            <div id="app"></div>
-        </div>
-        <script src="{{ mix('/js/app.js') }}" defer></script>
+        <div id="app"></div>
     </body>
+    <script src="{{ mix('/js/app.js') }}" defer></script>
 </html>

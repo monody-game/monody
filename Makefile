@@ -6,14 +6,14 @@ composer.lock: composer.json
 	composer update
 
 vendor: composer.lock
-	composer install --prefer-dist --no-suggest
+	composer install --prefer-dist
 
 .PHONY: install
 install: vendor
 
 .PHONY: server
 server: install
-	php -S localhost:8000 -t public/ -d display_errors=1
+	php artisan serve
 
 .PHONY: format
 format: install

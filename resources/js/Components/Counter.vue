@@ -1,8 +1,7 @@
 <template>
-    <div>
-        <p>{{ (new Date(this.time * 1000)).toISOString().substr(14, 5) }}</p>
-        <button @click="time = time + 30">+30s</button>
-        <button @click="time = time - 10">-10s</button>
+    <div class="counter__main">
+        <p class="counter__seconds">{{ (new Date(this.time * 1000)).toISOString().substr(14, 5) }}&nbsp;</p>
+        <p class="counter__round">- {{ round }}</p>
     </div>
 </template>
 
@@ -19,7 +18,8 @@ export default {
     },
     data: function () {
         return {
-            time: parseInt(this.start_time)
+            time: parseInt(this.start_time),
+            round: 'Jour'
         }
     },
     methods: {
@@ -30,14 +30,33 @@ export default {
                 }
                 this.time = this.time - 1
                 switch (this.time) {
-                    case 31:
-                        console.log(this.time)
+                    case 60:
                         this.playDing()
+                        break
+                    case 30:
+                        this.playDing()
+                        break
+                    case 10:
+                        this.playDing()
+                        break
+                    case 5:
+                        this.playDing()
+                        break
+                    case 3:
+                        this.playDing()
+                        break
+                    case 2:
+                        this.playDing()
+                        break
+                    case 1:
+                        this.playDing()
+                        break
                 }
             }, 1000)
         },
         playDing: function () {
             let audio = new Audio('../sounds/bip.mp3')
+            console.log('played sound')
             audio.play()
         }
     }
