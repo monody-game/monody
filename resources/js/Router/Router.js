@@ -1,33 +1,43 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import HomePage from '@/pages/HomePage.vue'
+import LoginPage from '@/pages/LoginPage.vue'
+import PlayPage from '@/pages/PlayPage.vue'
+import e404 from '@/pages/e404.vue'
+import GamePage from '@/pages/GamePage.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
+let routes = [
     {
         path: '/',
         name: 'home',
-        component: require('@/pages/HomePage.vue').default
+        component: HomePage
     },
     {
         path: '/login',
         name: 'login',
-        component: require('@/pages/LoginPage.vue').default
+        component: LoginPage
     },
     {
         path: '/play',
         name: 'play',
-        component: require('@/pages/PlayPage.vue').default
+        component: PlayPage
+    },
+    {
+        path: '*',
+        name: 'e404',
+        component: e404
     },
     {
         path: '/game/:id',
         name: 'game',
-        component: require('@/pages/GamePage.vue').default
+        component: GamePage
     },
     {
-        path: '*',
-        name: '404',
-        component: require('@/pages/404.vue').default
+        path: '/game/new',
+        name: 'game_new',
+        component: GamePage
     }
 ]
 
