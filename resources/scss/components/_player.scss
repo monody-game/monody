@@ -16,6 +16,11 @@
 .player__is-voted {
     box-shadow: 0 0 32px 6px #E50000;
 }
+.player__voters {
+    position: absolute;
+    right: auto;
+    left: auto;
+}
 .player__is-wolf {
     position: absolute;
     background-color: #E50000;
@@ -27,4 +32,5 @@
 }
 .player__username {
     z-index: 2;
+    border-radius: 24px;
 }

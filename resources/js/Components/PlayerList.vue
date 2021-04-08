@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="player-list__">
         <Player v-for="player in players" :key="player.id" :player="player"/>
     </div>
 </template>
@@ -21,9 +21,13 @@ export default {
                     avatar: '../images/avatars/1.png',
                     role: {
                         group: 'villager',
-                        name: 'villager'
+                        name: 'villager',
+                        see_has: 'villager'
                     },
-                    is_voted: true
+                    vote: {
+                        is_voted: false,
+                        voted_by: []
+                    }
                 },
                 {
                     id: 2,
@@ -31,9 +35,15 @@ export default {
                     avatar: '../images/avatars/2.png',
                     role: {
                         group: 'werewolf',
-                        name: 'werewolf'
+                        name: 'werewolf',
+                        see_has: 'werewolf'
                     },
-                    is_voted: false
+                    vote: {
+                        is_voted: true,
+                        voted_by: [
+                            1
+                        ]
+                    }
                 }
             ]
         }
