@@ -196,11 +196,23 @@ a {
 }
 
 .game-page__home-link {
-  color: #fff;
+  width: 45%;
+  color: rgba(255, 255, 255, 0.5);
   display: flex;
   flex-direction: row;
   align-items: center;
   padding-left: calc(1 * var(--space));
+}
+.game-page__home-link:hover {
+  transition: color 0.3s;
+  color: #fff;
+}
+.game-page__home-link svg path {
+  fill: rgba(255, 255, 255, 0.5);
+}
+.game-page__home-link:hover svg path {
+  transition: fill 0.3s;
+  fill: #fff;
 }
 .game-page__home-link p {
   margin-left: calc(1 * var(--space));
@@ -241,24 +253,32 @@ a {
 }
 
 .home-page__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   color: #fff;
   font-size: 48px;
 }
-.home-page__link::before, .home-page__link::after {
+.home-page__link:hover {
+  transition: color 0.6s;
+  color: #c7ceff;
+}
+.home-page__link:hover .home-page__logo path {
+  transition: fill 0.6s;
+  fill: #c7ceff;
+}
+.home-page__link:hover.home-page__play-text::before, .home-page__link:hover.home-page__play-text::after {
+  transition: border-top 0.6s;
+  border-top: 4px solid #c7ceff;
+}
+
+.home-page__play-text::before, .home-page__play-text::after {
   display: inline-block;
   content: "";
   border-top: 4px solid #fff;
   width: 225px;
   margin: 0 calc(3 * var(--space));
   transform: translateY(-1rem);
-}
-.home-page__link:hover {
-  transition: color 0.6s;
-  color: #c7ceff;
-}
-.home-page__link:hover::before, .home-page__link:hover::after {
-  transition: border-top 0.6s;
-  border-top: 4px solid #c7ceff;
 }
 
 .home-page__header {
@@ -343,6 +363,7 @@ a {
 
 .counter__main {
   display: flex;
+  width: 50%;
 }
 
 .counter__seconds {
@@ -367,7 +388,8 @@ a {
 
 .chat__messages {
   height: calc(100% - 56px);
-  padding-top: calc(1 * var(--space));
+  padding-top: calc(2 * var(--space));
+  padding-left: calc(2 * var(--space));
 }
 .chat__messages > p {
   color: #000;
@@ -418,9 +440,13 @@ a {
   border-left: solid 1px rgba(0, 0, 0, 0.06);
   cursor: pointer;
 }
+.chat__send-button:hover .chat__submit-icon path {
+  transition: fill 0.4s;
+  fill: rgba(0, 0, 0, 0.4);
+}
 
-#chat__submit-icon {
-  fill: rgba(0, 0, 0, 0.3);
+.chat__submit-icon path {
+  fill: rgba(0, 0, 0, 0.2);
 }
 
 .btn {
@@ -460,6 +486,12 @@ a {
   box-shadow: 0 0 32px 6px #E50000;
 }
 
+.player__voters {
+  position: absolute;
+  right: auto;
+  left: auto;
+}
+
 .player__is-wolf {
   position: absolute;
   background-color: #E50000;
@@ -472,4 +504,5 @@ a {
 
 .player__username {
   z-index: 2;
+  border-radius: 24px;
 }

@@ -24,11 +24,26 @@
     margin-left: space(4);
 }
 .game-page__home-link {
-    color: #fff;
+    width: 45%;
+    color: rgba(255, 255, 255, 50%);
     display: flex;
     flex-direction: row;
     align-items: center;
     padding-left: space(1);
+
+    &:hover {
+        transition: color .3s;
+        color: #fff;
+    }
+
+    & svg path {
+        fill: rgba(255, 255, 255, 50%); 
+    }
+
+    &:hover svg path {
+        transition: fill .3s;
+        fill: #fff;
+    }
 
     & p {
         margin-left: space(1);
