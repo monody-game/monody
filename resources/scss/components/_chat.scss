@@ -10,7 +10,9 @@
     height: calc(100% - 56px);
     padding-top: space(2);
     padding-left: space(2);
-    
+    padding-right: space(2);
+    overflow-y: scroll;
+
     & > p {
         color: #000;
     }
