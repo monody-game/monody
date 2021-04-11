@@ -40,13 +40,13 @@
         transition: fill .6s;
         fill: #c7ceff;
     }
-    
-    &:hover.home-page__play-text::before,
-    &:hover.home-page__play-text::after {
+
+    &:hover .home-page__play-text::before,
+    &:hover .home-page__play-text::after {
         transition: border-top .6s;
         border-top: 4px solid #c7ceff;
     }
-}
+}    
 
 .home-page__play-text {
     &::before,

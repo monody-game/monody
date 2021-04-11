@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -10,6 +11,9 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+    /**
+     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     */
     public function register (Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -29,6 +33,9 @@ class AuthController extends Controller
         return response($response, 200);
     }
 
+    /**
+     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     */
     public function login(Request $request)
     {
         $content = json_decode($request->getContent(), true);
@@ -54,6 +61,9 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     */
     public function logout (Request $request)
     {
         $request->user()->token()->revoke();

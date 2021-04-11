@@ -267,7 +267,7 @@ a {
   transition: fill 0.6s;
   fill: #c7ceff;
 }
-.home-page__link:hover.home-page__play-text::before, .home-page__link:hover.home-page__play-text::after {
+.home-page__link:hover .home-page__play-text::before, .home-page__link:hover .home-page__play-text::after {
   transition: border-top 0.6s;
   border-top: 4px solid #c7ceff;
 }
@@ -390,6 +390,8 @@ a {
   height: calc(100% - 56px);
   padding-top: calc(2 * var(--space));
   padding-left: calc(2 * var(--space));
+  padding-right: calc(2 * var(--space));
+  overflow-y: scroll;
 }
 .chat__messages > p {
   color: #000;
@@ -505,4 +507,26 @@ a {
 .player__username {
   z-index: 2;
   border-radius: 24px;
+}
+
+.message__main {
+  color: #000;
+  display: flex;
+  padding-bottom: calc(2 * var(--space));
+}
+
+.message__avatar {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+
+.message__author {
+  padding-left: calc(1 * var(--space));
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.message__content {
+  padding-top: calc(1 * var(--space));
+  padding-left: calc(1.5 * var(--space));
 }
