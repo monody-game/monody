@@ -167,6 +167,8 @@ a {
   --dark-background: #0F1127;
   --dark-background-lighter: #111433;
   --light-background: #FFFCF1;
+  --light-scrollbar-background: var(--light-background);
+  --light-scrollbar-color: darken(var(--light-background));
 }
 
 .day {
@@ -392,6 +394,8 @@ a {
   padding-left: calc(2 * var(--space));
   padding-right: calc(2 * var(--space));
   overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: var(--light-scrollbar-color) var(--light-scrollbar-background);
 }
 .chat__messages > p {
   color: #000;

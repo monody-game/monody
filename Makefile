@@ -1,3 +1,5 @@
+dc := USER_ID=$(user) GROUP_ID=$(group) docker-compose
+
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | gawk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -13,7 +15,7 @@ install: vendor
 
 .PHONY: server
 server: install
-	php artisan serve
+	$(dc) up
 
 .PHONY: format
 format: install
@@ -25,17 +27,13 @@ fix: install
 	vendor\bin\phpcbf
 	vendor\bin\php-cs-fixer fix
 
-.PHONY: rollback
-rollback: install
-	vendor\bin\phinx rollback -t 0
-
 .PHONY: migrate
 migrate: install
-	vendor\bin\phinx migrate
+	php artisan migrate:fresh
 
 .PHONY: seed
 seed: migrate
-	vendor\bin\phinx seed:run
+	php artisan db:seed
 
 .PHONY: compile
 compile:

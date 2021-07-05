@@ -2,7 +2,7 @@
     <div class="player__container">
         <div class="player__avatar-container">
             <span class="player__voters" v-if="isVoted()">voté</span>
-            <img :src="player.avatar" alt="" class="player__avatar" :class="player.vote.is_voted === true ? 'player__is-voted' : ''">
+            <img :src="player.avatar" alt="" class="player__avatar" :class="isVoted() === true ? 'player__is-voted' : ''">
             <span class="player__is-wolf" v-if="isWerewolf()"></span>
         </div>
         <p class="player__username">{{ player.username }}</p>
@@ -18,7 +18,7 @@ export default {
             return this.player.role.group === 'werewolf';
         },
         isVoted: function () {
-            return this.player.vote.is_voted === true;
+            return this.player.voted_by.length > 0;
         }
     }
 }

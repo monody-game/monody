@@ -38,6 +38,8 @@ a {
     --dark-background: #0F1127;
     --dark-background-lighter: #111433;
     --light-background: #FFFCF1;
+    --light-scrollbar-background: var(--light-background);
+    --light-scrollbar-color: darken(var(--light-background));
 }
 
 // Pages
