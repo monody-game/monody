@@ -6,4 +6,4 @@
 
 import io from 'socket.io-client'
 
-window.socketIO = io()
+window.socketIO = io('http://localhost:3000', { transports: ['websocket'] })

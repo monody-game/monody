@@ -24,26 +24,20 @@ export default {
                         name: 'villager',
                         see_has: 'villager'
                     },
-                    vote: {
-                        is_voted: false,
-                        voted_by: []
-                    }
+                    voted_by: []
                 },
                 {
                     id: 2,
                     username: 'John Doe',
-                    avatar: '../images/avatars/2.png',
+                    avatar: '../images/avatars/default.png',
                     role: {
                         group: 'werewolf',
                         name: 'werewolf',
                         see_has: 'werewolf'
                     },
-                    vote: {
-                        is_voted: true,
-                        voted_by: [
-                            1
-                        ]
-                    }
+                    voted_by: [
+                        1
+                    ]
                 }
             ]
         }

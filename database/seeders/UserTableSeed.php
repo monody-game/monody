@@ -17,6 +17,7 @@ class UserTableSeed extends Seeder
         DB::table('users')->insert([
             'username' => 'moon250',
             'email' => 'mooneupho@gmail.com',
+            'avatar' => './images/avatar/1.png',
             'password' => bcrypt('moon250bg')
         ]);
 

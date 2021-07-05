@@ -7,7 +7,6 @@ io.on('connection', socket => {
             author: author,
             content: content
         }
-        console.log(message)
         messages.push(message)
         socket.broadcast.emit('chat.new', message)
         socket.emit('messages', { messages })
