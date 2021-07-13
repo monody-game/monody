@@ -1,13 +1,13 @@
 <template>
-
+    <div>
+        
+    </div>
 </template>
-
 <script>
 export default {
-    name: "RegisterPage"
+    name: 'NewGamePage'
 }
 </script>
-
 <style scoped>
-
+    
 </style>

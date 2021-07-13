@@ -1,5 +1,5 @@
 <template>
-    <div class="player-list__">
+    <div class="player-list__" :data-token="token">
         <Player v-for="player in players" :key="player.id" :player="player"/>
     </div>
 </template>
@@ -9,6 +9,7 @@ import Player from '@/Components/Player.vue'
 
 export default {
     name: "PlayerList",
+    props: ['token'],
     components: {
         Player: Player
     },
