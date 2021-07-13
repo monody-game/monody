@@ -12,7 +12,7 @@
         </div>
         <div class="game-page__main">
             <Chat />
-            <PlayerList />
+            <PlayerList :token="token" />
         </div>
     </div>
 </template>
@@ -28,6 +28,17 @@ export default {
         Counter: Counter,
         Chat: Chat,
         PlayerList: PlayerList
+    },
+    data() {
+        token: ''
+    },
+    methods() {
+        return {
+            
+        }
+    },
+    created() {
+        window.socketIO.emit('game.connect')
     }
 }
 </script>

@@ -19,13 +19,13 @@ server: install
 
 .PHONY: format
 format: install
-	vendor\bin\phpcbf
-	vendor\bin\php-cs-fixer fix --dry-run
+	./vendor/bin/phpcbf
+	./vendor/bin/php-cs-fixer fix --dry-run
 
 .PHONY: fix
 fix: install
-	vendor\bin\phpcbf
-	vendor\bin\php-cs-fixer fix
+	./vendor/bin/phpcbf
+	./vendor/bin/php-cs-fixer fix
 
 .PHONY: migrate
 migrate: install
@@ -34,6 +34,7 @@ migrate: install
 .PHONY: seed
 seed: migrate
 	php artisan db:seed
+	php artisan passport:install
 
 .PHONY: compile
 compile:
@@ -41,12 +42,12 @@ compile:
 
 .PHONY: lint
 lint: vendor/autoload.php install
-	vendor\bin\phpstan analyse --memory-limit=32
+	./vendor/bin/phpstan analyse --memory-limit=32
 
 .PHONY: tests
 tests: install
-	vendor\bin\phpunit --stop-on-failure
+	./vendor/bin/phpunit --stop-on-failure
 
 .PHONY: tt
 tt: install
-	vendor\bin\phpunit-watcher watch
+	./vendor/bin/phpunit-watcher watch

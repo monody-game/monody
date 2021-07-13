@@ -363,6 +363,57 @@ a {
   width: 100px;
 }
 
+.register-page {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.register-page__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-page__input {
+  font-family: "Sen", sans-serif;
+  display: inline-block;
+  background: var(--dark-background);
+  color: #fff;
+  border: none;
+  padding: 0 0 calc(1 * var(--space)) calc(1 * var(--space));
+  margin: calc(1 * var(--space));
+}
+.register-page__input:focus {
+  outline: none;
+}
+.register-page__input:focus::-moz-placeholder {
+  opacity: 1;
+  color: #fff;
+}
+.register-page__input:focus:-ms-input-placeholder {
+  opacity: 1;
+  color: #fff;
+}
+.register-page__input:focus::placeholder {
+  opacity: 1;
+  color: #fff;
+}
+
+.register-page__input ::after {
+  content: "AZERAZER";
+  display: block;
+  width: 0;
+  height: 3px;
+  background: #fff;
+  transition: width 0.3s;
+}
+
+.register-page__input:focus::after {
+  width: 100px;
+}
+
 .counter__main {
   display: flex;
   width: 50%;

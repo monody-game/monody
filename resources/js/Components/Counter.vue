@@ -23,7 +23,7 @@ export default {
         }
     },
     methods: {
-        decount: function () {
+        decount () {
             window.setInterval(() => {
                 if (this.time === 0) {
                     return

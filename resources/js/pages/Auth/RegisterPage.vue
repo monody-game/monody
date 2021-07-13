@@ -1,14 +1,13 @@
 <template>
-    <div class="login-page">
-        <h1>Se connecter</h1>
-        <form class="login-page__form">
-            <input type="text" class="login-page__input" placeholder="Nom d'utilisateur" v-model="username" required>
-            <input type="password" class="login-page__input" placeholder="Mot de passe" v-model="password" required>
-            <label for="remember_me">Se souvenir de moi</label>
-            <input id="remember_me" v-model="remember_me" class="login-page__remember-me" type="checkbox">
+    <div class="register-page">
+        <h1>S'inscrire</h1>
+        <form class="register-page__form">
+            <input type="text" class="register-page__input" placeholder="Nom d'utilisateur" v-model="username" required>
+            <input type="email" class="register-page__input" placeholder="Email" v-model="email" required>
+            <input type="password" class="register-page__input" placeholder="Mot de passe" v-model="password" required>
+            <input type="password" class="register-page__input" placeholder="Confirmez le mot de passe" v-model="password_confirmation" required>
             <div>
                 <input type="submit" value="Se connecter" @keyup.enter="login()" @click.prevent="login()">
-                <router-link to="/register">Pas encore de compte ?</router-link>
             </div>
         </form>
     </div>
@@ -19,20 +18,22 @@ const axios = require('axios').default
 import router from '@/Router/Router.js'
 
 export default {
-    name: 'LoginPage',
+    name: 'RegisterPage',
     data() {
         return {
             username: '',
+            email: '',
             password: '',
-            remember_me: false
+            password_confirmation: ''
         }
     },
     methods: {
         login: function () {
-            axios.post('/api/login', {
+            axios.post('/api/auth/register', {
                 username: this.username,
+                email: this.email,
                 password: this.password,
-                remember_me: this.remember_me
+                password_confirmation: this.password_confirmation
             }).then((res) => {
                 if (res.status === 200) {
                     this.$store.commit('setUser', {

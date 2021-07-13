@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function token(Request $request): JsonResponse
     {
         $key = env('JWT_TOKEN');
         $user = $request->user();

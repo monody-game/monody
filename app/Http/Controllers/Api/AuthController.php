@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use ArrayObject;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use ArrayObject;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -18,66 +17,44 @@ class AuthController extends Controller
      * @return JsonResponse
      */
     public function login(Request $request): JsonResponse
-    {
-        $credentials = $request->validate([
-            'username' => ['required', 'string'],
-            'password' => ['required', 'string'],
-            'remember_me' => 'boolean'
+    {        
+        $validateData = $request->validate([
+            'username' => 'required|string|max:24',
+            'password' => 'required|string|min:6',
+            'remember_me' => 'required|boolean'
         ]);
-
-        $attempt = new ArrayObject($credentials);
-        unset($attempt['remember_me']);
         
-        if(!Auth::attempt(["username" => "moon250", "password" => "moon250bg"])) {
-            $request->session()->regenerate();
+        $attempt = new ArrayObject($validateData);
+        unset($attempt['remember_me']);
 
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+        if (!Auth::attempt($attempt->getArrayCopy())) {
+            return response(['message' => 'Invalid Credentials']);
         }
 
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-        if ($request->all()['remember_me']) {
-            $token->expires_at = Carbon::now()->addWeeks(1);
-            $token->save();
-            return response()->json([
-                'access_token' => $tokenResult->accessToken,
-                'token_type' => 'Bearer',
-                'expires_at' => Carbon::parse(
-                    $tokenResult->token->expires_at
-                )->toDateTimeString()
-            ]);
-        }
-        dd('not remember');
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer'
-        ]);
+        $accessToken = Auth::user()->createToken('authToken')->accessToken;
+
+        return response()->json(['user' => auth()->user(), 'access_token' => $accessToken]);
     }
 
     /**
      * @param Request $request
      * @return JsonResponse
      */
-    public function register(Request $request): JsonResponse
+    public function register(Request $request)
     {
-        /** @var string $content */
-        $content = $request->getContent();
-        $data = json_decode($content, true);
-        Validator::make($data, [
-            'username' => 'required|string|unique:users',
-            'password' => 'required|string|confirmed'
+        $validatedData = $request->validate([
+            'username' => 'required|max:24',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed|min:6',
         ]);
-        $user = new User([
-            'username' => $data['username'],
-            'password' => bcrypt($data['password'])
-        ]);
-        $user->save();
-        return response()->json([
-            'message' => 'Successfully created user!'
-        ], 201);
+
+        $validatedData['password'] = bcrypt($request->password);
+
+        $user = User::create($validatedData);
+
+        $accessToken = $user->createToken('authToken')->accessToken;
+
+        return response()->json([ 'user' => $user, 'access_token' => $accessToken]);
     }
 
     /**
@@ -96,6 +73,6 @@ class AuthController extends Controller
      */
     public function user(): JsonResponse
     {
-        return response()->json(request()->user(), 200);
+        return response()->json(request()->user());
     }
 }
