@@ -18,7 +18,7 @@ class AddGame extends Migration
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
             $table->json('users');
             $table->json('roles');
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamps();
             $table->boolean('is_started')->default(false);
         });
     }

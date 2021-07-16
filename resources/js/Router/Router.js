@@ -32,11 +32,6 @@ let routes = [
         component: PlayPage
     },
     {
-        path: "*",
-        name: "e404",
-        component: e404
-    },
-    {
         path: "/game/:id",
         name: "game",
         component: GamePage
@@ -45,6 +40,11 @@ let routes = [
         path: "/game/new",
         name: "game_new",
         component: NewGamePage
+    },
+    {
+        path: "*",
+        name: "e404",
+        component: e404
     }
 ];
 

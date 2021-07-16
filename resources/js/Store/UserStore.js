@@ -26,7 +26,7 @@ const UserStore = new Vuex.Store({
     },
     getters: {
         isUserConnected: state => {
-            return state.user.is_connected
+            return state.user.access_token !== ''
         },
         getAccessToken: state => {
             return 'Bearer ' + state.user.access_token
