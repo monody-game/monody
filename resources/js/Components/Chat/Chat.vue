@@ -33,7 +33,6 @@
 import Message from "./Message.vue";
 import io from "socket.io-client";
 import Vue from "vue";
-import Router from "vue-router";
 
 export default {
     name: "Chat",
@@ -63,31 +62,34 @@ export default {
         return {
             message: ""
         };
+    },
+    created() {
+        const socket = io("http://localhost:3000", {
+            transports: ["websocket"]
+        });
+
+        const sendMessage = message => {
+            const chat = document.querySelector(".chat__messages");
+            const MessageClass = Vue.extend(Message);
+            const instance = new MessageClass({
+                propsData: { message: message }
+            });
+            instance.$mount();
+            chat.appendChild(instance.$el);
+        };
+        socket.on("chat.new", message => {
+            const input = document.querySelector(".chat__send-input");
+            console.log(message);
+            sendMessage({ content: message.content, author: message.author });
+            input.value = "";
+        });
+        socket.on("messages", ({ messages }) => {
+            for (const k in messages) {
+                sendMessage(messages[k]);
+            }
+        });
     }
 };
-
-const socket = io("http://localhost:3000", { transports: ["websocket"] });
-
-const sendMessage = message => {
-    const chat = document.querySelector(".chat__messages");
-    const MessageClass = Vue.extend(Message);
-    const instance = new MessageClass({
-        propsData: { message: message }
-    });
-    instance.$mount();
-    chat.appendChild(instance.$el);
-};
-socket.on("chat.new", message => {
-    const input = document.querySelector(".chat__send-input");
-    console.log(message);
-    sendMessage({ content: message.content, author: message.author });
-    input.value = "";
-});
-socket.on("messages", ({ messages }) => {
-    for (const k in messages) {
-        sendMessage(messages[k]);
-    }
-});
 </script>
 
 <style scoped></style>

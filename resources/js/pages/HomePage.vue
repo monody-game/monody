@@ -1,7 +1,7 @@
 <template>
     <div class="home-page">
         <header class="home-page__header">
-            <router-link :to="{ name: 'how-to-play' }">Comment jouer</router-link>
+            <router-link :to="{ name: 'home_page' }">Comment jouer</router-link>
             <router-link :to="{ name: 'login' }" class="btn-primary">Se connecter</router-link>
         </header>
         <div class="home-page__main">
@@ -14,7 +14,7 @@
                 <p class="home-page__play-text">Jouer</p>
             </router-link>
         </div>
-        <footer class="home-page__footer">
+            <footer class="home-page__footer">
             <p>&copy; Monody 2020 — Tous droits reservés.</p>
             <LangSwitcher />
         </footer>

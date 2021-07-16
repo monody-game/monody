@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Message extends Model
+class Game extends Model
 {
     use HasFactory;
 
-    protected $table = 'messages';
-
     protected $fillable = [
         'id',
-        'from_id',
-        'game_id',
-        'content',
-        'visibility'
+        'owner_id',
+        'users',
+        'roles',
+        'created_at',
+        'is_started'
     ];
 }
