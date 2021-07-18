@@ -18,8 +18,7 @@
         "laravel/passport": "^10.1",
         "laravel/sail": "^1.7",
         "laravel/tinker": "^2.5",
-        "league/flysystem": "^1.1.4",
-        "pusher/pusher-php-server": "^4.1"
+        "league/flysystem": "^1.1.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -56,7 +55,8 @@
     "prefer-stable": true,
     "scripts": {
         "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
