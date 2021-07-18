@@ -1,4 +1,4 @@
-const io = require('socket.io')(3000)
+const io = require('socket.io')(5000)
 const jwt = require('jsonwebtoken')
 const env = require('dotenv')
 

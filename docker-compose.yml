@@ -6,7 +6,7 @@ services:
     ports:
       - 8000:80
     volumes:
-      - .:/var/www:cache
+      - .:/var/www:delegated
       - ./site.conf:/etc/nginx/conf.d/default.conf
     links:
       - php
@@ -18,7 +18,7 @@ services:
     build:
       context: ./docker/php
     volumes:
-      - .:/var/www:cache
+      - .:/var/www:delegated
     depends_on:
       - db
     links:
@@ -47,15 +47,6 @@ services:
     ports:
       - 8888:8080
       
-  node:
-    restart: unless-stopped
-    build:
-      context: ./docker/node
-    command: yarn run dev
-    working_dir: /usr/src/app
-    volumes:
-      - .:/usr/src/app:cache
-  
   node_server:
     restart: unless-stopped
     build: 
@@ -63,9 +54,9 @@ services:
     command: npm start
     working_dir: /usr/src/app
     volumes:
-      - .:/usr/src/app:cache
+      - .:/usr/src/app:delegated
     ports:
-      - 3000:3000
+      - 5000:5000
 
 volumes:
   db-data:

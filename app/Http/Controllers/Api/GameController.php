@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Game;
+use App\Models\User;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
@@ -43,13 +44,29 @@ class GameController extends Controller
         ]);
         
         if($validator->fails()){
-            return response()->json(['error' => $validator->errors(), 'Validation Error']);
+            return response()->json(['error' => $validator->errors(), 'Validation Error'], 400);
         }
         
-        $data['owner_id'] = 1;
+        $data['owner_id'] = $request->user()->id;
 
         $game = Game::create($data);
 
         return response()->json(['message' => 'Game created !', 'game' => $game]);
+    }
+
+    public function delete(Request $request): JsonResponse
+    {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'game_id' => 'integer|required|exists:games,id'
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['error' => $validator->errors(), 'Validation Error'], 400);
+        }
+        
+        Game::destroy($data['game_id']);
+        return response()->json(['message' => 'Game successfully deleted']);
     }
 }
