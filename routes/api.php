@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', 'Api\AuthController@login')->name('login');
 Route::post('/auth/register', 'Api\AuthController@register');
+Route::get('/oauth/link/discord', 'Api\OauthController@discord');
+Route::get('/oauth/link/google', 'Api\OauthController@google');
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/user', 'Api\AuthController@user');
