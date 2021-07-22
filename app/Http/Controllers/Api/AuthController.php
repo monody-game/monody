@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
 use ArrayObject;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,15 +17,9 @@ class AuthController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function login(Request $request): JsonResponse
-    {        
-        $validateData = $request->validate([
-            'username' => 'required|string|max:24',
-            'password' => 'required|string|min:6',
-            'remember_me' => 'required|boolean'
-        ]);
-        
-        $attempt = new ArrayObject($validateData);
+    public function login(LoginRequest $request): JsonResponse
+    {
+        $attempt = new ArrayObject($request->all());
         unset($attempt['remember_me']);
 
         if (!Auth::attempt($attempt->getArrayCopy())) {
@@ -40,27 +35,23 @@ class AuthController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validatedData = $request->validate([
-            'username' => 'required|max:24',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed|min:6',
-        ]);
+        $data = $request->all();
 
-        $validatedData['password'] = bcrypt($request->password);
+        $data['password'] = bcrypt($request->password);
 
-        $user = User::create($validatedData);
+        $user = User::create($data);
 
         $accessToken = $user->createToken('authToken')->accessToken;
 
-        return response()->json([ 'user' => $user, 'access_token' => $accessToken]);
+        return response()->json(['user' => $user, 'access_token' => $accessToken]);
     }
 
     /**
      * @return JsonResponse
      */
-    public function logout (Request $request): JsonResponse
+    public function logout(Request $request): JsonResponse
     {
         $request->user()->token()->revoke();
         return response()->json([
