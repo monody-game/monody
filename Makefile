@@ -19,13 +19,11 @@ server: install
 
 .PHONY: format
 format: install
-	./vendor/bin/phpcbf
-	./vendor/bin/php-cs-fixer fix --dry-run
+	vendor\bin\php-cs-fixer fix --dry-run
 
 .PHONY: fix
 fix: install
-	./vendor/bin/phpcbf
-	./vendor/bin/php-cs-fixer fix
+	vendor\bin\php-cs-fixer fix
 
 .PHONY: migrate
 migrate: install
@@ -38,16 +36,16 @@ seed: migrate
 
 .PHONY: compile
 compile:
-	sass assets/scss/style.scss public/style.css --no-source-map --watch
+	sass assets\scss\style.scss public\style.css --no-source-map --watch
 
 .PHONY: lint
-lint: vendor/autoload.php install
-	./vendor/bin/phpstan analyse --memory-limit=32
+lint: vendor\autoload.php install
+	vendor\bin\phpstan analyse --memory-limit=32
 
 .PHONY: tests
 tests: install
-	./vendor/bin/phpunit --stop-on-failure
+	vendor\bin\phpunit --stop-on-failure
 
 .PHONY: tt
 tt: install
-	./vendor/bin/phpunit-watcher watch
+	vendor\bin\phpunit-watcher watch
