@@ -1,19 +1,14 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__ . '/src')
-    ->in(__DIR__ . '/tests')
-    ->in(__DIR__ . '/views')
+    ->in(__DIR__ . '/app')
 ;
 
-return PhpCsFixer\Config::create()
+$config = new PhpCsFixer\Config();
+return $config
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony' => true,
-        'binary_operator_spaces' => [
-            'align_equals' => false,
-            'align_double_arrow' => true,
-        ],
         '@Symfony:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
         'linebreak_after_opening_tag' => true,
@@ -29,7 +24,7 @@ return PhpCsFixer\Config::create()
         'strict_comparison' => true,
         'strict_param' => true,
         'concat_space' => ['spacing' => 'one'],
-        'trailing_comma_in_multiline_array' => false
+        'trailing_comma_in_multiline' => false
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/.php_cs.cache');
