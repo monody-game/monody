@@ -17,14 +17,14 @@ class UserTableSeed extends Seeder
         DB::table('users')->insert([
             'username' => 'moon250',
             'email' => '***REMOVED***',
-            'avatar' => './images/avatar/1.png',
+            'avatar' => '/images/avatars/1.png',
             'password' => bcrypt('***REMOVED***')
         ]);
 
         DB::table('users')->insert([
             'username' => 'JohnDoe',
             'email' => 'johndoe@gmail.com',
-            'password' => bcrypt('john')
+            'password' => bcrypt('johndoe')
         ]);
     }
 }
