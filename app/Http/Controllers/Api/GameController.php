@@ -13,17 +13,18 @@ class GameController extends Controller
 {
     public function token(Request $request): JsonResponse
     {
-        $key = env('JWT_TOKEN');
+        $key = env('JWT_SECRET');
         $user = $request->user();
         $token = [
-            'user_id' => $user->getId(),
-            'user_name' => $user->getUsername(),
-            'user_avatar' => $user->getAvatar(),
+            'user_id' => $user->id,
+            'user_name' => $user->username,
+            'user_avatar' => $user->avatar,
             'exp' => time() + 30
         ];
+
         $token = JWT::encode($token, $key);
 
-        return new JsonResponse(['token' => $token]);
+        return response()->json(['token' => $token]);
     }
 
     public function list(Request $request): JsonResponse
