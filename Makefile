@@ -40,7 +40,7 @@ compile:
 
 .PHONY: lint
 lint: vendor\autoload.php install
-	vendor\bin\phpstan analyse --memory-limit=32
+	vendor\bin\phpstan analyse --memory-limit=2G
 
 .PHONY: tests
 tests: install
