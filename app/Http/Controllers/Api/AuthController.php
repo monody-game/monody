@@ -17,7 +17,6 @@ class AuthController extends Controller
     {
         $attempt = new ArrayObject($request->all());
         unset($attempt['remember_me']);
-
         if (!Auth::attempt($attempt->getArrayCopy())) {
             return response()->json(['message' => 'Invalid Credentials']);
         }
