@@ -7,7 +7,6 @@ env.config();
 let users = [];
 
 io.on("connection", (socket) => {
-    alert('INIT CONNECTION')
     console.log("init socket");
     let currentUser = null;
 
