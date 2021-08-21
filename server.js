@@ -18,7 +18,7 @@ io.on("connection", (socket) => {
             content: content,
         };
         messages.push(message);
-        console.log(messages, message);
+        console.log(message);
         socket.broadcast.emit("chat.new", message);
         socket.emit("messages", { messages });
     });

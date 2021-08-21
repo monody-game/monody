@@ -19,7 +19,8 @@ class CreateRolesTable extends Migration
             $table->string('display_name')->unique();
             $table->string('image')->default('/images/roles/default.png');
             $table->tinyInteger('limit')->nullable();
-            $table->timestamps();
+            $table->tinyInteger('weight');
+            $table->integer('team_id')->constrained('teams')->onDelete('cascade');
         });
     }
 

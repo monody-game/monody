@@ -17,5 +17,4 @@ class Role extends Model
         'image',
         'limit'
     ];
-
 }

@@ -12,6 +12,7 @@ class RoleController extends Controller
     public function all(Request $request): JsonResponse
     {
         $roles = Role::all();
+
         return response()->json(['roles' => $roles]);
     }
 }
