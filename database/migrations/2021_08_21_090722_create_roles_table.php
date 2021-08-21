@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddGame extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class AddGame extends Migration
      */
     public function up()
     {
-        Schema::create('games', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
-            $table->json('users');
-            $table->json('roles');
+            $table->string('name')->unique();
+            $table->string('display_name')->unique();
+            $table->string('image')->default('/images/roles/default.png');
+            $table->tinyInteger('limit')->nullable();
             $table->timestamps();
-            $table->boolean('is_started')->default(false);
         });
     }
 
@@ -30,6 +30,6 @@ class AddGame extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('games');
+        Schema::dropIfExists('roles');
     }
 }
