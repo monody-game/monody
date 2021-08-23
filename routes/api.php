@@ -17,4 +17,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/game/delete', 'Api\GameController@delete');
 
     Route::get('/roles', 'Api\RoleController@all');
+
+    Route::get('/teams', 'Api\TeamController@all');
 });
