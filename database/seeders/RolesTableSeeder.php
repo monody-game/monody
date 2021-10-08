@@ -18,7 +18,7 @@ class RolesTableSeeder extends Seeder
             'name' => 'werewolf',
             'display_name' => 'Loup-garou',
             'image' => '/images/roles/werewolf.png',
-            'weight' => 1,
+            'weight' => 2,
             'team_id' => 2
         ]);
 
