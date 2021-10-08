@@ -7,10 +7,29 @@ use App\Models\Game;
 use Firebase\JWT\JWT;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class GameController extends Controller
 {
+    public function users(Request $request, int $id): JsonResponse
+    {
+        $users = DB::select(
+            DB::raw(
+                <<<SQL
+    select `users`.`id`, `users`.`username`, `users`.`avatar` from `users`
+    inner join `game_users` on `game_users`.`game_id` = :game_id
+    where `users`.`id` = `game_users`.`user_id`
+SQL
+            ),
+            [
+                'game_id' => $id
+            ]
+        );
+
+        return response()->json(['users' => $users]);
+    }
+
     public function token(Request $request): JsonResponse
     {
         $key = env('JWT_SECRET');
