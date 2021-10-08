@@ -1,4 +1,8 @@
-const io = require("socket.io")(5000);
+const io = require("socket.io")(5000, {
+    cors: {
+        origin: "*",
+    },
+});
 const jwt = require("jsonwebtoken");
 const env = require("dotenv");
 
@@ -7,20 +11,49 @@ env.config();
 let users = [];
 
 io.on("connection", (socket) => {
-    console.log("init socket");
     let currentUser = null;
 
+    socket.on("counter.day", () => {
+        console.log("day");
+        socket.broadcast.emit("game.day");
+    });
+
+    socket.on("counter.night", () => {
+        console.log("night");
+        socket.broadcast.emit("game.night");
+    });
+
+    socket.on("counter.start", () => {
+        console.log("Counter started !!");
+    });
+
+    socket.on("counter.update", () => {
+        console.log("Counter update !!");
+    });
+
+    socket.on("counter.end", () => {
+        console.log("Counter ended !!");
+    });
+
     socket.on("chat.send", ({ author, content }) => {
-      console.log('hey salut');  
-      const messages = [];
+        const messages = [];
         const message = {
             author: author,
             content: content,
         };
         messages.push(message);
-        console.log(message);
         socket.broadcast.emit("chat.new", message);
         socket.emit("messages", { messages });
+    });
+
+    socket.on("game.voting", ({ voted_user, voted_by }) => {
+        socket.broadcast.emit("game.vote", { voted_user, voted_by });
+        socket.emit("game.update.users");
+    });
+
+    socket.on("game.unvoting", ({ voted_user, voted_by }) => {
+        socket.broadcast.emit("game.unvote", { voted_user, voted_by });
+        socket.emit("game.update.users");
     });
 
     socket.on("game.connect", ({ token }) => {
