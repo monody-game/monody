@@ -39,7 +39,7 @@ compile:
 	sass assets\scss\style.scss public\style.css --no-source-map --watch
 
 .PHONY: lint
-lint: vendor\autoload.php install
+lint: install
 	vendor\bin\phpstan analyse --memory-limit=2G
 
 .PHONY: tests

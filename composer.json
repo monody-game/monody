@@ -21,7 +21,9 @@
         "laravel/tinker": "^2.5",
         "league/flysystem": "^1.1.4",
         "league/glide-laravel": "^1.0",
-        "socialiteproviders/discord": "^4.1"
+        "socialiteproviders/discord": "^4.1",
+        "ext-fileinfo": "*",
+        "ext-gd": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
