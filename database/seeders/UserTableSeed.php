@@ -18,6 +18,7 @@ class UserTableSeed extends Seeder
             'username' => 'moon250',
             'email' => '***REMOVED***',
             'avatar' => '/images/avatars/1.png',
+            'level' => 100,
             'password' => bcrypt('***REMOVED***')
         ]);
 
