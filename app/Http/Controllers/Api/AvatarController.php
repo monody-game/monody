@@ -21,9 +21,6 @@ class AvatarController extends Controller
     }
 
     /**
-     * @param Filesystem $filesystem
-     * @param Request $request
-     * @param string $path
      * @return mixed
      */
     public function show(Filesystem $filesystem, Request $request, string $path)

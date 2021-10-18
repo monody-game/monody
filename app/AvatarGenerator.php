@@ -24,6 +24,8 @@ class AvatarGenerator
     public function generate(User $user): bool
     {
         $formatted = $this->getFormattedUserAvatar($user->avatar);
+        /** @var resource $base */
+        $base = null;
 
         if ('image/jpeg' === mime_content_type($formatted)) {
             /** @var resource $base */
