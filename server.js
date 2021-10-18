@@ -64,6 +64,7 @@ io.on("connection", (socket) => {
             currentUser = {
                 id: decoded.user_id,
                 username: decoded.user_name,
+                avatar: decoded.user_avatar,
                 count: 1,
             };
             const user = users.find((u) => u.id === currentUser.id);
@@ -71,7 +72,7 @@ io.on("connection", (socket) => {
                 user.count++;
             } else {
                 users.push(currentUser);
-                socket.broadcast.emit("users.new", { user: currentUser });
+                socket.broadcast.emit("game.users.new", { user: currentUser });
             }
             socket.emit("game.users", { users });
         } catch (e) {
@@ -80,14 +81,15 @@ io.on("connection", (socket) => {
     });
 
     socket.on("game.disconnect", () => {
-        console.log("game.disconnect");
         if (currentUser) {
             const user = users.find((u) => u.id === currentUser.id);
             if (user) {
                 user.count--;
                 if (user.count === 0) {
                     users = users.filter((u) => u.id !== currentUser.id);
-                    socket.broadcast.emit("users.leave", { user: currentUser });
+                    socket.broadcast.emit("game.users.leave", {
+                        user: currentUser,
+                    });
                 }
             }
         }
