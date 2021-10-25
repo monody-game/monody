@@ -48,12 +48,10 @@ io.on("connection", (socket) => {
 
     socket.on("game.voting", ({ voted_user, voted_by }) => {
         socket.broadcast.emit("game.vote", { voted_user, voted_by });
-        socket.emit("game.update.users");
     });
 
     socket.on("game.unvoting", ({ voted_user, voted_by }) => {
         socket.broadcast.emit("game.unvote", { voted_user, voted_by });
-        socket.emit("game.update.users");
     });
 
     socket.on("game.connect", ({ token }) => {
