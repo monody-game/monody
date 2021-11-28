@@ -4,7 +4,7 @@ services:
     image: nginx:alpine
     restart: unless-stopped
     ports:
-      - 8000:80
+      - "8000:80"
     volumes:
       - .:/var/www:delegated
       - ./site.conf:/etc/nginx/conf.d/default.conf
@@ -29,7 +29,7 @@ services:
     restart: unless-stopped
     image: mysql:latest
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: monody
@@ -45,18 +45,24 @@ services:
       ADMINER_DESIGN: pepa-linha
       ADMINER_DEFAULT_SERVER: db
     ports:
-      - 8888:8080
-      
+      - "8888:8080"
+
   node_server:
     restart: unless-stopped
-    build: 
+    build:
       context: ./docker/node
     command: npm start
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app:delegated
     ports:
-      - 5000:5000
+      - "5000:5000"
+
+  redis:
+    restart: unless-stopped
+    image: redis:alpine
+    ports:
+      - "6379:6379"
 
 volumes:
   db-data:

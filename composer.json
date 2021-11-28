@@ -9,6 +9,8 @@
     "license": "MIT",
     "require": {
         "php": "^7.4|^8.0",
+        "ext-fileinfo": "*",
+        "ext-gd": "*",
         "ext-json": "*",
         "fideloper/proxy": "^4.4",
         "firebase/php-jwt": "^5.4",
@@ -22,8 +24,7 @@
         "league/flysystem": "^1.1.4",
         "league/glide-laravel": "^1.0",
         "socialiteproviders/discord": "^4.1",
-        "ext-fileinfo": "*",
-        "ext-gd": "*"
+        "ext-pdo": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
