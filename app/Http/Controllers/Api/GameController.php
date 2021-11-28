@@ -17,9 +17,9 @@ class GameController extends Controller
         $users = DB::select(
             DB::raw(
                 <<<SQL
-    select `users`.`id`, `users`.`username`, `users`.`avatar` from `users`
-    inner join `game_users` on `game_users`.`game_id` = :game_id
-    where `users`.`id` = `game_users`.`user_id`
+    SELECT `users`.`id`, `users`.`username`, `users`.`avatar` FROM `users`
+    INNER JOIN `game_users` ON `game_users`.`game_id` = :game_id
+    WHERE `users`.`id` = `game_users`.`user_id`
 SQL
             ),
             [
