@@ -13,7 +13,20 @@ class GameController extends Controller
 {
     public function users(Request $request): JsonResponse
     {
-        return response()->json(['users' => []]);
+        $data = $request->all();
+
+        if (!\array_key_exists('id', $data)) {
+            return response()->json(['error' => 'Game id is required'], 400);
+        }
+
+        $game = Redis::get('game:' . $data['id']);
+
+        if ($game) {
+            $game = json_decode($game, true);
+            return response()->json(['users' => $game['users']]);
+        }
+
+        return response()->json(['error' => 'Game not found'], 404);
     }
 
     public function token(Request $request): JsonResponse
@@ -67,19 +80,6 @@ class GameController extends Controller
         return response()->json(['game' => $data]);
     }
 
-    private function generateGameId(): string
-    {
-        $bytes = random_bytes(10);
-        $id = base64_encode($bytes);
-        $id = str_replace(['+', '/', '='], '', $id);
-
-        if (Redis::exists('game:' . $id)) {
-            return $this->generateGameId();
-        }
-
-        return $id;
-    }
-
     public function delete(Request $request): JsonResponse
     {
         $data = $request->all();
@@ -95,5 +95,18 @@ class GameController extends Controller
         Redis::del('game:' . $data['game_id']);
 
         return response()->json();
+    }
+
+    private function generateGameId(): string
+    {
+        $bytes = random_bytes(10);
+        $id = base64_encode($bytes);
+        $id = str_replace(['+', '/', '='], '', $id);
+
+        if (Redis::exists('game:' . $id)) {
+            return $this->generateGameId();
+        }
+
+        return $id;
     }
 }
