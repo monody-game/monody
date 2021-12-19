@@ -23,6 +23,7 @@ class GameController extends Controller
 
         if ($game) {
             $game = json_decode($game, true);
+
             return response()->json(['users' => $game['users']]);
         }
 

@@ -25,6 +25,15 @@ services:
       - db
       - adminer
 
+  websockets:
+    restart: unless-stopped
+    build:
+      context: ./docker/websockets
+    volumes:
+      - .:/var/www:delegated
+    ports:
+      - "6001:6001"
+
   db:
     restart: unless-stopped
     image: mysql:latest
