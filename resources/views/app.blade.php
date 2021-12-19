@@ -4,12 +4,28 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="description" content="Monody is a online werewolf game !"/>
 
         <title>Monody</title>
 
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="{{ mix('css/style.css') }}" type="text/css">
+        <link
+            as="style"
+            href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap"
+            onload="this.onload=null;this.rel='stylesheet'"
+            rel="preload"
+        />
+        <link
+            as="style"
+            href="{{ mix('css/style.css') }}"
+            onload="this.onload=null;this.rel='stylesheet'"
+            rel="preload"
+            type="text/css"
+        />
+        <noscript>
+            <link href="{{ mix('css/style.css') }}" rel="stylesheet" type="text/css"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com">
+            <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
+        </noscript>
     </head>
     <body>
         <div id="app"></div>

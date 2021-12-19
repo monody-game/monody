@@ -1,0 +1,68 @@
+.register-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.register-page__button {
+  display: flex;
+
+  & .loader {
+    height: 16px;
+    width: 16px;
+    margin-right: space(1);
+
+    & spinning-dots {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.register-page__form {
+  margin-top: space(2);
+  display: flex;
+  flex-direction: column;
+  width: 25vw;
+}
+
+.register-page__input {
+  font-family: 'Sen', sans-serif;
+  display: inline-block;
+  background: var(--dark-background);
+  color: #fff;
+  border: none;
+  padding: 0 0 space(1) space(1);
+  margin: space(1);
+  width: 100%;
+
+  &.login-page__input-error {
+    outline: none;
+    border-bottom: var(--danger) solid 2px;
+  }
+
+  &:focus {
+    outline: none;
+    border-bottom: #fff solid 2px;
+
+    &::placeholder {
+      opacity: 1;
+      color: #fff;
+    }
+  }
+}
+
+.register-page__input ::after {
+  content: 'AZERAZER';
+  display: block;
+  width: 0;
+  height: 3px;
+  background: #fff;
+  transition: width .3s;
+}
+
+.register-page__input:focus::after {
+  width: 100px;
+}

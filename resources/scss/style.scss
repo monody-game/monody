@@ -1,0 +1,68 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// Tools
+@import "tools/_reset";
+@import "tools/_functions";
+
+body {
+  font-family: "Sen", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: #fff;
+  height: 100vh;
+  background-color: var(--dark-background);
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  font-family: 'Sen', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+:root {
+  --space: 8px;
+  --danger: #b40000;
+  --info: #009ec0;
+  --dark-background: #0f1127;
+  --dark-background-lighter: #111433;
+  --light-dark-background: #273097;
+  --light-background: #fffcf1;
+  --light-scrollbar-background: var(--light-background);
+  --light-scrollbar-color: darken(var(--light-background));
+  --villager-color: #4c93d6;
+  --werewolf-color: #a51818;
+}
+
+// Pages
+@import "./pages/game-page";
+@import "./pages/home-page";
+@import "./pages/play-page";
+@import "./pages/login-page";
+@import "./pages/register-page";
+
+// Components
+@import "./components/_counter";
+@import "./components/_buttons";
+@import "./components/_player-list";
+
+@import "./components/Chat/_message";
+@import "./components/Chat/_chat";
+@import "./components/Chat/_time-separator";
+
+@import "./components/Modal/_modal";
+@import "./components/Modal/_role-selector";
+@import "./components/Modal/_roles-page";
+@import "./components/Modal/_role-show";
+@import "./components/Modal/_game-state";
+@import "./components/Modal/_roles-balance";
+
+@import "./components/Player/_player";
+@import "./components/Player/_voted-by";

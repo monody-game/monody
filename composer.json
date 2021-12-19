@@ -1,7 +1,7 @@
 {
-    "name": "monody/api",
+    "name": "monody/app",
     "type": "project",
-    "description": "The monody api.",
+    "description": "The monody website.",
     "license": "PRIVATE",
     "require": {
         "php": "^7.4|^8.0",

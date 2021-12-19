@@ -1,0 +1,30 @@
+@use "sass:color";
+
+.btn {
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+  background-color: var(--light-dark-background);
+  transition: background-color 0.4s;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: color.scale(#273097, $lightness: -40%);
+  }
+
+  &:not(.disable-hover):hover {
+    background-color: color.scale(#273097, $lightness: -20%);
+  }
+
+  &.small {
+    height: 20px;
+    width: 20px;
+  }
+
+  &.large {
+    padding: space(0.5) space(1);
+  }
+}
