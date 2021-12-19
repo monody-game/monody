@@ -73,6 +73,15 @@ services:
     ports:
       - "6379:6379"
 
+  mix:
+    restart: unless-stopped
+    build:
+      context: ./docker/mix
+    command: yarn run watch
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+
 volumes:
   db-data:
     driver: local

@@ -1,0 +1,51 @@
+.counter__main {
+  display: flex;
+  width: 50%;
+  align-items: center;
+}
+
+.counter__seconds {
+  font-weight: bold;
+}
+
+.counter__icon-container {
+  position: relative;
+  width: 45px;
+  height: 45px;
+  margin-right: space(1);
+}
+
+.counter__icon-circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotateZ(-90deg) rotateX(180deg);
+  stroke-width: 2px;
+  stroke-dashoffset: 1100;
+
+  & circle {
+    transition: stroke-dashoffset 1s linear;
+  }
+}
+
+.counter__icon {
+  position: absolute;
+  top: 7.5px;
+  right: 7.5px;
+  height: 30px;
+  width: 30px;
+
+  &.counter__icon-rotate {
+    animation: rotate 30s linear infinite
+  }
+}
+
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

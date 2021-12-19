@@ -1,0 +1,20 @@
+.roles__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+  column-gap: 2%;
+  box-sizing: border-box;
+  margin-top: space(1);
+  margin-bottom: space(1);
+}
+
+.roles__page {
+  height: 100%;
+  width: 100%;
+}
+
+.roles__loader {
+  position: absolute;
+  top: calc(50% - 14px);
+  left: calc(50% - 14px);
+  z-index: 1000;
+}

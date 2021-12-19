@@ -1,0 +1,52 @@
+.player__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: space(6);
+  height: min-content;
+  width: min-content;
+  user-select: none;
+
+  &.player__votable {
+    cursor: pointer;
+  }
+}
+
+.player__avatar {
+  height: 125px;
+  width: 125px;
+  border-radius: 20px;
+  margin-bottom: space(1);
+}
+
+.player__avatar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.player__is-voted {
+  box-shadow: 0 0 32px 6px #e50000;
+}
+
+.player__voters {
+  position: absolute;
+  right: auto;
+  left: auto;
+}
+
+.player__is-wolf {
+  position: absolute;
+  background-color: #e50000;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  right: 8px;
+  top: 8px;
+}
+
+.player__username {
+  z-index: 2;
+  border-radius: 24px;
+}
