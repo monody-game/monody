@@ -42,18 +42,18 @@ class GameController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'users' => 'json',
-            'roles' => 'json|required',
-            'is_started' => 'boolean|required'
+            'users' => 'array',
+            'roles' => 'array|required',
+            'is_started' => 'boolean'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $data['users'] = \array_key_exists('users', $data) ? json_decode($data['users'], true) : [];
+        $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
         $data['owner_id'] = $request->user()->id;
-        $data['is_started'] = (bool) $data['is_started'];
+        $data['is_started'] = \array_key_exists('is_started', $data) ? (bool) $data['is_started'] : false;
         $id = $this->generateGameId();
 
         if (!array_search($data['owner_id'], $data['users'], true)) {
@@ -61,6 +61,8 @@ class GameController extends Controller
         }
 
         Redis::set('game:' . $id, json_encode($data));
+
+        $data['id'] = $id;
 
         return response()->json(['game' => $data]);
     }
