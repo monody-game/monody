@@ -11,25 +11,6 @@ use Illuminate\Support\Facades\Validator;
 
 class GameController extends Controller
 {
-    public function users(Request $request): JsonResponse
-    {
-        $data = $request->all();
-
-        if (!\array_key_exists('id', $data)) {
-            return response()->json(['error' => 'Game id is required'], 400);
-        }
-
-        $game = Redis::get('game:' . $data['id']);
-
-        if ($game) {
-            $game = json_decode($game, true);
-
-            return response()->json(['users' => $game['users']]);
-        }
-
-        return response()->json(['error' => 'Game not found'], 404);
-    }
-
     public function token(Request $request): JsonResponse
     {
         $key = env('JWT_SECRET');
@@ -48,7 +29,15 @@ class GameController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        return response()->json(['games' => Redis::keys('game:*')]);
+        $games = Redis::keys('game:*');
+        $list = [];
+
+        foreach ($games as $game) {
+            $list[] = str_replace('game:', '', $game);
+        }
+
+
+        return response()->json(['games' => $list]);
     }
 
     public function new(Request $request): JsonResponse
