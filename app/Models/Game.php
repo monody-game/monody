@@ -2,18 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
-class Game extends Model
+class Game extends Entity
 {
-    use HasFactory;
-
-    protected $fillable = [
+    protected array $keys = [
         'id',
         'owner_id',
         'users',
         'roles',
         'is_started',
     ];
+
+    public function __construct(array $data)
+    {
+        parent::__construct($data);
+        Log::info(json_encode($this->all()));
+    }
 }

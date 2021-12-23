@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 class ConnectionHandler {
-    users = []
+    users = [];
 
     connect(token) {
         try {
@@ -19,9 +19,15 @@ class ConnectionHandler {
                 user.count++;
             } else {
                 this.users.push(this.currentUser);
-                this.socket.broadcast.emit("game.users.new", { user: this.currentUser });
+                this.socket.broadcast.emit("game.users.new", {
+                    user: this.currentUser,
+                });
             }
-            this.socket.emit("game.users", { users: this.users });
+            console.log(this.users, this.users.length)
+            if(this.users.length === 2) {
+                this.socket.emit('game.night')
+            }
+            this.socket.emit("game.users", {users: this.users});
         } catch (e) {
             console.error(e.message);
         }
@@ -31,9 +37,12 @@ class ConnectionHandler {
         if (this.currentUser) {
             const user = this.users.find((u) => u.id === this.currentUser.id);
             if (user) {
-                user.count--;
+                user.count = 0;
                 if (user.count === 0) {
-                    this.users = this.users.filter((u) => u.id !== this.currentUser.id);
+                    this.users = this.users.filter(
+                        (u) => u.id !== this.currentUser.id
+                    );
+                    console.log(`${this.currentUser.username} disconnected`);
                     this.socket.broadcast.emit("game.users.leave", {
                         user: this.currentUser,
                     });
@@ -43,16 +52,16 @@ class ConnectionHandler {
     }
 
     register(socket) {
-        this.socket = socket
+        this.socket = socket;
 
-        socket.on("game.connect", ({ token }) => {
-            this.connect(token)
+        socket.on("game.connect", ({token}) => {
+            this.connect(token);
         });
 
         socket.on("game.disconnect", () => {
-            this.disconnect()
+            this.disconnect();
         });
     }
 }
 
-module.exports = ConnectionHandler
+module.exports = ConnectionHandler;

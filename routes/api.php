@@ -20,6 +20,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/game/list', 'Api\GameController@list');
     Route::post('/game/new', 'Api\GameController@new');
     Route::post('/game/delete', 'Api\GameController@delete');
+    Route::post('/game/check', 'Api\GameController@check');
 
     Route::get('/game/users', 'Api\GameUsersController@list');
     Route::post('/game/users/add', 'Api\GameUsersController@add');

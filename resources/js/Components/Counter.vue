@@ -46,7 +46,7 @@ export default {
     }
 
     (async () => {
-      this.socket.on("game.start", () => {
+      Echo.private(`game.${this.$route.params.id}`).listen("game.start", () => {
         this.status = "night";
         this.time = this.counterService.getTimeCounter();
         this.starting_time = this.counterService.getTimeCounter();
@@ -55,9 +55,7 @@ export default {
           this.updateCircle();
           this.decount();
         }
-      });
-
-      this.socket.on("game.day", () => {
+      }).listen("game.day", () => {
         this.status = "day";
         document.querySelector(".counter__icon").classList.add("counter__icon-rotate");
         this.time = this.counterService.getTimeCounter();
@@ -67,9 +65,7 @@ export default {
           this.updateCircle();
           this.decount();
         }
-      });
-
-      this.socket.on("game.night", () => {
+      }).listen("game.night", () => {
         this.status = "night";
         this.time = this.counterService.getTimeCounter();
         this.starting_time = this.counterService.getTimeCounter();
@@ -95,12 +91,12 @@ export default {
   methods: {
     decount () {
       this.counterId = window.setInterval(() => {
-        if (this.time === this.starting_time) {
+        /*if (this.time === this.starting_time) {
           emitter.emit("counter.start");
         }
         if (this.time !== this.starting_time && this.time % 10 === 0) {
           emitter.emit("counter.update");
-        }
+        }*/
 
         this.time = this.time - 1;
         this.soundManagement();
@@ -108,7 +104,7 @@ export default {
         if (this.time === 0) {
           this.counterService.switch();
           clearInterval(this.counterId);
-          emitter.emit("counter.end");
+          //emitter.emit("counter.end");
         }
       }, 1000);
     },

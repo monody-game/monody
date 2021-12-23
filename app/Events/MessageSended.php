@@ -5,16 +5,18 @@ namespace App\Events;
 use App\Models\Message;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class MessageSended
+class MessageSended implements ShouldBroadcast
 {
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
 
-    public Message $message;
+    public array $message;
 
     /**
      * Create a new event instance.
@@ -23,7 +25,7 @@ class MessageSended
      */
     public function __construct(Message $message)
     {
-        $this->message = $message;
+        $this->message = $message->all();
     }
 
     /**
@@ -31,11 +33,8 @@ class MessageSended
      */
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel('game.' . $this->message->gameId);
-    }
+        Log::info(json_encode($this->message));
 
-    public function broadcastAs(): string
-    {
-        return 'message.sended';
+        return new PrivateChannel('game.' . $this->message['gameId']);
     }
 }

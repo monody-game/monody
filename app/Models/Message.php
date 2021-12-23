@@ -2,17 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-/**
- * @property int    $gameId
- * @property array  $author
- * @property string $content
- */
-class Message extends Model
+class Message extends Entity
 {
-    use HasFactory;
+    protected array $keys = ['gameId', 'author', 'content'];
 
-    protected $fillable = ['gameId', 'author', 'content'];
+    public function __construct(array $data)
+    {
+        parent::__construct($data);
+    }
 }

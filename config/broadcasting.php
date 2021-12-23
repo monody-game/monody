@@ -1,11 +1,9 @@
 <?php
 
 return [
-
     'default' => env('BROADCAST_DRIVER', 'null'),
 
     'connections' => [
-
         'pusher' => [
             'driver' => 'pusher',
             'key' => env('PUSHER_APP_KEY'),
@@ -16,7 +14,7 @@ return [
                 'encrypted' => true,
                 'host' => '127.0.0.1',
                 'port' => 6001,
-                'scheme' => 'http'
+                'useTLS' => true,
             ],
         ],
 
@@ -37,7 +35,5 @@ return [
         'null' => [
             'driver' => 'null',
         ],
-
     ],
-
 ];

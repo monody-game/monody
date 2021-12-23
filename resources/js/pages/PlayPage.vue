@@ -1,22 +1,29 @@
 <template>
-  <div class="play-page">
-    <div class="play-page__play-container">
-      <h1>Jouer</h1>
-      <button class="play-page__logout" @click="logout()">
-        Se déconnecter
-      </button>
-      <button @click="openModal()">Créer une partie</button>
-      <router-link :to="{ name: 'game', params: { id: 1 } }">Partie n°1</router-link>
+    <div class="play-page">
+        <div class="play-page__play-container">
+            <h1>Jouer</h1>
+            <button class="play-page__logout" @click="logout()">
+                Se déconnecter
+            </button>
+            <button @click="openModal()">Créer une partie</button>
+            <router-link :to="{ name: 'game', params: { id: 1 } }">Partie n°1</router-link>
+            <div class="play-page__game-list">
+                <ul>
+                    <li v-for="game in games">
+                        <router-link :to="{ name: 'game', params: { id: game } }">Partie n°@{{ game }}</router-link>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="play-page__user-container">
+            <img
+                alt="Avatar"
+                class="play-page__user-avatar"
+                src="http://localhost:8000/images/avatars/1.jpg"
+            />
+        </div>
+        <NewGameModal v-if="isModalOpenned()"/>
     </div>
-    <div class="play-page__user-container">
-      <img
-        alt="Avatar"
-        class="play-page__user-avatar"
-        src="http://localhost:8000/images/avatars/1.jpg"
-      />
-    </div>
-    <NewGameModal v-if="isModalOpenned()"/>
-  </div>
 </template>
 
 <script>
@@ -28,19 +35,21 @@ export default {
   components: {
     NewGameModal: NewGameModal
   },
-  created () {
-    const auth = new AuthService();
-    if (
-      !auth.check(this.$store) ||
-      auth.getUserIfAccessToken(this.$store) === false
-    ) {
-      this.$router.push({ name: "login" });
-    }
-  },
   data () {
     return {
       user: this.$store.getUser,
+      games: []
     };
+  },
+  async created() {
+    const games = await JSONFetch('/game/list', 'GET');
+    if (games.data) {
+      this.games = games.data.games;
+    }
+
+    Echo.channel('home').listen('.game.created', (e) => {
+      this.games.push(e.game.id);
+    });
   },
   methods: {
     logout () {
@@ -56,5 +65,9 @@ export default {
       return this.$store.getters.isModalOpenned;
     },
   },
+  beforeRouteLeave(to, from, next) {
+    Echo.leave('home');
+    next();
+  }
 };
 </script>
