@@ -37,7 +37,7 @@ class GameLifeCycle {
   }
 
   getSocket () {
-    return io('localhost:5000', { transports: ["websocket"] });
+    //return io('localhost:5000', { transports: ["websocket"] });
   }
 }
 

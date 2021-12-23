@@ -30,7 +30,6 @@ import ChatService from "@/services/ChatService";
 
 export default {
   name: "Chat",
-  props: ["socket"],
   methods: {
     isNight: function () {
       return document.body.classList.contains("night") === true;
@@ -46,31 +45,27 @@ export default {
   data () {
     return {
       message: "",
-      service: new ChatService(this.socket)
+      service: new ChatService(),
     };
   },
-  created () {
-    (async () => {
-      this.socket.on("chat.new", (message) => {
-        const input = document.querySelector(".chat__send-input");
-        this.service.sendMessage({ content: message.content, author: message.author });
-        input.value = "";
-      });
-
-      this.socket.on("game.day", () => {
-        this.message = "";
-      });
-
-      this.socket.on("game.night", () => {
-        this.message = "";
-      });
-
-      this.socket.on("messages", ({ messages }) => {
-        for (const k in messages) {
-          this.service.sendMessage(messages[k]);
-        }
-      });
-    })();
+  mounted () {
+    Echo.private(`game.${this.$route.params.id}`)
+    .listen('MessageSended', (e) => {
+      debugger
+      /*
+      console.log(message);
+      const input = document.querySelector(".chat__send-input");
+      this.service.sendMessage({ content: message.content, author: message.author });
+      input.value = "";*/
+    })/*.listen("game.day", () => {
+      this.message = "";
+    }).listen("game.night", () => {
+      this.message = "";
+    }).listen("messages", ({ messages }) => {
+      for (const k in messages) {
+        this.service.sendMessage(messages[k]);
+      }
+    });*/
   },
 };
 </script>

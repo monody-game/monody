@@ -12,9 +12,9 @@ class GameMessageController extends Controller
 {
     public function send(Request $request): JsonResponse
     {
-        $message = Message::hydrate([$request->all()]);
+        $message = new Message($request->all());
 
-        broadcast(new MessageSended($message->first()));
+        MessageSended::dispatch($message);
 
         return response()->json();
     }

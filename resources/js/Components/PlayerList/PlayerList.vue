@@ -17,7 +17,7 @@ import DotsSpinner from "@/Components/Spinners/DotsSpinner";
 
 export default {
   name: "PlayerList",
-  props: ["token", "socket"],
+  props: ["token"],
   components: {
     Player: Player,
     DotsSpinner: DotsSpinner
@@ -30,19 +30,15 @@ export default {
   },
   mounted () {
     (async () => {
-      this.socket.on("game.users.new", ({ user }) => {
+      Echo.private(`game.${this.$route.params.id}`).listen("game.users.new", ({ user }) => {
         this.$store.commit("addGamePlayer", this.injectPlayersProperties([user])[0]);
-      });
-
-      this.socket.on("game.users", ({ users }) => {
+      }).listen("game.users", ({ users }) => {
         this.loading = true;
         const list = this.injectPlayersProperties(users);
         this.$store.commit("setGamePlayers", list);
         this.playerList = list;
         this.loading = false;
-      });
-
-      this.socket.on("game.users.leave", ({ user }) => {
+      }).listen("game.users.leave", ({ user }) => {
         const gameUser = this.injectPlayersProperties([user])[0];
         this.$store.commit("removeGamePlayer", gameUser);
       });

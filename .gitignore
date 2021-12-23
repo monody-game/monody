@@ -15,3 +15,4 @@ yarn-error.log
 .php_cs.cache
 /public/css/style.css
 /public/js/app.js
+laravel-echo-server.lock
