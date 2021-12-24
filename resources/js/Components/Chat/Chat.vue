@@ -51,12 +51,8 @@ export default {
   mounted () {
     Echo.private(`game.${this.$route.params.id}`)
     .listen('MessageSended', (e) => {
-      debugger
-      /*
-      console.log(message);
-      const input = document.querySelector(".chat__send-input");
+      const message = e.message
       this.service.sendMessage({ content: message.content, author: message.author });
-      input.value = "";*/
     })/*.listen("game.day", () => {
       this.message = "";
     }).listen("game.night", () => {

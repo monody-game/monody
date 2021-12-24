@@ -13,6 +13,7 @@ class GameMessageController extends Controller
     public function send(Request $request): JsonResponse
     {
         $message = new Message($request->all());
+        $message->set('author', $request->user());
 
         MessageSended::dispatch($message);
 
