@@ -6,11 +6,10 @@
                 Se déconnecter
             </button>
             <button @click="openModal()">Créer une partie</button>
-            <router-link :to="{ name: 'game', params: { id: 1 } }">Partie n°1</router-link>
             <div class="play-page__game-list">
                 <ul>
                     <li v-for="game in games">
-                        <router-link :to="{ name: 'game', params: { id: game } }">Partie n°@{{ game }}</router-link>
+                        <router-link :to="{ name: 'game', params: { id: game } }">Partie n°{{ game }}</router-link>
                     </li>
                 </ul>
             </div>
