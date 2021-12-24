@@ -7,6 +7,8 @@ import PlayPage from "@/pages/PlayPage.vue";
 import e404 from "@/pages/e404.vue";
 import GamePage from "@/pages/Game/GamePage.vue";
 import auth from "./middleware/auth";
+import exists from "./middleware/gameExists";
+import user from "./middleware/user";
 
 Vue.use(Router);
 
@@ -31,7 +33,7 @@ let routes = [
     name: "play",
     component: PlayPage,
     meta: {
-      middleware: auth
+      middleware: [auth, user]
     }
   },
   {
@@ -39,7 +41,7 @@ let routes = [
     name: "game",
     component: GamePage,
     meta: {
-      middleware: auth
+      middleware: [auth, exists, user]
     }
   },
   {
@@ -68,6 +70,9 @@ function nextFactory(context, middleware, index) {
 }
 
 router.beforeEach((to, from, next) => {
+  if (to.path === from.path) {
+    return next();
+  }
   if (to.meta.middleware) {
     const middleware = Array.isArray(to.meta.middleware)
       ? to.meta.middleware

@@ -20,31 +20,22 @@ export default class AuthService {
     }
   }
 
-  getUserIfAccessToken (store) {
+  async getUserIfAccessToken (store) {
     if (store.getters.isAccessTokenSet === false && this.isAccessTokenSaved()) {
       const access_token = this.getAccessToken();
-      let status;
 
-      fetch("/api/user", {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + access_token,
-        },
-      }).then((res) => {
-        if (res.ok) {
-          res.json().then((data) => {
-            store.commit("setUser", {
-              id: data.id,
-              username: data.username,
-              avatar: data.avatar,
-              access_token: access_token,
-            });
-          });
-          status = true;
-        } else {
-          status = false;
-        }
-        return status;
+      const res = await JSONFetch("/user", "GET")
+      const data = res.data
+
+      if(!data) {
+        return false;
+      }
+
+      store.commit("setUser", {
+        id: data.id,
+        username: data.username,
+        avatar: data.avatar,
+        access_token: access_token,
       });
     }
     return true;
