@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Log;
-
 class Game extends Entity
 {
     protected array $keys = [
@@ -17,6 +15,5 @@ class Game extends Entity
     public function __construct(array $data)
     {
         parent::__construct($data);
-        Log::info(json_encode($this->all()));
     }
 }

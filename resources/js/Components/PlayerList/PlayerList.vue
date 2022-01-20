@@ -30,7 +30,7 @@ export default {
   },
   mounted () {
     (async () => {
-      Echo.private(`game.${this.$route.params.id}`).listen("game.users.new", ({ user }) => {
+      Echo.join(`game.${this.$route.params.id}`).listen("game.users.new", ({ user }) => {
         this.$store.commit("addGamePlayer", this.injectPlayersProperties([user])[0]);
       }).listen("game.users", ({ users }) => {
         this.loading = true;
