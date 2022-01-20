@@ -2,9 +2,9 @@ includes:
     - ./vendor/nunomaduro/larastan/extension.neon
 
 parameters:
-	level: 8
-	paths:
-		- app
-	excludePaths:
-		- app/Http/Middleware/*
-	checkMissingIterableValueType: false
+    level: 8
+    paths:
+        - app
+    checkMissingIterableValueType: false
+    ignoreErrors:
+        - '#Call to an undefined static method#'

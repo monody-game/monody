@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\GameCreated;
 use App\Http\Controllers\Controller;
+use App\Models\Game;
 use Firebase\JWT\JWT;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,20 +13,18 @@ use Illuminate\Support\Facades\Validator;
 
 class GameController extends Controller
 {
-    public function users(Request $request): JsonResponse
+    public function check(Request $request): JsonResponse
     {
         $data = $request->all();
 
-        if (!\array_key_exists('id', $data)) {
+        if (!isset($data['gameId'])) {
             return response()->json(['error' => 'Game id is required'], 400);
         }
 
-        $game = Redis::get('game:' . $data['id']);
+        $game = Redis::get('game:' . $data['gameId']);
 
         if ($game) {
-            $game = json_decode($game, true);
-
-            return response()->json(['users' => $game['users']]);
+            return response()->json(['message' => 'Game found']);
         }
 
         return response()->json(['error' => 'Game not found'], 404);
@@ -48,7 +48,14 @@ class GameController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        return response()->json(['games' => Redis::keys('game:*')]);
+        $games = Redis::keys('game:*');
+        $list = [];
+
+        foreach ($games as $game) {
+            $list[] = str_replace('game:', '', $game);
+        }
+
+        return response()->json(['games' => $list]);
     }
 
     public function new(Request $request): JsonResponse
@@ -67,7 +74,7 @@ class GameController extends Controller
 
         $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
         $data['owner_id'] = $request->user()->id;
-        $data['is_started'] = \array_key_exists('is_started', $data) ? (bool) $data['is_started'] : false;
+        $data['is_started'] = \array_key_exists('is_started', $data) && (bool) $data['is_started'];
         $id = $this->generateGameId();
 
         if (!array_search($data['owner_id'], $data['users'], true)) {
@@ -77,6 +84,8 @@ class GameController extends Controller
         Redis::set('game:' . $id, json_encode($data));
 
         $data['id'] = $id;
+
+        broadcast(new GameCreated(new Game($data)));
 
         return response()->json(['game' => $data]);
     }

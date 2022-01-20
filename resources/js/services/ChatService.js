@@ -3,10 +3,6 @@ import Message from "@/Components/Chat/Message";
 import TimeSeparator from "@/Components/Chat/TimeSeparator";
 
 export default class ChatService {
-  constructor (socket) {
-    this.socket = socket;
-  }
-
   timeSeparator (message) {
     const messageContainer = document.querySelector(".chat__messages");
     const chat = document.querySelector(".chat__messages");
@@ -32,14 +28,11 @@ export default class ChatService {
     messageContainer.scrollTo(0, messageContainer.scrollHeight);
   }
 
-  async send (message, store) {
+  async send (message) {
     if (message === "") return;
-    this.socket.emit("chat.send", {
-      author: {
-        username: store.getters.getUsername,
-        avatar: store.getters.getAvatar,
-      },
+    await SocketJSONFetch("/game/message/send", Echo.socketId(),{
       content: message,
+      gameId: window.location.pathname.split('/')[2],
     });
   }
 

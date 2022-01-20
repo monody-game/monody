@@ -1,10 +1,9 @@
-FROM grafikart/php:1.0.4
-
-# On désactive xdebug
-RUN printf '%s%s' ";" "$(cat /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini)" > "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
+FROM node:16-alpine
 
 WORKDIR /var/www
 
+RUN npm i -g laravel-echo-server-updated --no-audit
+
 EXPOSE 6001
 
-CMD ["php", "artisan", "websockets:serve"]
+CMD ["laravel-echo-server", "start", "--force"]

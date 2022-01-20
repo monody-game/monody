@@ -20,12 +20,12 @@
         </svg>
         <p>Accueil</p>
       </a>
-      <Counter :socket="socket"/>
+      <Counter/>
     </div>
     <div class="game-page__main">
-      <Chat :socket="socket"/>
+      <Chat/>
       <DotsSpinner v-if="loading"/>
-      <PlayerList :socket="socket" :token="token"/>
+      <PlayerList :token="token"/>
     </div>
   </div>
 </template>
@@ -36,7 +36,6 @@ import Chat from "@/Components/Chat/Chat.vue";
 import PlayerList from "@/Components/PlayerList/PlayerList.vue";
 import AuthService from "@/services/AuthService.js";
 import DotsSpinner from "@/Components/Spinners/DotsSpinner";
-import io from "socket.io-client";
 
 export default {
   name: "GamePage",
@@ -47,17 +46,7 @@ export default {
     DotsSpinner: DotsSpinner
   },
   mounted () {
-    const auth = new AuthService();
-    if (!auth.check(this.$store)) {
-      this.$router.push({ name: "login" });
-    }
-    auth.getUserIfAccessToken(this.$store);
     this.loading = true;
-    window.addEventListener("load", () => {
-      this.socket.emit("game.disconnect");
-    }, {
-      passive: true
-    });
     this.emitConnect();
     this.loading = false;
 
@@ -66,12 +55,12 @@ export default {
         event.preventDefault();
         event.returnValue = "";
       }
-      this.socket.emit("game.disconnect");
+      Echo.leave(`game.${this.gameId}`);
     });
   },
   data () {
     return {
-      socket: io('localhost:5000'),
+      gameId: this.$route.params.id,
       token: "",
       loading: false,
       isStarted: false
@@ -91,14 +80,26 @@ export default {
     },
     emitConnect: async function () {
       await this.getToken();
-      this.socket.emit("game.connect", { token: this.token });
+      Echo.join(`game.${this.gameId}`)
+        .here((users) => {
+          console.log('here' ,users)
+          this.$store.commit("setGamePlayers", users);
+        })
+        .joining((user) => {
+          console.log('joining', user)
+          this.$store.commit("addGamePlayer", user);
+        })
+        .leaving((user) => {
+          console.log('leaving', user)
+          this.$store.commit("removeGamePlayer", user);
+        })
     },
     disconnect: async function () {
       await this.$router.push("/play");
     },
   },
   async beforeRouteLeave (to, from, next) {
-    this.socket.emit("game.disconnect");
+    Echo.leave(`game.${this.gameId}`);
     this.$store.commit("clearGamePlayers");
     next();
   }
