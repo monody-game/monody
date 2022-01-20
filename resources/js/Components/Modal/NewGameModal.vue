@@ -87,13 +87,12 @@ export default {
           this.error = this.$store.getters.getErrors[0];
         } else {
           this.currentPage = this.currentPage + 1;
+          await window.JSONFetch("/game/new", "POST", {
+            roles: this.$store.getters.getSelectedRoles,
+            is_started: false,
+            users: []
+          });
         }
-
-        await window.JSONFetch("/game/new", "POST", {
-          roles: this.$store.getters.getSelectedRoles,
-          is_started: false,
-          users: []
-        });
       } else {
         this.currentPage = this.currentPage + 1;
       }

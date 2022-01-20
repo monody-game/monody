@@ -1,13 +1,16 @@
 import Vue from "vue";
-import VueRouter from "vue-router";
+import Router from "vue-router";
 import HomePage from "@/pages/HomePage.vue";
 import LoginPage from "@/pages/Auth/LoginPage.vue";
 import RegisterPage from "@/pages/Auth/RegisterPage.vue";
 import PlayPage from "@/pages/PlayPage.vue";
 import e404 from "@/pages/e404.vue";
 import GamePage from "@/pages/Game/GamePage.vue";
+import auth from "./middleware/auth";
+import exists from "./middleware/gameExists";
+import user from "./middleware/user";
 
-Vue.use(VueRouter);
+Vue.use(Router);
 
 let routes = [
   {
@@ -28,12 +31,18 @@ let routes = [
   {
     path: "/play",
     name: "play",
-    component: PlayPage
+    component: PlayPage,
+    meta: {
+      middleware: [auth, user]
+    }
   },
   {
     path: "/game/:id",
     name: "game",
-    component: GamePage
+    component: GamePage,
+    meta: {
+      middleware: [auth, exists, user]
+    }
   },
   {
     path: "*",
@@ -42,9 +51,45 @@ let routes = [
   }
 ];
 
-const router = new VueRouter({
+const router = new Router({
   mode: "history",
   routes
+});
+
+function nextFactory(context, middleware, index) {
+  const subsequentMiddleware = middleware[index];
+  if (!subsequentMiddleware) return context.next;
+
+  return (...parameters) => {
+    context.next(...parameters);
+
+    const nextMiddleware = nextFactory(context, middleware, index + 1);
+
+    subsequentMiddleware({ ...context, next: nextMiddleware });
+  };
+}
+
+router.beforeEach((to, from, next) => {
+  if (to.path === from.path) {
+    return next();
+  }
+  if (to.meta.middleware) {
+    const middleware = Array.isArray(to.meta.middleware)
+      ? to.meta.middleware
+      : [to.meta.middleware];
+
+    const context = {
+      from,
+      next,
+      router,
+      to,
+    };
+    const nextMiddleware = nextFactory(context, middleware, 1);
+
+    return middleware[0]({ ...context, next: nextMiddleware });
+  }
+
+  return next();
 });
 
 export default router;
