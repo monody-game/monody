@@ -49,8 +49,8 @@ export default {
     };
   },
   mounted () {
-    Echo.private(`game.${this.$route.params.id}`)
-    .listen('MessageSended', (e) => {
+    Echo.join(`game.${this.$route.params.id}`)
+    .listen('chat.send', (e) => {
       const message = e.message
       this.service.sendMessage({ content: message.content, author: message.author });
     })/*.listen("game.day", () => {

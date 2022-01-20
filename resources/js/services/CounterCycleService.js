@@ -3,18 +3,16 @@ import NightTimeHandler from "@/services/TimeHandlers/NightTimeHandler";
 import GameLifeCycleEmitter from "@/services/EventEmitters/GameLifeCycleEmitter";
 import ChatService from "./ChatService";
 
-const gameEmitter = new GameLifeCycleEmitter();
-
 export default class CounterCycleService {
 
   DEFAULT_DAY_TIME = 30;
 
   DEFAULT_NIGHT_TIME = 30;
 
-  constructor (socket, store) {
+  constructor (store) {
     this.dayHandler = new DayTimeHandler();
     this.nightHandler = new NightTimeHandler();
-    this.chatService = new ChatService(socket);
+    this.chatService = new ChatService();
     this.store = store;
     this.actual = "wait";
     this.state = "wait";
@@ -45,7 +43,6 @@ export default class CounterCycleService {
   }
 
   onNight () {
-    gameEmitter.emit("counter.night");
     this.state = "night";
     this.nightHandler.switchBackround();
     this.switchChatState();
@@ -54,7 +51,6 @@ export default class CounterCycleService {
   }
 
   onDay () {
-    gameEmitter.emit("counter.day");
     this.state = "day";
     this.dayHandler.switchBackround();
     this.chatService.timeSeparator("Lever du jour");

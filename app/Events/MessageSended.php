@@ -4,11 +4,10 @@ namespace App\Events;
 
 use App\Models\Message;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class MessageSended implements ShouldBroadcast
 {
@@ -31,10 +30,13 @@ class MessageSended implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      */
-    public function broadcastOn(): PrivateChannel
+    public function broadcastOn(): PresenceChannel
     {
-        Log::info(json_encode($this->message));
+        return new PresenceChannel('game.' . $this->message['gameId']);
+    }
 
-        return new PrivateChannel('game.' . $this->message['gameId']);
+    public function broadcastAs(): string
+    {
+        return 'chat.send';
     }
 }

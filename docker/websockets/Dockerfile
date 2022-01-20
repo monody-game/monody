@@ -2,7 +2,7 @@ FROM node:16-alpine
 
 WORKDIR /var/www
 
-RUN npm i -g laravel-echo-server --no-audit
+RUN npm i -g laravel-echo-server-updated --no-audit
 
 EXPOSE 6001
 

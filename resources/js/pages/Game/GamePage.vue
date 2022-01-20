@@ -82,21 +82,17 @@ export default {
       await this.getToken();
       Echo.join(`game.${this.gameId}`)
         .here((users) => {
+          console.log('here' ,users)
           this.$store.commit("setGamePlayers", users);
         })
         .joining((user) => {
+          console.log('joining', user)
           this.$store.commit("addGamePlayer", user);
         })
         .leaving((user) => {
+          console.log('leaving', user)
           this.$store.commit("removeGamePlayer", user);
         })
-      Echo.private(`game.${this.gameId}`)
-        .listen("GameStarted", (e) => {
-          this.isStarted = true;
-        })
-        .listen("GameEnded", (e) => {
-          this.isStarted = false;
-        });
     },
     disconnect: async function () {
       await this.$router.push("/play");
