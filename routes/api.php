@@ -23,9 +23,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/game/check', 'Api\GameController@check');
 
     Route::get('/game/users', 'Api\GameUsersController@list');
-    Route::post('/game/users/add', 'Api\GameUsersController@add');
-    Route::post('/game/users/remove', 'Api\GameUsersController@remove');
-
     Route::post('/game/message/send', 'Api\GameMessageController@send');
 
     Route::get('/roles', 'Api\RoleController@all');
