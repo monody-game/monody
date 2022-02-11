@@ -43,11 +43,9 @@ export default {
         return "équilibrée";
       }
       if (werewolfCount >= "40") {
-        this.$store.commit("addError", "La partie est avantagée aux loups-garous");
         return "avantagée aux loups-garous";
       }
       if (villagerCount >= "60") {
-        this.$store.commit("addError", "La partie est avantagée aux villageois");
         return "avantagée aux villageois";
       }
     },

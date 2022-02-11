@@ -51,6 +51,7 @@
 import RolesModalPage from "@/Components/Modal/Pages/Roles/RolesModalPage";
 import GameStateModalPage from "@/Components/Modal/Pages/GameState/GameStateModalPage";
 import ShareModalPage from "@/Components/Modal/Pages/ShareModalPage";
+import { useStore } from "@/stores/modal"
 
 export default {
   name: "NewGameModal",
@@ -64,6 +65,7 @@ export default {
       currentPage: 1,
       totalPage: 3,
       error: "",
+      store: useStore()
     };
   },
   mounted () {
@@ -71,11 +73,11 @@ export default {
   },
   methods: {
     notEnoughSelectedRoles () {
-      const selectedRoles = this.$store.getters.getSelectedRoles;
+      const selectedRoles = this.store.selectedRoles;
       return selectedRoles.length < 5;
     },
     closeModal () {
-      this.$store.commit("closeModal");
+      this.store.isOpenned = false;
     },
     async nextPage () {
       if (this.currentPage + 1 > this.totalPage) {
@@ -83,22 +85,15 @@ export default {
       }
 
       if (this.currentPage === 2) {
-        if (this.checkErrors()) {
-          this.error = this.$store.getters.getErrors[0];
-        } else {
           this.currentPage = this.currentPage + 1;
           await window.JSONFetch("/game/new", "POST", {
-            roles: this.$store.getters.getSelectedRoles,
+            roles: this.store.selectedRoles,
             is_started: false,
             users: []
           });
-        }
       } else {
         this.currentPage = this.currentPage + 1;
       }
-    },
-    checkErrors () {
-      return this.$store.getters.getErrors.length > 0;
     },
     finish () {
       this.closeModal();

@@ -51,6 +51,7 @@
 
 <script>
 import DotsSpinner from "@/Components/Spinners/DotsSpinner";
+import { useStore } from "@/stores/user";
 
 export default {
   name: "LoginPage",
@@ -59,6 +60,7 @@ export default {
   },
   data () {
     return {
+      store: useStore(),
       username: "",
       password: "",
       remember_me: false,
@@ -80,7 +82,7 @@ export default {
       if (
         localStorage.getItem('access-token') ||
         sessionStorage.getItem('access-token') ||
-        this.$store.getters.isAccessTokenSet
+        this.store.access_token === ""
       ) {
         this.$router.push("play");
       }
@@ -100,7 +102,7 @@ export default {
         .then((res) => {
           const data = res.data;
           if (typeof data !== "undefined") {
-            this.$store.commit("setUser", {
+            this.store.setUser({
               id: data.user.id,
               username: data.user.username,
               avatar: data.user.avatar,
@@ -118,7 +120,6 @@ export default {
         })
         .catch((e) => {
           console.error(e);
-
           this.loading = false;
         });
     },

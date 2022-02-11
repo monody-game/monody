@@ -37,7 +37,7 @@ export default {
       starting_time: 0,
       counterId: "",
       status: "",
-      counterService: new CounterCycleService(this.$store),
+      counterService: new CounterCycleService(),
     };
   },
   mounted() {

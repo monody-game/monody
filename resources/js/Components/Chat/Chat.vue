@@ -38,7 +38,7 @@ export default {
       return this.isNight() === true ? "chat__submit-readonly" : "";
     },
     async send () {
-      await this.service.send(this.message, this.$store);
+      await this.service.send(this.message);
       this.message = "";
     },
   },
