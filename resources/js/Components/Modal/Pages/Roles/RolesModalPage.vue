@@ -16,6 +16,7 @@
 <script>
 import RoleSelector from "./RoleSelector.vue";
 import DotsSpinner from "@/Components/Spinners/DotsSpinner";
+import { useStore } from "@/stores/modal"
 
 export default {
   name: "RolesModalPage",
@@ -26,7 +27,8 @@ export default {
   data () {
     return {
       roles: [],
-      loading: false
+      loading: false,
+      store: useStore()
     };
   },
   mounted () {
@@ -39,7 +41,7 @@ export default {
   },
   methods: {
     async getRoles () {
-      if (this.$store.getters.getRoles.length === 0) {
+      if (this.store.roles.length === 0) {
         const res = await window.JSONFetch("/roles", "GET");
         const list = res.data;
         list.roles.forEach((role) => {
@@ -49,15 +51,15 @@ export default {
           }
         });
         this.roles = list.roles;
-        this.$store.commit("setRoles", list.roles);
+        this.store.roles = list.roles;
       } else {
-        this.roles = this.$store.getters.getRoles;
+        this.roles = this.store.roles;
       }
     },
     async getTeams () {
-      if (this.$store.getters.getTeams.length === 0) {
+      if (this.store.teams.length === 0) {
         const teams = await window.JSONFetch("/teams", "GET");
-        this.$store.commit("setTeams", teams.data.teams);
+        this.store.teams = teams.data.teams;
       }
     },
   },

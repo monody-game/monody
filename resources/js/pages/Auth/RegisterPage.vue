@@ -57,6 +57,7 @@
 <script>
 
 import DotsSpinner from "@/Components/Spinners/DotsSpinner";
+import { useStore } from "@/stores/user"
 
 export default {
   name: "RegisterPage",
@@ -65,6 +66,7 @@ export default {
   },
   data () {
     return {
+      store: useStore(),
       username: "",
       email: "",
       password: "",
@@ -103,7 +105,7 @@ export default {
             password_confirmation: this.password_confirmation,
           });
         const data = res.data;
-        this.$store.commit("setUser", {
+        this.store.setUser({
           username: data.user.username,
           avatar: data.user.avatar,
           access_token: data.user.access_token,

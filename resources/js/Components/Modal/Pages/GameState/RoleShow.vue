@@ -21,6 +21,7 @@
   </div>
 </template>
 <script>
+import { useStore } from "@/stores/modal"
 export default {
   name: "RoleShow",
   props: ["selectedRole"],
@@ -30,7 +31,7 @@ export default {
     };
   },
   created () {
-    this.role.team = this.$store.getters.getTeamById(this.role.team_id);
+    this.role.team = useStore().getTeamById(this.role.team_id);
   },
 };
 </script>

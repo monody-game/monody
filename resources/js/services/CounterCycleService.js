@@ -1,7 +1,8 @@
 import DayTimeHandler from "@/services/TimeHandlers/DayTimeHandler";
 import NightTimeHandler from "@/services/TimeHandlers/NightTimeHandler";
-import GameLifeCycleEmitter from "@/services/EventEmitters/GameLifeCycleEmitter";
 import ChatService from "./ChatService";
+import { useStore as useGameStore } from "@/stores/game"
+import { useStore as useUserStore } from "@/stores/user"
 
 export default class CounterCycleService {
 
@@ -9,11 +10,10 @@ export default class CounterCycleService {
 
   DEFAULT_NIGHT_TIME = 30;
 
-  constructor (store) {
+  constructor () {
     this.dayHandler = new DayTimeHandler();
     this.nightHandler = new NightTimeHandler();
     this.chatService = new ChatService();
-    this.store = store;
     this.actual = "wait";
     this.state = "wait";
   }
@@ -69,8 +69,8 @@ export default class CounterCycleService {
   }
 
   isWerewolf () {
-    const id = this.store.getters.getUserId;
-    const player = this.store.getters.getPlayerByID(id);
+    const id = useUserStore().id;
+    const player = useGameStore().getPlayerByID(id);
 
     return player.role.group === "werewolf";
   }

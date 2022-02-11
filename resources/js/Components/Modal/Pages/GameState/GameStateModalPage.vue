@@ -13,18 +13,20 @@
 <script>
 import RoleShow from "./RoleShow.vue";
 import RolesBalance from "./RolesBalance.vue";
+import { useStore } from "@/stores/modal"
 
 export default {
   name: "GameStateModalPage",
   components: { RoleShow, RolesBalance },
   computed: {
     getSelectedRoles () {
-      const selectedIds = this.$store.getters.getSelectedRoles;
-      const roles = this.$store.getters.getRoles;
+      const store = useStore();
+      const selectedIds = store.selectedRoles;
+      const roles = store.roles;
       const selectedRoles = [];
       roles.forEach((role) => {
         if (selectedIds.indexOf(role.id) !== -1) {
-          role.count = this.$store.getters.getRoleCountById(role.id);
+          role.count = store.getRoleCountById(role.id);
           selectedRoles.push(role);
         }
       });
