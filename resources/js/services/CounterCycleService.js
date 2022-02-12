@@ -1,8 +1,8 @@
-import DayTimeHandler from "@/services/TimeHandlers/DayTimeHandler";
-import NightTimeHandler from "@/services/TimeHandlers/NightTimeHandler";
+import DayTimeHandler from "@/services/TimeHandlers/DayTimeHandler.js";
+import NightTimeHandler from "@/services/TimeHandlers/NightTimeHandler.js";
 import ChatService from "./ChatService";
-import { useStore as useGameStore } from "@/stores/game"
-import { useStore as useUserStore } from "@/stores/user"
+import { useStore as useGameStore } from "@/stores/game.js"
+import { useStore as useUserStore } from "@/stores/user.js"
 
 export default class CounterCycleService {
 

@@ -34,8 +34,8 @@
 import Counter from "@/Components/Counter.vue";
 import Chat from "@/Components/Chat/Chat.vue";
 import PlayerList from "@/Components/PlayerList/PlayerList.vue";
-import DotsSpinner from "@/Components/Spinners/DotsSpinner";
-import { useStore } from "@/stores/game"
+import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
+import { useStore } from "@/stores/game.js"
 
 export default {
   name: "GamePage",

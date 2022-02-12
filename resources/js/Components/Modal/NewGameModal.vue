@@ -48,10 +48,10 @@
 </template>
 
 <script>
-import RolesModalPage from "@/Components/Modal/Pages/Roles/RolesModalPage";
-import GameStateModalPage from "@/Components/Modal/Pages/GameState/GameStateModalPage";
-import ShareModalPage from "@/Components/Modal/Pages/ShareModalPage";
-import { useStore } from "@/stores/modal"
+import RolesModalPage from "@/Components/Modal/Pages/Roles/RolesModalPage.vue";
+import GameStateModalPage from "@/Components/Modal/Pages/GameState/GameStateModalPage.vue";
+import ShareModalPage from "@/Components/Modal/Pages/ShareModalPage.vue";
+import { useStore } from "@/stores/modal.js"
 
 export default {
   name: "NewGameModal",

@@ -12,8 +12,8 @@
 <script>
 import { createApp } from "vue";
 import Player from "@/Components/PlayerList/Player.vue";
-import DotsSpinner from "@/Components/Spinners/DotsSpinner";
-import { useStore } from "@/stores/game"
+import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
+import { useStore } from "@/stores/game.js"
 
 export default {
   name: "PlayerList",
