@@ -1,5 +1,5 @@
-import Message from "@/Components/Chat/Message";
-import TimeSeparator from "@/Components/Chat/TimeSeparator";
+import Message from "@/Components/Chat/Message.vue";
+import TimeSeparator from "@/Components/Chat/TimeSeparator.vue";
 import { createApp } from "vue";
 
 export default class ChatService {

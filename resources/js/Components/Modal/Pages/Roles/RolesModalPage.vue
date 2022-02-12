@@ -15,8 +15,8 @@
 
 <script>
 import RoleSelector from "./RoleSelector.vue";
-import DotsSpinner from "@/Components/Spinners/DotsSpinner";
-import { useStore } from "@/stores/modal"
+import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
+import { useStore } from "@/stores/modal.js"
 
 export default {
   name: "RolesModalPage",

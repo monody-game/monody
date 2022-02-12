@@ -50,8 +50,8 @@
 </template>
 
 <script>
-import DotsSpinner from "@/Components/Spinners/DotsSpinner";
-import { useStore } from "@/stores/user";
+import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
+import { useStore } from "@/stores/user.js";
 
 export default {
   name: "LoginPage",

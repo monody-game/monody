@@ -5,9 +5,9 @@ import RegisterPage from "@/pages/Auth/RegisterPage.vue";
 import PlayPage from "@/pages/PlayPage.vue";
 import e404 from "@/pages/e404.vue";
 import GamePage from "@/pages/Game/GamePage.vue";
-import auth from "./middleware/auth";
-import exists from "./middleware/gameExists";
-import user from "./middleware/user";
+import auth from "./middleware/auth.js";
+import exists from "./middleware/gameExists.js";
+import user from "./middleware/user.js";
 
 let routes = [
   {

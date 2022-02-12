@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import ChatService from "@/services/ChatService";
+import ChatService from "@/services/ChatService.js";
 
 export default {
   name: "Chat",

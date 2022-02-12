@@ -1,4 +1,4 @@
-import AuthService from "@/services/AuthService";
+import AuthService from "@/services/AuthService.js";
 
 export default async function user({ next, router }) {
     const service = new AuthService();

@@ -21,7 +21,7 @@
   </div>
 </template>
 <script>
-import { useStore } from "@/stores/modal"
+import { useStore } from "@/stores/modal.js"
 export default {
   name: "RoleShow",
   props: ["selectedRole"],

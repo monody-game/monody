@@ -28,7 +28,7 @@
 <script>
 import AuthService from "@/services/AuthService.js";
 import NewGameModal from "@/Components/Modal/NewGameModal.vue";
-import { useStore } from "@/stores/modal";
+import { useStore } from "@/stores/modal.js";
 
 export default {
   name: "PlayPage",
@@ -42,7 +42,7 @@ export default {
     };
   },
   async created() {
-    const games = await JSONFetch('/game/list', 'GET');
+    const games = await window.JSONFetch('/game/list', 'GET');
     if (games.data) {
       this.games = games.data.games;
     }
