@@ -1,30 +1,27 @@
-import Vue from "vue";
-import Message from "@/Components/Chat/Message";
-import TimeSeparator from "@/Components/Chat/TimeSeparator";
+import Message from "@/Components/Chat/Message.vue";
+import TimeSeparator from "@/Components/Chat/TimeSeparator.vue";
+import { createApp } from "vue";
 
 export default class ChatService {
   timeSeparator (message) {
     const messageContainer = document.querySelector(".chat__messages");
     const chat = document.querySelector(".chat__messages");
-    const TimeSeparatorClass = Vue.extend(TimeSeparator);
-    const instance = new TimeSeparatorClass({
-      propsData: { message: message },
-    });
-    instance.$mount();
-    chat.appendChild(instance.$el);
+    createApp(TimeSeparator, {
+      propsData: {
+        message: message,
+      }
+    }).mount(chat);
     messageContainer.scrollTo(0, messageContainer.scrollHeight);
   }
 
   sendMessage (message) {
     const messageContainer = document.querySelector(".chat__messages");
     const chat = document.querySelector(".chat__messages");
-    const MessageClass = Vue.extend(Message);
-    const instance = new MessageClass({
-      propsData: { message: message },
-    });
-
-    instance.$mount();
-    chat.appendChild(instance.$el);
+    createApp(Message, {
+      propsData: {
+        message: message,
+      }
+    }).mount(chat);
     messageContainer.scrollTo(0, messageContainer.scrollHeight);
   }
 

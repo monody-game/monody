@@ -1,11 +1,13 @@
-import UserStore from "@/store/UserStore.js";
+import { useStore } from '../stores/user';
 
 export default class AuthService {
-  /**
-   * @param {UserStore} store
-   */
-  check (store) {
-    return store.getters.isAccessTokenSet || this.isAccessTokenSaved();
+
+  constructor() {
+    this.store = useStore();
+  }
+
+  check () {
+    return this.store.access_token !== "" || this.isAccessTokenSaved();
   }
 
   isAccessTokenSaved () {
@@ -20,8 +22,8 @@ export default class AuthService {
     }
   }
 
-  async getUserIfAccessToken (store) {
-    if (store.getters.isAccessTokenSet === false && this.isAccessTokenSaved()) {
+  async getUserIfAccessToken () {
+    if (this.store.access_token === "" && this.isAccessTokenSaved()) {
       const access_token = this.getAccessToken();
 
       const res = await JSONFetch("/user", "GET")
@@ -31,7 +33,7 @@ export default class AuthService {
         return false;
       }
 
-      store.commit("setUser", {
+      this.store.setUser({
         id: data.id,
         username: data.username,
         avatar: data.avatar,
@@ -41,17 +43,14 @@ export default class AuthService {
     return true;
   }
 
-  /**v
-   * @param {UserStore} store
-   */
-  async logout (store) {
+  async logout () {
     await fetch("/api/auth/logout", {
       method: "POST",
       headers: {
         Authorization: "Bearer " + this.getAccessToken(),
       },
     });
-    store.commit("removeUser");
+    this.store.$reset;
     sessionStorage.removeItem('access-token');
     localStorage.removeItem('access-token');
   }

@@ -5,15 +5,15 @@
       v-for="player in playerList"
       :key="player.id"
       :player="player"
-      :socket="socket"
     />
   </div>
 </template>
 
 <script>
-import Vue from "vue";
+import { createApp } from "vue";
 import Player from "@/Components/PlayerList/Player.vue";
-import DotsSpinner from "@/Components/Spinners/DotsSpinner";
+import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
+import { useStore } from "@/stores/game.js"
 
 export default {
   name: "PlayerList",
@@ -25,22 +25,23 @@ export default {
   data () {
     return {
       playerList: [],
-      loading: false
+      loading: false,
+      store: useStore()
     };
   },
   mounted () {
     (async () => {
       Echo.join(`game.${this.$route.params.id}`).listen("game.users.new", ({ user }) => {
-        this.$store.commit("addGamePlayer", this.injectPlayersProperties([user])[0]);
+        this.store.playerList.push(this.injectPlayersProperties([user])[0]);
       }).listen("game.users", ({ users }) => {
         this.loading = true;
         const list = this.injectPlayersProperties(users);
-        this.$store.commit("setGamePlayers", list);
+        this.store.playerList = list;
         this.playerList = list;
         this.loading = false;
       }).listen("game.users.leave", ({ user }) => {
         const gameUser = this.injectPlayersProperties([user])[0];
-        this.$store.commit("removeGamePlayer", gameUser);
+        this.store.removeGamePlayer(gameUser);
       });
     })();
   },
@@ -52,12 +53,12 @@ export default {
   methods: {
     addUser (player) {
       const playerList = document.querySelector(".player-list__wrapper");
-      const PlayerClass = Vue.extend(Player);
-      const instance = new PlayerClass({
-        propsData: { player: player },
-      });
-      instance.$mount();
-      playerList.appendChild(instance.$el);
+      createApp(Player, {
+        propsData: {
+          player: player,
+          socket: this.socket
+        }
+      }).mount(playerList);
     },
     injectPlayersProperties (players) {
       players.forEach((player) => {

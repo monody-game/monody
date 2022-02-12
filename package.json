@@ -19,10 +19,10 @@
     "jsonwebtoken": "^8.5.1",
     "laravel-echo": "^1.11.3",
     "laravel-mix": "^6.0.25",
+    "pinia": "^2.0.11",
     "socket.io-client": "^4.4.1",
-    "vue": "^2.6.14",
-    "vue-router": "^3.5.2",
-    "vuex": "^3.6.2"
+    "vue": "^3.2.30",
+    "vue-router": "^4.0.12"
   },
   "devDependencies": {
     "css-loader": "^6.2.0",
@@ -30,7 +30,7 @@
     "resolve-url-loader": "^4.0.0",
     "sass": "^1.35.2",
     "sass-loader": "^12.1.0",
-    "vue-loader": "^15.9.7",
+    "vue-loader": "^17.0.0",
     "vue-template-compiler": "^2.6.14",
     "webpack": "^5.51.1"
   },
