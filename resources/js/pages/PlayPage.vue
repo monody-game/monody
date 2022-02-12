@@ -28,6 +28,7 @@
 <script>
 import AuthService from "@/services/AuthService.js";
 import NewGameModal from "@/Components/Modal/NewGameModal.vue";
+import { useStore } from "@/stores/modal.js";
 
 export default {
   name: "PlayPage",
@@ -36,12 +37,12 @@ export default {
   },
   data () {
     return {
-      user: this.$store.getUser,
-      games: []
+      games: [],
+      store: useStore()
     };
   },
   async created() {
-    const games = await JSONFetch('/game/list', 'GET');
+    const games = await window.JSONFetch('/game/list', 'GET');
     if (games.data) {
       this.games = games.data.games;
     }
@@ -53,15 +54,15 @@ export default {
   methods: {
     logout () {
       const auth = new AuthService();
-      auth.logout(this.$store).then(() => {
+      auth.logout().then(() => {
         this.$router.push({ name: "home_page" });
       });
     },
     openModal () {
-      this.$store.commit("openModal");
+      this.store.isOpenned = true;
     },
     isModalOpenned () {
-      return this.$store.getters.isModalOpenned;
+      return this.store.isOpenned;
     },
   },
   beforeRouteLeave(to, from, next) {

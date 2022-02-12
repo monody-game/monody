@@ -1,16 +1,12 @@
-import AuthService from "@/services/AuthService";
-import Store from "@/store/BaseStore";
+import AuthService from "@/services/AuthService.js";
 
 export default async function user({ next, router }) {
     const service = new AuthService();
-    const status = await service.getUserIfAccessToken(Store)
+    const status = await service.getUserIfAccessToken()
 
-    if(status) {
-      return next();
-    } else {
-      await service.logout(Store);
-      router.push('/login');
+    if(!status) {
+      await service.logout();
+      next('/login');
+      return false;
     }
-
-  return next();
 }

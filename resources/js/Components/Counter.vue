@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import CounterEmitter from "@/services/EventEmitters/CounterEmitter";
-import CounterCycleService from "@/services/CounterCycleService";
-import GameLifeCycleEmitter from "@/services/EventEmitters/GameLifeCycleEmitter";
+import CounterEmitter from "@/services/EventEmitters/CounterEmitter.js";
+import CounterCycleService from "@/services/CounterCycleService.js";
+import GameLifeCycleEmitter from "@/services/EventEmitters/GameLifeCycleEmitter.js";
 
 const emitter = new CounterEmitter();
 const gameEmitter = new GameLifeCycleEmitter();
@@ -37,7 +37,7 @@ export default {
       starting_time: 0,
       counterId: "",
       status: "",
-      counterService: new CounterCycleService(this.$store),
+      counterService: new CounterCycleService(),
     };
   },
   mounted() {

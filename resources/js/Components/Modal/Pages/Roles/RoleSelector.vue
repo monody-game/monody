@@ -28,24 +28,27 @@
   </div>
 </template>
 <script>
+import { useStore } from "@/stores/modal.js"
+
 export default {
   name: "RoleSelector",
   props: ["role"],
   data () {
     return {
+      store: useStore(),
       count: this.currentSelectedCount(),
       default_limit: 10,
     };
   },
   methods: {
     currentSelectedCount () {
-      return this.$store.getters.getRoleCountById(this.role.id) ?? 0;
+      return useStore().getRoleCountById(this.role.id) ?? 0;
     },
     substract () {
       if (this.count === 0) {
         return;
       }
-      this.$store.commit("removeSelectedRole", this.role.id);
+      this.store.removeSelectedRole(this.role.id);
       this.count = this.count - 1;
     },
     add () {
@@ -56,7 +59,7 @@ export default {
         return;
       }
       this.count = this.count + 1;
-      this.$store.commit("addSelectedRole", this.role.id, this.count);
+      this.store.selectedRoles.push(this.role.id);
     },
   },
 };

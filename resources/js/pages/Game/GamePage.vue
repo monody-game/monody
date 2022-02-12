@@ -34,8 +34,8 @@
 import Counter from "@/Components/Counter.vue";
 import Chat from "@/Components/Chat/Chat.vue";
 import PlayerList from "@/Components/PlayerList/PlayerList.vue";
-import AuthService from "@/services/AuthService.js";
-import DotsSpinner from "@/Components/Spinners/DotsSpinner";
+import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
+import { useStore } from "@/stores/game.js"
 
 export default {
   name: "GamePage",
@@ -63,7 +63,8 @@ export default {
       gameId: this.$route.params.id,
       token: "",
       loading: false,
-      isStarted: false
+      isStarted: false,
+      store: useStore()
     };
   },
   methods: {
@@ -83,15 +84,15 @@ export default {
       Echo.join(`game.${this.gameId}`)
         .here((users) => {
           console.log('here' ,users)
-          this.$store.commit("setGamePlayers", users);
+          //this.$store.commit("setGamePlayers", users);
         })
         .joining((user) => {
           console.log('joining', user)
-          this.$store.commit("addGamePlayer", user);
+          //this.$store.commit("addGamePlayer", user);
         })
         .leaving((user) => {
           console.log('leaving', user)
-          this.$store.commit("removeGamePlayer", user);
+          //this.$store.commit("removeGamePlayer", user);
         })
     },
     disconnect: async function () {
@@ -100,7 +101,7 @@ export default {
   },
   async beforeRouteLeave (to, from, next) {
     Echo.leave(`game.${this.gameId}`);
-    this.$store.commit("clearGamePlayers");
+    this.store.playerList = [];
     next();
   }
 };
