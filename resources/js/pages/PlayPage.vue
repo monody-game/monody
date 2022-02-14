@@ -48,7 +48,8 @@ export default {
     }
 
     Echo.channel('home').listen('.game.created', (e) => {
-      this.games.push(e.game.id);
+      debugger
+      this.games.push(e.data.game.id);
     });
   },
   methods: {

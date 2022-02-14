@@ -27,6 +27,9 @@ services:
       context: ./docker/websockets
     volumes:
       - .:/var/www:delegated
+    working_dir: /var/www
+    #command: node --trace-warnings /var/www/websockets/index.js
+    command: yarn run serve
     ports:
       - "6001:6001"
 
