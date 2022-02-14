@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller
 {
@@ -72,10 +73,15 @@ class GameController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
+        Log::info(json_encode($data['roles']));
+
         $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
+        $data['roles'] = array_count_values($data['roles']);
         $data['owner_id'] = $request->user()->id;
         $data['is_started'] = \array_key_exists('is_started', $data) && (bool) $data['is_started'];
         $id = $this->generateGameId();
+
+        Log::info(json_encode($data['roles']));
 
         if (!array_search($data['owner_id'], $data['users'], true)) {
             $data['users'] = array_merge($data['users'], [$data['owner_id']]);
@@ -88,6 +94,19 @@ class GameController extends Controller
         broadcast(new GameCreated(new Game($data)));
 
         return response()->json(['game' => $data]);
+    }
+
+    private function generateGameId(): string
+    {
+        $bytes = random_bytes(10);
+        $id = base64_encode($bytes);
+        $id = str_replace(['+', '/', '='], '', $id);
+
+        if (Redis::exists('game:' . $id)) {
+            return $this->generateGameId();
+        }
+
+        return $id;
     }
 
     public function delete(Request $request): JsonResponse
@@ -105,18 +124,5 @@ class GameController extends Controller
         Redis::del('game:' . $data['game_id']);
 
         return response()->json();
-    }
-
-    private function generateGameId(): string
-    {
-        $bytes = random_bytes(10);
-        $id = base64_encode($bytes);
-        $id = str_replace(['+', '/', '='], '', $id);
-
-        if (Redis::exists('game:' . $id)) {
-            return $this->generateGameId();
-        }
-
-        return $id;
     }
 }
