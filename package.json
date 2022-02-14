@@ -9,17 +9,22 @@
   "scripts": {
     "dev": "npx mix",
     "prod": "npx mix --production",
-    "watch": "npx mix watch"
+    "watch": "npx mix watch",
+    "serve": "nodemon -L --watch /var/www/websockets /var/www/websockets/index.js"
   },
   "dependencies": {
     "@grafikart/spinning-dots-element": "^1.1.0",
+    "@socket.io/redis-adapter": "^7.1.0",
     "@vue/compiler-sfc": "^3.2.6",
     "devtools-detect": "^4.0.0",
-    "dotenv": "^10.0.0",
+    "dotenv": "^16.0.0",
     "jsonwebtoken": "^8.5.1",
     "laravel-echo": "^1.11.3",
     "laravel-mix": "^6.0.25",
+    "node-fetch": "2",
     "pinia": "^2.0.11",
+    "redis": "^4.0.3",
+    "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
     "vue": "^3.2.30",
     "vue-router": "^4.0.12"

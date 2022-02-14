@@ -2,8 +2,7 @@ FROM node:16-alpine
 
 WORKDIR /var/www
 
-RUN npm i -g laravel-echo-server-updated --no-audit
+RUN npm i -g nodemon
+RUN yarn
 
 EXPOSE 6001
-
-CMD ["laravel-echo-server", "start", "--force"]
