@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Events\GameCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Game;
+use App\Models\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
 
 class GameController extends Controller
 {
@@ -49,11 +49,17 @@ class GameController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $games = Redis::keys('game:*');
+        $games = Redis::scan('0', 'COUNT', '100', 'MATCH', 'game:*');
         $list = [];
+        $user = new User();
 
-        foreach ($games as $game) {
-            $list[] = str_replace('game:', '', $game);
+        if($games[1]) {
+            foreach ($games[1] as $game) {
+                $currentGame = json_decode(Redis::get($game), true);
+                $currentGame['owner'] = $user->find(['id' => $currentGame['owner']])[0];
+                $currentGame['id'] = str_replace('game:', '', $game);
+                $list[] = $currentGame;
+            }
         }
 
         return response()->json(['games' => $list]);
@@ -73,18 +79,14 @@ class GameController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        Log::info(json_encode($data['roles']));
-
         $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
-        $data['owner_id'] = $request->user()->id;
+        $data['owner'] = $request->user()->id;
         $data['is_started'] = \array_key_exists('is_started', $data) && (bool) $data['is_started'];
         $id = $this->generateGameId();
 
-        Log::info(json_encode($data['roles']));
-
-        if (!array_search($data['owner_id'], $data['users'], true)) {
-            $data['users'] = array_merge($data['users'], [$data['owner_id']]);
+        if (!array_search($data['owner'], $data['users'], true)) {
+            $data['users'] = array_merge($data['users'], [$data['owner']]);
         }
 
         Redis::set('game:' . $id, json_encode($data));
