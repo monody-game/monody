@@ -92,6 +92,7 @@ class GameController extends Controller
         Redis::set('game:' . $id, json_encode($data));
 
         $data['id'] = $id;
+        $data['owner'] = $request->user();
 
         broadcast(new GameCreated(new Game($data)));
 
