@@ -6,7 +6,7 @@ class Game extends Entity
 {
     protected array $keys = [
         'id',
-        'owner_id',
+        'owner',
         'users',
         'roles',
         'is_started',

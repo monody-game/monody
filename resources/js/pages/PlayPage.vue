@@ -1,55 +1,65 @@
 <template>
     <div class="play-page">
-        <div class="play-page__play-container">
-            <h1>Jouer</h1>
-            <button class="play-page__logout" @click="logout()">
-                Se déconnecter
-            </button>
-            <button @click="openModal()">Créer une partie</button>
+      <header class="play-page__header">
+        <router-link :to="{ name: 'home_page' }">Comment jouer</router-link>
+        <div class="links">
+          <svg class="icon">
+            <use href="/sprite.svg#wheel"></use>
+          </svg>
+          <button title="Se déconnecter" @click="logout()">
+            <svg class="icon">
+              <use href="/sprite.svg#logout"></use>
+            </svg>
+          </button>
+        </div>
+      </header>
+      <div class="play-page__container">
+          <div class="play-page__games">
+            <header>
+              <p>Liste des parties :</p>
+              <button class="play-page__button" @click="openModal()">Créer</button>
+            </header>
             <div class="play-page__game-list">
-                <ul>
-                    <li v-for="game in games">
-                        <router-link :to="{ name: 'game', params: { id: game } }">Partie n°{{ game }}</router-link>
-                    </li>
-                </ul>
+              <GamePresentation v-for="game in games" :key="game.id" :game="game" :roles="roles"></GamePresentation>
             </div>
-        </div>
-        <div class="play-page__user-container">
-            <img
-                alt="Avatar"
-                class="play-page__user-avatar"
-                src="http://localhost:8000/images/avatars/1.jpg"
-            />
-        </div>
-        <NewGameModal v-if="isModalOpenned()"/>
+          </div>
+      </div>
+      <NewGameModal v-if="isModalOpenned()"/>
+      <footer class="play-page__footer">
+        <p>&copy; Monody 2022 — Tous droits reservés.</p>
+      </footer>
     </div>
 </template>
 
 <script>
 import AuthService from "@/services/AuthService.js";
 import NewGameModal from "@/Components/Modal/NewGameModal.vue";
+import GamePresentation from "@/Components/GamePresentation.vue";
 import { useStore } from "@/stores/modal.js";
 
 export default {
   name: "PlayPage",
   components: {
-    NewGameModal: NewGameModal
+    NewGameModal: NewGameModal,
+    GamePresentation: GamePresentation
   },
   data () {
     return {
       games: [],
+      roles: [],
       store: useStore()
     };
   },
   async created() {
+    const res = await window.JSONFetch("/roles", "GET")
+    this.roles = res.data.roles
     const games = await window.JSONFetch('/game/list', 'GET');
     if (games.data) {
       this.games = games.data.games;
     }
 
     Echo.channel('home').listen('.game.created', (e) => {
-      debugger
-      this.games.push(e.data.game.id);
+      this.games.push(e.data.game);
     });
   },
   methods: {
