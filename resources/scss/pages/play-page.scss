@@ -15,17 +15,19 @@
 }
 
 .play-page__button {
-    // TODO: fix text alignment
     background: #171D5B;
+    display: flex;
+    align-items: centerser;
+    justify-content: space-between;
     border: none;
     color: #fff;
     cursor: pointer;
+    padding: space(1) space(2);
+    font-size: 18px;
 
-    &::before {
+    & i {
         content: url("data:image/svg+xml,%3Csvg width='25' height='25' viewBox='0 0 35 35' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M17.5 17.5H5.83337M17.5 29.1666V17.5V29.1666ZM17.5 17.5V5.83331V17.5ZM17.5 17.5H29.1667H17.5Z' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E%0A");
-        margin-right: space(1);
-        height: 25px;
-        display: inline-block;
+        margin-right: space(2);
     }
 }
 
@@ -59,11 +61,12 @@
     padding: space(4);
     margin-left: space(8);
     height: 85vh;
-    overflow-y: scroll;
+    overflow-y: auto;
 
     & header {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         font-size: 20px;
     }
 }

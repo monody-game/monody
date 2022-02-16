@@ -17,12 +17,16 @@
           <div class="play-page__games">
             <header>
               <p>Liste des parties :</p>
-              <button class="play-page__button" @click="openModal()">Créer</button>
+              <button class="play-page__button" @click="openModal()">
+                <i></i>
+                Créer
+              </button>
             </header>
             <div class="play-page__game-list">
               <GamePresentation v-for="game in games" :key="game.id" :game="game" :roles="roles"></GamePresentation>
             </div>
           </div>
+          <PlayerPresentation />
       </div>
       <NewGameModal v-if="isModalOpenned()"/>
       <footer class="play-page__footer">
@@ -35,13 +39,15 @@
 import AuthService from "@/services/AuthService.js";
 import NewGameModal from "@/Components/Modal/NewGameModal.vue";
 import GamePresentation from "@/Components/GamePresentation.vue";
+import PlayerPresentation from "@/Components/PlayerPresentation/PlayerPresentation.vue";
 import { useStore } from "@/stores/modal.js";
 
 export default {
   name: "PlayPage",
   components: {
     NewGameModal: NewGameModal,
-    GamePresentation: GamePresentation
+    GamePresentation: GamePresentation,
+    PlayerPresentation: PlayerPresentation
   },
   data () {
     return {
