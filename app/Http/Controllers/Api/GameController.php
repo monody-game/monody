@@ -53,7 +53,7 @@ class GameController extends Controller
         $list = [];
         $user = new User();
 
-        if($games[1]) {
+        if ($games) {
             foreach ($games[1] as $game) {
                 $currentGame = json_decode(Redis::get($game), true);
                 $currentGame['owner'] = $user->find(['id' => $currentGame['owner']])[0];
