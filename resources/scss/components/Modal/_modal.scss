@@ -8,6 +8,7 @@
   background-color: rgba(0, 0, 0, 0.3);
   height: 100%;
   width: 100%;
+  z-index: 1000;
 }
 
 .modal__main {
@@ -23,6 +24,7 @@
   align-items: center;
   padding: space(4);
   margin: space(2);
+  z-index: 5000;
 }
 
 .modal__buttons {
