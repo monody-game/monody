@@ -28,4 +28,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/roles', 'Api\RoleController@all');
 
     Route::get('/teams', 'Api\TeamController@all');
+
+    Route::get('/exp/get', 'Api\ExpController@get');
 });
