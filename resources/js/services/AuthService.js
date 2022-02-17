@@ -26,8 +26,11 @@ export default class AuthService {
     if (this.store.access_token === "" && this.isAccessTokenSaved()) {
       const access_token = this.getAccessToken();
 
-      const res = await JSONFetch("/user", "GET")
+      let res = await JSONFetch("/user", "GET")
       const data = res.data
+
+      res = await window.JSONFetch('/exp/get', 'GET')
+      data.exp = res.data.experience
 
       if(!data) {
         return false;
@@ -37,7 +40,9 @@ export default class AuthService {
         id: data.id,
         username: data.username,
         avatar: data.avatar,
+        level: data.level,
         access_token: access_token,
+        exp: data.exp
       });
     }
     return true;

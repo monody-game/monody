@@ -1,5 +1,5 @@
 <template>
-  <div class="game-show__container">
+  <router-link :to="{ name: 'game', params: { id: game.id } }" class="game-show__container">
     <img :alt="game.owner.username + '\'s avatar'" :src="game.owner.avatar" class="game-show__avatar">
     <div class="game-show__center">
       <p>{{ game.owner.username }}</p>
@@ -8,7 +8,7 @@
       </div>
     </div>
     <p>{{ game.users.length }}/{{ getUserCount() }}</p>
-  </div>
+  </router-link>
 </template>
 
 <script>

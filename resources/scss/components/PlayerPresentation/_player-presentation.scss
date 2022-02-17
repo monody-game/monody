@@ -1,0 +1,37 @@
+.player-presentation__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: calc(40% - space(12));
+}
+
+.player-presentation__main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & .player-presentation__avatar {
+        border-radius: 50%;
+        height: 260px;
+        z-index: 10;
+    }
+
+    & .player-presentation__level {
+        transform: translateY(-32px);
+        z-index: 100;
+    }
+
+    & .player-presentation__exp {
+        transform: translateY(-24px);
+        z-index: 100;
+    }
+
+    & .player-presentation__name {
+        font-size: 24px;
+        z-index: 10;
+    }
+}
+
+

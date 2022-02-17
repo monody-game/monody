@@ -10,6 +10,8 @@
 }
 
 .play-page__container {
+    display: flex;
+    justify-content: space-evenly;
     flex: 2;
     margin-bottom: space(4);
 }
@@ -57,9 +59,8 @@
 
 .play-page__games {
     background-color: var(--dark-background-lighter);
-    width: calc(50% - space(12));
+    width: calc(40% - space(12));
     padding: space(4);
-    margin-left: space(8);
     height: 85vh;
     overflow-y: auto;
 
