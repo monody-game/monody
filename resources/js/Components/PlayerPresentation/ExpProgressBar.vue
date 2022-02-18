@@ -22,8 +22,6 @@ export default {
     progressStyle() {
       const progress = (53 * this.exp) / 100;
 
-      console.log(progress)
-
       return `background-image: conic-gradient(from -97deg at 49% 91%, #fff 0 ${progress}%, #111433 0);`
     }
   },
