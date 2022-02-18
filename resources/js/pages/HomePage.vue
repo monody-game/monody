@@ -2,10 +2,7 @@
   <div class="home-page">
     <header class="home-page__header">
       <router-link :to="{ name: 'home_page' }">Comment jouer</router-link>
-      <router-link :to="{ name: 'login' }" class="btn-primary"
-      >Se connecter
-      </router-link
-      >
+      <router-link :to="{ name: 'login' }" class="btn-primary">Se connecter</router-link>
     </header>
     <div class="home-page__main">
       <router-link :to="{ name: 'play' }" class="home-page__link">

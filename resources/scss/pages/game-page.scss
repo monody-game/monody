@@ -1,7 +1,8 @@
 .day {
-  background: url("../../../public/images/scenejour_wolfy.svg") no-repeat center;
+  background-image: url("/images/scenejour_wolfy.svg");
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
-  background-position-y: -100px;
 
   --chat-background: var(--light-background);
   --chat-send-background: var(--light-background);
@@ -10,9 +11,10 @@
 }
 
 .night {
-  background: url("../../../public/images/scenenuit_wolfy.svg") no-repeat;
+  background-image: url("/images/scenenuit_wolfy.svg");
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
-  background-position-y: -100px;
 
   & * {
     color: #fff;
