@@ -5,23 +5,27 @@ import { createApp } from "vue";
 export default class ChatService {
   timeSeparator (message) {
     const messageContainer = document.querySelector(".chat__messages");
-    const chat = document.querySelector(".chat__messages");
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("time-separator__main")
+
     createApp(TimeSeparator, {
-      propsData: {
-        message: message,
-      }
-    }).mount(chat);
+      message: message,
+    }).mount(wrapper);
+
+    messageContainer.appendChild(wrapper);
     messageContainer.scrollTo(0, messageContainer.scrollHeight);
   }
 
   sendMessage (message) {
     const messageContainer = document.querySelector(".chat__messages");
-    const chat = document.querySelector(".chat__messages");
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("message__main")
+
     createApp(Message, {
-      propsData: {
-        message: message,
-      }
-    }).mount(chat);
+      message: message
+    }).mount(wrapper);
+
+    messageContainer.appendChild(wrapper);
     messageContainer.scrollTo(0, messageContainer.scrollHeight);
   }
 
