@@ -18,5 +18,10 @@ class ExpTableSeed extends Seeder
             'user_id' => 1,
             'exp' => 15,
         ]);
+
+        DB::table('exp')->insert([
+            'user_id' => 2,
+            'exp' => 35,
+        ]);
     }
 }

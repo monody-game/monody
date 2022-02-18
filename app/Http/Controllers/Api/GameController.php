@@ -49,16 +49,18 @@ class GameController extends Controller
 
     public function list(Request $request): JsonResponse
     {
-        $games = Redis::scan('0', 'COUNT', '100', 'MATCH', 'game:*');
+        $games = Redis::scan('0', '100', 'game:*');
         $list = [];
         $user = new User();
 
         if ($games) {
             foreach ($games[1] as $game) {
-                $currentGame = json_decode(Redis::get($game), true);
-                $currentGame['owner'] = $user->find(['id' => $currentGame['owner']])[0];
-                $currentGame['id'] = str_replace('game:', '', $game);
-                $list[] = $currentGame;
+                if(preg_match('/game:\w*/', $game) === 1) {
+                    $currentGame = json_decode(Redis::get($game), true);
+                    $currentGame['owner'] = $user->find(['id' => $currentGame['owner']])[0];
+                    $currentGame['id'] = str_replace('game:', '', $game);
+                    $list[] = $currentGame;
+                }
             }
         }
 
