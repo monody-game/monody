@@ -54,10 +54,7 @@ export default {
     addUser (player) {
       const playerList = document.querySelector(".player-list__wrapper");
       createApp(Player, {
-        propsData: {
-          player: player,
-          socket: this.socket
-        }
+        player: player
       }).mount(playerList);
     },
     injectPlayersProperties (players) {

@@ -50,11 +50,11 @@ export default {
   },
   mounted () {
     Echo.join(`game.${this.$route.params.id}`)
-    .listen('chat.send', (e) => {
-      const message = e.message
+    .listen('.chat.send', (e) => {
+      const message = e.data.message
       this.service.sendMessage({ content: message.content, author: message.author });
     })/*.listen("game.day", () => {
-      this.message = "";
+      this.message = "";s
     }).listen("game.night", () => {
       this.message = "";
     }).listen("messages", ({ messages }) => {
