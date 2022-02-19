@@ -28,7 +28,7 @@ class AuthController extends Controller
 
         $accessToken = $user->createToken('authToken')->accessToken;
 
-        return response()->json(['user' => $user, 'access_token' => $accessToken]);
+        return response()->json(['access_token' => $accessToken]);
     }
 
     public function register(RegisterRequest $request): JsonResponse
@@ -41,7 +41,7 @@ class AuthController extends Controller
 
         $accessToken = $user->createToken('authToken')->accessToken;
 
-        return response()->json(['user' => $user, 'access_token' => $accessToken]);
+        return response()->json(['access_token' => $accessToken]);
     }
 
     public function logout(Request $request): JsonResponse

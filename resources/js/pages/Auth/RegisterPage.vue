@@ -105,11 +105,6 @@ export default {
             password_confirmation: this.password_confirmation,
           });
         const data = res.data;
-        this.store.setUser({
-          username: data.user.username,
-          avatar: data.user.avatar,
-          access_token: data.user.access_token,
-        });
         localStorage.setItem(
           'access-token',
           data.access_token
