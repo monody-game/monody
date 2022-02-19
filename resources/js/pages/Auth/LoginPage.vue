@@ -102,12 +102,6 @@ export default {
         .then((res) => {
           const data = res.data;
           if (typeof data !== "undefined") {
-            this.store.setUser({
-              id: data.user.id,
-              username: data.user.username,
-              avatar: data.user.avatar,
-              access_token: data.access_token,
-            });
             if (this.remember_me === false) {
               sessionStorage.setItem('access-token', data.access_token);
             } else if (this.remember_me === true) {

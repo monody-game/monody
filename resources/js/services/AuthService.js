@@ -11,7 +11,7 @@ export default class AuthService {
   }
 
   isAccessTokenSaved () {
-    return localStorage.getItem('access-token') || sessionStorage.getItem('access-token');
+    return !!(localStorage.getItem('access-token') || sessionStorage.getItem('access-token'));
   }
 
   getAccessToken () {
