@@ -34,7 +34,6 @@ export default {
     (async () => {
       Echo.join(`game.${this.$route.params.id}`)
         .here((users) => {
-          console.log(users)
           users.forEach((user) => {
             this.addUser(user);
           });
@@ -51,7 +50,6 @@ export default {
     addUser (player) {
       const playerList = document.querySelector(".player-list__wrapper");
       const wrapper = document.createElement("div");
-      wrapper.classList.add('player__container');
 
       createApp(Player, {
         player: this.injectPlayersProperties([player])[0]
@@ -60,8 +58,8 @@ export default {
       playerList.appendChild(wrapper);
     },
     removeUser (player) {
-      const players = document.querySelectorAll(".player__container")
-      players.forEach((playerContainer) => {
+      const players = document.querySelector(".player-list__wrapper")
+      Array.from(players.children).forEach((playerContainer) => {
         if (parseInt(playerContainer.children[0].dataset.id) === parseInt(player.id)) {
           playerContainer.remove();
         }

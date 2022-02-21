@@ -33,9 +33,7 @@ module.exports.Channel = class {
 
     if (data.event && data.channel) {
       if(this.isClientEvent(data.event) && this.isPrivate(data.channel) && this.isInChannel(socket, data.channel)) {
-        console.log("Channel.js")
-        console.log(this.io.sockets)
-        this.io.sockets.sockets[socket.id].broadcast.to(data.channel).emit(data.event, data.channel, data.data)
+        this.io.sockets.sockets.get(socket.id).broadcast.to(data.channel).emit(data.event, data.channel, data.data)
       }
     }
   }

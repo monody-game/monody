@@ -1,6 +1,6 @@
 <template>
   <div
-    class="player__votable"
+    class="player__container player__votable"
     @click="vote(userID, player.id)"
     :data-id="player.id"
   >
