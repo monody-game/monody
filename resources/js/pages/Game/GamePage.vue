@@ -25,7 +25,7 @@
     <div class="game-page__main">
       <Chat/>
       <DotsSpinner v-if="loading"/>
-      <PlayerList :token="token"/>
+      <PlayerList />
     </div>
   </div>
 </template>
@@ -45,56 +45,15 @@ export default {
     PlayerList: PlayerList,
     DotsSpinner: DotsSpinner
   },
-  mounted () {
-    this.loading = true;
-    this.emitConnect();
-    this.loading = false;
-
-    window.addEventListener("beforeunload", (event) => {
-      if (this.isStarted) {
-        event.preventDefault();
-        event.returnValue = "";
-      }
-      Echo.leave(`game.${this.gameId}`);
-    });
-  },
   data () {
     return {
       gameId: this.$route.params.id,
-      token: "",
       loading: false,
       isStarted: false,
       store: useStore()
     };
   },
   methods: {
-    getToken: async function () {
-      const response = await fetch("/api/game/token", {
-        method: "GET",
-        headers: {
-          Authorization:
-            "Bearer " + localStorage.getItem('access-token'),
-        },
-      });
-      const data = await response.json();
-      this.token = data.token;
-    },
-    emitConnect: async function () {
-      await this.getToken();
-      Echo.join(`game.${this.gameId}`)
-        .here((users) => {
-          console.log('here' ,users)
-          //this.$store.commit("setGamePlayers", users);
-        })
-        .joining((user) => {
-          console.log('joining', user)
-          //this.$store.commit("addGamePlayer", user);
-        })
-        .leaving((user) => {
-          console.log('leaving', user)
-          //this.$store.commit("removeGamePlayer", user);
-        })
-    },
     disconnect: async function () {
       await this.$router.push("/play");
     },

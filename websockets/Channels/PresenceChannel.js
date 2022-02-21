@@ -7,19 +7,25 @@ module.exports.PresenceChannel = class {
   }
 
   async getMembers(channel) {
-    return JSON.parse(await client.get(channel + ':members'))
+    const members = JSON.parse(await client.get(channel + ':members'));
+    if (!members) return [];
+    return members
   }
 
   async isMember(channel, member) {
     let members = await this.getMembers(channel);
-    members = await this.removeInactive(channel, members, member)
+    members = await this.removeInactive(channel, members)
     const search = members.filter(m => m.user_id === member.user_id)
     return search && search.length;
   }
 
-  async removeInactive(channel, members, member) {
-    const truc = this.io.of("/").in("channel")
-    return [...members]
+  async removeInactive(channel, members) {
+    const clients = await this.io.of("/").in(channel).allSockets()
+    members = members.filter(member => {
+      return Array.from(clients).indexOf(member.socketId) >= 0;
+    })
+    await client.set(channel + ':members', JSON.stringify(members));
+    return members
   }
 
   async join(socket, channel, member) {
@@ -28,15 +34,12 @@ module.exports.PresenceChannel = class {
     }
 
     const isMember = await this.isMember(channel, member)
-    let members = this.getMembers(channel)
+    let members = await this.getMembers(channel)
 
-    members = members || []
     member.socketId = socket.id
     members.push(member)
 
     await client.set(channel + ':members', JSON.stringify(members))
-
-    members = members.filter((item, index) => members.indexOf(item) !== index)
 
     this.onSubscribed(socket, channel, members);
 
@@ -53,6 +56,9 @@ module.exports.PresenceChannel = class {
     members = members.filter(m => m.socketId !== member.socketId)
 
     await client.set(channel + ':members', JSON.stringify(members))
+    const game = JSON.parse(await client.get('game:' + channel.split('.')[1]))
+    game.users = members
+    await client.set('game:' + channel.split('.')[1], JSON.stringify(game))
 
     const isMember = await this.isMember(channel, member);
 
@@ -63,7 +69,7 @@ module.exports.PresenceChannel = class {
   }
 
   onJoin(socket, channel, member) {
-    this.io.sockets.sockets[socket.id].broadcast.to(channel).emit('presence:joining', channel, member);
+    this.io.sockets.sockets.get(socket.id).broadcast.to(channel).emit('presence:joining', channel, member);
   }
 
   onLeave(channel, member) {
@@ -71,6 +77,7 @@ module.exports.PresenceChannel = class {
   }
 
   onSubscribed(socket, channel, members) {
+    console.log(members)
     this.io.to(socket.id).emit('presence:subscribed', channel, members);
   }
 }
