@@ -55,16 +55,24 @@ module.exports.PresenceChannel = class {
     let member = members.find(m => m.socketId === socket.id)
     members = members.filter(m => m.socketId !== member.socketId)
 
-    await client.set(channel + ':members', JSON.stringify(members))
-    const game = JSON.parse(await client.get('game:' + channel.split('.')[1]))
-    game.users = members
-    await client.set('game:' + channel.split('.')[1], JSON.stringify(game))
+    if(members.length === 0) {
+      await client.del(channel + ':members')
+      await client.del('game:' + channel.split('.')[1])
 
-    const isMember = await this.isMember(channel, member);
-
-    if(!isMember && member) {
-      delete member.socketId;
+      this.onDelete(channel.split('.')[1])
       this.onLeave(channel, member)
+    } else {
+      await client.set(channel + ':members', JSON.stringify(members))
+      const game = JSON.parse(await client.get('game:' + channel.split('.')[1]))
+      game.users = members
+      await client.set('game:' + channel.split('.')[1], JSON.stringify(game))
+
+      const isMember = await this.isMember(channel, member);
+
+      if(!isMember && member) {
+        delete member.socketId;
+        this.onLeave(channel, member)
+      }
     }
   }
 
@@ -76,8 +84,11 @@ module.exports.PresenceChannel = class {
     this.io.to(channel).emit('presence:leaving', channel, member);
   }
 
+  onDelete(gameId) {
+    this.io.to('home').emit('game.delete', 'home', gameId)
+  }
+
   onSubscribed(socket, channel, members) {
-    console.log(members)
     this.io.to(socket.id).emit('presence:subscribed', channel, members);
   }
 }

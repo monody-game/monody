@@ -55,6 +55,7 @@ export default {
   },
   methods: {
     disconnect: async function () {
+      Echo.leave(`game.${this.gameId}`);
       await this.$router.push("/play");
     },
   },

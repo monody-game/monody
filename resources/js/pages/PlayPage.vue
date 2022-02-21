@@ -66,6 +66,8 @@ export default {
 
     Echo.channel('home').listen('.game.created', (e) => {
       this.games.push(e.data.game);
+    }).listen('.game.delete', (id) => {
+      this.games = this.games.filter(game => game.id !== id);
     });
   },
   methods: {
