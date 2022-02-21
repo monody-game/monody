@@ -1,5 +1,5 @@
 <template>
-  <div :data-token="token" class="player-list__wrapper">
+  <div class="player-list__wrapper">
     <DotsSpinner v-if="loading"/>
     <Player
       v-for="player in playerList"
@@ -13,11 +13,11 @@
 import { createApp } from "vue";
 import Player from "@/Components/PlayerList/Player.vue";
 import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
-import { useStore } from "@/stores/game.js"
+import { useStore as useGameStore } from "@/stores/game.js"
+import { useStore as useUserStore } from "@/stores/user.js";
 
 export default {
   name: "PlayerList",
-  props: ["token"],
   components: {
     Player: Player,
     DotsSpinner: DotsSpinner
@@ -26,36 +26,46 @@ export default {
     return {
       playerList: [],
       loading: false,
-      store: useStore()
+      gameStore: useGameStore(),
+      userStore: useUserStore()
     };
   },
   mounted () {
     (async () => {
-      Echo.join(`game.${this.$route.params.id}`).listen("game.users.new", ({ user }) => {
-        this.store.playerList.push(this.injectPlayersProperties([user])[0]);
-      }).listen("game.users", ({ users }) => {
-        this.loading = true;
-        const list = this.injectPlayersProperties(users);
-        this.store.playerList = list;
-        this.playerList = list;
-        this.loading = false;
-      }).listen("game.users.leave", ({ user }) => {
-        const gameUser = this.injectPlayersProperties([user])[0];
-        this.store.removeGamePlayer(gameUser);
-      });
+      Echo.join(`game.${this.$route.params.id}`)
+        .here((users) => {
+          console.log(users)
+          users.forEach((user) => {
+            this.addUser(user);
+          });
+        })
+        .joining((user) => {
+          this.addUser(user)
+        })
+        .leaving((user) => {
+          this.removeUser(user)
+        })
     })();
-  },
-  computed: {
-    gameId () {
-      return window.location.pathname.match("[0-9]$")[0];
-    },
   },
   methods: {
     addUser (player) {
       const playerList = document.querySelector(".player-list__wrapper");
+      const wrapper = document.createElement("div");
+      wrapper.classList.add('player__container');
+
       createApp(Player, {
-        player: player
-      }).mount(playerList);
+        player: this.injectPlayersProperties([player])[0]
+      }).mount(wrapper);
+
+      playerList.appendChild(wrapper);
+    },
+    removeUser (player) {
+      const players = document.querySelectorAll(".player__container")
+      players.forEach((playerContainer) => {
+        if (parseInt(playerContainer.children[0].dataset.id) === parseInt(player.id)) {
+          playerContainer.remove();
+        }
+      });
     },
     injectPlayersProperties (players) {
       players.forEach((player) => {

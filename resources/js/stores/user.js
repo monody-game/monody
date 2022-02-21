@@ -18,5 +18,17 @@ export const useStore = defineStore('user', {
       this.level = payload.level
       this.exp = payload.exp
     },
+  },
+  getters: {
+    getUser() {
+      return {
+        id: this.id,
+        username: this.username,
+        avatar: this.avatar,
+        access_token: this.access_token,
+        level: this.level,
+        exp: this.exp
+      }
+    }
   }
 });

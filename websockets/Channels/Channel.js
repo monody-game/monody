@@ -67,7 +67,7 @@ module.exports.Channel = class {
 
   async joinPrivate(socket, data) {
     try {
-      const res = await this.private.authenticate(socket, data)
+      const res = JSON.parse(await this.private.authenticate(socket, data))
       socket.join(data.channel)
 
       if (this.isPresence(data.channel)) {
