@@ -17,6 +17,9 @@ class ExpController extends Controller
             ->where('exp.user_id', $request->user()->id)
             ->get();
 
-        return response()->json(['experience' => json_decode(json_encode($exp->first()), true)['exp']]);
+        /** @var string $encodedExp */
+        $encodedExp = json_encode($exp->first());
+
+        return response()->json(['experience' => json_decode($encodedExp, true)['exp']]);
     }
 }
