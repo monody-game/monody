@@ -46,7 +46,7 @@
           @keyup.enter="register()"
           @click.prevent="register()"
         >
-          <DotsSpinner v-if="loading === true" class="loader"/>
+          <Spinner v-if="loading === true" class="spinner__cloud-white"/>
           S'inscrire
         </button>
       </div>
@@ -56,15 +56,15 @@
 
 <script>
 
-import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
-import { useStore } from "@/stores/user.js"
+import Spinner from "@/Components/Spinner.vue";
+import {useStore} from "@/stores/user.js"
 
 export default {
   name: "RegisterPage",
   components: {
-    DotsSpinner: DotsSpinner
+    Spinner: Spinner
   },
-  data () {
+  data() {
     return {
       store: useStore(),
       username: "",
@@ -94,7 +94,7 @@ export default {
     };
   },
   methods: {
-    async register () {
+    async register() {
       if (this.checkInput()) {
         this.loading = true;
         const res = await window
@@ -113,7 +113,7 @@ export default {
         await this.$router.push("play");
       }
     },
-    checkInput () {
+    checkInput() {
       this.errors.username.errored = this.username === "";
       this.errors.email.errored = this.email === "";
       this.errors.password.errored = this.password === "";
@@ -138,7 +138,7 @@ export default {
      * @param {String} data
      * @param {String} type
      */
-    validate (data, type) {
+    validate(data, type) {
       if (type === "email") {
         if (data.match(/^([a-z.]+)@([a-z]+)\.([a-z]+)$/gm) === null) {
           this.errors.email.errored = true;
@@ -170,13 +170,13 @@ export default {
     }
   },
   watch: {
-    username () {
+    username() {
       this.validate(this.username, "username");
     },
-    email () {
+    email() {
       this.validate(this.email, "email");
     },
-    password () {
+    password() {
       this.validate(this.password, "password");
     }
   }

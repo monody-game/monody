@@ -58,6 +58,11 @@ export default {
   },
   async created() {
     const res = await window.JSONFetch("/roles", "GET")
+
+    if (!res.ok) {
+      return;
+    }
+
     this.roles = res.data.roles
     const games = await window.JSONFetch('/game/list', 'GET');
     if (games.data) {
