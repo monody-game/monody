@@ -10,6 +10,11 @@ export default class CounterCycleService {
 
   DEFAULT_NIGHT_TIME = 30;
 
+  DEFAULT_START_TIME = 10;
+
+  actual = "wait";
+  state = "wait";
+
   constructor () {
     this.dayHandler = new DayTimeHandler();
     this.nightHandler = new NightTimeHandler();
@@ -19,11 +24,18 @@ export default class CounterCycleService {
   }
 
   switch () {
-    if (this.actual === "day") {
+    if (this.actual === "wait") {
+      this.actual = "starting";
+      this.state = "starting";
+      return;
+    }
+    if (this.actual === "day" || this.actual === "starting") {
       this.actual = "night";
+      this.state = "night";
       this.onNight();
     } else {
       this.actual = "day";
+      this.state = "day";
       this.onDay();
     }
   }
@@ -33,13 +45,22 @@ export default class CounterCycleService {
   }
 
   getTimeCounter () {
-    if (this.actual === "day") {
-      return this.DEFAULT_DAY_TIME;
-    } else if (this.actual === "night") {
-      return this.DEFAULT_NIGHT_TIME;
-    } else if (this.actual === "wait") {
-      return 0;
+    let value
+    switch (this.actual) {
+      case "day":
+        value = this.DEFAULT_DAY_TIME;
+        break;
+      case "night":
+        value = this.DEFAULT_NIGHT_TIME;
+        break;
+      case "starting":
+        value = this.DEFAULT_START_TIME;
+        break;
+      case "wait":
+        value = 0;
+        break;
     }
+    return value;
   }
 
   onNight () {
