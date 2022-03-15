@@ -14,18 +14,12 @@
   },
   "dependencies": {
     "@grafikart/spinning-dots-element": "^1.1.0",
-    "@socket.io/redis-adapter": "^7.1.0",
     "@vue/compiler-sfc": "^3.2.6",
     "devtools-detect": "^4.0.0",
     "dotenv": "^16.0.0",
     "jsonwebtoken": "^8.5.1",
     "laravel-echo": "^1.11.3",
-<<<<<<< Updated upstream
-    "laravel-mix": "^6.0.25",
     "node-fetch": "2",
-=======
-    "laravel-mix": "^6.0.41",
->>>>>>> Stashed changes
     "pinia": "^2.0.11",
     "redis": "^4.0.3",
     "socket.io": "^4.4.1",
@@ -35,6 +29,7 @@
   },
   "devDependencies": {
     "css-loader": "^6.2.0",
+    "laravel-mix": "^6.0.41",
     "postcss": "^8.3.6",
     "resolve-url-loader": "^4.0.0",
     "sass": "^1.35.2",
