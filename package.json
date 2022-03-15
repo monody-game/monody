@@ -20,8 +20,12 @@
     "dotenv": "^16.0.0",
     "jsonwebtoken": "^8.5.1",
     "laravel-echo": "^1.11.3",
+<<<<<<< Updated upstream
     "laravel-mix": "^6.0.25",
     "node-fetch": "2",
+=======
+    "laravel-mix": "^6.0.41",
+>>>>>>> Stashed changes
     "pinia": "^2.0.11",
     "redis": "^4.0.3",
     "socket.io": "^4.4.1",

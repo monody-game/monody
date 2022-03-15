@@ -1,5 +1,6 @@
 const { PresenceChannel } = require("./PresenceChannel");
 const { PrivateChannel } = require('./PrivateChannel')
+const { ResponderManager } = require('../Responders/ResponderManager')
 
 module.exports.Channel = class {
   privateChannels = ['private-*', 'presence-*'];
@@ -9,6 +10,7 @@ module.exports.Channel = class {
   constructor(io) {
     this.private = new PrivateChannel()
     this.presence = new PresenceChannel(io)
+    this.responderManager = new ResponderManager();
     this.io = io
   }
 
@@ -23,17 +25,15 @@ module.exports.Channel = class {
     }
   }
 
-  clientEvent(socket, data) {
+  clientEvent(socket, data, responders) {
     try {
       data = JSON.parse(data)
     } catch (e) {}
 
-    console.log('clientEvent')
-    console.log(data)
-
     if (data.event && data.channel) {
+      const responder = this.responderManager.findResponder(data.event, responders);
       if(this.isClientEvent(data.event) && this.isPrivate(data.channel) && this.isInChannel(socket, data.channel)) {
-        this.io.sockets.sockets.get(socket.id).broadcast.to(data.channel).emit(data.event, data.channel, data.data)
+        responder.emit(socket, data)
       }
     }
   }
@@ -109,6 +109,6 @@ module.exports.Channel = class {
   }
 
   isInChannel(socket, channel) {
-    return !!socket.rooms[channel]
+    return socket.rooms.has(channel)
   }
 }
