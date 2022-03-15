@@ -46,6 +46,13 @@ module.exports.PresenceChannel = class {
     if (!isMember) {
       this.onJoin(socket, channel, member);
     }
+
+    const count = await this.getRolesCount(channel.split('.')[1])
+    const game = JSON.parse(await client.get('game:' + channel.split('.')[1]))
+
+    if(members.length === count && game.is_started === false) {
+      await this.startGame(channel, game)
+    }
   }
 
   async leave(socket, channel) {
@@ -90,5 +97,27 @@ module.exports.PresenceChannel = class {
 
   onSubscribed(socket, channel, members) {
     this.io.to(socket.id).emit('presence:subscribed', channel, members);
+  }
+
+  async getRolesCount(gameId) {
+    const game = JSON.parse(await client.get('game:' + gameId))
+    let count = 0;
+
+    for (const role in game.roles) {
+      count += game.roles[role]
+    }
+    return count;
+  }
+
+  async startGame(channel, game) {
+    const id = channel.split('.')[1];
+    game.is_started = true;
+    await client.set('game:' + id, JSON.stringify(game))
+
+    this.io.to(channel).emit('game.start', channel);
+
+    if (process.env.APP_DEBUG) {
+      console.info(`[${new Date().toISOString()}] - Starting game id ${id}\n`);
+    }
   }
 }

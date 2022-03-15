@@ -1,6 +1,6 @@
 <template>
   <div class="player-list__wrapper">
-    <DotsSpinner v-if="loading"/>
+    <Spinner v-if="loading"/>
     <Player
       v-for="player in playerList"
       :key="player.id"
@@ -12,7 +12,7 @@
 <script>
 import { createApp } from "vue";
 import Player from "@/Components/PlayerList/Player.vue";
-import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
+import Spinner from "@/Components/Spinner.vue";
 import { useStore as useGameStore } from "@/stores/game.js"
 import { useStore as useUserStore } from "@/stores/user.js";
 
@@ -20,7 +20,7 @@ export default {
   name: "PlayerList",
   components: {
     Player: Player,
-    DotsSpinner: DotsSpinner
+    Spinner: Spinner
   },
   data () {
     return {
@@ -50,10 +50,13 @@ export default {
     addUser (player) {
       const playerList = document.querySelector(".player-list__wrapper");
       const wrapper = document.createElement("div");
+      player = this.injectPlayersProperties([player])[0]
 
       createApp(Player, {
-        player: this.injectPlayersProperties([player])[0]
+        player: player
       }).mount(wrapper);
+
+      this.gameStore.playerList.push(player)
 
       playerList.appendChild(wrapper);
     },
@@ -61,6 +64,7 @@ export default {
       const players = document.querySelector(".player-list__wrapper")
       Array.from(players.children).forEach((playerContainer) => {
         if (parseInt(playerContainer.children[0].dataset.id) === parseInt(player.id)) {
+          this.gameStore.playerList = this.gameStore.playerList.filter((p) => p.id !== player.id)
           playerContainer.remove();
         }
       });

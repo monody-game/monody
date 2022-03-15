@@ -2,10 +2,17 @@
 # yarn lockfile v1
 
 
+<<<<<<< Updated upstream
 "@ampproject/remapping@^2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.1.2.tgz#4edca94973ded9630d20101cd8559cedb8d8bd34"
   integrity sha512-hoyByceqwKirw7w3Z7gnIIZC3Wx3J484Y3L/cMpXFbr7d9ZQj2mODrirNzcJa+SM3UlpWXYvKV4RlRpFXlWgXg==
+=======
+"@ampproject/remapping@^2.0.0":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.1.1.tgz#7922fb0817bf3166d8d9e258c57477e3fd1c3610"
+  integrity sha512-Aolwjd7HSC2PyY0fDj/wA/EimQT4HfEnFYNp5s9CQlrdhyvWTtvZ5YzrUPu6R6/1jKiUlxu8bUhkdSnKHNAHMA==
+>>>>>>> Stashed changes
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
@@ -1102,7 +1109,11 @@
   resolved "https://registry.yarnpkg.com/@types/cors/-/cors-2.8.12.tgz#6b2c510a7ad7039e98e7b8d3d6598f4359e5c080"
   integrity sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==
 
+<<<<<<< Updated upstream
 "@types/eslint-scope@^3.7.3":
+=======
+"@types/eslint-scope@^3.7.0":
+>>>>>>> Stashed changes
   version "3.7.3"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.3.tgz#125b88504b61e3c8bc6f870882003253005c3224"
   integrity sha512-PB3ldyrcnAicT35TWPs5IcwKD8S333HMaa2VVv4+wdvebJkjWuW/xESoB8IwRcog8HYVYamb1g/R31Qv5Bx03g==
@@ -1209,9 +1220,15 @@
   integrity sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==
 
 "@types/node@*", "@types/node@>=10.0.0":
+<<<<<<< Updated upstream
   version "17.0.19"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.19.tgz#726171367f404bfbe8512ba608a09ebad810c7e6"
   integrity sha512-PfeQhvcMR4cPFVuYfBN4ifG7p9c+Dlh3yUZR6k+5yQK7wX3gDgVxBly4/WkBRs9x4dmcy1TVl08SY67wwtEvmA==
+=======
+  version "17.0.17"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.17.tgz#a8ddf6e0c2341718d74ee3dc413a13a042c45a0c"
+  integrity sha512-e8PUNQy1HgJGV3iU/Bp2+D/DXh3PYeyli8LgIwsQcs1Ar1LoaWHSIT6Rw+H2rNJmiq6SNWiDytfx8+gYj7wDHw==
+>>>>>>> Stashed changes
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -2210,6 +2227,11 @@ cookie-signature@1.0.6:
   integrity sha1-4wOogrNCzD7oylE6eZmXNNqzriw=
 
 cookie@0.4.2, cookie@~0.4.1:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
+  integrity sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==
+
+cookie@~0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
   integrity sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==
@@ -3648,10 +3670,17 @@ laravel-echo@^1.11.3:
   resolved "https://registry.yarnpkg.com/laravel-echo/-/laravel-echo-1.11.3.tgz#f596f05cb1d83728c955ba762223e5e280a3ebd7"
   integrity sha512-VNTnnoF8gK29ovxslnrFDt3xgrKiKKW1kTnKKO1A4kYVj4UCKmNO4x2ehRlfg2UTrG/oggwk95p+S9ftQYjXdw==
 
+<<<<<<< Updated upstream
 laravel-mix@^6.0.25:
   version "6.0.43"
   resolved "https://registry.yarnpkg.com/laravel-mix/-/laravel-mix-6.0.43.tgz#6a9d67419e891f5075fc08bfff47770bf1f00d8a"
   integrity sha512-SOO+C1aOpVSAUs30DYc6k/e0QJxfyD42aav4IKJtE5UZKw9ROWcVzkVoek2J475jNeNnl7GkoLAC27gejZsQ8g==
+=======
+laravel-mix@^6.0.41:
+  version "6.0.41"
+  resolved "https://registry.yarnpkg.com/laravel-mix/-/laravel-mix-6.0.41.tgz#b068934539a447e812877699a9c5208ee9cedf32"
+  integrity sha512-LA6ep2kUritCzvePgza98Ge2wmlntYSmd1mJx0BwRqyP6x8vMbh9VnMesTm5ezZql83mXI+hFumRCEBxzAnZaQ==
+>>>>>>> Stashed changes
   dependencies:
     "@babel/core" "^7.15.8"
     "@babel/plugin-proposal-object-rest-spread" "^7.15.6"
