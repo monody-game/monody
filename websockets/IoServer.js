@@ -1,9 +1,10 @@
-const { Server } = require('socket.io');
-const { RedisSubscriber } = require('./Redis/RedisSubscriber');
-const { ResponderManager } = require("./Responders/ResponderManager");
-const { Channel } = require("./Channels/Channel")
+const {Server} = require('socket.io');
+const {RedisSubscriber} = require('./Redis/RedisSubscriber');
+const {ResponderManager} = require("./Responders/ResponderManager");
+const {Channel} = require("./Channels/Channel")
 
 module.exports.IoServer = class {
+  responders = [];
 
   constructor() {
     this.server = new Server({});
@@ -14,7 +15,7 @@ module.exports.IoServer = class {
   async start() {
     console.log("\nStarting IoServer...");
 
-    if(process.env.APP_DEBUG) {
+    if (process.env.APP_DEBUG) {
       console.log("\nIoServer is running in debug mode.\n");
     }
 
@@ -35,7 +36,7 @@ module.exports.IoServer = class {
   }
 
   broadcast(channel, message) {
-    if(message.socket && this.find(message.socket)) {
+    if (message.socket && this.find(message.socket)) {
       this.find(message.socket).broadcast.to(channel).emit(message.event, channel, message.data);
     } else {
       this.server.to(channel).emit(message.event, channel, message);
@@ -74,14 +75,14 @@ module.exports.IoServer = class {
   }
 
   onClientEvent(socket) {
-    socket.on('clientEvent', (data) => {
-      this.channel.clientEvent(socket, data)
+    socket.on('client event', (data) => {
+      this.channel.clientEvent(socket, data, this.responders)
     });
   }
 
   initResponders() {
     ResponderManager.getAll().forEach(responder => {
-      new responder(this.server);
+      this.responders.push(new responder(this.server));
     });
   }
 }

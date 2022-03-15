@@ -8,10 +8,10 @@
         width="45"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <circle cx="22.5" cy="22.5" fill="none" r="20" stroke="white" />
+        <circle cx="22.5" cy="22.5" fill="none" r="20" stroke="white"/>
       </svg>
       <svg class="counter__icon">
-        <use :href="'/sprite.svg#' + status" />
+        <use :href="'/sprite.svg#' + status"/>
       </svg>
     </span>
     <p class="counter__seconds">
@@ -27,7 +27,6 @@ import CounterCycleService from "@/services/CounterCycleService.js";
 import GameLifeCycleEmitter from "@/services/EventEmitters/GameLifeCycleEmitter.js";
 
 const emitter = new CounterEmitter();
-const gameEmitter = new GameLifeCycleEmitter();
 
 export default {
   name: "Counter",
@@ -50,31 +49,19 @@ export default {
 
     (async () => {
       Echo.join(`game.${this.$route.params.id}`)
-        .listen("game.start", () => {
-          this.status = "night";
+        .listen(".game.start", () => {
+          this.counterService.switch();
           this.time = this.counterService.getTimeCounter();
-          this.starting_time = this.counterService.getTimeCounter();
+          this.starting_time = this.time;
 
           if (this.time !== 0) {
             this.updateCircle();
             this.decount();
           }
         })
-        .listen("game.day", () => {
-          this.status = "day";
-          document
-            .querySelector(".counter__icon")
-            .classList.add("counter__icon-rotate");
-          this.time = this.counterService.getTimeCounter();
-          this.starting_time = this.counterService.getTimeCounter();
-
-          if (this.time !== 0) {
-            this.updateCircle();
-            this.decount();
-          }
-        })
-        .listen("game.night", () => {
-          this.status = "night";
+        .listen(".game.newDay", () => {
+          this.counterService.switch();
+          this.status = this.counterService.getState();
           this.time = this.counterService.getTimeCounter();
           this.starting_time = this.counterService.getTimeCounter();
 
@@ -84,14 +71,20 @@ export default {
           }
         });
     })();
+
   },
   computed: {
     getRound() {
       const rounds = {
+        starting: "Début de la partie",
         wait: "Attente",
         day: "Jour",
         night: "Nuit",
         vote: "Vote",
+        werewolf: "Tour des Loups",
+        witch: "Tour de la sorcière",
+        psychic: "Tour de la voyante",
+        end: "Fin de la partie",
       };
       return rounds[this.status];
     },
@@ -109,10 +102,12 @@ export default {
         this.time = this.time - 1;
         this.soundManagement();
         this.updateCircle();
+
         if (this.time === 0) {
-          this.counterService.switch();
           clearInterval(this.counterId);
-          //emitter.emit("counter.end");
+
+          Echo.join(`game.${this.$route.params.id}`)
+            .whisper("counter.end", {data: "test"});
         }
       }, 1000);
     },
