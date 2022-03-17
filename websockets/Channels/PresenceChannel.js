@@ -1,4 +1,6 @@
 const {client} = require('../Redis/Connection')
+const RoleManager = require('../Services/RoleManager')
+const UserService = require('../Services/UserService')
 
 module.exports.PresenceChannel = class {
 
@@ -50,8 +52,15 @@ module.exports.PresenceChannel = class {
     const count = await this.getRolesCount(channel.split('.')[1])
     const game = JSON.parse(await client.get('game:' + channel.split('.')[1]))
 
-    if(members.length === count && game.is_started === false) {
+    if (members.length === count && game.is_started === false) {
       await this.startGame(channel, game)
+      setTimeout(() => {
+        game.assigned_roles = RoleManager.assign(game.roles, members);
+        members.forEach(member => {
+          this.io.to(member.socketId).emit('game.role-assign', channel, game.assigned_roles[UserService.getUserBySocket(member.socketId, members).user_id])
+        })
+        this.io.to(channel).emit('game.assign', channel);
+      }, 5000)
     }
   }
 
@@ -60,9 +69,10 @@ module.exports.PresenceChannel = class {
     members = members || []
 
     let member = members.find(m => m.socketId === socket.id)
+    if(!member) return;
     members = members.filter(m => m.socketId !== member.socketId)
 
-    if(members.length === 0) {
+    if (members.length === 0) {
       await client.del(channel + ':members')
       await client.del('game:' + channel.split('.')[1])
 
@@ -76,7 +86,7 @@ module.exports.PresenceChannel = class {
 
       const isMember = await this.isMember(channel, member);
 
-      if(!isMember && member) {
+      if (!isMember && member) {
         delete member.socketId;
         this.onLeave(channel, member)
       }

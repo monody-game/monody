@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
+use function array_key_exists;
 
 class GameController extends Controller
 {
@@ -29,22 +30,6 @@ class GameController extends Controller
         }
 
         return response()->json(['error' => 'Game not found'], 404);
-    }
-
-    public function token(Request $request): JsonResponse
-    {
-        $key = env('JWT_SECRET');
-        $user = $request->user();
-        $token = [
-            'user_id' => $user->id,
-            'user_name' => $user->username,
-            'user_avatar' => $user->avatar,
-            'exp' => time() + 30
-        ];
-
-        $token = JWT::encode($token, $key);
-
-        return response()->json(['token' => $token]);
     }
 
     public function list(Request $request): JsonResponse
@@ -84,10 +69,11 @@ class GameController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
+        $data['users'] = array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
+        $data['assigned_roles'] = [];
         $data['owner'] = $request->user()->id;
-        $data['is_started'] = \array_key_exists('is_started', $data) && (bool) $data['is_started'];
+        $data['is_started'] = array_key_exists('is_started', $data) && (bool)$data['is_started'];
         $id = $this->generateGameId();
 
         if (!array_search($data['owner'], $data['users'], true)) {
