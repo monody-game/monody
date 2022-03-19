@@ -1,7 +1,7 @@
 language: php
 php:
   - '7.4'
-
+dist: bionic
 install:
   - make install
 
