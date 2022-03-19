@@ -3,8 +3,10 @@ module.exports = class RoleManager {
     const assigned = {};
 
     for (const role in roles) {
-      const member = members[Math.floor(Math.random() * members.length)].user_id
-      if (assigned.hasOwnProperty(member)) continue;
+      let member = members[Math.floor(Math.random() * members.length)].user_id
+      while (assigned.hasOwnProperty(member)) {
+        member = members[Math.floor(Math.random() * members.length)].user_id
+      }
       if(roles[role] > 1) {
         for (const spares in roles[role]) {
           assigned[member] = role;
