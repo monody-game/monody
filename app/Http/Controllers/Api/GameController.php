@@ -6,12 +6,10 @@ use App\Events\GameCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Game;
 use App\Models\User;
-use Firebase\JWT\JWT;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
-use function array_key_exists;
 
 class GameController extends Controller
 {
@@ -69,11 +67,11 @@ class GameController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $data['users'] = array_key_exists('users', $data) ? $data['users'] : [];
+        $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
         $data['owner'] = $request->user()->id;
-        $data['is_started'] = array_key_exists('is_started', $data) && (bool)$data['is_started'];
+        $data['is_started'] = \array_key_exists('is_started', $data) && (bool) $data['is_started'];
         $id = $this->generateGameId();
 
         if (!array_search($data['owner'], $data['users'], true)) {
