@@ -37,6 +37,7 @@ export default {
       counterId: "",
       status: "",
       counterService: new CounterCycleService(),
+      sound: new Audio("../sounds/bip.mp3")
     };
   },
   mounted() {
@@ -114,33 +115,30 @@ export default {
     soundManagement() {
       switch (this.time) {
         case 120:
-          this.playSound();
+          this.sound.play();
           break;
         case 60:
-          this.playSound();
+          this.sound.play();
           break;
         case 30:
-          this.playSound();
+          this.sound.play();
           break;
         case 10:
-          this.playSound();
+          this.sound.play();
           break;
         case 5:
-          this.playSound();
+          this.sound.play();
           break;
         case 3:
-          this.playSound();
+          this.sound.play();
           break;
         case 2:
-          this.playSound();
+          this.sound.play();
           break;
         case 1:
-          this.playSound();
+          this.sound.play();
           break;
       }
-    },
-    playSound: function () {
-      new Audio("../sounds/bip.mp3").play();
     },
     updateCircle() {
       const circle = document.querySelector(".counter__icon-circle circle");
