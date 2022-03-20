@@ -37,31 +37,27 @@ export default {
     isReadonly: function () {
       return this.isNight() === true ? "chat__submit-readonly" : "";
     },
-    async send () {
+    async send() {
       await this.service.send(this.message);
       this.message = "";
     },
   },
-  data () {
+  data() {
     return {
       message: "",
       service: new ChatService(),
     };
   },
-  mounted () {
+  mounted() {
     Echo.join(`game.${this.$route.params.id}`)
-    .listen('.chat.send', (e) => {
-      const message = e.data.message
-      this.service.sendMessage({ content: message.content, author: message.author });
-    })/*.listen("game.day", () => {
-      this.message = "";s
-    }).listen("game.night", () => {
-      this.message = "";
-    }).listen("messages", ({ messages }) => {
-      for (const k in messages) {
-        this.service.sendMessage(messages[k]);
-      }
-    });*/
+      .listen('.chat.send', (e) => {
+        const message = e.data.message
+        this.service.sendMessage({content: message.content, author: message.author});
+      })
+      .listen('.game.role-assign', async (role_id) => {
+        const res = await JSONFetch(`/roles/get/${role_id}`, 'GET')
+        console.log(res.data)
+      })
   },
 };
 </script>

@@ -54,11 +54,13 @@ module.exports.PresenceChannel = class {
 
     if (members.length === count && game.is_started === false) {
       await this.startGame(channel, game)
-      setTimeout(() => {
+      setTimeout(async () => {
         game.assigned_roles = RoleManager.assign(game.roles, members);
-        members.forEach(member => {
-          this.io.to(member.socketId).emit('game.role-assign', channel, game.assigned_roles[UserService.getUserBySocket(member.socketId, members).user_id])
+        await members.forEach(async (member) => {
+          const user = await UserService.getUserBySocket(member.socketId, members);
+          this.io.to(member.socketId).emit('game.role-assign', channel, game.assigned_roles[user.user_id])
         })
+        await client.set('game:' + channel.split('.')[1], JSON.stringify(game));
         this.io.to(channel).emit('game.assign', channel);
       }, 5000)
     }
@@ -69,7 +71,7 @@ module.exports.PresenceChannel = class {
     members = members || []
 
     let member = members.find(m => m.socketId === socket.id)
-    if(!member) return;
+    if (!member) return;
     members = members.filter(m => m.socketId !== member.socketId)
 
     if (members.length === 0) {
