@@ -1,6 +1,7 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
+import playerList from "../Components/PlayerList/PlayerList";
 
-export const useStore = defineStore('game',{
+export const useStore = defineStore('game', {
   state: () => {
     return {
       playerList: [],
@@ -8,19 +9,32 @@ export const useStore = defineStore('game',{
     }
   },
   actions: {
-    removeGamePlayer (state, user) {
-      const index = state.playerList.indexOf(user);
-      state.playerList.splice(index, 1);
+    removeGamePlayer(user) {
+      const index = this.playerList.indexOf(user);
+      this.playerList.splice(index, 1);
     },
-    setVote (state, { userID, votedBy }) {
+    setRole(userId, role) {
+      const player = this.playerList.find(player => player.id === parseInt(userId));
+      if (player) {
+        const index = this.playerList.indexOf(player);
+        console.log(index)
+        player.role = {
+          group: role.team_id,
+          name: role.name,
+          see_has: role.display_name,
+        };
+        this.playerList[index] = player
+      }
+    },
+    setVote({userID, votedBy}) {
       this.getters.getPlayerByID(userID).voted_by.push(votedBy);
-      state.currentVote = userID;
+      this.currentVote = userID;
     },
-    unVote (state, { userID, votedBy }) {
+    unVote({userID, votedBy}) {
       if (userID === 0) {
         return;
       }
-      state.currentVote = 0;
+      this.currentVote = 0;
       const votes = this.getters.getPlayerByID(userID).voted_by;
       if (votes.length === 1) {
         this.getters.getPlayerByID(userID).voted_by = [];

@@ -73,9 +73,9 @@ export default {
       players.forEach((player) => {
         player.voted_by = [];
         player.role = {
-          group: "villager",
-          name: "villager",
-          see_has: "villager",
+          group: 0,
+          name: "",
+          see_has: "",
         };
       });
       return players;

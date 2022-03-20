@@ -62,7 +62,7 @@ module.exports.PresenceChannel = class {
         })
         await client.set('game:' + channel.split('.')[1], JSON.stringify(game));
         this.io.to(channel).emit('game.assign', channel);
-      }, 5000)
+      }, 6000)
     }
   }
 

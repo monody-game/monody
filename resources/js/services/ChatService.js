@@ -33,7 +33,7 @@ export default class ChatService {
   sendAlert(type, message) {
     const messageContainer = document.querySelector(".chat__messages");
     const wrapper = document.createElement("div");
-    wrapper.classList.add("chat-alert__info")
+    wrapper.classList.add("alert-message__" + type);
 
     createApp(AlertMessage, {
       type: type,
