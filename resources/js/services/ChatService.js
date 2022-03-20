@@ -1,4 +1,5 @@
 import Message from "@/Components/Chat/Message.vue";
+import AlertMessage from "@/Components/Chat/AlertMessage.vue";
 import TimeSeparator from "@/Components/Chat/TimeSeparator.vue";
 import { createApp } from "vue";
 
@@ -22,6 +23,20 @@ export default class ChatService {
     wrapper.classList.add("message__main")
 
     createApp(Message, {
+      message: message
+    }).mount(wrapper);
+
+    messageContainer.appendChild(wrapper);
+    messageContainer.scrollTo(0, messageContainer.scrollHeight);
+  }
+
+  sendAlert(type, message) {
+    const messageContainer = document.querySelector(".chat__messages");
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("chat-alert__info")
+
+    createApp(AlertMessage, {
+      type: type,
       message: message
     }).mount(wrapper);
 
