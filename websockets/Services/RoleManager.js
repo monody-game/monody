@@ -9,10 +9,10 @@ module.exports = class RoleManager {
       }
       if(roles[role] > 1) {
         for (const spares in roles[role]) {
-          assigned[member] = role;
+          assigned[member] = parseInt(role);
         }
       }
-      assigned[member] = role;
+      assigned[member] = parseInt(role);
     }
 
     return assigned;
