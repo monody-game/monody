@@ -7,10 +7,11 @@ import { useStore as useUserStore } from "@/stores/user.js"
 export default class CounterCycleService {
 
   DEFAULT_DAY_TIME = 30;
-
   DEFAULT_NIGHT_TIME = 30;
-
   DEFAULT_START_TIME = 10;
+  VILLAGER_GROUP = 2;
+  WEREWOLF_GROUP = 2;
+  SOLO_GROUP = 3;
 
   actual = "wait";
   state = "wait";
@@ -93,6 +94,6 @@ export default class CounterCycleService {
     const id = useUserStore().id;
     const player = useGameStore().getPlayerByID(id);
 
-    return player.role.group === "werewolf";
+    return player.role.group === this.WEREWOLF_GROUP;
   }
 }
