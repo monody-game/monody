@@ -20,10 +20,10 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
 
-        if($role) {
+        if ($role) {
             return response()->json(['role' => $role]);
-        } else {
-            return response()->json(['error' => 'Role not found'], 404);
         }
+
+        return response()->json(['error' => 'Role not found'], 404);
     }
 }
