@@ -27,6 +27,8 @@
 
 <script>
 import ChatService from "@/services/ChatService.js";
+import { useStore as useGameStore } from "@/stores/game.js"
+import { useStore as useUserStore } from "@/stores/user.js"
 
 export default {
   name: "Chat",
@@ -46,6 +48,8 @@ export default {
     return {
       message: "",
       service: new ChatService(),
+      gameStore: useGameStore(),
+      userStore: useUserStore()
     };
   },
   mounted() {
@@ -56,7 +60,11 @@ export default {
       })
       .listen('.game.role-assign', async (role_id) => {
         const res = await JSONFetch(`/roles/get/${role_id}`, 'GET')
-        console.log(res.data)
+        const role = res.data.role;
+        setTimeout(() => {
+          this.gameStore.setRole(this.userStore.id, role)
+          this.service.sendAlert('info', 'Votre role est : ' + role.display_name);
+        }, 3000);
       })
   },
 };
