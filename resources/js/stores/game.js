@@ -17,7 +17,6 @@ export const useStore = defineStore('game', {
       const player = this.playerList.find(player => player.id === parseInt(userId));
       if (player) {
         const index = this.playerList.indexOf(player);
-        console.log(index)
         player.role = {
           group: role.team_id,
           name: role.name,
