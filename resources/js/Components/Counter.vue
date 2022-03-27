@@ -22,11 +22,7 @@
 </template>
 
 <script>
-import CounterEmitter from "@/services/EventEmitters/CounterEmitter.js";
 import CounterCycleService from "@/services/CounterCycleService.js";
-import GameLifeCycleEmitter from "@/services/EventEmitters/GameLifeCycleEmitter.js";
-
-const emitter = new CounterEmitter();
 
 export default {
   name: "Counter",
