@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\User;
+use GdImage;
 use const DIRECTORY_SEPARATOR;
 
 class AvatarGenerator
@@ -41,12 +42,12 @@ class AvatarGenerator
             return false;
         }
 
-        /** @var resource $overlay */
+        /** @var GdImage $overlay */
         /** @var string $overlayPath */
         $overlay = imagecreatefrompng($overlayPath);
-        /** @var resource $overlay */
+        /** @var GdImage $overlay */
         $overlay = imagescale($overlay, 600, 600);
-        /** @var resource $base */
+        /** @var GdImage $base */
         $base = imagescale($base, 600, 600);
 
         imagecopy(

@@ -32,6 +32,7 @@ class GameController extends Controller
 
     public function list(Request $request): JsonResponse
     {
+        /** @var array[] $games */
         $games = Redis::scan('0', '100', 'game:*');
         $list = [];
         $user = new User();

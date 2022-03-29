@@ -1,12 +1,16 @@
 name: 'Run code fixer'
-on: [push]
+on: [ push ]
 jobs:
   Fixer:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository code
+      - name: ✨ Infos
+        run: |
+          echo "💼 Running tests on ${GITHUB_REPOSITORY}"
+          echo "🐘 PHP version: $(php -v)"
+      - name: 💻 Check out repository code
         uses: actions/checkout@v3
-      - name: Install dependencies
+      - name: 📜 Install dependencies
         run: make install
-      - name: Run fixer
+      - name: ⚙ Run fixer
         run: make format
