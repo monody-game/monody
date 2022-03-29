@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\User;
 use const DIRECTORY_SEPARATOR;
+use GdImage;
 
 class AvatarGenerator
 {
@@ -24,15 +25,16 @@ class AvatarGenerator
     public function generate(User $user): bool
     {
         $formatted = $this->getFormattedUserAvatar($user->avatar);
-        /** @var resource $base */
-        $base = null;
 
         if ('image/jpeg' === mime_content_type($formatted)) {
-            /** @var resource $base */
+            /** @var GdImage $base */
             $base = imagecreatefromjpeg($formatted);
         } elseif ('image/png' === mime_content_type($formatted)) {
-            /** @var resource $base */
+            /** @var GdImage $base */
             $base = imagecreatefrompng($formatted);
+        } else {
+            /** @var GdImage $base */
+            $base = imagecreate(600, 600);
         }
 
         $overlayPath = $this->getOverlay();
@@ -41,12 +43,11 @@ class AvatarGenerator
             return false;
         }
 
-        /** @var resource $overlay */
-        /** @var string $overlayPath */
+        /** @var GdImage $overlay */
         $overlay = imagecreatefrompng($overlayPath);
-        /** @var resource $overlay */
+        /** @var GdImage $overlay */
         $overlay = imagescale($overlay, 600, 600);
-        /** @var resource $base */
+        /** @var GdImage $base */
         $base = imagescale($base, 600, 600);
 
         imagecopy(
@@ -78,7 +79,7 @@ class AvatarGenerator
     }
 
     /**
-     * @return bool|string
+     * @return string|false
      */
     private function getOverlay(int $level = 100)
     {

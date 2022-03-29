@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Events\GameCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Game;
-use Firebase\JWT\JWT;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -30,29 +30,29 @@ class GameController extends Controller
         return response()->json(['error' => 'Game not found'], 404);
     }
 
-    public function token(Request $request): JsonResponse
-    {
-        $key = env('JWT_SECRET');
-        $user = $request->user();
-        $token = [
-            'user_id' => $user->id,
-            'user_name' => $user->username,
-            'user_avatar' => $user->avatar,
-            'exp' => time() + 30
-        ];
-
-        $token = JWT::encode($token, $key);
-
-        return response()->json(['token' => $token]);
-    }
-
     public function list(Request $request): JsonResponse
     {
-        $games = Redis::keys('game:*');
+        $cursor = '0';
+        /** @var array[] $games */
+        $games = Redis::scan($cursor, 'game:*', 100);
         $list = [];
+        $user = new User();
 
-        foreach ($games as $game) {
-            $list[] = str_replace('game:', '', $game);
+        if ($games) {
+            foreach ($games[1] as $game) {
+                if (1 === preg_match('/game:\w*/', $game)) {
+                    $gameData = Redis::get($game);
+                    if ($gameData) {
+                        $currentGame = json_decode($gameData, true);
+                        $owner = $user->find(['id' => $currentGame['owner']]);
+                        if ($owner) {
+                            $currentGame['owner'] = $owner->first();
+                            $currentGame['id'] = str_replace('game:', '', $game);
+                            $list[] = $currentGame;
+                        }
+                    }
+                }
+            }
         }
 
         return response()->json(['games' => $list]);
@@ -73,21 +73,37 @@ class GameController extends Controller
         }
 
         $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
-        $data['owner_id'] = $request->user()->id;
+        $data['roles'] = array_count_values($data['roles']);
+        $data['assigned_roles'] = [];
+        $data['owner'] = $request->user()->id;
         $data['is_started'] = \array_key_exists('is_started', $data) && (bool) $data['is_started'];
         $id = $this->generateGameId();
 
-        if (!array_search($data['owner_id'], $data['users'], true)) {
-            $data['users'] = array_merge($data['users'], [$data['owner_id']]);
+        if (!array_search($data['owner'], $data['users'], true)) {
+            $data['users'] = array_merge($data['users'], [$data['owner']]);
         }
 
         Redis::set('game:' . $id, json_encode($data));
 
         $data['id'] = $id;
+        $data['owner'] = $request->user();
 
         broadcast(new GameCreated(new Game($data)));
 
         return response()->json(['game' => $data]);
+    }
+
+    private function generateGameId(): string
+    {
+        $bytes = random_bytes(10);
+        $id = base64_encode($bytes);
+        $id = str_replace(['+', '/', '='], '', $id);
+
+        if (Redis::exists('game:' . $id)) {
+            return $this->generateGameId();
+        }
+
+        return $id;
     }
 
     public function delete(Request $request): JsonResponse
@@ -105,18 +121,5 @@ class GameController extends Controller
         Redis::del('game:' . $data['game_id']);
 
         return response()->json();
-    }
-
-    private function generateGameId(): string
-    {
-        $bytes = random_bytes(10);
-        $id = base64_encode($bytes);
-        $id = str_replace(['+', '/', '='], '', $id);
-
-        if (Redis::exists('game:' . $id)) {
-            return $this->generateGameId();
-        }
-
-        return $id;
     }
 }

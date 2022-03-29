@@ -1,7 +1,5 @@
 <template>
-  <div class="time-separator__main">
-    <p class="time-separator__message">{{ message }}</p>
-  </div>
+  <p class="time-separator__message">{{ message }}</p>
 </template>
 
 <script>

@@ -1,39 +1,68 @@
 import Message from "@/Components/Chat/Message.vue";
+import AlertMessage from "@/Components/Chat/AlertMessage.vue";
 import TimeSeparator from "@/Components/Chat/TimeSeparator.vue";
-import { createApp } from "vue";
+import {createApp} from "vue";
+import {useStore as useGameStore} from "@/stores/game.js";
+import {useStore as useUserStore} from "@/stores/user.js";
 
 export default class ChatService {
-  timeSeparator (message) {
+  timeSeparator(message) {
     const messageContainer = document.querySelector(".chat__messages");
-    const chat = document.querySelector(".chat__messages");
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("time-separator__main")
+
     createApp(TimeSeparator, {
-      propsData: {
-        message: message,
-      }
-    }).mount(chat);
+      message: message,
+    }).mount(wrapper);
+
+    messageContainer.appendChild(wrapper);
     messageContainer.scrollTo(0, messageContainer.scrollHeight);
   }
 
-  sendMessage (message) {
+  sendMessage(message, customClass = "") {
     const messageContainer = document.querySelector(".chat__messages");
-    const chat = document.querySelector(".chat__messages");
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("message__main", customClass);
+
     createApp(Message, {
-      propsData: {
-        message: message,
-      }
-    }).mount(chat);
+      message: message
+    }).mount(wrapper);
+
+    messageContainer.appendChild(wrapper);
     messageContainer.scrollTo(0, messageContainer.scrollHeight);
   }
 
-  async send (message) {
+  sendAlert(type, message) {
+    const messageContainer = document.querySelector(".chat__messages");
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("alert-message__" + type);
+
+    createApp(AlertMessage, {
+      type: type,
+      message: message
+    }).mount(wrapper);
+
+    messageContainer.appendChild(wrapper);
+    messageContainer.scrollTo(0, messageContainer.scrollHeight);
+  }
+
+  async send(message) {
     if (message === "") return;
-    await SocketJSONFetch("/game/message/send", Echo.socketId(),{
+
+    const gameId = window.location.pathname.split('/')[2];
+
+    if (useGameStore().state === "night" && useGameStore().isWerewolf) {
+      Echo.join(`game.${gameId}`)
+        .whisper("chat.werewolf.send", {data: { content: message, author: useUserStore().id }});
+      return;
+    }
+    await SocketJSONFetch("/game/message/send", Echo.socketId(), {
       content: message,
-      gameId: window.location.pathname.split('/')[2],
+      gameId
     });
   }
 
-  lock () {
+  lock() {
     const input = document.querySelector(".chat__send-input");
     const button = document.querySelector(".chat__send-button");
     const icon = document.querySelector(".chat__submit-icon use");
@@ -46,7 +75,7 @@ export default class ChatService {
     button.classList.add("locked");
   }
 
-  unlock () {
+  unlock() {
     const input = document.querySelector(".chat__send-input");
     const button = document.querySelector(".chat__send-button");
     const icon = document.querySelector(".chat__submit-icon use");

@@ -1,7 +1,7 @@
 <template>
   <div class="roles__page">
     Choisissez les roles parmis les suivants :
-    <DotsSpinner v-if="loading" class="roles__loader"/>
+    <Spinner v-if="loading" class="roles__loader"/>
     <div class="roles__list">
       <RoleSelector
         v-for="role in roles"
@@ -15,14 +15,14 @@
 
 <script>
 import RoleSelector from "./RoleSelector.vue";
-import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
+import Spinner from "@/Components/Spinner.vue";
 import { useStore } from "@/stores/modal.js"
 
 export default {
   name: "RolesModalPage",
   components: {
     RoleSelector,
-    DotsSpinner: DotsSpinner
+    Spinner: Spinner
   },
   data () {
     return {

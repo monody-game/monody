@@ -1,0 +1,36 @@
+.game-show__container {
+    display: flex;
+    align-items: center;
+    background: #171D5B;
+    padding: space(1) space(2);
+    margin-top: space(3);
+    color: #fff;
+
+    & .game-show__avatar {
+        border-radius: 50%;
+        height: 70px;
+        width: 70px;
+        margin-right: space(2);
+    }
+
+    & .game-show__roles {
+        margin-top: space(1.5);
+    }
+
+    & .game-show__role {
+        height: 30px;
+        width: 30px;
+        margin-right: space(1);
+    }
+
+    & p {
+        font-size: 20px;
+    }
+}
+
+.game-show__center {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+}
+

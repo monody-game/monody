@@ -2,6 +2,7 @@
   <div
     class="player__container player__votable"
     @click="vote(userID, player.id)"
+    :data-id="player.id"
   >
     <VotedBy v-if="isVoted" :player="player" :votedBy="votedBy"/>
     <div class="player__avatar-container">
@@ -22,7 +23,7 @@ import VotedBy from "@/Components/PlayerList/VotedBy.vue";
 
 export default {
   name: "Player",
-  props: ["player", "socket"],
+  props: ["player"],
   components: { VotedBy },
   data () {
     return {
@@ -41,7 +42,7 @@ export default {
     }
   },
   mounted () {
-    this.socket.on("game.vote", ({ voted_user, voted_by }) => {
+    /*this.socket.on("game.vote", ({ voted_user, voted_by }) => {
       if (voted_user === this.player.id) {
         this.vote(voted_by, voted_user, false);
       }
@@ -50,7 +51,7 @@ export default {
       if (voted_user === this.player.id) {
         this.unVote(voted_by, voted_user, false);
       }
-    });
+    });*/
   },
   methods: {
     vote (voted_by, voted_user, emit_event = true) {

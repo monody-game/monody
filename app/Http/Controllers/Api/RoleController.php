@@ -15,4 +15,15 @@ class RoleController extends Controller
 
         return response()->json(['roles' => $roles]);
     }
+
+    public function get(Request $request, int $id): JsonResponse
+    {
+        $role = Role::find($id);
+
+        if ($role) {
+            return response()->json(['role' => $role]);
+        }
+
+        return response()->json(['error' => 'Role not found'], 404);
+    }
 }

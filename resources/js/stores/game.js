@@ -1,26 +1,44 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
+import {useStore as useUserStore} from "./user";
 
-export const useStore = defineStore('game',{
+const VILLAGER_GROUP = 1;
+const WEREWOLF_GROUP = 2;
+const SOLO_GROUP = 3;
+
+export const useStore = defineStore('game', {
   state: () => {
     return {
       playerList: [],
       currentVote: 0,
+      state: "wait"
     }
   },
   actions: {
-    removeGamePlayer (state, user) {
-      const index = state.playerList.indexOf(user);
-      state.playerList.splice(index, 1);
+    removeGamePlayer(user) {
+      const index = this.playerList.indexOf(user);
+      this.playerList.splice(index, 1);
     },
-    setVote (state, { userID, votedBy }) {
+    setRole(userId, role) {
+      const player = this.playerList.find(player => player.id === parseInt(userId));
+      if (player) {
+        const index = this.playerList.indexOf(player);
+        player.role = {
+          group: role.team_id,
+          name: role.name,
+          see_has: role.display_name,
+        };
+        this.playerList[index] = player
+      }
+    },
+    setVote({userID, votedBy}) {
       this.getters.getPlayerByID(userID).voted_by.push(votedBy);
-      state.currentVote = userID;
+      this.currentVote = userID;
     },
-    unVote (state, { userID, votedBy }) {
+    unVote({userID, votedBy}) {
       if (userID === 0) {
         return;
       }
-      state.currentVote = 0;
+      this.currentVote = 0;
       const votes = this.getters.getPlayerByID(userID).voted_by;
       if (votes.length === 1) {
         this.getters.getPlayerByID(userID).voted_by = [];
@@ -35,5 +53,11 @@ export const useStore = defineStore('game',{
       const list = state.playerList;
       return list.filter((player) => player.id === playerID)[0] ?? {};
     },
+    isWerewolf() {
+      const id = useUserStore().id;
+      const player = this.getPlayerByID(id);
+
+      return player.role.group === WEREWOLF_GROUP;
+    }
   },
 });

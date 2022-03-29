@@ -19,5 +19,5 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
         Redis::set('game:' . $gameId, json_encode($game));
     }
 
-    return $game['users'];
+    return $user;
 });

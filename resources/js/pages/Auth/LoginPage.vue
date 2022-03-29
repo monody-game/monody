@@ -40,7 +40,7 @@
           @keyup.enter="login()"
           @click.prevent="login()"
         >
-          <DotsSpinner v-if="loading === true" class="loader"/>
+          <Spinner v-if="loading === true" class="spinner__cloud-white"/>
           Se connecter
         </button>
         <router-link class="login-page__no-account-link" to="/register">Pas encore de compte ?</router-link>
@@ -50,13 +50,13 @@
 </template>
 
 <script>
-import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
+import Spinner from "@/Components/Spinner.vue";
 import { useStore } from "@/stores/user.js";
 
 export default {
   name: "LoginPage",
   components: {
-    DotsSpinner: DotsSpinner
+    Spinner: Spinner
   },
   data () {
     return {
@@ -102,12 +102,6 @@ export default {
         .then((res) => {
           const data = res.data;
           if (typeof data !== "undefined") {
-            this.store.setUser({
-              id: data.user.id,
-              username: data.user.username,
-              avatar: data.user.avatar,
-              access_token: data.access_token,
-            });
             if (this.remember_me === false) {
               sessionStorage.setItem('access-token', data.access_token);
             } else if (this.remember_me === true) {

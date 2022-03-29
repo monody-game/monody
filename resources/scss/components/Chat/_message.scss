@@ -1,24 +1,44 @@
 .message__main {
-  color: #000;
-  display: flex;
-  width: 100%;
-  padding-bottom: space(2);
+    color: #000;
+    display: flex;
+    width: 100%;
+    margin-bottom: space(2);
+    padding: space(1);
+}
+
+.message__werewolf {
+    background-color: rgba(180, 0, 0, 40%);
+}
+
+.alert-message__info {
+    @extend .message__main;
+    color: #fff;
+    height: 70px;
+    align-items: center;
+    background: var(--info);
+    border-radius: 2px;
+}
+
+.alert-message__icon {
+    height: 40px;
+    width: 40px;
+    margin: space(2);
 }
 
 .message__avatar {
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
 }
 
 .message__author {
-  padding-left: space(1);
+    padding-left: space(1);
 
-  color: rgba(var(--unchanged-color), 50%);
+    color: rgba(var(--unchanged-color), 50%);
 }
 
 .message__content {
-  padding-top: space(1);
-  padding-left: space(1.5);
-  overflow-wrap: anywhere;
+    padding-top: space(1);
+    padding-left: space(1.5);
+    overflow-wrap: anywhere;
 }

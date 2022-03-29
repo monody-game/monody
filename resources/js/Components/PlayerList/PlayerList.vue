@@ -1,6 +1,6 @@
 <template>
-  <div :data-token="token" class="player-list__wrapper">
-    <DotsSpinner v-if="loading"/>
+  <div class="player-list__wrapper">
+    <Spinner v-if="loading"/>
     <Player
       v-for="player in playerList"
       :key="player.id"
@@ -12,61 +12,70 @@
 <script>
 import { createApp } from "vue";
 import Player from "@/Components/PlayerList/Player.vue";
-import DotsSpinner from "@/Components/Spinners/DotsSpinner.vue";
-import { useStore } from "@/stores/game.js"
+import Spinner from "@/Components/Spinner.vue";
+import { useStore as useGameStore } from "@/stores/game.js"
+import { useStore as useUserStore } from "@/stores/user.js";
 
 export default {
   name: "PlayerList",
-  props: ["token"],
   components: {
     Player: Player,
-    DotsSpinner: DotsSpinner
+    Spinner: Spinner
   },
   data () {
     return {
       playerList: [],
       loading: false,
-      store: useStore()
+      gameStore: useGameStore(),
+      userStore: useUserStore()
     };
   },
   mounted () {
     (async () => {
-      Echo.join(`game.${this.$route.params.id}`).listen("game.users.new", ({ user }) => {
-        this.store.playerList.push(this.injectPlayersProperties([user])[0]);
-      }).listen("game.users", ({ users }) => {
-        this.loading = true;
-        const list = this.injectPlayersProperties(users);
-        this.store.playerList = list;
-        this.playerList = list;
-        this.loading = false;
-      }).listen("game.users.leave", ({ user }) => {
-        const gameUser = this.injectPlayersProperties([user])[0];
-        this.store.removeGamePlayer(gameUser);
-      });
+      Echo.join(`game.${this.$route.params.id}`)
+        .here((users) => {
+          users.forEach((user) => {
+            this.addUser(user);
+          });
+        })
+        .joining((user) => {
+          this.addUser(user)
+        })
+        .leaving((user) => {
+          this.removeUser(user)
+        })
     })();
-  },
-  computed: {
-    gameId () {
-      return window.location.pathname.match("[0-9]$")[0];
-    },
   },
   methods: {
     addUser (player) {
       const playerList = document.querySelector(".player-list__wrapper");
+      const wrapper = document.createElement("div");
+      player = this.injectPlayersProperties([player])[0]
+
       createApp(Player, {
-        propsData: {
-          player: player,
-          socket: this.socket
+        player: player
+      }).mount(wrapper);
+
+      this.gameStore.playerList.push(player)
+
+      playerList.appendChild(wrapper);
+    },
+    removeUser (player) {
+      const players = document.querySelector(".player-list__wrapper")
+      Array.from(players.children).forEach((playerContainer) => {
+        if (parseInt(playerContainer.children[0].dataset.id) === parseInt(player.id)) {
+          this.gameStore.playerList = this.gameStore.playerList.filter((p) => p.id !== player.id)
+          playerContainer.remove();
         }
-      }).mount(playerList);
+      });
     },
     injectPlayersProperties (players) {
       players.forEach((player) => {
         player.voted_by = [];
         player.role = {
-          group: "villager",
-          name: "villager",
-          see_has: "villager",
+          group: 0,
+          name: "",
+          see_has: "",
         };
       });
       return players;
