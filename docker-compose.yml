@@ -13,7 +13,7 @@ services:
 
   php:
     restart: unless-stopped
-    image: grafikart/php:1.0.4
+    image: grafikart/php:php8.1-1
     build:
       context: ./docker/php
     volumes:
@@ -28,7 +28,6 @@ services:
     volumes:
       - .:/var/www:delegated
     working_dir: /var/www
-    #command: node --trace-warnings /var/www/websockets/index.js
     command: yarn run serve
     ports:
       - "6001:6001"
