@@ -3,6 +3,11 @@
     display: flex;
     width: 100%;
     margin-bottom: space(2);
+    padding: space(1);
+}
+
+.message__werewolf {
+    background-color: rgba(180, 0, 0, 40%);
 }
 
 .alert-message__info {

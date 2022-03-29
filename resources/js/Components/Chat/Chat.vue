@@ -27,8 +27,8 @@
 
 <script>
 import ChatService from "@/services/ChatService.js";
-import { useStore as useGameStore } from "@/stores/game.js"
-import { useStore as useUserStore } from "@/stores/user.js"
+import {useStore as useGameStore} from "@/stores/game.js"
+import {useStore as useUserStore} from "@/stores/user.js"
 
 export default {
   name: "Chat",
@@ -65,6 +65,9 @@ export default {
           this.gameStore.setRole(this.userStore.id, role)
           this.service.sendAlert('info', 'Votre role est : ' + role.display_name);
         }, 3000);
+      })
+      .listen('.chat.werewolf', (e) => {
+        this.service.sendMessage({content: e.data.content, author: e.data.author}, "message__werewolf");
       })
   },
 };

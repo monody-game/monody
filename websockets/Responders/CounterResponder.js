@@ -1,10 +1,11 @@
-module.exports = class CounterResponder {
-  respondTo = [
-    'counter.end'
-  ]
+const BaseResponder = require("./BaseResponder");
 
-  canRespond(event) {
-    return !!(this.respondTo.find(canRespondTo => event.replace('client-', '') === canRespondTo))
+module.exports = class CounterResponder extends BaseResponder {
+  constructor() {
+    super();
+    this.respondTo = [
+      /^counter\.end$/
+    ]
   }
 
   emit(socket, data) {

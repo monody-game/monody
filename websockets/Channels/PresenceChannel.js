@@ -1,6 +1,7 @@
 const {client} = require('../Redis/Connection')
 const RoleManager = require('../Services/RoleManager')
 const UserService = require('../Services/UserService')
+const werewolves = [1]
 
 module.exports.PresenceChannel = class {
 
@@ -55,7 +56,14 @@ module.exports.PresenceChannel = class {
     if (members.length === count && game.is_started === false) {
       await this.startGame(channel, game)
       setTimeout(async () => {
+        const gameWerewolves = [];
         game.assigned_roles = RoleManager.assign(game.roles, members);
+
+        Object.keys(game.assigned_roles).forEach(role => {
+          if (werewolves.indexOf(game.assigned_roles[parseInt(role)]) >= 0) gameWerewolves.push(game.assigned_roles[parseInt(role)])
+        })
+        game.werewolves = gameWerewolves;
+
         await members.forEach(async (member) => {
           const user = await UserService.getUserBySocket(member.socketId, members);
           this.io.to(member.socketId).emit('game.role-assign', channel, game.assigned_roles[user.user_id])
