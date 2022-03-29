@@ -104,7 +104,7 @@ export default {
           clearInterval(this.counterId);
 
           Echo.join(`game.${this.$route.params.id}`)
-            .whisper("counter.end", {data: "test"});
+            .whisper("counter.end");
         }
       }, 1000);
     },

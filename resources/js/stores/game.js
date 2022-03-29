@@ -1,11 +1,16 @@
 import {defineStore} from 'pinia'
-import playerList from "../Components/PlayerList/PlayerList";
+import {useStore as useUserStore} from "./user";
+
+const VILLAGER_GROUP = 1;
+const WEREWOLF_GROUP = 2;
+const SOLO_GROUP = 3;
 
 export const useStore = defineStore('game', {
   state: () => {
     return {
       playerList: [],
       currentVote: 0,
+      state: "wait"
     }
   },
   actions: {
@@ -48,5 +53,11 @@ export const useStore = defineStore('game', {
       const list = state.playerList;
       return list.filter((player) => player.id === playerID)[0] ?? {};
     },
+    isWerewolf() {
+      const id = useUserStore().id;
+      const player = this.getPlayerByID(id);
+
+      return player.role.group === WEREWOLF_GROUP;
+    }
   },
 });
