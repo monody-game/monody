@@ -10,7 +10,7 @@ install: vendor
 
 .PHONY: server
 server: install
-	$(dc) up
+	docker-compose up -d
 
 .PHONY: format
 format: install

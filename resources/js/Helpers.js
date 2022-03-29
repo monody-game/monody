@@ -4,18 +4,27 @@ const service = new AuthService();
 
 const baseFetch = async (url, body, params) => {
     let res = {};
+
     if (service.getAccessToken()) {
         params.headers.Authorization = "Bearer " + service.getAccessToken();
     }
+
     if (params.method.toLowerCase() !== "get") {
         params.body = JSON.stringify(body);
     }
+
     const response = await fetch("/api" + url, params).catch((err) =>
         res.error = err
     );
+
     if (response.ok) {
         res.data = await response.json();
     }
+
+    if(!res.data) {
+      res.data = {};
+    }
+
     return res;
 };
 

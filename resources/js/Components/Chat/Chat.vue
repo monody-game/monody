@@ -27,6 +27,8 @@
 
 <script>
 import ChatService from "@/services/ChatService.js";
+import {useStore as useGameStore} from "@/stores/game.js"
+import {useStore as useUserStore} from "@/stores/user.js"
 
 export default {
   name: "Chat",
@@ -37,31 +39,36 @@ export default {
     isReadonly: function () {
       return this.isNight() === true ? "chat__submit-readonly" : "";
     },
-    async send () {
+    async send() {
       await this.service.send(this.message);
       this.message = "";
     },
   },
-  data () {
+  data() {
     return {
       message: "",
       service: new ChatService(),
+      gameStore: useGameStore(),
+      userStore: useUserStore()
     };
   },
-  mounted () {
+  mounted() {
     Echo.join(`game.${this.$route.params.id}`)
-    .listen('chat.send', (e) => {
-      const message = e.message
-      this.service.sendMessage({ content: message.content, author: message.author });
-    })/*.listen("game.day", () => {
-      this.message = "";
-    }).listen("game.night", () => {
-      this.message = "";
-    }).listen("messages", ({ messages }) => {
-      for (const k in messages) {
-        this.service.sendMessage(messages[k]);
-      }
-    });*/
+      .listen('.chat.send', (e) => {
+        const message = e.data.message
+        this.service.sendMessage({content: message.content, author: message.author});
+      })
+      .listen('.game.role-assign', async (role_id) => {
+        const res = await JSONFetch(`/roles/get/${role_id}`, 'GET')
+        const role = res.data.role;
+        setTimeout(() => {
+          this.gameStore.setRole(this.userStore.id, role)
+          this.service.sendAlert('info', 'Votre role est : ' + role.display_name);
+        }, 3000);
+      })
+      .listen('.chat.werewolf', (e) => {
+        this.service.sendMessage({content: e.data.content, author: e.data.author}, "message__werewolf");
+      })
   },
 };
 </script>
