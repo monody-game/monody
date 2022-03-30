@@ -7,14 +7,11 @@ use App\Exceptions\FileExtensionException;
 use App\Exceptions\FileLoadException;
 use App\Models\User;
 use GdImage;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use function dirname;
 
 class AvatarGeneratorTest extends TestCase
 {
-    use RefreshDatabase;
-
     private string $basePath;
     private AvatarGenerator $avatarGenerator;
 
@@ -41,7 +38,7 @@ class AvatarGeneratorTest extends TestCase
         $this->avatarGenerator->getImageDependingOnExtension($path);
     }
 
-    public function testUnExistantFileThrowsException(): void
+    public function testUnExistentFileThrowsException(): void
     {
         $this->expectException(FileLoadException::class);
         $path = $this->avatarGenerator->getFormattedUserAvatar('/images/avatars/10.jpg');

@@ -5,7 +5,6 @@ namespace App;
 use App\Exceptions\FileExtensionException;
 use App\Exceptions\FileLoadException;
 use App\Models\User;
-use function in_array;
 use const DIRECTORY_SEPARATOR;
 use GdImage;
 
@@ -82,7 +81,7 @@ class AvatarGenerator
     {
         $filetype = @mime_content_type($filename);
 
-        if($filetype) {
+        if ($filetype) {
             $image = match ($filetype) {
                 'image/jpeg' => imagecreatefromjpeg($filename),
                 'image/png' => imagecreatefrompng($filename),
@@ -102,7 +101,7 @@ class AvatarGenerator
      */
     public function getOverlay(int $level = 100)
     {
-        if (!in_array($level, $this->overlayLevels, true)) {
+        if (!\in_array($level, $this->overlayLevels, true)) {
             return false;
         }
 
