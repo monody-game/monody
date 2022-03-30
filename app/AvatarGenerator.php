@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Exceptions\FileExtensionException;
+use App\Exceptions\FileLoadException;
 use App\Models\User;
 use const DIRECTORY_SEPARATOR;
 use GdImage;
@@ -22,29 +24,20 @@ class AvatarGenerator
         100
     ];
 
+    /**
+     * @throws FileExtensionException
+     */
     public function generate(User $user): bool
     {
         $formatted = $this->getFormattedUserAvatar($user->avatar);
-
-        if ('image/jpeg' === mime_content_type($formatted)) {
-            /** @var GdImage $base */
-            $base = imagecreatefromjpeg($formatted);
-        } elseif ('image/png' === mime_content_type($formatted)) {
-            /** @var GdImage $base */
-            $base = imagecreatefrompng($formatted);
-        } else {
-            /** @var GdImage $base */
-            $base = imagecreate(600, 600);
-        }
-
+        $base = $this->getImageDependingOnExtension($formatted);
         $overlayPath = $this->getOverlay();
 
         if (false === $overlayPath) {
             return false;
         }
 
-        /** @var GdImage $overlay */
-        $overlay = imagecreatefrompng($overlayPath);
+        $overlay = $this->getImageDependingOnExtension($overlayPath);
         /** @var GdImage $overlay */
         $overlay = imagescale($overlay, 600, 600);
         /** @var GdImage $base */
@@ -68,14 +61,28 @@ class AvatarGenerator
         return true;
     }
 
-    private function getGeneratedPath(): string
-    {
-        return \dirname(__DIR__) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'avatars';
-    }
-
     private function getFormattedUserAvatar(string $baseAvatar): string
     {
         return \dirname(__DIR__) . DIRECTORY_SEPARATOR . 'public' . $baseAvatar;
+    }
+
+    /**
+     * @throws FileExtensionException
+     * @throws FileLoadException
+     */
+    private function getImageDependingOnExtension(string $filename): GdImage
+    {
+        $image = match (mime_content_type($filename)) {
+            'image/jpeg' => imagecreatefromjpeg($filename),
+            'image/png' => imagecreatefrompng($filename),
+            default => throw new FileExtensionException(explode('.', $filename)[1]),
+        };
+
+        if ($image) {
+            return $image;
+        }
+
+        throw new FileLoadException($filename);
     }
 
     /**
@@ -93,5 +100,10 @@ class AvatarGenerator
             DIRECTORY_SEPARATOR . 'avatars' .
             DIRECTORY_SEPARATOR . 'levels' .
             DIRECTORY_SEPARATOR . $level . '.png';
+    }
+
+    private function getGeneratedPath(): string
+    {
+        return \dirname(__DIR__) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'avatars';
     }
 }

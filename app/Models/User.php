@@ -30,6 +30,7 @@ class User extends Authenticatable
      *
      * @var string[]
      */
+    // @phpstan-ignore-next-line
     protected $hidden = [
         'email',
         'password',

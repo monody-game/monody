@@ -6,3 +6,6 @@ parameters:
     paths:
         - app
     checkMissingIterableValueType: false
+    ignoreErrors:
+        - '#Call to an undefined static method \w+#'
+    reportUnmatchedIgnoredErrors: false
