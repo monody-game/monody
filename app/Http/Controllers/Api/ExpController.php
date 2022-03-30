@@ -14,7 +14,7 @@ class ExpController extends Controller
         $exp = DB::table('exp')
             ->join('users', 'exp.user_id', '=', 'users.id')
             ->select('exp.*')
-            ->where('exp.user_id', $request->user()->id)
+            ->where('exp.user_id', $request->user()?->id)
             ->get();
 
         /** @var string $encodedExp */

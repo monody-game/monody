@@ -12,6 +12,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @var array
      */
+    // @phpstan-ignore-next-line
     protected $policies = [
         'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
