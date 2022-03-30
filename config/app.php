@@ -6,7 +6,7 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     'url' => env('APP_URL', 'http://localhost'),
 
@@ -55,6 +55,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Spatie\Glide\GlideServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -84,6 +85,7 @@ return [
         'Event' => Illuminate\Support\Facades\Event::class,
         'File' => Illuminate\Support\Facades\File::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
+        'GlideImage' => Spatie\Glide\GlideImageFacade::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Http' => Illuminate\Support\Facades\Http::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
@@ -104,7 +106,5 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
     ],
-
 ];

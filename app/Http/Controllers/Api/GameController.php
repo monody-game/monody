@@ -16,7 +16,6 @@ class GameController extends Controller
     public function check(Request $request): JsonResponse
     {
         $data = $request->all();
-
         if (!isset($data['gameId'])) {
             return response()->json(['error' => 'Game id is required'], 400);
         }
@@ -75,7 +74,7 @@ class GameController extends Controller
         $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
-        $data['owner'] = $request->user()->id;
+        $data['owner'] = $request->user()?->id;
         $data['is_started'] = \array_key_exists('is_started', $data) && (bool) $data['is_started'];
         $id = $this->generateGameId();
 

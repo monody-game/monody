@@ -39,4 +39,4 @@ tests: install
 
 .PHONY: tt
 tt: install
-	vendor/bin/phpunit-watcher watch
+	phpunit-watcher watch
