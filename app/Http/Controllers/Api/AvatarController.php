@@ -20,10 +20,7 @@ class AvatarController extends Controller
         $this->generator = new AvatarGenerator();
     }
 
-    /**
-     * @return mixed
-     */
-    public function show(Filesystem $filesystem, Request $request, string $path)
+    public function show(Filesystem $filesystem, Request $request, string $path): mixed
     {
         $server = ServerFactory::create([
             'response' => new LaravelResponseFactory($request),
