@@ -17,7 +17,10 @@ class AvatarController extends Controller
 
     public function __construct()
     {
-        $this->generator = new AvatarGenerator();
+        $this->generator = new AvatarGenerator(\dirname(__DIR__) .
+            \DIRECTORY_SEPARATOR . 'public' .
+            \DIRECTORY_SEPARATOR . 'images' .
+            \DIRECTORY_SEPARATOR . 'avatars');
     }
 
     public function show(Filesystem $filesystem, Request $request, string $path): mixed
