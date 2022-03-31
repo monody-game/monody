@@ -55,7 +55,6 @@ return [
         /*
          * Package Service Providers...
          */
-        Spatie\Glide\GlideServiceProvider::class,
 
         /*
          * Application Service Providers...
