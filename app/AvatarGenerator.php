@@ -79,13 +79,14 @@ class AvatarGenerator
      */
     public function getImageDependingOnExtension(string $filename): GdImage
     {
+        /** @var string $filetype */
         $filetype = @mime_content_type($filename);
 
         if ($filetype) {
             $image = match ($filetype) {
                 'image/jpeg' => imagecreatefromjpeg($filename),
                 'image/png' => imagecreatefrompng($filename),
-                default => throw new FileExtensionException(mime_content_type($filename)),
+                default => throw new FileExtensionException($filetype),
             };
 
             if ($image) {
