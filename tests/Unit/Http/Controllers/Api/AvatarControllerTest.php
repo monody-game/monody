@@ -11,6 +11,7 @@ class AvatarControllerTest extends TestCase
     {
         $response = $this->actingAs($this->user, 'api')->getJson('/api/avatars/generate');
         $response->assertStatus(200);
+        unlink(public_path('images/avatars/' . $this->user->id . '.jpg'));
     }
 
     protected function setUp(): void
