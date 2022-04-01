@@ -35,7 +35,7 @@ lint: install
 
 .PHONY: tests
 tests: install
-	vendor/bin/phpunit --stop-on-failure
+	vendor/bin/phpunit
 
 .PHONY: tt
 tt: install
