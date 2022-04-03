@@ -24,14 +24,19 @@ class AvatarGenerator
         100
     ];
 
+    public function __construct(private string $basePath)
+    {
+    }
+
     /**
      * @throws FileExtensionException
+     * @throws FileLoadException
      */
     public function generate(User $user): bool
     {
         $formatted = $this->getFormattedUserAvatar($user->avatar);
         $base = $this->getImageDependingOnExtension($formatted);
-        $overlayPath = $this->getOverlay();
+        $overlayPath = $this->getOverlay($user->level);
 
         if (false === $overlayPath) {
             return false;
@@ -54,32 +59,39 @@ class AvatarGenerator
             imagesy($overlay)
         );
 
-        imagejpeg($base, $this->getGeneratedPath() . DIRECTORY_SEPARATOR . $user->id . '.jpg');
+        imagejpeg($base, $this->basePath . DIRECTORY_SEPARATOR . $user->id . '.jpg');
 
         imagedestroy($base);
 
         return true;
     }
 
-    private function getFormattedUserAvatar(string $baseAvatar): string
+    public function getFormattedUserAvatar(string $baseAvatar): string
     {
-        return \dirname(__DIR__) . DIRECTORY_SEPARATOR . 'public' . $baseAvatar;
+        $baseAvatar = str_replace('/images/avatars', '', $baseAvatar);
+
+        return $this->basePath . $baseAvatar;
     }
 
     /**
      * @throws FileExtensionException
      * @throws FileLoadException
      */
-    private function getImageDependingOnExtension(string $filename): GdImage
+    public function getImageDependingOnExtension(string $filename): GdImage
     {
-        $image = match (mime_content_type($filename)) {
-            'image/jpeg' => imagecreatefromjpeg($filename),
-            'image/png' => imagecreatefrompng($filename),
-            default => throw new FileExtensionException(explode('.', $filename)[1]),
-        };
+        /** @var string $filetype */
+        $filetype = @mime_content_type($filename);
 
-        if ($image) {
-            return $image;
+        if ($filetype) {
+            $image = match ($filetype) {
+                'image/jpeg' => imagecreatefromjpeg($filename),
+                'image/png' => imagecreatefrompng($filename),
+                default => throw new FileExtensionException($filetype),
+            };
+
+            if ($image) {
+                return $image;
+            }
         }
 
         throw new FileLoadException($filename);
@@ -88,22 +100,14 @@ class AvatarGenerator
     /**
      * @return string|false
      */
-    private function getOverlay(int $level = 100)
+    public function getOverlay(int $level = 100)
     {
         if (!\in_array($level, $this->overlayLevels, true)) {
             return false;
         }
 
-        return \dirname(__DIR__) .
-            DIRECTORY_SEPARATOR . 'public' .
-            DIRECTORY_SEPARATOR . 'images' .
-            DIRECTORY_SEPARATOR . 'avatars' .
+        return $this->basePath .
             DIRECTORY_SEPARATOR . 'levels' .
             DIRECTORY_SEPARATOR . $level . '.png';
-    }
-
-    private function getGeneratedPath(): string
-    {
-        return \dirname(__DIR__) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'avatars';
     }
 }
