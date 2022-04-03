@@ -67,7 +67,7 @@ export default {
         }, 3000);
       })
       .listen('.chat.werewolf', (e) => {
-        this.service.sendMessage({content: e.data.content, author: e.data.author}, "message__werewolf");
+        this.service.sendMessage({content: e.content, author: e.author}, "message__werewolf");
       })
   },
 };

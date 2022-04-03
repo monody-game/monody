@@ -14,11 +14,11 @@ module.exports = class ChatResponder extends BaseResponder {
       case "client-chat.werewolf.send":
         const game = JSON.parse(await client.get('game:' + data.channel.split('.')[1]))
         const members = await this.getMembers(data.channel)
-        data.data.data.author = members.find(member => member.user_id === data.data.data.author).user_info
+        data.data.author = members.find(member => member.user_id === data.data.author).user_info
+
         members.forEach(member => {
-          console.log(game.werewolves.indexOf(parseInt(member.user_id)), member.user_id)
           if (game.werewolves.indexOf(parseInt(member.user_id)) >= 0) {
-            socket.emit("chat.werewolf", data.channel, data.data);
+            socket.to(member.socketId).emit("chat.werewolf", data.channel, data.data);
           }
         })
         break;
