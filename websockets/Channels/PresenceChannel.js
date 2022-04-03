@@ -131,7 +131,7 @@ module.exports.PresenceChannel = class {
 
   async startGame(channel, game) {
     const id = channel.split('.')[1];
-    game.is_started = true;
+    //game.is_started = true;
     await client.set('game:' + id, JSON.stringify(game))
 
     this.io.to(channel).emit('game.start', channel);

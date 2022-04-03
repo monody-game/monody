@@ -57,7 +57,11 @@ export default class ChatService {
 
     if (useGameStore().state === "night" && useGameStore().isWerewolf) {
       Echo.join(`game.${gameId}`)
-        .whisper("chat.werewolf.send", {data: { content: message, author: useUserStore().id }});
+        .whisper("chat.werewolf.send", { content: message, author: useUserStore().id });
+      this.sendMessage({
+        content: message,
+        author: useUserStore().getUser
+      }, "message__werewolf");
       return;
     }
     await SocketJSONFetch("/game/message/send", Echo.socketId(), {
