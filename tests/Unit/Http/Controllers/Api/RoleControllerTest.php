@@ -1,0 +1,39 @@
+<?php
+
+namespace Http\Controllers\Api;
+
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class RoleControllerTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function testGetAllRoles(): void
+    {
+        $response = $this->actingAs($this->user, 'api')->getJson('/api/roles');
+        $parsed = json_decode($response->getContent(), true)['roles'];
+
+        $this->assertTrue(sizeof($parsed) > 1);
+    }
+
+    public function testGetOneRole(): void
+    {
+        $response = $this->actingAs($this->user, 'api')->getJson('/api/roles/get/1');
+        $response->assertJsonPath('role.id', 1);
+    }
+
+    public function testGetUnexistentRole(): void
+    {
+        $response = $this->actingAs($this->user, 'api')->getJson('/api/roles/get/0');
+
+        $response->assertStatus(404);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->make();
+    }
+}

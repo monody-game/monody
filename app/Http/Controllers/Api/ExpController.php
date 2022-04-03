@@ -20,6 +20,6 @@ class ExpController extends Controller
         /** @var string $encodedExp */
         $encodedExp = json_encode($exp->first());
 
-        return response()->json(['experience' => json_decode($encodedExp, true)['exp']]);
+        return response()->json(['experience' => json_decode($encodedExp, true)]);
     }
 }

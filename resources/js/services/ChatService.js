@@ -19,10 +19,14 @@ export default class ChatService {
     messageContainer.scrollTo(0, messageContainer.scrollHeight);
   }
 
-  sendMessage(message, customClass = "") {
+  sendMessage(message, customClass) {
     const messageContainer = document.querySelector(".chat__messages");
     const wrapper = document.createElement("div");
-    wrapper.classList.add("message__main", customClass);
+    wrapper.classList.add("message__main");
+
+    if(customClass) {
+      wrapper.classList.add(customClass);
+    }
 
     createApp(Message, {
       message: message
@@ -53,7 +57,11 @@ export default class ChatService {
 
     if (useGameStore().state === "night" && useGameStore().isWerewolf) {
       Echo.join(`game.${gameId}`)
-        .whisper("chat.werewolf.send", {data: { content: message, author: useUserStore().id }});
+        .whisper("chat.werewolf.send", { content: message, author: useUserStore().id });
+      this.sendMessage({
+        content: message,
+        author: useUserStore().getUser
+      }, "message__werewolf");
       return;
     }
     await SocketJSONFetch("/game/message/send", Echo.socketId(), {
