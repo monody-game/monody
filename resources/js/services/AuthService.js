@@ -30,7 +30,7 @@ export default class AuthService {
       const data = res.data
 
       res = await window.JSONFetch('/exp/get', 'GET')
-      data.exp = res.data.experience
+      data.exp = res.data.experience.exp
 
       if(!data) {
         return false;
