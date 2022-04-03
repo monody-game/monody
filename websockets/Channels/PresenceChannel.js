@@ -59,8 +59,8 @@ module.exports.PresenceChannel = class {
         const gameWerewolves = [];
         game.assigned_roles = RoleManager.assign(game.roles, members);
 
-        Object.keys(game.assigned_roles).forEach(role => {
-          if (werewolves.indexOf(game.assigned_roles[parseInt(role)]) >= 0) gameWerewolves.push(game.assigned_roles[parseInt(role)])
+        Object.keys(game.assigned_roles).forEach(member => {
+          if (werewolves.indexOf(game.assigned_roles[member]) >= 0) gameWerewolves.push(parseInt(member))
         })
         game.werewolves = gameWerewolves;
 
