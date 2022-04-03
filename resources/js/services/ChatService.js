@@ -19,10 +19,14 @@ export default class ChatService {
     messageContainer.scrollTo(0, messageContainer.scrollHeight);
   }
 
-  sendMessage(message, customClass = "") {
+  sendMessage(message, customClass) {
     const messageContainer = document.querySelector(".chat__messages");
     const wrapper = document.createElement("div");
-    wrapper.classList.add("message__main", customClass);
+    wrapper.classList.add("message__main");
+
+    if(customClass) {
+      wrapper.classList.add(customClass);
+    }
 
     createApp(Message, {
       message: message
