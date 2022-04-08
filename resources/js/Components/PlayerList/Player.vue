@@ -1,8 +1,8 @@
 <template>
   <div
+    :data-id="player.id"
     class="player__container player__votable"
     @click="vote(userID, player.id)"
-    :data-id="player.id"
   >
     <VotedBy v-if="isVoted" :player="player" :votedBy="votedBy"/>
     <div class="player__avatar-container">
@@ -20,28 +20,32 @@
 
 <script>
 import VotedBy from "@/Components/PlayerList/VotedBy.vue";
+import {useStore as useGameStore} from "@/stores/game.js";
+import {useStore as useUserStore} from "@/stores/user.js";
 
 export default {
   name: "Player",
   props: ["player"],
-  components: { VotedBy },
-  data () {
+  components: {VotedBy},
+  data() {
     return {
       isVoted: this.player.voted_by.length > 1,
+      gameStore: useGameStore(),
+      userStore: useUserStore(),
     };
   },
   computed: {
-    userID () {
-      return this.$store.getters.getUserId;
+    userID() {
+      return this.userStore.id;
     },
-    votedBy () {
+    votedBy() {
       return this.player.voted_by;
     },
-    getAvatar () {
+    getAvatar() {
       return "http://localhost:8000" + this.player.avatar;
     }
   },
-  mounted () {
+  mounted() {
     /*this.socket.on("game.vote", ({ voted_user, voted_by }) => {
       if (voted_user === this.player.id) {
         this.vote(voted_by, voted_user, false);
@@ -54,7 +58,7 @@ export default {
     });*/
   },
   methods: {
-    vote (voted_by, voted_user, emit_event = true) {
+    vote(voted_by, voted_user, emit_event = true) {
       if (typeof voted_by === "undefined") {
         return;
       }
@@ -65,15 +69,15 @@ export default {
       }
 
       if (
-        this.$store.getters.getCurrentVote > 0
+        this.gameStore.getCurrentVote > 0
       ) {
-        this.unVote(voted_by, this.$store.getters.getCurrentVote);
+        this.unVote(voted_by, this.gameStore.getCurrentVote);
         return;
       }
 
       this.isVoted = true;
 
-      this.$store.commit("setVote", {
+      this.gameStore.setVote({
         userID: voted_user,
         votedBy: voted_by,
       });
@@ -85,15 +89,15 @@ export default {
         });
       }
     },
-    unVote (voted_by, voted_user, emit_event = true) {
+    unVote(voted_by, voted_user, emit_event = true) {
       if (typeof voted_by === "undefined") {
         return;
       }
       if (this.player.id === voted_user) {
         this.isVoted = false;
       }
-      this.$store.commit("resetCurrentVote");
-      this.$store.commit("unVote", {
+      this.gameStore.currentVote = 0;
+      this.gameStore.unVote({
         userID: voted_user,
         votedBy: voted_by,
       });
