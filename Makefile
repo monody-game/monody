@@ -9,7 +9,7 @@ vendor: composer.lock
 install: vendor
 
 .PHONY: server
-server: install
+server:
 	docker-compose up -d
 
 .PHONY: format

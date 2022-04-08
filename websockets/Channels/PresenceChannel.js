@@ -1,12 +1,9 @@
 const {client} = require('../Redis/Connection')
-const RoleManager = require('../Services/RoleManager')
-const UserService = require('../Services/UserService')
-const werewolves = [1]
 
 module.exports.PresenceChannel = class {
-
   constructor(io) {
     this.io = io
+    this.gameService = new (require('../Services/GameService'))(io)
   }
 
   async getMembers(channel) {
@@ -50,31 +47,17 @@ module.exports.PresenceChannel = class {
       this.onJoin(socket, channel, member);
     }
 
-    const count = await this.getRolesCount(channel.split('.')[1])
-    const game = JSON.parse(await client.get('game:' + channel.split('.')[1]))
+    const id = channel.split('.')[1]
+    const count = await this.gameService.getRolesCount(id)
+    const game = JSON.parse(await client.get('game:' + id))
 
     if (members.length === count && game.is_started === false) {
-      await this.startGame(channel, game)
-      setTimeout(async () => {
-        const gameWerewolves = [];
-        game.assigned_roles = RoleManager.assign(game.roles, members);
-
-        Object.keys(game.assigned_roles).forEach(member => {
-          if (werewolves.indexOf(game.assigned_roles[member]) >= 0) gameWerewolves.push(parseInt(member))
-        })
-        game.werewolves = gameWerewolves;
-
-        await members.forEach(async (member) => {
-          const user = await UserService.getUserBySocket(member.socketId, members);
-          this.io.to(member.socketId).emit('game.role-assign', channel, game.assigned_roles[user.user_id])
-        })
-        await client.set('game:' + channel.split('.')[1], JSON.stringify(game));
-        this.io.to(channel).emit('game.assign', channel);
-      }, 6000)
+      await this.gameService.startGame(channel, game, members)
     }
   }
 
   async leave(socket, channel) {
+    const gameId = channel.split('.')[1]
     let members = await this.getMembers(channel)
     members = members || []
 
@@ -84,15 +67,15 @@ module.exports.PresenceChannel = class {
 
     if (members.length === 0) {
       await client.del(channel + ':members')
-      await client.del('game:' + channel.split('.')[1])
+      await client.del('game:' + gameId)
 
-      this.onDelete(channel.split('.')[1])
+      this.onDelete(gameId)
       this.onLeave(channel, member)
     } else {
       await client.set(channel + ':members', JSON.stringify(members))
-      const game = JSON.parse(await client.get('game:' + channel.split('.')[1]))
+      const game = JSON.parse(await client.get('game:' + gameId))
       game.users = members
-      await client.set('game:' + channel.split('.')[1], JSON.stringify(game))
+      await client.set('game:' + gameId, JSON.stringify(game))
 
       const isMember = await this.isMember(channel, member);
 
@@ -117,27 +100,5 @@ module.exports.PresenceChannel = class {
 
   onSubscribed(socket, channel, members) {
     this.io.to(socket.id).emit('presence:subscribed', channel, members);
-  }
-
-  async getRolesCount(gameId) {
-    const game = JSON.parse(await client.get('game:' + gameId))
-    let count = 0;
-
-    for (const role in game.roles) {
-      count += game.roles[role]
-    }
-    return count;
-  }
-
-  async startGame(channel, game) {
-    const id = channel.split('.')[1];
-    //game.is_started = true;
-    await client.set('game:' + id, JSON.stringify(game))
-
-    this.io.to(channel).emit('game.start', channel);
-
-    if (process.env.APP_DEBUG) {
-      console.info(`[${new Date().toISOString()}] - Starting game id ${id}\n`);
-    }
   }
 }
