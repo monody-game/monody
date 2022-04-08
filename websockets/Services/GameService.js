@@ -16,22 +16,30 @@ module.exports = class GameService {
     await client.set('game:' + id, JSON.stringify(data));
   }
 
+  async isAuthor(socket, gameId) {
+    const game = await this.getGame(gameId);
+    const members = await client.get('presence-game:' + gameId + ':members');
+    const userId = await UserService.getUserBySocket(socket, members);
+    return game.author === userId;
+  }
+
   async startGame(channel, game, members) {
-    game.is_started = true;
+    // TODO : SWITCH BEFORE PUSH
+    game.is_started = false;
     await this.setGame(channel.split('.')[1], game);
 
     this.io.to(channel).emit('game.start', channel);
 
     if (process.env.APP_DEBUG) {
-      console.info(`[${new Date().toISOString()}] - Starting game id ${id}\n`);
+      console.info(`[${new Date().toISOString()}] - Starting game id ${channel.split('.')[1]}\n`);
     }
 
     setTimeout(() => {
-      this.roleManagement(game, members)
+      this.roleManagement(game, channel, members)
     }, 6000)
   }
 
-  async roleManagement(game, members) {
+  async roleManagement(game, channel, members) {
     const gameWerewolves = [];
     game.assigned_roles = RoleManager.assign(game.roles, members);
 
