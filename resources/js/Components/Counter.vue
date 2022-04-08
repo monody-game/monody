@@ -89,12 +89,9 @@ export default {
   methods: {
     decount() {
       this.counterId = window.setInterval(() => {
-        /*if (this.time === this.starting_time) {
-          emitter.emit("counter.start");
-        }
         if (this.time !== this.starting_time && this.time % 10 === 0) {
           emitter.emit("counter.update");
-        }*/
+        }
 
         this.time = this.time - 1;
         this.soundManagement();
