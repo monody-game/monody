@@ -9,12 +9,13 @@
   </div>
 </template>
 <script>
+import { useStore } from '@/stores/game.js'
 export default {
   name: "VotedBy",
   props: ["player", "votedBy"],
   methods: {
     getPlayerByID (id) {
-      return this.$store.getters.getPlayerByID(id);
+      return useStore().getPlayerByID(id);
     },
     getAvatar (id) {
       return (
