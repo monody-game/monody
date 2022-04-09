@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\GameCreated;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateGameRequest;
+use App\Http\Requests\DeleteGameRequest;
 use App\Models\Game;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Validator;
 
 class GameController extends Controller
 {
@@ -29,7 +30,7 @@ class GameController extends Controller
         return response()->json(['error' => 'Game not found'], 404);
     }
 
-    public function list(Request $request): JsonResponse
+    public function list(): JsonResponse
     {
         $cursor = '0';
         /** @var array[] $games */
@@ -57,19 +58,9 @@ class GameController extends Controller
         return response()->json(['games' => $list]);
     }
 
-    public function new(Request $request): JsonResponse
+    public function new(CreateGameRequest $request): JsonResponse
     {
         $data = $request->all();
-
-        $validator = Validator::make($data, [
-            'users' => 'array',
-            'roles' => 'array|required',
-            'is_started' => 'boolean'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        }
 
         $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
@@ -105,19 +96,12 @@ class GameController extends Controller
         return $id;
     }
 
-    public function delete(Request $request): JsonResponse
+    public function delete(DeleteGameRequest $request): JsonResponse
     {
-        $data = $request->all();
+        /** @var string $gameId */
+        $gameId = $request->post('game_id');
 
-        $validator = Validator::make($data, [
-            'game_id' => 'string|required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        }
-
-        Redis::del('game:' . $data['game_id']);
+        Redis::del('game:' . $gameId);
 
         return response()->json();
     }

@@ -8,6 +8,7 @@ use App\Models\User;
 use const DIRECTORY_SEPARATOR;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AvatarController extends Controller
 {
@@ -29,7 +30,7 @@ class AvatarController extends Controller
         $user = auth()->user();
         $result = $this->generator->generate($user);
         if (true === $result) {
-            return response()->json(['message' => 'Avatar generated successfully']);
+            return response()->json([], Response::HTTP_NO_CONTENT);
         }
 
         return response()->json(['message' => 'Error while generating the avatar'], 500);
