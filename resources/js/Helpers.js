@@ -1,33 +1,3 @@
-import AuthService from "@/services/AuthService.js";
-
-const service = new AuthService();
-
-const baseFetch = async (url, body, params) => {
-    let res = {};
-
-    if (service.getAccessToken()) {
-        params.headers.Authorization = "Bearer " + service.getAccessToken();
-    }
-
-    if (params.method.toLowerCase() !== "get") {
-        params.body = JSON.stringify(body);
-    }
-
-    const response = await fetch("/api" + url, params).catch((err) =>
-        res.error = err
-    );
-
-    if (response.ok) {
-        res.data = await response.json();
-    }
-
-    if(!res.data) {
-      res.data = {};
-    }
-
-    return res;
-};
-
 /**
  * @param {String} url
  * @param {String} method
@@ -39,23 +9,41 @@ window.JSONFetch = async (url, method, body = null) => {
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },
+    credentials: "include",
   };
+  let res = {};
 
-  return await baseFetch(url, body, params);
+  if (params.method.toLowerCase() !== "get") {
+    params.body = JSON.stringify(body);
+  }
+
+  const response = await fetch("/api" + url, params).catch((err) =>
+    res.error = err
+  );
+
+  if (response.ok && response.status !== 204) {
+    res.data = await response.json();
+  }
+
+  if (!res.data) {
+    res.data = {};
+  }
+
+  return res;
 };
 /**
  * @param {String} url
  * @param {String} socketId
  * @param {Object} body
  */
-window.SocketJSONFetch = async(url, socketId, body = null) => {
-    const params = {
-        method: "POST",
-        headers: {
-            "Content-type": "application/json; charset=UTF-8",
-            "X-Socket-ID": socketId,
-        },
-    };
+window.SocketJSONFetch = async (url, socketId, body = null) => {
+  const params = {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      "X-Socket-ID": socketId,
+    },
+  };
 
-    return await baseFetch(url, body, params);
+  return await baseFetch(url, body, params);
 }

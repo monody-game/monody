@@ -27,7 +27,9 @@ class AuthControllerTest extends TestCase
             'password' => 'carlos100',
             'password_confirmation' => 'carlos100',
         ]);
+        $response->assertCookie('monody_access_token');
         $response->assertCreated();
+
         $this->assertTrue(User::where('username', 'carlos')->exists());
     }
 
@@ -76,6 +78,21 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertCookie('monody_access_token');
+    }
+
+    public function testLogout()
+    {
+        $response = $this->post('/api/auth/login', [
+            'username' => 'JohnTest',
+            'password' => 'johntest',
+            'remember_me' => false,
+        ]);
+
+        $response->assertCookie('monody_access_token');
+
+        $response = $this->post('/api/auth/logout');
+
+        $response->assertCookieMissing('monody_access_token');
     }
 
     protected function setUp(): void

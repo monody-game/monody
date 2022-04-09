@@ -51,14 +51,14 @@
 
 <script>
 import Spinner from "@/Components/Spinner.vue";
-import { useStore } from "@/stores/user.js";
+import {useStore} from "@/stores/user.js";
 
 export default {
   name: "LoginPage",
   components: {
     Spinner: Spinner
   },
-  data () {
+  data() {
     return {
       store: useStore(),
       username: "",
@@ -78,14 +78,7 @@ export default {
     };
   },
   methods: {
-    login: function () {
-      if (
-        localStorage.getItem('access-token') ||
-        sessionStorage.getItem('access-token') ||
-        this.store.access_token === ""
-      ) {
-        this.$router.push("play");
-      }
+    login: async function () {
       if (this.username === "" || this.password === "") {
         this.errors.username.errored = true;
         this.errors.password.errored = true;
@@ -93,29 +86,16 @@ export default {
         return;
       }
       this.loading = true;
-      window
+      await window
         .JSONFetch("/auth/login", "POST", {
           username: this.username,
           password: this.password,
           remember_me: this.remember_me,
         })
-        .then((res) => {
-          const data = res.data;
-          if (typeof data !== "undefined") {
-            if (this.remember_me === false) {
-              sessionStorage.setItem('access-token', data.access_token);
-            } else if (this.remember_me === true) {
-              localStorage.setItem('access-token', data.access_token);
-            }
-            this.loading = false;
-            this.$router.push("play");
-          }
-          this.loading = false;
-        })
-        .catch((e) => {
-          console.error(e);
-          this.loading = false;
-        });
+
+      this.loading = false;
+      await this.$router.push("play");
+      console.log('w')
     },
   },
 };

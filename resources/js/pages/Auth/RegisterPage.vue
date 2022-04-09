@@ -97,18 +97,13 @@ export default {
     async register() {
       if (this.checkInput()) {
         this.loading = true;
-        const res = await window
+        await window
           .JSONFetch("/auth/register", "POST", {
             username: this.username,
             email: this.email,
             password: this.password,
             password_confirmation: this.password_confirmation,
           });
-        const data = res.data;
-        localStorage.setItem(
-          'access-token',
-          data.access_token
-        );
         this.loading = false;
         await this.$router.push("play");
       }

@@ -1,4 +1,4 @@
-import { useStore } from '../stores/user';
+import {useStore} from '../stores/user';
 
 export default class AuthService {
 
@@ -6,57 +6,32 @@ export default class AuthService {
     this.store = useStore();
   }
 
-  check () {
-    return this.store.access_token !== "" || this.isAccessTokenSaved();
-  }
+  async getUser() {
+    let res = await JSONFetch("/user", "GET")
+    const data = res.data
 
-  isAccessTokenSaved () {
-    return !!(localStorage.getItem('access-token') || sessionStorage.getItem('access-token'));
-  }
+    res = await window.JSONFetch('/exp/get', 'GET')
+    data.exp = res.data.experience.exp
 
-  getAccessToken () {
-    if (localStorage.hasOwnProperty('access-token')) {
-      return localStorage.getItem('access-token');
-    } else if (sessionStorage.hasOwnProperty('access-token')) {
-      return sessionStorage.getItem('access-token');
+    if (!data) {
+      return false;
     }
-  }
 
-  async getUserIfAccessToken () {
-    if (this.store.access_token === "" && this.isAccessTokenSaved()) {
-      const access_token = this.getAccessToken();
+    this.store.setUser({
+      id: data.id,
+      username: data.username,
+      avatar: data.avatar,
+      level: data.level,
+      exp: data.exp
+    });
 
-      let res = await JSONFetch("/user", "GET")
-      const data = res.data
-
-      res = await window.JSONFetch('/exp/get', 'GET')
-      data.exp = res.data.experience.exp
-
-      if(!data) {
-        return false;
-      }
-
-      this.store.setUser({
-        id: data.id,
-        username: data.username,
-        avatar: data.avatar,
-        level: data.level,
-        access_token: access_token,
-        exp: data.exp
-      });
-    }
     return true;
   }
 
-  async logout () {
+  async logout() {
     await fetch("/api/auth/logout", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + this.getAccessToken(),
-      },
+      method: "POST"
     });
-    this.store.$reset;
-    sessionStorage.removeItem('access-token');
-    localStorage.removeItem('access-token');
+    await this.store.$reset;
   }
 }
