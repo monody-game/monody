@@ -60,7 +60,7 @@ class GameController extends Controller
 
     public function new(CreateGameRequest $request): JsonResponse
     {
-        $data = $request->all();
+        $data = $request->validated();
 
         $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
