@@ -10,7 +10,7 @@ class AvatarControllerTest extends TestCase
     public function testGenerateCallService(): void
     {
         $response = $this->actingAs($this->user, 'api')->getJson('/api/avatars/generate');
-        $response->assertStatus(200);
+        $response->assertStatus(204);
         unlink(public_path('images/avatars/' . $this->user->id . '.jpg'));
     }
 
