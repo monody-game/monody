@@ -36,11 +36,11 @@ jobs:
           echo "🐘 PHP version: $(php -v)"
       - name: 💻 Check out repository code
         uses: actions/checkout@v3
+      - name: 📜 Install dependencies
+        run: make install
       - name: 🔑 Prepare .env
         run: |
           php -r "file_exists('.env') || copy('.env.example', '.env');"
           php artisan key:generate --ansi
-      - name: 📜 Install dependencies
-        run: make install
       - name: ⚙ Run tests
         run: make tests
