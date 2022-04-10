@@ -1,6 +1,6 @@
-const { PresenceChannel } = require("./PresenceChannel");
-const { PrivateChannel } = require('./PrivateChannel')
-const { ResponderManager } = require('../Responders/ResponderManager')
+const {PresenceChannel} = require("./PresenceChannel");
+const {PrivateChannel} = require('./PrivateChannel')
+const {ResponderManager} = require('../Responders/ResponderManager')
 
 module.exports.Channel = class {
   privateChannels = ['private-*', 'presence-*'];
@@ -15,8 +15,8 @@ module.exports.Channel = class {
   }
 
   async join(socket, data) {
-    if(data.channel) {
-      if(this.isPrivate(data.channel)) {
+    if (data.channel) {
+      if (this.isPrivate(data.channel)) {
         await this.joinPrivate(socket, data)
       } else {
         socket.join(data.channel)
@@ -28,11 +28,12 @@ module.exports.Channel = class {
   clientEvent(socket, data, responders) {
     try {
       data = JSON.parse(data)
-    } catch (e) {}
+    } catch (e) {
+    }
 
     if (data.event && data.channel) {
       const responder = this.responderManager.findResponder(data.event, responders);
-      if(this.isClientEvent(data.event) && this.isPrivate(data.channel) && this.isInChannel(socket, data.channel)) {
+      if (this.isClientEvent(data.event) && this.isPrivate(data.channel) && this.isInChannel(socket, data.channel)) {
         responder.emit(socket, data)
       }
     }
@@ -46,7 +47,7 @@ module.exports.Channel = class {
 
       socket.leave(channel)
 
-      if(process.env.APP_DEBUG) {
+      if (process.env.APP_DEBUG) {
         console.info(`[${new Date().toISOString()}] - ${socket.id} left channel: ${channel} (${reason})`)
       }
     }
@@ -73,7 +74,8 @@ module.exports.Channel = class {
 
         try {
           member = JSON.parse(res.channel_data)
-        } catch (e) {}
+        } catch (e) {
+        }
 
         await this.presence.join(socket, data.channel, member)
       }

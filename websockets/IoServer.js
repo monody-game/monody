@@ -7,7 +7,11 @@ module.exports.IoServer = class {
   responders = [];
 
   constructor() {
-    this.server = new Server({});
+    this.server = new Server({}, {
+      cors: {
+        credentials: true
+      }
+    });
     this.subscriber = new RedisSubscriber();
     this.channel = new Channel(this.server)
   }

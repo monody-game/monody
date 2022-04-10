@@ -6,6 +6,7 @@ module.exports.PrivateChannel = class {
       form: { channel_name: data.channel },
       headers: (data.auth && data.auth.headers) ? data.auth.headers : {},
       rejectUnauthorized: false,
+      credentials: 'include',
     }
 
     if (process.env.APP_DEBUG) {
