@@ -4,7 +4,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Redis;
 
-Broadcast::channel('home', function (User $user) {
+Broadcast::channel('home', function () {
     return true;
 });
 

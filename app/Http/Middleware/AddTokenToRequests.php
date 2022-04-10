@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AddTokenToRequests
 {
     /**
-     * Attach secure cookie stored access token to the request.
+     * Attach cookie access token to the Authorization header in the request.
      *
      * @return mixed
      */
