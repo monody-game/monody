@@ -41,9 +41,9 @@ class Kernel extends HttpKernel
 
         'api' => [
             AddTokenToRequests::class,
+            \App\Http\Middleware\ForceJsonResponse::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\ForceJsonResponse::class,
         ],
     ];
 
