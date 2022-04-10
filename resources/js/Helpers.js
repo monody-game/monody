@@ -21,7 +21,7 @@ window.JSONFetch = async (url, method, body = null) => {
     res.error = err
   );
 
-  if (response.ok && response.status !== 204) {
+  if (response.status !== 204) {
     res.data = await response.json();
   }
 

@@ -95,7 +95,6 @@ export default {
 
       this.loading = false;
       await this.$router.push("play");
-      console.log('w')
     },
   },
 };
