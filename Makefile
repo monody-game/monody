@@ -12,6 +12,10 @@ install: vendor
 server:
 	docker-compose up -d
 
+.PHONY: down
+down:
+	docker-compose down
+
 .PHONY: format
 format: install
 	vendor/bin/php-cs-fixer fix --dry-run
