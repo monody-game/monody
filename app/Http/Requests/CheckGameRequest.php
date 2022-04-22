@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteGameRequest extends FormRequest
+class CheckGameRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class DeleteGameRequest extends FormRequest
     public function rules()
     {
         return [
-            'game_id' => 'required|string',
+            'game_id' => 'required|string'
         ];
     }
 }

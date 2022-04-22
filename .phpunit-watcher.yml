@@ -1,7 +1,7 @@
 watch:
   directories:
     - tests
-    - src
+    - app
   fileMask: '*.php'
 notifications:
   passingTests: false
