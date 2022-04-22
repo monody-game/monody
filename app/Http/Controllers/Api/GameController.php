@@ -4,24 +4,24 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\GameCreated;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CheckGameRequest;
 use App\Http\Requests\CreateGameRequest;
 use App\Http\Requests\DeleteGameRequest;
 use App\Models\Game;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
 class GameController extends Controller
 {
-    public function check(Request $request): JsonResponse
-    {
-        $data = $request->all();
-        if (!isset($data['gameId'])) {
-            return response()->json(['error' => 'Game id is required'], 400);
-        }
+    private const GAME_WAITING = 0;
 
-        $game = Redis::get('game:' . $data['gameId']);
+    public function check(CheckGameRequest $request): JsonResponse
+    {
+        /** @var array $data */
+        $data = $request->post();
+
+        $game = Redis::get("game:{$data['game_id']}");
 
         if ($game) {
             return response()->json(['message' => 'Game found']);
@@ -34,7 +34,8 @@ class GameController extends Controller
     {
         $cursor = '0';
         /** @var array[] $games */
-        $games = Redis::scan($cursor, 'game:*', 100);
+        /** @phpstan-ignore-next-line */
+        $games = Redis::scan($cursor, ['MATCH' => 'game:*', 'COUNT' => 20]);
         $list = [];
         $user = new User();
 
@@ -66,14 +67,15 @@ class GameController extends Controller
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
         $data['owner'] = $request->user()?->id;
-        $data['is_started'] = \array_key_exists('is_started', $data) && (bool) $data['is_started'];
+        $data['is_started'] = false;
         $id = $this->generateGameId();
 
         if (!array_search($data['owner'], $data['users'], true)) {
             $data['users'] = array_merge($data['users'], [$data['owner']]);
         }
 
-        Redis::set('game:' . $id, json_encode($data));
+        Redis::set("game:{$id}", json_encode($data));
+        Redis::set("game:{$id}:state", self::GAME_WAITING);
 
         $data['id'] = $id;
         $data['owner'] = $request->user();
@@ -83,13 +85,13 @@ class GameController extends Controller
         return response()->json(['game' => $data]);
     }
 
-    private function generateGameId(): string
+    public function generateGameId(): string
     {
         $bytes = random_bytes(10);
         $id = base64_encode($bytes);
         $id = str_replace(['+', '/', '='], '', $id);
 
-        if (Redis::exists('game:' . $id)) {
+        if (Redis::exists("game:{$id}")) {
             return $this->generateGameId();
         }
 
@@ -101,7 +103,8 @@ class GameController extends Controller
         /** @var string $gameId */
         $gameId = $request->post('game_id');
 
-        Redis::del('game:' . $gameId);
+        Redis::del("game:{$gameId}");
+        Redis::del("game:{$gameId}:state");
 
         return response()->json();
     }
