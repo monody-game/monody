@@ -34,10 +34,7 @@ class GameController extends Controller
     {
         $cursor = '0';
         /** @var array[] $games */
-<<<<<<< HEAD
         /** @phpstan-ignore-next-line */
-=======
->>>>>>> 7a879b1a3a63a96f2765c003df916e3636319402
         $games = Redis::scan($cursor, ['MATCH' => 'game:*', 'COUNT' => 20]);
         $list = [];
         $user = new User();
