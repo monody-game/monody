@@ -81,7 +81,12 @@ class GameControllerTest extends TestCase
         $this->assertCount(2, $list->json('games'));
 
         $game = $list->json('games')[0];
-        $this->assertSame(sort($this->game), sort($game));
+        $this->assertArrayNotHasKey('is_started', $game);
+        $this->assertArrayNotHasKey('assigned_roles', $game);
+        $exceptedGame = $this->game;
+        unset($exceptedGame['is_started']);
+        unset($exceptedGame['assigned_roles']);
+        $this->assertSame(sort($exceptedGame), sort($game));
     }
 
     public function testDeleteGameWithWrongRequest()

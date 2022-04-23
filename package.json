@@ -17,7 +17,6 @@
     "@vue/compiler-sfc": "^3.2.6",
     "devtools-detect": "^4.0.0",
     "dotenv": "^16.0.0",
-    "jsonwebtoken": "^8.5.1",
     "laravel-echo": "^1.11.3",
     "node-fetch": "2",
     "pinia": "^2.0.11",

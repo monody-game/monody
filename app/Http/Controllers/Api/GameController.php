@@ -41,14 +41,19 @@ class GameController extends Controller
 
         if ($games) {
             foreach ($games[1] as $game) {
-                if (1 === preg_match('/game:\w*/', $game)) {
+                if (1 === preg_match('/^game:[^:]+$/', $game)) {
                     $gameData = Redis::get($game);
                     if ($gameData) {
                         $currentGame = json_decode($gameData, true);
+                        if ($currentGame['is_started']) {
+                            continue;
+                        }
                         $owner = $user->find(['id' => $currentGame['owner']]);
                         if ($owner) {
                             $currentGame['owner'] = $owner->first();
                             $currentGame['id'] = str_replace('game:', '', $game);
+                            unset($currentGame['assigned_roles']);
+                            unset($currentGame['is_started']);
                             $list[] = $currentGame;
                         }
                     }
