@@ -17,14 +17,14 @@ module.exports.IoServer = class {
   }
 
   async start() {
-    console.log("\nStarting IoServer...");
+    console.info("\nStarting IoServer...");
 
     if (process.env.APP_DEBUG) {
-      console.log("\nIoServer is running in debug mode.\n");
+      console.info("\nIoServer is running in debug mode.\n");
     }
 
-    this.onConnect();
     this.initResponders();
+    this.onConnect();
     await this.listen();
     this.server.listen(6001);
   }
@@ -58,6 +58,10 @@ module.exports.IoServer = class {
 
   onSubscribe(socket) {
     socket.on('subscribe', async (data) => {
+      if (data.channel) {
+        const responder = ResponderManager.findResponder('subscribe', this.responders);
+        responder.emit(socket, data)
+      }
       await this.channel.join(socket, data)
     });
   }
@@ -80,7 +84,10 @@ module.exports.IoServer = class {
 
   onClientEvent(socket) {
     socket.on('client event', (data) => {
-      this.channel.clientEvent(socket, data, this.responders)
+      if (data.event && data.channel) {
+        const responder = ResponderManager.findResponder(data.event, this.responders);
+        responder.emit(socket, data)
+      }
     });
   }
 

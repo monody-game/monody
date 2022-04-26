@@ -16,25 +16,12 @@ module.exports.Channel = class {
 
   async join(socket, data) {
     if (data.channel) {
+      if (this.isInChannel(socket, data.channel)) return;
       if (this.isPrivate(data.channel)) {
         await this.joinPrivate(socket, data)
       } else {
         socket.join(data.channel)
         this.onJoin(socket, data.channel)
-      }
-    }
-  }
-
-  clientEvent(socket, data, responders) {
-    try {
-      data = JSON.parse(data)
-    } catch (e) {
-    }
-
-    if (data.event && data.channel) {
-      const responder = this.responderManager.findResponder(data.event, responders);
-      if (this.isClientEvent(data.event) && this.isPrivate(data.channel) && this.isInChannel(socket, data.channel)) {
-        responder.emit(socket, data)
       }
     }
   }
