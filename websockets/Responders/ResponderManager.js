@@ -5,7 +5,7 @@ module.exports.ResponderManager = class {
     return fs.readdirSync(__dirname).filter(file => file !== "BaseResponder.js" && file.endsWith('Responder.js')).map(file => require(`${__dirname}/${file}`))
   }
 
-  findResponder(event, responders) {
+  static findResponder(event, responders) {
     return responders.find(responder => responder.canRespond(event));
   }
 }

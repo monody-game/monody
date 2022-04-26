@@ -1,6 +1,6 @@
 const BaseResponder = require("./BaseResponder");
 
-module.exports = class CounterResponder extends BaseResponder {
+module.exports = class VoteResponder extends BaseResponder {
   constructor() {
     super();
     this.respondTo = [

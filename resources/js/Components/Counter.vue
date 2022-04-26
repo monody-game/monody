@@ -44,31 +44,33 @@ export default {
       this.decount();
     }
 
-    (async () => {
-      Echo.join(`game.${this.$route.params.id}`)
-        .listen(".game.start", () => {
-          this.counterService.switch();
-          this.time = this.counterService.getTimeCounter();
-          this.starting_time = this.time;
+    Echo.join(`game.${this.$route.params.id}`)
+      .listen(".game.start", () => {
+        this.counterService.switch();
+        this.time = this.counterService.getTimeCounter();
+        this.starting_time = this.time;
 
-          if (this.time !== 0) {
-            this.updateCircle();
-            this.decount();
-          }
-        })
-        .listen(".game.newDay", () => {
-          this.counterService.switch();
-          this.status = this.counterService.getState();
-          this.time = this.counterService.getTimeCounter();
-          this.starting_time = this.counterService.getTimeCounter();
+        if (this.time !== 0) {
+          this.updateCircle();
+          this.decount();
+        }
+      })
+      .listen(".game.newDay", () => {
+        this.counterService.switch();
+        this.status = this.counterService.getState();
+        this.time = this.counterService.getTimeCounter();
+        this.starting_time = this.counterService.getTimeCounter();
 
-          if (this.time !== 0) {
-            this.updateCircle();
-            this.decount();
-          }
-        });
-    })();
-
+        if (this.time !== 0) {
+          this.updateCircle();
+          this.decount();
+        }
+      })
+      .listen('.counter.time', (data) => {
+        debugger;
+        this.time = parseInt((new Date(data.start - Date.now()).getTime() / 1000).toFixed(0));
+        this.starting_time = this.time;
+      });
   },
   computed: {
     getRound() {
@@ -88,11 +90,12 @@ export default {
   },
   methods: {
     decount() {
+      const channel = Echo.join(`game.${this.$route.params.id}`);
+      channel.whisper('counter.start', {
+        duration: this.starting_time,
+        starting_timestamp: Date.now()
+      })
       this.counterId = window.setInterval(() => {
-        if (this.time !== this.starting_time && this.time % 10 === 0) {
-          emitter.emit("counter.update");
-        }
-
         this.time = this.time - 1;
         this.soundManagement();
         this.updateCircle();
@@ -100,8 +103,7 @@ export default {
         if (this.time === 0) {
           clearInterval(this.counterId);
 
-          Echo.join(`game.${this.$route.params.id}`)
-            .whisper("counter.end");
+          channel.whisper("counter.end");
         }
       }, 1000);
     },

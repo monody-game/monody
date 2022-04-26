@@ -1,9 +1,12 @@
 const {client} = require('../Redis/Connection')
+const states = require("../Constants/GameStates");
+const durations = require("../Constants/RoundDurations");
 
 module.exports.PresenceChannel = class {
   constructor(io) {
-    this.io = io
-    this.gameService = new (require('../Services/GameService'))(io)
+    this.io = io;
+    this.gameService = new (require('../Services/GameService'))(io);
+    this.StateManager = new (require('../Services/StateManager'))(io);
   }
 
   async getMembers(channel) {
@@ -51,6 +54,14 @@ module.exports.PresenceChannel = class {
     const count = await this.gameService.getRolesCount(id)
     const game = JSON.parse(await client.get('game:' + id))
 
+    if (await this.gameService.isAuthor(socket, id)) {
+      this.StateManager.setState({
+        status: states.GAME_WAITING,
+        startTimestamp: Date.now(),
+        counterDuration: durations.STARTING_DURATION
+      }, channel);
+    }
+
     if (members.length === count && game.is_started === false) {
       await this.gameService.startGame(channel, game, members)
     }
@@ -68,6 +79,7 @@ module.exports.PresenceChannel = class {
     if (members.length === 0) {
       await client.del(channel + ':members')
       await client.del('game:' + gameId)
+      await client.del(`game:${gameId}:state`)
 
       this.onDelete(gameId)
       this.onLeave(channel, member)
