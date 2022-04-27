@@ -11,7 +11,7 @@
         <circle cx="22.5" cy="22.5" fill="none" r="20" stroke="white"/>
       </svg>
       <svg class="counter__icon">
-        <use :href="'/sprite.svg#' + status"/>
+        <use :href="'/sprite.svg#' + getIcon"/>
       </svg>
     </span>
     <p class="counter__seconds">
@@ -45,13 +45,10 @@ export default {
     }
 
     Echo.join(`game.${this.$route.params.id}`)
-      .listen(".game.start", () => {
-        this.counterService.switch();
-        this.time = this.counterService.getTimeCounter();
-        this.starting_time = this.time;
-
-        if (this.time !== 0) {
-          this.updateCircle();
+      .listen('.game.state', (data) => {
+        if (data) {
+          this.time = data.counterDuration === -1 ? 0 : data.counterDuration;
+          this.status = data.state;
           this.decount();
         }
       })
@@ -67,7 +64,6 @@ export default {
         }
       })
       .listen('.counter.time', (data) => {
-        debugger;
         this.time = parseInt((new Date(data.start - Date.now()).getTime() / 1000).toFixed(0));
         this.starting_time = this.time;
       });
@@ -75,26 +71,33 @@ export default {
   computed: {
     getRound() {
       const rounds = {
-        starting: "Début de la partie",
-        wait: "Attente",
-        day: "Jour",
-        night: "Nuit",
-        vote: "Vote",
-        werewolf: "Tour des Loups",
-        witch: "Tour de la sorcière",
-        psychic: "Tour de la voyante",
-        end: "Fin de la partie",
+        GAME_WAITING: "Attente",
+        GAME_STARTING: "Début de la partie",
+        GAME_NIGHT: "Nuit",
+        GAME_WEREWOLF: "Tour des Loups",
+        GAME_DAY: "Jour",
+        GAME_VOTE: "Vote",
       };
       return rounds[this.status];
     },
+    getIcon() {
+      const icons = {
+        GAME_WAITING: "wait",
+        GAME_STARTING: "start",
+        GAME_NIGHT: "night",
+        GAME_WEREWOLF: "werewolf",
+        GAME_DAY: "day",
+        GAME_VOTE: "vote",
+      };
+      return icons[this.status];
+    }
   },
   methods: {
     decount() {
+      if (this.time === 0) {
+        return;
+      }
       const channel = Echo.join(`game.${this.$route.params.id}`);
-      channel.whisper('counter.start', {
-        duration: this.starting_time,
-        starting_timestamp: Date.now()
-      })
       this.counterId = window.setInterval(() => {
         this.time = this.time - 1;
         this.soundManagement();
@@ -102,7 +105,6 @@ export default {
 
         if (this.time === 0) {
           clearInterval(this.counterId);
-
           channel.whisper("counter.end");
         }
       }, 1000);
