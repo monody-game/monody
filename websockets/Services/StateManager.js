@@ -20,7 +20,7 @@ module.exports = class StateManager {
 
     await client.set(`game:${channel.split('.')[1]}:state`, JSON.stringify(state));
 
-    this.io.to(channel).emit('game.', channel);
+    this.io.to(channel).emit('game.state', channel);
 
     return this;
   }
@@ -29,9 +29,9 @@ module.exports = class StateManager {
    * Get the current state of a game
    *
    * @param { String } gameId
-   * @returns { String }
+   * @returns { Promise<Object> }
    */
   async getState(gameId) {
-    return await client.get(`game:${gameId}:state`);
+    return JSON.parse(await client.get(`game:${gameId}:state`));
   }
 }

@@ -1,5 +1,6 @@
 const BaseResponder = require("./BaseResponder");
 const StateManager = new (require("../Services/StateManager"))();
+const states = require('../Constants/GameStates')
 
 module.exports = class JoinResponder extends BaseResponder {
   constructor() {
@@ -9,11 +10,18 @@ module.exports = class JoinResponder extends BaseResponder {
     ]
   }
 
-  emit(socket, data) {
+  async emit(socket, data) {
     const id = data.channel.split('.')[1];
-    const game = StateManager.getState(id);
+    const game = await StateManager.getState(id);
 
-    console.log("JoinResponder");
-    console.log(data)
+    if (game) {
+      setTimeout(() => {
+        socket.emit('game.state', data.channel, {
+          state: Object.keys(states)[game.status],
+          counterDuration: game.counterDuration,
+          startTimestamp: game.startTimestamp
+        })
+      }, 500)
+    }
   }
 };

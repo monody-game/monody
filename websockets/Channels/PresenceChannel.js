@@ -58,7 +58,7 @@ module.exports.PresenceChannel = class {
       this.StateManager.setState({
         status: states.GAME_WAITING,
         startTimestamp: Date.now(),
-        counterDuration: durations.STARTING_DURATION
+        counterDuration: durations.WAITING_DURATION
       }, channel);
     }
 
