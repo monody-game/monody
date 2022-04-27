@@ -29,6 +29,8 @@ window.JSONFetch = async (url, method, body = null) => {
     res.data = {};
   }
 
+  res.status = response.status;
+
   return res;
 };
 /**

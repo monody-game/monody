@@ -8,12 +8,12 @@ export default class AuthService {
 
   async getUser() {
     let res = await JSONFetch("/user", "GET")
-    const data = res.data
 
-    if (data.error) {
+    if (!res.status.toString().startsWith('2')) {
       return false;
     }
 
+    const data = res.data
     res = await window.JSONFetch('/exp/get', 'GET')
     data.exp = res.data.experience.exp
 
