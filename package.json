@@ -24,7 +24,7 @@
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
     "vue": "^3.2.30",
-    "vue-router": "^4.0.12"
+    "vue-router": "4"
   },
   "devDependencies": {
     "css-loader": "^6.2.0",
