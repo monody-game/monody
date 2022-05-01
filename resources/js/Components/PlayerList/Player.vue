@@ -32,6 +32,7 @@ export default {
       isVoted: this.player.voted_by.length > 1,
       gameStore: useGameStore(),
       userStore: useUserStore(),
+      gameId: document.URL.split('/')[document.URL.split('/').length - 1]
     };
   },
   computed: {
@@ -45,20 +46,8 @@ export default {
       return "http://localhost:8000" + this.player.avatar;
     }
   },
-  mounted() {
-    /*this.socket.on("game.vote", ({ voted_user, voted_by }) => {
-      if (voted_user === this.player.id) {
-        this.vote(voted_by, voted_user, false);
-      }
-    });
-    this.socket.on("game.unvote", ({ voted_user, voted_by }) => {
-      if (voted_user === this.player.id) {
-        this.unVote(voted_by, voted_user, false);
-      }
-    });*/
-  },
   methods: {
-    vote(voted_by, voted_user, emit_event = true) {
+    vote: function (voted_by, voted_user, emit_event = true) {
       if (typeof voted_by === "undefined") {
         return;
       }
@@ -83,13 +72,13 @@ export default {
       });
 
       if (emit_event) {
-        this.socket.emit("game.voting", {
+        Echo.join(`game.${this.gameId}`).whisper("game.voting", {
           voted_user: voted_user,
           voted_by: voted_by,
         });
       }
     },
-    unVote(voted_by, voted_user, emit_event = true) {
+    unVote: function (voted_by, voted_user, emit_event = true) {
       if (typeof voted_by === "undefined") {
         return;
       }
@@ -97,12 +86,13 @@ export default {
         this.isVoted = false;
       }
       this.gameStore.currentVote = 0;
+      this.votedBy.splice(this.votedBy.indexOf(voted_by), 1)
       this.gameStore.unVote({
         userID: voted_user,
         votedBy: voted_by,
       });
       if (emit_event) {
-        this.socket.emit("game.unvoting", {
+        Echo.join(`game.${this.gameId}`).whisper("game.unvoting", {
           voted_user: voted_user,
           voted_by: voted_by,
         });

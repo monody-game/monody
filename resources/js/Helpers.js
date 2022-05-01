@@ -33,19 +33,3 @@ window.JSONFetch = async (url, method, body = null) => {
 
   return res;
 };
-/**
- * @param {String} url
- * @param {String} socketId
- * @param {Object} body
- */
-window.SocketJSONFetch = async (url, socketId, body = null) => {
-  const params = {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-      "X-Socket-ID": socketId,
-    },
-  };
-
-  return await baseFetch(url, body, params);
-}
