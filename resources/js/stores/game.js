@@ -39,9 +39,9 @@ export const useStore = defineStore('game', {
         return;
       }
       this.currentVote = 0;
-      const votes = this.getters.getPlayerByID(userID).voted_by;
+      const votes = this.getPlayerByID(userID).voted_by;
       if (votes.length === 1) {
-        this.getters.getPlayerByID(userID).voted_by = [];
+        this.getPlayerByID(userID).voted_by = [];
         return;
       }
       const index = votes.indexOf(votedBy);
