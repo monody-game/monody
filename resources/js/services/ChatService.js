@@ -24,7 +24,7 @@ export default class ChatService {
     const wrapper = document.createElement("div");
     wrapper.classList.add("message__main");
 
-    if(customClass) {
+    if (customClass) {
       wrapper.classList.add(customClass);
     }
 
@@ -57,14 +57,14 @@ export default class ChatService {
 
     if (useGameStore().state === "night" && useGameStore().isWerewolf) {
       Echo.join(`game.${gameId}`)
-        .whisper("chat.werewolf.send", { content: message, author: useUserStore().id });
+        .whisper("chat.werewolf.send", {content: message, author: useUserStore().id});
       this.sendMessage({
         content: message,
         author: useUserStore().getUser
       }, "message__werewolf");
       return;
     }
-    await SocketJSONFetch("/game/message/send", Echo.socketId(), {
+    await JSONFetch("/game/message/send", 'POST', {
       content: message,
       gameId
     });

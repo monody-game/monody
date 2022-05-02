@@ -29,44 +29,31 @@ export default {
   data: function () {
     return {
       time: 0,
-      starting_time: 0,
+      startingTime: 0,
+      totalTime: 0,
       counterId: "",
-      status: "",
+      status: "GAME_WAITING",
       counterService: new CounterCycleService(),
       sound: new Audio("../sounds/bip.mp3")
     };
   },
   mounted() {
     this.updateCircle();
-    this.status = this.counterService.getState();
-
-    if (this.starting_time !== 0) {
-      this.decount();
-    }
-
     Echo.join(`game.${this.$route.params.id}`)
       .listen('.game.state', (data) => {
         if (data) {
-          this.time = data.counterDuration === -1 ? 0 : data.counterDuration;
-          this.status = data.state;
-          this.decount();
-        }
-      })
-      .listen(".game.newDay", () => {
-        this.counterService.switch();
-        this.status = this.counterService.getState();
-        this.time = this.counterService.getTimeCounter();
-        this.starting_time = this.counterService.getTimeCounter();
+          if (data.counterDuration === -1) {
+            clearInterval(this.counterId);
+          }
 
-        if (this.time !== 0) {
+          this.time = data.counterDuration === -1 ? 0 : data.counterDuration;
+          this.startingTime = data.startTimestamp;
+          this.totalTime = this.time;
+          this.status = data.state;
           this.updateCircle();
           this.decount();
         }
       })
-      .listen('.counter.time', (data) => {
-        this.time = parseInt((new Date(data.start - Date.now()).getTime() / 1000).toFixed(0));
-        this.starting_time = this.time;
-      });
   },
   computed: {
     getRound() {
@@ -83,7 +70,7 @@ export default {
     getIcon() {
       const icons = {
         GAME_WAITING: "wait",
-        GAME_STARTING: "start",
+        GAME_STARTING: "wait",
         GAME_NIGHT: "night",
         GAME_WEREWOLF: "werewolf",
         GAME_DAY: "day",
@@ -140,9 +127,9 @@ export default {
     updateCircle() {
       const circle = document.querySelector(".counter__icon-circle circle");
       if (circle) {
-        let percentage = (this.time / this.starting_time) * 100;
+        let percentage = (this.time / this.totalTime) * 100;
 
-        if (this.starting_time === 0) {
+        if (this.totalTime === 0) {
           percentage = 100;
         }
 
