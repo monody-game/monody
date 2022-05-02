@@ -1,12 +1,13 @@
 const {client} = require('../Redis/Connection')
 const states = require("../Constants/GameStates");
 const durations = require("../Constants/RoundDurations");
+const {GAME_STARTING} = require("../Constants/GameStates");
 
 module.exports.PresenceChannel = class {
   constructor(io) {
     this.io = io;
     this.gameService = new (require('../Services/GameService'))(io);
-    this.StateManager = new (require('../Services/StateManager'))(io);
+    this.stateManager = new (require('../Services/StateManager'))(io);
   }
 
   async getMembers(channel) {
@@ -54,8 +55,11 @@ module.exports.PresenceChannel = class {
     const count = await this.gameService.getRolesCount(id)
     const game = JSON.parse(await client.get('game:' + id))
 
-    if (await this.gameService.isAuthor(socket, id)) {
-      this.StateManager.setState({
+    if (
+      await this.gameService.isAuthor(socket, id) &&
+      !await this.gameService.getGame(id).is_started &&
+      !members.length > 0) {
+      this.stateManager.setState({
         status: states.GAME_WAITING,
         startTimestamp: Date.now(),
         counterDuration: durations.WAITING_DURATION
@@ -69,15 +73,24 @@ module.exports.PresenceChannel = class {
 
   async leave(socket, channel) {
     const gameId = channel.split('.')[1]
+    const game = await this.gameService.getGame(gameId)
     let members = await this.getMembers(channel)
     members = members || []
+
+    if (game.is_started) {
+      const state = await this.stateManager.getState(gameId);
+      if (state.status === GAME_STARTING) {
+        await this.gameService.stopGameLaunch(channel);
+      }
+    }
 
     let member = members.find(m => m.socketId === socket.id)
     if (!member) return;
     members = members.filter(m => m.socketId !== member.socketId)
 
+
     if (members.length === 0) {
-      await client.del(channel + ':members')
+      await client.del(`game:${gameId}:members`)
       await client.del('game:' + gameId)
       await client.del(`game:${gameId}:state`)
 
@@ -85,9 +98,8 @@ module.exports.PresenceChannel = class {
       this.onLeave(channel, member)
     } else {
       await client.set(`game:${channel.split('.')[1]}:members`, JSON.stringify(members));
-      const game = JSON.parse(await client.get('game:' + gameId))
       game.users = members
-      await client.set('game:' + gameId, JSON.stringify(game))
+      await this.gameService.setGame(gameId, game)
 
       const isMember = await this.isMember(channel, member);
 

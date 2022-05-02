@@ -1,5 +1,6 @@
 const {client} = require('../Redis/Connection');
 const states = require('../Constants/GameStates')
+const durations = require("../Constants/RoundDurations");
 
 module.exports = class StateManager {
   constructor(io) {
@@ -20,7 +21,11 @@ module.exports = class StateManager {
 
     await client.set(`game:${channel.split('.')[1]}:state`, JSON.stringify(state));
 
-    this.io.to(channel).emit('game.state', channel);
+    this.io.to(channel).emit('game.state', channel, {
+      state: Object.keys(states)[state.status],
+      counterDuration: state.counterDuration,
+      startTimestamp: state.startTimestamp
+    });
 
     return this;
   }
@@ -33,5 +38,25 @@ module.exports = class StateManager {
    */
   async getState(gameId) {
     return JSON.parse(await client.get(`game:${gameId}:state`));
+  }
+
+  /**
+   * Switch the state to the next
+   *
+   * @param { Object } channel
+   * @returns void
+   */
+  async nextState(channel) {
+    const currentState = (await this.getState(channel.split('.')[1]))['status'];
+    const nextState = currentState + 1;
+
+    if (!Object.keys(states).includes(nextState)) {
+      throw new Error('Game is supposed to be ended');
+    }
+    await this.setState({
+      status: Object.keys(states)[nextState],
+      startTimestamp: Date.now(),
+      counterDuration: durations
+    }, channel)
   }
 }
