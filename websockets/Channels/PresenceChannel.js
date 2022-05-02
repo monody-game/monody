@@ -10,7 +10,7 @@ module.exports.PresenceChannel = class {
   }
 
   async getMembers(channel) {
-    const members = JSON.parse(await client.get(channel + ':members'));
+    const members = JSON.parse(await client.get(`game:${channel.split('.')[1]}:members`));
     if (!members) return [];
     return members
   }
@@ -27,7 +27,7 @@ module.exports.PresenceChannel = class {
     members = members.filter(member => {
       return Array.from(clients).indexOf(member.socketId) >= 0;
     })
-    await client.set(channel + ':members', JSON.stringify(members));
+    await client.set(`game:${channel.split('.')[1]}:members`, JSON.stringify(members));
     return members
   }
 
@@ -42,7 +42,7 @@ module.exports.PresenceChannel = class {
     member.socketId = socket.id
     members.push(member)
 
-    await client.set(channel + ':members', JSON.stringify(members))
+    await client.set(`game:${channel.split('.')[1]}:members`, JSON.stringify(members));
 
     this.onSubscribed(socket, channel, members);
 
@@ -84,7 +84,7 @@ module.exports.PresenceChannel = class {
       this.onDelete(gameId)
       this.onLeave(channel, member)
     } else {
-      await client.set(channel + ':members', JSON.stringify(members))
+      await client.set(`game:${channel.split('.')[1]}:members`, JSON.stringify(members));
       const game = JSON.parse(await client.get('game:' + gameId))
       game.users = members
       await client.set('game:' + gameId, JSON.stringify(game))
