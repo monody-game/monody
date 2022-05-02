@@ -22,13 +22,16 @@ module.exports = class GameService {
 
   async isAuthor(socket, gameId) {
     const game = await this.getGame(gameId);
-    const members = JSON.parse(await client.get('presence-game:' + gameId + ':members')) ?? [];
-    const userId = await UserService.getUserBySocket(socket, members);
-    return game.author === userId;
+    if (game) {
+      const members = JSON.parse(await client.get('game:' + gameId + ':members')) ?? [];
+      const userId = await UserService.getUserBySocket(socket, members);
+      return game.author === userId;
+    }
+    return false;
   }
 
   async startGame(channel, game, members) {
-    game.is_started = false;
+    game.is_started = true;
     await this.setGame(channel.split('.')[1], game);
 
     this.StateManager.setState({
@@ -41,9 +44,20 @@ module.exports = class GameService {
       console.info(`[${new Date().toISOString()}] - Starting game id ${channel.split('.')[1]}\n`);
     }
 
-    setTimeout(() => {
+    this.startTimeout = setTimeout(() => {
       this.roleManagement(game, channel, members)
     }, 6000)
+  }
+
+  async stopGameLaunch(channel) {
+    if (this.startTimeout) {
+      clearTimeout(this.startTimeout)
+    }
+    await this.StateManager.setState({
+      status: states.GAME_WAITING,
+      startTimestamp: Date.now(),
+      counterDuration: -1
+    }, channel)
   }
 
   async roleManagement(game, channel, members) {
