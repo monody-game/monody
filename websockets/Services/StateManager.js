@@ -50,13 +50,14 @@ module.exports = class StateManager {
     const currentState = (await this.getState(channel.split('.')[1]))['status'];
     const nextState = currentState + 1;
 
-    if (!Object.keys(states).includes(nextState)) {
+    if (!Object.values(states).includes(nextState)) {
       throw new Error('Game is supposed to be ended');
     }
+
     await this.setState({
-      status: Object.keys(states)[nextState],
+      status: Object.values(states)[nextState],
       startTimestamp: Date.now(),
-      counterDuration: durations
+      counterDuration: Object.values(durations)[nextState]
     }, channel)
   }
 }

@@ -42,16 +42,14 @@ export default {
     Echo.join(`game.${this.$route.params.id}`)
       .listen('.game.state', (data) => {
         if (data) {
-          if (data.counterDuration === -1) {
-            clearInterval(this.counterId);
-          }
-
+          clearInterval(this.counterId);
           this.time = data.counterDuration === -1 ? 0 : data.counterDuration;
           this.startingTime = data.startTimestamp;
           this.totalTime = this.time;
           this.status = data.state;
           this.updateCircle();
           this.decount();
+          this.updateOverlay()
         }
       })
   },
@@ -72,7 +70,7 @@ export default {
         GAME_WAITING: "wait",
         GAME_STARTING: "wait",
         GAME_NIGHT: "night",
-        GAME_WEREWOLF: "werewolf",
+        GAME_WEREWOLF: "night",
         GAME_DAY: "day",
         GAME_VOTE: "vote",
       };
@@ -140,6 +138,27 @@ export default {
         circle.style.strokeDashoffset = `${offset}`;
       }
     },
+    updateOverlay() {
+      switch (this.status) {
+        case "GAME_WAITING":
+        case "GAME_STARTING":
+          break;
+        case "GAME_NIGHT":
+          this.counterService.onNight()
+          this.chatService.timeSeparator("Tombée de la nuit");
+          break;
+        case "GAME_WEREWOLF":
+          this.counterService.onNight()
+          break;
+        case "GAME_DAY":
+          this.counterService.onDay()
+          this.chatService.timeSeparator("Lever du jour");
+          break;
+        case "GAME_VOTE":
+          this.counterService.onDay()
+          break;
+      }
+    }
   },
   beforeRouteLeave(to, from, next) {
     clearInterval(this.counterId);

@@ -1,4 +1,5 @@
 const BaseResponder = require("./BaseResponder");
+const StateManager = require('../Services/StateManager');
 
 module.exports = class CounterResponder extends BaseResponder {
   constructor() {
@@ -9,7 +10,8 @@ module.exports = class CounterResponder extends BaseResponder {
     ]
   }
 
-  emit(socket, data) {
+  async emit(socket, data) {
+    const manager = new StateManager(socket);
     switch (data.event) {
       case "client-counter.start":
         socket.emit("counter.time", data.channel, {
@@ -18,7 +20,12 @@ module.exports = class CounterResponder extends BaseResponder {
         });
         break;
       case "client-counter.end":
-        socket.emit('game.newDay', data.channel)
+        const state = await manager.getState(data.channel.split('.')[1])
+        const currentSeconds = new Date().getSeconds()
+        const stateSeconds = new Date((state.startTimestamp + state.counterDuration * 1000)).getSeconds()
+        if (currentSeconds === stateSeconds) {
+          manager.nextState(data.channel);
+        }
         break;
       default:
         console.warn("Unknown event: " + data.event);

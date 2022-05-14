@@ -14,14 +14,12 @@ module.exports = class JoinResponder extends BaseResponder {
     const id = data.channel.split('.')[1];
     const game = await StateManager.getState(id);
 
-    if (game) {
-      setTimeout(() => {
-        socket.emit('game.state', data.channel, {
-          state: Object.keys(states)[game.status],
-          counterDuration: game.counterDuration,
-          startTimestamp: game.startTimestamp
-        })
-      }, 500)
+    if (game && game.is_started) {
+      socket.emit('game.state', data.channel, {
+        state: Object.keys(states)[game.status],
+        counterDuration: game.counterDuration,
+        startTimestamp: game.startTimestamp
+      })
     }
   }
 };

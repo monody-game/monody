@@ -29,7 +29,7 @@ module.exports = class ChatResponder extends BaseResponder {
   }
 
   async getMembers(channel) {
-    const members = JSON.parse(await client.get(channel + ':members'));
+    const members = JSON.parse(await client.get(`game:${channel.split('.')[1]}:members`));
     if (!members) return [];
     return members;
   }
