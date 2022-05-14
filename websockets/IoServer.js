@@ -60,7 +60,7 @@ module.exports.IoServer = class {
     socket.on('subscribe', async (data) => {
       if (data.channel) {
         const responder = ResponderManager.findResponder('subscribe', this.responders);
-        responder.emit(socket, data)
+        await responder.emit(socket, data)
       }
       await this.channel.join(socket, data)
     });
@@ -83,10 +83,10 @@ module.exports.IoServer = class {
   }
 
   onClientEvent(socket) {
-    socket.on('client event', (data) => {
+    socket.on('client event', async (data) => {
       if (data.event && data.channel) {
         const responder = ResponderManager.findResponder(data.event, this.responders);
-        responder.emit(socket, data)
+        await responder.emit(socket, data)
       }
     });
   }
