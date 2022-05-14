@@ -77,6 +77,8 @@ module.exports.PresenceChannel = class {
     let members = await this.getMembers(channel)
     members = members || []
 
+    if (!game) return;
+
     if (game.is_started) {
       const state = await this.stateManager.getState(gameId);
       if (state.status === GAME_STARTING) {
