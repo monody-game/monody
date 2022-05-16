@@ -22,7 +22,8 @@
 </template>
 
 <script>
-import CounterCycleService from "@/services/CounterCycleService.js";
+import CounterCycleService from "../services/CounterCycleService.js";
+import ChatService from "../services/ChatService";
 
 export default {
   name: "Counter",
@@ -34,6 +35,7 @@ export default {
       counterId: "",
       status: "GAME_WAITING",
       counterService: new CounterCycleService(),
+      chatService: new ChatService(),
       sound: new Audio("../sounds/bip.mp3")
     };
   },
@@ -97,26 +99,12 @@ export default {
     soundManagement() {
       switch (this.time) {
         case 120:
-          this.sound.play();
-          break;
         case 60:
-          this.sound.play();
-          break;
         case 30:
-          this.sound.play();
-          break;
         case 10:
-          this.sound.play();
-          break;
         case 5:
-          this.sound.play();
-          break;
         case 3:
-          this.sound.play();
-          break;
         case 2:
-          this.sound.play();
-          break;
         case 1:
           this.sound.play();
           break;
