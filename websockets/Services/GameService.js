@@ -1,6 +1,7 @@
 const {client} = require("../Redis/Connection");
 const RoleManager = require("./RoleManager");
 const StateManager = require("./StateManager");
+const CounterService = require("./CounterService");
 const UserService = require("./UserService");
 const states = require('../Constants/GameStates');
 const durations = require('../Constants/RoundDurations');
@@ -10,6 +11,7 @@ module.exports = class GameService {
   constructor(io) {
     this.io = io
     this.StateManager = new StateManager(io);
+    this.counterService = new CounterService(io);
   }
 
   async getGame(id) {
@@ -22,17 +24,21 @@ module.exports = class GameService {
 
   async isAuthor(socket, gameId) {
     const game = await this.getGame(gameId);
-    if (game) {
-      const members = JSON.parse(await client.get('game:' + gameId + ':members')) ?? [];
-      const userId = await UserService.getUserBySocket(socket, members);
-      return game.author === userId;
-    }
-    return false;
+    if (!game) return false;
+
+    const members = JSON.parse(await client.get('game:' + gameId + ':members')) ?? [];
+    const user = await UserService.getUserBySocket(socket, members);
+
+    if (!user) return false;
+
+    return game.owner === user.user_id;
   }
 
   async startGame(channel, game, members) {
-    game.is_started = true;
-    await this.setGame(channel.split('.')[1], game);
+    // TODO : CHANGE !!!!
+    game.is_started = false;
+    const gameId = channel.split('.')[1];
+    await this.setGame(gameId, game);
 
     this.StateManager.setState({
       status: states.GAME_STARTING,
@@ -44,9 +50,14 @@ module.exports = class GameService {
       console.info(`[${new Date().toISOString()}] - Starting game id ${channel.split('.')[1]}\n`);
     }
 
-    this.startTimeout = setTimeout(() => {
-      this.roleManagement(game, channel, members)
-    }, 6000)
+    this.startTimeout = await new Promise((resolve, reject) => {
+      const id = setTimeout(async () => {
+        await this.roleManagement(game, channel, members)
+        resolve(id)
+      }, 6000)
+    })
+
+    await this.counterService.cycle(channel)
   }
 
   async stopGameLaunch(channel) {
@@ -75,7 +86,6 @@ module.exports = class GameService {
     }
 
     await client.set('game:' + channel.split('.')[1], JSON.stringify(game));
-    this.io.to(channel).emit('game.assign', channel);
   }
 
   async getRolesCount(gameId) {

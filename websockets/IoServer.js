@@ -86,7 +86,7 @@ module.exports.IoServer = class {
     socket.on('client event', async (data) => {
       if (data.event && data.channel) {
         const responder = ResponderManager.findResponder(data.event, this.responders);
-        await responder.emit(socket, data)
+        if (responder) await responder.emit(socket, data);
       }
     });
   }

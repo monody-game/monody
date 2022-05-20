@@ -43,6 +43,8 @@ export default {
     this.updateCircle();
     Echo.join(`game.${this.$route.params.id}`)
       .listen('.game.state', (data) => {
+        console.log('game.state');
+        console.log(data);
         if (data) {
           clearInterval(this.counterId);
           this.time = data.counterDuration === -1 ? 0 : data.counterDuration;
@@ -84,7 +86,6 @@ export default {
       if (this.time === 0) {
         return;
       }
-      const channel = Echo.join(`game.${this.$route.params.id}`);
       this.counterId = window.setInterval(() => {
         this.time = this.time - 1;
         this.soundManagement();
@@ -92,7 +93,6 @@ export default {
 
         if (this.time === 0) {
           clearInterval(this.counterId);
-          channel.whisper("counter.end");
         }
       }, 1000);
     },
