@@ -8,6 +8,7 @@ module.exports.PresenceChannel = class {
     this.io = io;
     this.gameService = new (require('../Services/GameService'))(io);
     this.stateManager = new (require('../Services/StateManager'))(io);
+    this.counterService = new (require('../Services/CounterService'))(io);
   }
 
   async getMembers(channel) {
@@ -90,14 +91,9 @@ module.exports.PresenceChannel = class {
     if (!member) return;
     members = members.filter(m => m.socketId !== member.socketId)
 
-
     if (members.length === 0) {
-      await client.del(`game:${gameId}:members`)
-      await client.del('game:' + gameId)
-      await client.del(`game:${gameId}:state`)
-
-      this.onDelete(gameId)
       this.onLeave(channel, member)
+      await this.onDelete(gameId)
     } else {
       await client.set(`game:${channel.split('.')[1]}:members`, JSON.stringify(members));
       game.users = members
@@ -120,8 +116,16 @@ module.exports.PresenceChannel = class {
     this.io.to(channel).emit('presence:leaving', channel, member);
   }
 
-  onDelete(gameId) {
+  async onDelete(gameId) {
+    await client.del(`game:${gameId}:members`)
+    await client.del('game:' + gameId)
+    await client.del(`game:${gameId}:state`)
+
+    clearTimeout(this.counterService.counterId);
+
     this.io.to('home').emit('game.delete', 'home', gameId)
+
+    console.info(`Deleting game, id: ${gameId}`)
   }
 
   onSubscribed(socket, channel, members) {
