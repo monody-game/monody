@@ -43,8 +43,6 @@ export default {
     this.updateCircle();
     Echo.join(`game.${this.$route.params.id}`)
       .listen('.game.state', (data) => {
-        console.log('game.state');
-        console.log(data);
         if (data) {
           clearInterval(this.counterId);
           this.time = data.counterDuration === -1 ? 0 : data.counterDuration;
