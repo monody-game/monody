@@ -108,6 +108,10 @@ class GameController extends Controller
         /** @var string $gameId */
         $gameId = $request->post('game_id');
 
+        if (!Redis::get("game:{$gameId}")) {
+            return response()->json("Game $gameId not found", 404);
+        }
+
         Redis::del("game:{$gameId}");
         Redis::del("game:{$gameId}:state");
 
