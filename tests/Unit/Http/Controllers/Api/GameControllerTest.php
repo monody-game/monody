@@ -13,7 +13,6 @@ class GameControllerTest extends TestCase
     private User $user;
     private array $game;
 
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -116,7 +115,8 @@ class GameControllerTest extends TestCase
         $this->actingAs($this->user, 'api')
             ->post('/api/game/delete', [
                 'game_id' => $game->json('game')['id']
-            ]);
+            ])
+            ->assertStatus(204);
 
         $this->assertNull(Redis::get("game:{$game->json('game')['id']}"));
         $this->assertNull(Redis::get("game:{$game->json('game')['id']}:state"));
