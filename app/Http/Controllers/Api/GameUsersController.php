@@ -11,13 +11,12 @@ class GameUsersController extends Controller
 {
     public function list(Request $request): JsonResponse
     {
-        $data = $request->all();
-
-        if (!\array_key_exists('game_id', $data)) {
+        if (!$request->has('game_id')) {
             return response()->json(['error' => 'Game id is required'], 400);
         }
 
-        $game = Redis::get('game:' . $data['game_id']);
+        $id = $request->get('game_id');
+        $game = Redis::get("game:$id");
 
         if ($game) {
             $game = json_decode($game, true);
