@@ -115,6 +115,6 @@ class GameController extends Controller
         Redis::del("game:{$gameId}");
         Redis::del("game:{$gameId}:state");
 
-        return response()->json();
+        return response()->json([], 204);
     }
 }
