@@ -13,7 +13,7 @@ class GameMessageController extends Controller
 {
     public function send(SendMessageRequest $request): JsonResponse
     {
-        $data = $request->post();
+        $data = $request->all();
         $game = Redis::get("game:{$data['gameId']}");
 
         if (!$game) {
@@ -22,7 +22,7 @@ class GameMessageController extends Controller
 
         $game = json_decode($game, true);
 
-        if (!\in_array($request->user()->id, $game['users'], true)) {
+        if (!\in_array($request->user()?->id, $game['users'], true)) {
             return response()->json('You must be in the game to send messages', 401);
         }
 
