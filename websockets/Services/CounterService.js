@@ -12,6 +12,11 @@ module.exports = class CounterService {
       await this.cycle(channel)
     }, (await manager.getNextStateDuration(channel) + 1) * 1000)
 
-    await manager.nextState(channel, this.counterId[Symbol.toPrimitive]())
+    try {
+      await manager.nextState(channel, this.counterId[Symbol.toPrimitive]());
+    } catch (e) {
+      clearTimeout(this.counterId);
+      console.error(e);
+    }
   }
 }
