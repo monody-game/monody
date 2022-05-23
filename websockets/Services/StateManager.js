@@ -50,11 +50,7 @@ module.exports = class StateManager {
    * @returns {Promise<{duration: number, state: number}>} context The next round context
    */
   async nextState(channel, counterId) {
-    const state = await this.getState(channel.split('.')[1]);
-
-    if (!state) return;
-
-    const currentState = state['status'];
+    const currentState = (await this.getState(channel.split('.')[1]))['status'];
     let duration = 0;
 
     if (currentState === loopingStates[loopingStates.length - 1]) {
