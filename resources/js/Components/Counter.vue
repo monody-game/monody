@@ -24,6 +24,7 @@
 <script>
 import CounterCycleService from "../services/CounterCycleService.js";
 import ChatService from "../services/ChatService";
+import { useStore } from "../stores/game";
 
 export default {
   name: "Counter",
@@ -49,6 +50,7 @@ export default {
           this.startingTime = data.startTimestamp;
           this.totalTime = this.time;
           this.status = data.state;
+          useStore().state = data.state;
           this.updateCircle();
           this.decount();
           this.updateOverlay()
@@ -146,9 +148,8 @@ export default {
       }
     }
   },
-  beforeRouteLeave(to, from, next) {
+  beforeUnmount() {
     clearInterval(this.counterId);
-    next();
   },
 };
 </script>
