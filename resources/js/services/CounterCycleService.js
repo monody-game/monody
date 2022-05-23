@@ -26,10 +26,9 @@ export default class CounterCycleService {
 
   switchChatState() {
     this.chatService.lock();
-    if (this.state === "day") {
+
+    if (this.state === "day" || (useGameStore().isWerewolf && useGameStore().state === "GAME_WEREWOLF")) {
       this.chatService.unlock();
-    } else if (!useGameStore().isWerewolf && useGameStore().state === "GAME_WEREWOLF") {
-      this.chatService.lock();
     }
   }
 }
