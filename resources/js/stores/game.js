@@ -1,5 +1,5 @@
-import {defineStore} from 'pinia'
-import {useStore as useUserStore} from "./user";
+import { defineStore } from 'pinia'
+import { useStore as useUserStore } from "./user";
 
 const VILLAGER_GROUP = 1;
 const WEREWOLF_GROUP = 2;
@@ -10,7 +10,7 @@ export const useStore = defineStore('game', {
     return {
       playerList: [],
       currentVote: 0,
-      state: "wait"
+      state: "GAME_WAITING"
     }
   },
   actions: {
