@@ -35,8 +35,7 @@ module.exports = class GameService {
   }
 
   async startGame(channel, game, members) {
-    // TODO : CHANGE !!!!
-    game.is_started = false;
+    game.is_started = true;
     const gameId = channel.split('.')[1];
     await this.setGame(gameId, game);
 
@@ -50,10 +49,9 @@ module.exports = class GameService {
       console.info(`[${new Date().toISOString()}] - Starting game id ${channel.split('.')[1]}\n`);
     }
 
-    this.startTimeout = await new Promise((resolve, reject) => {
-      const id = setTimeout(async () => {
+    await new Promise(() => {
+      this.startTimeout = setTimeout(async () => {
         await this.roleManagement(game, channel, members)
-        resolve(id)
       }, 6000)
     })
 
@@ -64,6 +62,7 @@ module.exports = class GameService {
     if (this.startTimeout) {
       clearTimeout(this.startTimeout)
     }
+
     await this.StateManager.setState({
       status: states.GAME_WAITING,
       startTimestamp: Date.now(),
@@ -85,7 +84,7 @@ module.exports = class GameService {
       this.io.to(member.socketId).emit('game.role-assign', channel, game.assigned_roles[user.user_id])
     }
 
-    await client.set('game:' + channel.split('.')[1], JSON.stringify(game));
+    await this.setGame('game:' + channel.split('.')[1], game);
   }
 
   async getRolesCount(gameId) {

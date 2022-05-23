@@ -84,6 +84,7 @@ module.exports.PresenceChannel = class {
       const state = await this.stateManager.getState(gameId);
       if (state.status === GAME_STARTING) {
         await this.gameService.stopGameLaunch(channel);
+        game.is_started = false;
       }
     }
 
