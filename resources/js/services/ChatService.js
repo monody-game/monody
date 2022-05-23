@@ -1,9 +1,9 @@
 import Message from "@/Components/Chat/Message.vue";
 import AlertMessage from "@/Components/Chat/AlertMessage.vue";
 import TimeSeparator from "@/Components/Chat/TimeSeparator.vue";
-import {createApp} from "vue";
-import {useStore as useGameStore} from "@/stores/game.js";
-import {useStore as useUserStore} from "@/stores/user.js";
+import { createApp } from "vue";
+import { useStore as useGameStore } from "@/stores/game.js";
+import { useStore as useUserStore } from "@/stores/user.js";
 
 export default class ChatService {
   timeSeparator(message) {
@@ -55,7 +55,7 @@ export default class ChatService {
 
     const gameId = window.location.pathname.split('/')[2];
 
-    if (useGameStore().state === "night" && useGameStore().isWerewolf) {
+    if (useGameStore().state === "GAME_WEREWOLF" && useGameStore().isWerewolf) {
       Echo.join(`game.${gameId}`)
         .whisper("chat.werewolf.send", {content: message, author: useUserStore().id});
       this.sendMessage({
