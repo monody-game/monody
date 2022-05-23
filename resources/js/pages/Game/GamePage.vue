@@ -25,7 +25,7 @@
     <div class="game-page__main">
       <Chat/>
       <Spinner v-if="loading"/>
-      <PlayerList />
+      <PlayerList/>
     </div>
   </div>
 </template>
@@ -45,7 +45,7 @@ export default {
     PlayerList: PlayerList,
     Spinner: Spinner
   },
-  data () {
+  data() {
     return {
       gameId: this.$route.params.id,
       loading: false,
@@ -55,14 +55,12 @@ export default {
   },
   methods: {
     disconnect: async function () {
-      Echo.leave(`game.${this.gameId}`);
       await this.$router.push("/play");
     },
   },
-  async beforeRouteLeave (to, from, next) {
+  beforeUnmount() {
     Echo.leave(`game.${this.gameId}`);
     this.store.playerList = [];
-    next();
   }
 };
 </script>
