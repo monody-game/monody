@@ -8,6 +8,11 @@ const durations = require('../Constants/RoundDurations');
 const werewolves = [1];
 
 module.exports = class GameService {
+  /**
+   * @type {NodeJS.Timeout[]}
+   */
+  timeouts = [];
+
   constructor(io) {
     this.io = io
     this.StateManager = new StateManager(io);
@@ -49,18 +54,18 @@ module.exports = class GameService {
       console.info(`[${new Date().toISOString()}] - Starting game id ${channel.split('.')[1]}\n`);
     }
 
-    await new Promise(() => {
-      this.startTimeout = setTimeout(async () => {
-        await this.roleManagement(game, channel, members)
-      }, 6000)
-    })
+    this.timeouts.push(setTimeout(async () => {
+      await this.roleManagement(game, channel, members)
+    }, 6000))
 
-    await this.counterService.cycle(channel)
+    this.timeouts.push(setTimeout(async () => {
+      await this.counterService.cycle(channel)
+    }, 10000))
   }
 
   async stopGameLaunch(channel) {
-    if (this.startTimeout) {
-      clearTimeout(this.startTimeout)
+    if (this.timeouts.length > 0) {
+      this.timeouts.forEach(clearTimeout)
     }
 
     await this.StateManager.setState({
@@ -84,7 +89,7 @@ module.exports = class GameService {
       this.io.to(member.socketId).emit('game.role-assign', channel, game.assigned_roles[user.user_id])
     }
 
-    await this.setGame('game:' + channel.split('.')[1], game);
+    await this.setGame(channel.split('.')[1], game);
   }
 
   async getRolesCount(gameId) {

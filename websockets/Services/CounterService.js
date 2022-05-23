@@ -8,10 +8,10 @@ module.exports = class CounterService {
   async cycle(channel) {
     const manager = new StateManager(this.io)
 
-    const id = setTimeout(async () => {
+    this.counterId = setTimeout(async () => {
       await this.cycle(channel)
     }, (await manager.getNextStateDuration(channel) + 1) * 1000)
 
-    await manager.nextState(channel, id[Symbol.toPrimitive]())
+    await manager.nextState(channel, this.counterId[Symbol.toPrimitive]())
   }
 }
