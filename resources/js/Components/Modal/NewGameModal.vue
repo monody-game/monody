@@ -60,7 +60,7 @@ export default {
     GameStateModalPage,
     ShareModalPage,
   },
-  data () {
+  data() {
     return {
       currentPage: 1,
       totalPage: 3,
@@ -69,43 +69,43 @@ export default {
       gameId: 0,
     };
   },
-  mounted () {
+  mounted() {
     this.$refs.modal.focus();
   },
   methods: {
-    notEnoughSelectedRoles () {
+    notEnoughSelectedRoles() {
       const selectedRoles = this.store.selectedRoles;
       //return selectedRoles.length < 5;
-      //TODO: uncomment line above
+      //TODO: replace line below with line above
       return selectedRoles.length < 2;
     },
-    closeModal () {
+    closeModal() {
       this.store.isOpenned = false;
     },
-    async nextPage () {
+    async nextPage() {
       if (this.currentPage + 1 > this.totalPage) {
         return;
       }
 
       if (this.currentPage === 2) {
-          this.currentPage = this.currentPage + 1;
-          const res = await window.JSONFetch("/game/new", "POST", {
-            roles: this.store.selectedRoles,
-            is_started: false,
-            users: []
-          });
-          this.gameId = res.data.game.id
+        this.currentPage = this.currentPage + 1;
+        const res = await window.JSONFetch("/game/new", "POST", {
+          roles: this.store.selectedRoles,
+          is_started: false,
+          users: []
+        });
+        this.gameId = res.data.game.id
       } else {
         this.currentPage = this.currentPage + 1;
       }
     },
-    finish () {
+    finish() {
       this.closeModal();
-      if(this.gameId !== 0) {
+      if (this.gameId !== 0) {
         this.$router.push('/game/' + this.gameId);
       }
     },
-    previousPage () {
+    previousPage() {
       if (this.currentPage + 1 < this.totalPage) {
         return;
       }
