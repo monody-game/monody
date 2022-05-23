@@ -13,8 +13,8 @@
 import { createApp } from "vue";
 import Player from "@/Components/PlayerList/Player.vue";
 import Spinner from "@/Components/Spinner.vue";
-import { useStore as useGameStore } from "@/stores/game.js"
-import { useStore as useUserStore } from "@/stores/user.js";
+import { useStore } from "@/stores/game.js"
+import { createPinia } from "pinia";
 
 export default {
   name: "PlayerList",
@@ -22,15 +22,14 @@ export default {
     Player: Player,
     Spinner: Spinner
   },
-  data () {
+  data() {
     return {
       playerList: [],
       loading: false,
-      gameStore: useGameStore(),
-      userStore: useUserStore()
+      gameStore: useStore(),
     };
   },
-  mounted () {
+  mounted() {
     (async () => {
       Echo.join(`game.${this.$route.params.id}`)
         .here((users) => {
@@ -47,20 +46,20 @@ export default {
     })();
   },
   methods: {
-    addUser (player) {
+    addUser(player) {
       const playerList = document.querySelector(".player-list__wrapper");
       const wrapper = document.createElement("div");
       player = this.injectPlayersProperties([player])[0]
 
       createApp(Player, {
         player: player
-      }).mount(wrapper);
+      }).use(window.pinia).mount(wrapper);
 
       this.gameStore.playerList.push(player)
 
       playerList.appendChild(wrapper);
     },
-    removeUser (player) {
+    removeUser(player) {
       const players = document.querySelector(".player-list__wrapper")
       Array.from(players.children).forEach((playerContainer) => {
         if (parseInt(playerContainer.children[0].dataset.id) === parseInt(player.id)) {
@@ -69,7 +68,7 @@ export default {
         }
       });
     },
-    injectPlayersProperties (players) {
+    injectPlayersProperties(players) {
       players.forEach((player) => {
         player.voted_by = [];
         player.role = {
