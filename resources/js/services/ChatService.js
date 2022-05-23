@@ -44,7 +44,9 @@ export default class ChatService {
     createApp(AlertMessage, {
       type: type,
       message: message
-    }).mount(wrapper);
+    })
+      .use(window.pinia)
+      .mount(wrapper);
 
     messageContainer.appendChild(wrapper);
     messageContainer.scrollTo(0, messageContainer.scrollHeight);

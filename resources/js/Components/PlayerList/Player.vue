@@ -20,8 +20,8 @@
 
 <script>
 import VotedBy from "@/Components/PlayerList/VotedBy.vue";
-import {useStore as useGameStore} from "@/stores/game.js";
-import {useStore as useUserStore} from "@/stores/user.js";
+import { useStore as useGameStore } from "@/stores/game.js";
+import { useStore as useUserStore } from "@/stores/user.js";
 
 export default {
   name: "Player",
