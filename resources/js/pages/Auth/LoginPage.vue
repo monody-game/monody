@@ -10,8 +10,10 @@
           placeholder="Nom d'utilisateur"
           required
           type="text"
-        />
-        <p class="login-page__error">{{ errors.username.text }}</p>
+        >
+        <p class="login-page__error">
+          {{ errors.username.text }}
+        </p>
       </div>
       <div>
         <input
@@ -21,8 +23,10 @@
           placeholder="Mot de passe"
           required
           type="password"
-        />
-        <p class="login-page__error">{{ errors.password.text }}</p>
+        >
+        <p class="login-page__error">
+          {{ errors.password.text }}
+        </p>
       </div>
       <div class="login-page__remember-wrapper">
         <label for="remember_me">Se souvenir de moi</label>
@@ -31,7 +35,7 @@
           v-model="remember_me"
           class="login-page__remember-me"
           type="checkbox"
-        />
+        >
       </div>
       <div>
         <button
@@ -40,63 +44,71 @@
           @keyup.enter="login()"
           @click.prevent="login()"
         >
-          <Spinner v-if="loading === true" class="spinner__cloud-white"/>
+          <LoadingSpinner
+            v-if="loading === true"
+            class="spinner__cloud-white"
+          />
           Se connecter
         </button>
-        <router-link class="login-page__no-account-link" to="/register">Pas encore de compte ?</router-link>
+        <router-link
+          class="login-page__no-account-link"
+          to="/register"
+        >
+          Pas encore de compte ?
+        </router-link>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import Spinner from "@/Components/Spinner.vue";
-import {useStore} from "@/stores/user.js";
+import LoadingSpinner from "../../Components/LoadingSpinner.vue";
+import { useStore } from "../../stores/user.js";
 
 export default {
-  name: "LoginPage",
-  components: {
-    Spinner: Spinner
-  },
-  data() {
-    return {
-      store: useStore(),
-      username: "",
-      password: "",
-      remember_me: false,
-      loading: false,
-      errors: {
-        username: {
-          errored: false,
-          text: ""
-        },
-        password: {
-          errored: false,
-          text: ""
-        }
-      }
-    };
-  },
-  methods: {
-    login: async function () {
-      if (this.username === "" || this.password === "") {
-        this.errors.username.errored = true;
-        this.errors.password.errored = true;
-        this.errors.password.text = "Vous devez rentrer vos identifiants";
-        return;
-      }
-      this.loading = true;
-      await window
-        .JSONFetch("/auth/login", "POST", {
-          username: this.username,
-          password: this.password,
-          remember_me: this.remember_me,
-        })
+	name: "LoginPage",
+	components: {
+		LoadingSpinner: LoadingSpinner
+	},
+	data() {
+		return {
+			store: useStore(),
+			username: "",
+			password: "",
+			remember_me: false,
+			loading: false,
+			errors: {
+				username: {
+					errored: false,
+					text: ""
+				},
+				password: {
+					errored: false,
+					text: ""
+				}
+			}
+		};
+	},
+	methods: {
+		login: async function () {
+			if (this.username === "" || this.password === "") {
+				this.errors.username.errored = true;
+				this.errors.password.errored = true;
+				this.errors.password.text = "Vous devez rentrer vos identifiants";
+				return;
+			}
+			this.loading = true;
+			await window
+				.JSONFetch("/auth/login", "POST", {
+					username: this.username,
+					password: this.password,
+					remember_me: this.remember_me,
+				});
 
-      this.loading = false;
-      await this.$router.push("play");
-    },
-  },
+			this.loading = false;
+			await this.$router.push("play");
+		},
+	},
 };
 </script>
 

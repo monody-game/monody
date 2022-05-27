@@ -1,7 +1,10 @@
 <template>
   <div class="game-page__container day">
     <div class="game-page__header">
-      <a class="game-page__home-link" @click.prevent="disconnect()">
+      <a
+        class="game-page__home-link"
+        @click.prevent="disconnect()"
+      >
         <svg
           fill="none"
           height="40"
@@ -20,48 +23,48 @@
         </svg>
         <p>Accueil</p>
       </a>
-      <Counter/>
+      <GameCounter />
     </div>
     <div class="game-page__main">
-      <Chat/>
-      <Spinner v-if="loading"/>
-      <PlayerList/>
+      <Chat />
+      <LoadingSpinner v-if="loading" />
+      <PlayerList />
     </div>
   </div>
 </template>
 
 <script>
-import Counter from "@/Components/Counter.vue";
-import Chat from "@/Components/Chat/Chat.vue";
-import PlayerList from "@/Components/PlayerList/PlayerList.vue";
-import Spinner from "@/Components/Spinner.vue";
-import { useStore } from "@/stores/game.js"
+import GameCounter from "../../Components/GameCounter.vue";
+import TheChat from "../../Components/Chat/Chat.vue";
+import PlayerList from "../../Components/PlayerList/PlayerList.vue";
+import LoadingSpinner from "../../Components/LoadingSpinner.vue";
+import { useStore } from "../../stores/game.js";
 
 export default {
-  name: "GamePage",
-  components: {
-    Counter: Counter,
-    Chat: Chat,
-    PlayerList: PlayerList,
-    Spinner: Spinner
-  },
-  data() {
-    return {
-      gameId: this.$route.params.id,
-      loading: false,
-      isStarted: false,
-      store: useStore()
-    };
-  },
-  methods: {
-    disconnect: async function () {
-      await this.$router.push("/play");
-    },
-  },
-  beforeUnmount() {
-    Echo.leave(`game.${this.gameId}`);
-    this.store.playerList = [];
-  }
+	name: "GamePage",
+	components: {
+		GameCounter: GameCounter,
+		Chat: TheChat,
+		PlayerList: PlayerList,
+		LoadingSpinner: LoadingSpinner
+	},
+	data() {
+		return {
+			gameId: this.$route.params.id,
+			loading: false,
+			isStarted: false,
+			store: useStore()
+		};
+	},
+	beforeUnmount() {
+		window.Echo.leave(`game.${this.gameId}`);
+		this.store.playerList = [];
+	},
+	methods: {
+		disconnect: async function () {
+			await this.$router.push("/play");
+		},
+	}
 };
 </script>
 

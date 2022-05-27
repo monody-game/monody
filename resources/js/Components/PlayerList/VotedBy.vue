@@ -5,23 +5,27 @@
       :key="voter"
       :alt="getPlayerByID(voter).username + `'s avatar`"
       :src="getAvatar(voter)"
-      class="voted-by__avatar"/>
+      class="voted-by__avatar"
+    >
   </div>
 </template>
 <script>
-import { useStore } from '@/stores/game.js'
+import { useStore } from "../../stores/game.js";
+
 export default {
-  name: "VotedBy",
-  props: ["player", "votedBy"],
-  methods: {
-    getPlayerByID (id) {
-      return useStore().getPlayerByID(id);
-    },
-    getAvatar (id) {
-      return (
-        "http://localhost:8000" + this.getPlayerByID(id).avatar
-      );
-    },
-  },
+	name: "VotedBy",
+	props: {
+		votedBy: Object
+	},
+	methods: {
+		getPlayerByID(id) {
+			return useStore().getPlayerByID(id);
+		},
+		getAvatar(id) {
+			return (
+				"http://localhost:8000" + this.getPlayerByID(id).avatar
+			);
+		},
+	},
 };
 </script>

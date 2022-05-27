@@ -1,7 +1,7 @@
 module.exports = class BaseResponder {
-  respondTo = [];
+	respondTo = [];
 
-  canRespond(event) {
-    return !!(this.respondTo.find(regex => event.replace('client-', '').match(regex)));
-  }
-}
+	canRespond(event) {
+		return !!(this.respondTo.find(regex => event.replace("client-", "").match(regex)));
+	}
+};
