@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "ShareModalPage",
+	name: "ShareModalPage",
 };
 </script>
 

@@ -1,5 +1,8 @@
 <template>
-  <div class="modal__background" @click="closeModal()">
+  <div
+    class="modal__background"
+    @click="closeModal()"
+  >
     <div
       ref="modal"
       aria-modal="true"
@@ -10,12 +13,17 @@
     >
       <p>Création d'une partie ({{ currentPage }}/{{ totalPage }})</p>
       <div class="modal__page">
-        <RolesModalPage v-if="currentPage === 1"/>
-        <GameStateModalPage v-if="currentPage === 2"/>
-        <ShareModalPage v-if="currentPage === 3"/>
+        <RolesModalPage v-if="currentPage === 1" />
+        <GameStateModalPage v-if="currentPage === 2" />
+        <ShareModalPage v-if="currentPage === 3" />
       </div>
       <div class="modal__buttons">
-        <button class="btn large" @click="closeModal()">Annuler</button>
+        <button
+          class="btn large"
+          @click="closeModal()"
+        >
+          Annuler
+        </button>
         <div class="modal__buttons-right">
           <button
             :class="currentPage === 1 ? 'disable-hover' : ''"
@@ -48,70 +56,70 @@
 </template>
 
 <script>
-import RolesModalPage from "@/Components/Modal/Pages/Roles/RolesModalPage.vue";
-import GameStateModalPage from "@/Components/Modal/Pages/GameState/GameStateModalPage.vue";
-import ShareModalPage from "@/Components/Modal/Pages/ShareModalPage.vue";
-import { useStore } from "@/stores/modal.js"
+import RolesModalPage from "./Pages/Roles/RolesModalPage.vue";
+import GameStateModalPage from "./Pages/GameState/GameStateModalPage.vue";
+import ShareModalPage from "./Pages/ShareModalPage.vue";
+import { useStore } from "../../stores/modal.js";
 
 export default {
-  name: "NewGameModal",
-  components: {
-    RolesModalPage,
-    GameStateModalPage,
-    ShareModalPage,
-  },
-  data() {
-    return {
-      currentPage: 1,
-      totalPage: 3,
-      error: "",
-      store: useStore(),
-      gameId: 0,
-    };
-  },
-  mounted() {
-    this.$refs.modal.focus();
-  },
-  methods: {
-    notEnoughSelectedRoles() {
-      const selectedRoles = this.store.selectedRoles;
-      //return selectedRoles.length < 5;
-      //TODO: replace line below with line above
-      return selectedRoles.length < 2;
-    },
-    closeModal() {
-      this.store.isOpenned = false;
-    },
-    async nextPage() {
-      if (this.currentPage + 1 > this.totalPage) {
-        return;
-      }
+	name: "NewGameModal",
+	components: {
+		RolesModalPage,
+		GameStateModalPage,
+		ShareModalPage,
+	},
+	data() {
+		return {
+			currentPage: 1,
+			totalPage: 3,
+			error: "",
+			store: useStore(),
+			gameId: 0,
+		};
+	},
+	mounted() {
+		this.$refs.modal.focus();
+	},
+	methods: {
+		notEnoughSelectedRoles() {
+			const selectedRoles = this.store.selectedRoles;
+			// return selectedRoles.length < 5;
+			// TODO: replace line below with line above
+			return selectedRoles.length < 2;
+		},
+		closeModal() {
+			this.store.isOpenned = false;
+		},
+		async nextPage() {
+			if (this.currentPage + 1 > this.totalPage) {
+				return;
+			}
 
-      if (this.currentPage === 2) {
-        this.currentPage = this.currentPage + 1;
-        const res = await window.JSONFetch("/game/new", "POST", {
-          roles: this.store.selectedRoles,
-          is_started: false,
-          users: []
-        });
-        this.gameId = res.data.game.id
-      } else {
-        this.currentPage = this.currentPage + 1;
-      }
-    },
-    finish() {
-      this.closeModal();
-      if (this.gameId !== 0) {
-        this.$router.push('/game/' + this.gameId);
-      }
-    },
-    previousPage() {
-      if (this.currentPage + 1 < this.totalPage) {
-        return;
-      }
-      this.currentPage = this.currentPage - 1;
-    },
-  },
+			if (this.currentPage === 2) {
+				this.currentPage = this.currentPage + 1;
+				const res = await window.JSONFetch("/game/new", "POST", {
+					roles: this.store.selectedRoles,
+					is_started: false,
+					users: []
+				});
+				this.gameId = res.data.game.id;
+			} else {
+				this.currentPage = this.currentPage + 1;
+			}
+		},
+		finish() {
+			this.closeModal();
+			if (this.gameId !== 0) {
+				this.$router.push("/game/" + this.gameId);
+			}
+		},
+		previousPage() {
+			if (this.currentPage + 1 < this.totalPage) {
+				return;
+			}
+			this.currentPage = this.currentPage - 1;
+		},
+	},
 };
 </script>
 <style scoped></style>

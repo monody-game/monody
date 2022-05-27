@@ -1,4 +1,4 @@
-const { IoServer } = require('./IoServer')
-require('dotenv').config()
+const { IoServer } = require("./IoServer");
+require("dotenv").config();
 
-new IoServer().start()
+new IoServer().start();

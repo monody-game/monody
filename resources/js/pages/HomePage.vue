@@ -1,11 +1,21 @@
 <template>
   <div class="home-page">
     <header class="home-page__header">
-      <router-link :to="{ name: 'home_page' }">Comment jouer</router-link>
-      <router-link :to="{ name: 'login' }" class="btn-primary">Se connecter</router-link>
+      <router-link :to="{ name: 'home_page' }">
+        Comment jouer
+      </router-link>
+      <router-link
+        :to="{ name: 'login' }"
+        class="btn-primary"
+      >
+        Se connecter
+      </router-link>
     </header>
     <div class="home-page__main">
-      <router-link :to="{ name: 'play' }" class="home-page__link">
+      <router-link
+        :to="{ name: 'play' }"
+        class="home-page__link"
+      >
         <h1 class="home-page__title">
           Mon<span>
             <svg
@@ -23,7 +33,9 @@
             </svg>
           </span>dy
         </h1>
-        <p class="home-page__play-text">Jouer</p>
+        <p class="home-page__play-text">
+          Jouer
+        </p>
       </router-link>
     </div>
     <footer class="home-page__footer">
@@ -34,7 +46,7 @@
 
 <script>
 export default {
-  name: "HomePage",
+	name: "HomePage",
 };
 </script>
 

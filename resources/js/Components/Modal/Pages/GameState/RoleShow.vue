@@ -6,32 +6,37 @@
         :src="role.image"
         :title="role.display_name"
         class="role-show__image"
-      />
-      <p class="role-show__count">{{ role.count }}</p>
+      >
+      <p class="role-show__count">
+        {{ role.count }}
+      </p>
     </div>
     <div class="role-show_informations">
       <p>{{ role.display_name }}</p>
       <p>
         Camp des
         <span class="role-show__team-display-name">{{
-            role.team.display_name
-          }}</span>
+          role.team.display_name
+        }}</span>
       </p>
     </div>
   </div>
 </template>
 <script>
-import { useStore } from "@/stores/modal.js"
+import { useStore } from "../../../../stores/modal.js";
+
 export default {
-  name: "RoleShow",
-  props: ["selectedRole"],
-  data () {
-    return {
-      role: this.selectedRole,
-    };
-  },
-  created () {
-    this.role.team = useStore().getTeamById(this.role.team_id);
-  },
+	name: "RoleShow",
+	props: {
+		selectedRole: Object
+	},
+	data() {
+		return {
+			role: this.selectedRole,
+		};
+	},
+	created() {
+		this.role.team = useStore().getTeamById(this.role.team_id);
+	},
 };
 </script>

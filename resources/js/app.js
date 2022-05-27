@@ -3,13 +3,13 @@ import App from "./App.vue";
 import router from "./router/Router";
 import { createPinia } from "pinia";
 
-require('./bootstrap.js');
+require("./bootstrap.js");
 
-window.pinia = createPinia()
+window.pinia = createPinia();
 
 createApp(App)
-  .use(window.pinia)
-  .use(router)
-  .mount("#app");
+	.use(window.pinia)
+	.use(router)
+	.mount("#app");
 
 require("./Helpers.js");
