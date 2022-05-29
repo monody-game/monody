@@ -8,7 +8,7 @@ export const useStore = defineStore("game", {
 		return {
 			playerList: [],
 			currentVote: 0,
-			state: "GAME_WAITING"
+			state: 0
 		};
 	},
 	actions: {

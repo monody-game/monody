@@ -3,8 +3,8 @@ const RoleManager = require("./RoleManager");
 const StateManager = require("./StateManager");
 const CounterService = require("./CounterService");
 const UserService = require("./UserService");
-const states = require("../Constants/GameStates");
-const durations = require("../Constants/RoundDurations");
+const StartingState = require("../Rounds/States/StartingState");
+const WaitingState = require("../Rounds/States/WaitingState");
 const werewolves = [1];
 
 module.exports = class GameService {
@@ -45,9 +45,9 @@ module.exports = class GameService {
 		await this.setGame(gameId, game);
 
 		this.StateManager.setState({
-			status: states.GAME_STARTING,
+			status: StartingState.identifier,
 			startTimestamp: Date.now(),
-			counterDuration: durations.STARTING_DURATION
+			counterDuration: StartingState.duration
 		}, channel);
 
 		if (process.env.APP_DEBUG) {
@@ -69,9 +69,9 @@ module.exports = class GameService {
 		}
 
 		await this.StateManager.setState({
-			status: states.GAME_WAITING,
+			status: WaitingState.identifier,
 			startTimestamp: Date.now(),
-			counterDuration: -1
+			counterDuration: WaitingState.duration
 		}, channel);
 	}
 

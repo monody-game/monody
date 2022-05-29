@@ -1,7 +1,8 @@
 <template>
   <div
+    ref="player"
     :data-id="player.id"
-    class="player__container player__votable"
+    class="player__container"
     @click="vote(userID, player.id)"
   >
     <VotedBy
@@ -56,6 +57,16 @@ export default {
 		getAvatar() {
 			return "http://localhost:8000" + this.player.avatar;
 		}
+	},
+	created() {
+		window.Echo
+			.join(`game.${this.gameId}`)
+			.listen("game.unlock-vote", () => {
+				this.$refs.player.classList.add("player__votable");
+			})
+			.listen("game.lock-vote", () => {
+				this.$refs.player.classList.remove("player__votable");
+			});
 	},
 	methods: {
 		vote: function (voted_by, voted_user, emit_event = true) {

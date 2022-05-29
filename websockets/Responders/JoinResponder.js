@@ -1,6 +1,5 @@
 const BaseResponder = require("./BaseResponder");
 const StateManager = new (require("../Services/StateManager"))();
-const states = require("../Constants/GameStates");
 
 module.exports = class JoinResponder extends BaseResponder {
 	constructor() {
@@ -16,7 +15,7 @@ module.exports = class JoinResponder extends BaseResponder {
 
 		if (game && game.is_started) {
 			socket.emit("game.state", data.channel, {
-				state: Object.keys(states)[game.status],
+				state: game.status,
 				counterDuration: game.counterDuration,
 				startTimestamp: game.startTimestamp
 			});
