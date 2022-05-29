@@ -1,8 +1,5 @@
 const { client } = require("../Redis/Connection");
-const states = require("../Constants/GameStates");
-const durations = require("../Constants/RoundDurations");
-const loopingStates = require("../Constants/LoopingStates");
-const { dump } = require("laravel-mix");
+const rounds = require("./RoundService");
 
 module.exports = class StateManager {
 	constructor(io) {
@@ -17,14 +14,10 @@ module.exports = class StateManager {
    * @returns self
    */
 	async setState(state, channel) {
-		if (!Object.values(states).includes(state.status)) {
-			throw new Error("Invalid state");
-		}
-
 		await client.set(`game:${channel.split(".")[1]}:state`, JSON.stringify(state));
 
 		this.io.to(channel).emit("game.state", channel, {
-			state: Object.keys(states)[state.status],
+			state: state.status,
 			counterDuration: state.counterDuration,
 			startTimestamp: state.startTimestamp
 		});
@@ -50,43 +43,53 @@ module.exports = class StateManager {
    * @returns {Promise<{duration: number, state: number}>} context The next round context
    */
 	async nextState(channel, counterId) {
-		const currentState = (await this.getState(channel.split(".")[1]))["status"];
-		let duration = 0;
-
-		if (currentState === loopingStates[loopingStates.length - 1]) {
-			duration = Object.values(durations)[loopingStates[0]];
-
-			await this.setState({
-				status: loopingStates[0],
-				startTimestamp: Date.now(),
-				counterDuration: duration,
-				counterId: counterId
-			}, channel);
-
-			return {
-				duration,
-				state: loopingStates[0]
-			};
+		const state = (await this.getState(channel.split(".")[1]));
+		if (!state) {
+			clearTimeout(counterId);
+			return;
 		}
 
-		const nextState = currentState + 1;
+		let currentState = state["status"];
+		let currentRound = state["round"] || 0;
+		const loopingIndex = rounds.length - 1;
 
-		if (!Object.values(states).includes(nextState)) {
-			throw new Error("Game is supposed to be ended");
+		let duration;
+
+		if (
+			currentRound === loopingIndex &&
+			rounds[loopingIndex].indexOf(rounds[loopingIndex].filter(loopRoundState => loopRoundState.identifier === currentState)[0]) === rounds[loopingIndex].length - 1
+		) {
+			// If we're at the end of the looping round
+
+			duration = rounds[loopingIndex][0].duration;
+			console.log(duration);
+			currentState = rounds[loopingIndex][0].identifier;
+		} else if (!rounds[currentRound][currentState + 1] && rounds[currentRound].length === currentState) {
+			// If it's the end of the currrent round
+
+			currentRound++;
+			duration = rounds[currentRound][0].duration;
+			console.log(duration);
+			currentState = rounds[currentRound][0].identifier;
+		} else {
+			// Else :
+
+			currentState++;
+			duration = rounds[currentRound][currentState].duration;
+			console.log(duration);
 		}
-
-		duration = Object.values(durations)[nextState];
 
 		await this.setState({
-			status: Object.values(states)[nextState],
+			status: currentState,
 			startTimestamp: Date.now(),
 			counterDuration: duration,
-			counterId: counterId
+			counterId: counterId,
+			round: currentRound
 		}, channel);
 
 		return {
 			duration,
-			state: nextState
+			state: currentState
 		};
 	}
 
@@ -95,11 +98,18 @@ module.exports = class StateManager {
 		if (!state) return;
 
 		const currentState = state["status"];
+		const currentRound = state["round"] || 0;
+		const loopingIndex = rounds.length - 1;
 
-		if (currentState === loopingStates[loopingStates.length - 1]) {
-			return Object.values(durations)[loopingStates[0]];
+		if (
+			currentRound === loopingIndex &&
+			rounds[loopingIndex].indexOf(rounds[loopingIndex].filter(loopRoundState => loopRoundState.identifier === currentState)[0]) === rounds[loopingIndex].length - 1
+		) {
+			return rounds[loopingIndex][0].duration;
+		} else if (!rounds[currentRound][currentState + 1] && rounds[currentRound].length - 1 === currentState) {
+			return rounds[currentRound][0].duration;
+		} else {
+			return rounds[currentRound][currentState + 1].duration;
 		}
-
-		return Object.values(durations)[currentState + 1];
 	}
 };

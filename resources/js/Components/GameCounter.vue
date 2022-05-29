@@ -42,7 +42,7 @@ export default {
 			startingTime: 0,
 			totalTime: 0,
 			counterId: "",
-			status: "GAME_WAITING",
+			status: 0,
 			counterService: new CounterCycleService(),
 			chatService: new ChatService(),
 			sound: new Audio("../sounds/bip.mp3")
@@ -50,25 +50,25 @@ export default {
 	},
 	computed: {
 		getRound() {
-			const rounds = {
-				GAME_WAITING: "Attente",
-				GAME_STARTING: "Début de la partie",
-				GAME_NIGHT: "Nuit",
-				GAME_WEREWOLF: "Tour des Loups",
-				GAME_DAY: "Jour",
-				GAME_VOTE: "Vote",
-			};
+			const rounds = [
+				"Attente",
+				"Début de la partie",
+				"Nuit",
+				"Tour des Loups",
+				"Jour",
+				"Vote",
+			];
 			return rounds[this.status];
 		},
 		getIcon() {
-			const icons = {
-				GAME_WAITING: "wait",
-				GAME_STARTING: "wait",
-				GAME_NIGHT: "night",
-				GAME_WEREWOLF: "night",
-				GAME_DAY: "day",
-				GAME_VOTE: "vote",
-			};
+			const icons = [
+				"wait",
+				"wait",
+				"night",
+				"night",
+				"day",
+				"day",
+			];
 			return icons[this.status];
 		}
 	},
@@ -82,6 +82,7 @@ export default {
 					this.startingTime = data.startTimestamp;
 					this.totalTime = this.time;
 					this.status = data.state;
+					console.log(this.status, this.getIcon, this.getRound);
 					useStore().state = data.state;
 					this.updateCircle();
 					this.decount();
@@ -139,21 +140,21 @@ export default {
 		},
 		updateOverlay() {
 			switch (this.status) {
-			case "GAME_WAITING":
-			case "GAME_STARTING":
+			case 0:
+			case 1:
 				break;
-			case "GAME_NIGHT":
+			case 2:
 				this.counterService.onNight();
 				this.chatService.timeSeparator("Tombée de la nuit");
 				break;
-			case "GAME_WEREWOLF":
+			case 3:
 				this.counterService.onNight();
 				break;
-			case "GAME_DAY":
+			case 4:
 				this.counterService.onDay();
 				this.chatService.timeSeparator("Lever du jour");
 				break;
-			case "GAME_VOTE":
+			case 5:
 				this.counterService.onDay();
 				break;
 			}

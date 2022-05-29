@@ -1,7 +1,6 @@
 const { client } = require("../Redis/Connection");
-const states = require("../Constants/GameStates");
-const durations = require("../Constants/RoundDurations");
-const { GAME_STARTING } = require("../Constants/GameStates");
+const StartingState = require("../Rounds/States/StartingState");
+const WaitingState = require("../Rounds/States/WaitingState");
 
 module.exports.PresenceChannel = class {
 	constructor(io) {
@@ -61,9 +60,9 @@ module.exports.PresenceChannel = class {
       !await this.gameService.getGame(id).is_started &&
       !members.length > 0) {
 			this.stateManager.setState({
-				status: states.GAME_WAITING,
+				status: WaitingState.identifier,
 				startTimestamp: Date.now(),
-				counterDuration: durations.WAITING_DURATION
+				counterDuration: WaitingState.duration
 			}, channel);
 		}
 
@@ -82,7 +81,7 @@ module.exports.PresenceChannel = class {
 
 		if (game.is_started) {
 			const state = await this.stateManager.getState(gameId);
-			if (state.status === GAME_STARTING) {
+			if (state.status === StartingState.identifier) {
 				await this.gameService.stopGameLaunch(channel);
 				game.is_started = false;
 			}
@@ -119,7 +118,7 @@ module.exports.PresenceChannel = class {
 
 	async onDelete(gameId) {
 		await client.del(`game:${gameId}:members`);
-		await client.del("game:" + gameId);
+		await client.del(`game:${gameId}`);
 		await client.del(`game:${gameId}:state`);
 
 		clearTimeout(this.counterService.counterId);
