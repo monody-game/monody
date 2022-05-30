@@ -2,16 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::post('/auth/login', 'Api\AuthController@login')->name('login');
+Route::post('/auth/login', 'Api\AuthController@login');
 Route::post('/auth/register', 'Api\AuthController@register');
-Route::get('/oauth/link/discord', 'Api\OauthController@discord');
-Route::get('/oauth/link/google', 'Api\OauthController@google');
+Route::get('/oauth/discord/link', 'Api\OauthController@discord');
+Route::get('/oauth/google/link', 'Api\OauthController@google');
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/avatar/{path}', 'Api\AvatarController@show');
     Route::get('/avatars/generate', 'Api\AvatarController@generate');
 
-    Route::post('/auth/logout', 'Api\AuthController@logout')->name('auth.logout');
+    Route::post('/auth/logout', 'Api\AuthController@logout');
 
     Route::get('/user', 'Api\AuthController@user');
     Route::get('/user/avatar', 'Api\UserController@avatar');
