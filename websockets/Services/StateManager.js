@@ -49,35 +49,22 @@ module.exports = class StateManager {
 			return;
 		}
 
-		let currentState = state["status"];
+		let currentState = state["status"] + 1;
 		let currentRound = state["round"] || 0;
-		const loopingIndex = rounds.length - 1;
+		let stateIndex = rounds[currentRound].indexOf(rounds[currentRound].find(roundState => roundState.identifier === currentState));
+		const loopingRoundIndex = rounds.length - 1;
 
-		let duration;
-
-		if (
-			currentRound === loopingIndex &&
-			rounds[loopingIndex].indexOf(rounds[loopingIndex].filter(loopRoundState => loopRoundState.identifier === currentState)[0]) === rounds[loopingIndex].length - 1
-		) {
-			// If we're at the end of the looping round
-
-			duration = rounds[loopingIndex][0].duration;
-			console.log(duration);
-			currentState = rounds[loopingIndex][0].identifier;
-		} else if (!rounds[currentRound][currentState + 1] && rounds[currentRound].length === currentState) {
-			// If it's the end of the currrent round
-
+		if (currentRound !== loopingRoundIndex && typeof rounds[currentRound][stateIndex] === "undefined" && typeof rounds[currentRound + 1] !== "undefined") {
 			currentRound++;
-			duration = rounds[currentRound][0].duration;
-			console.log(duration);
 			currentState = rounds[currentRound][0].identifier;
-		} else {
-			// Else :
-
-			currentState++;
-			duration = rounds[currentRound][currentState].duration;
-			console.log(duration);
+			stateIndex = 0;
+		} else if (currentRound === loopingRoundIndex && stateIndex === rounds.length - 1) {
+			currentRound = loopingRoundIndex;
+			currentState = rounds[loopingRoundIndex][0].identifier;
+			stateIndex = 0;
 		}
+
+		const duration = rounds[currentRound][stateIndex].duration;
 
 		await this.setState({
 			status: currentState,
@@ -97,19 +84,22 @@ module.exports = class StateManager {
 		const state = await this.getState(channel.split(".")[1]);
 		if (!state) return;
 
-		const currentState = state["status"];
+		const currentState = state["status"] + 1;
+		console.log(state["round"]);
 		const currentRound = state["round"] || 0;
-		const loopingIndex = rounds.length - 1;
+		const stateIndex = rounds[currentRound].indexOf(rounds[currentRound].find(roundState => roundState.identifier === currentState));
+		const loopingRoundIndex = rounds.length - 1;
 
 		if (
-			currentRound === loopingIndex &&
-			rounds[loopingIndex].indexOf(rounds[loopingIndex].filter(loopRoundState => loopRoundState.identifier === currentState)[0]) === rounds[loopingIndex].length - 1
+			currentRound === loopingRoundIndex && stateIndex === rounds.length - 1
 		) {
-			return rounds[loopingIndex][0].duration;
-		} else if (!rounds[currentRound][currentState + 1] && rounds[currentRound].length - 1 === currentState) {
-			return rounds[currentRound][0].duration;
+			return rounds[loopingRoundIndex][0].duration;
+		} else if (
+			currentRound !== loopingRoundIndex && typeof rounds[currentRound][stateIndex] === "undefined"
+		) {
+			return rounds[currentRound + 1][0].duration;
 		} else {
-			return rounds[currentRound][currentState + 1].duration;
+			return rounds[currentRound][stateIndex].duration;
 		}
 	}
 };
