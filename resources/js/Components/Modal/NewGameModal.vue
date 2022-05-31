@@ -6,12 +6,16 @@
     <div
       ref="modal"
       aria-modal="true"
+      role="dialog"
       class="modal__main"
       tabindex="-1"
+      aria-labelledby="modal__title"
       @click.stop=""
       @keyup.esc="closeModal()"
     >
-      <p>Création d'une partie ({{ currentPage }}/{{ totalPage }})</p>
+      <p id="modal__title">
+        Création d'une partie ({{ currentPage }}/{{ totalPage }})
+      </p>
       <div class="modal__page">
         <RolesModalPage v-if="currentPage === 1" />
         <GameStateModalPage v-if="currentPage === 2" />
