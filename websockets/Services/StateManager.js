@@ -58,7 +58,7 @@ module.exports = class StateManager {
 			currentRound++;
 			currentState = rounds[currentRound][0].identifier;
 			stateIndex = 0;
-		} else if (currentRound === loopingRoundIndex && stateIndex === rounds.length - 1) {
+		} else if (currentRound === loopingRoundIndex && stateIndex === rounds[currentRound].length - 1) {
 			currentRound = loopingRoundIndex;
 			currentState = rounds[loopingRoundIndex][0].identifier;
 			stateIndex = 0;
@@ -85,13 +85,13 @@ module.exports = class StateManager {
 		if (!state) return;
 
 		const currentState = state["status"] + 1;
-		console.log(state["round"]);
 		const currentRound = state["round"] || 0;
 		const stateIndex = rounds[currentRound].indexOf(rounds[currentRound].find(roundState => roundState.identifier === currentState));
 		const loopingRoundIndex = rounds.length - 1;
 
 		if (
-			currentRound === loopingRoundIndex && stateIndex === rounds.length - 1
+			(currentRound !== loopingRoundIndex && typeof rounds[currentRound][stateIndex] === "undefined" && currentRound + 1 === loopingRoundIndex) ||
+			(currentRound === loopingRoundIndex && stateIndex === rounds[currentRound].length - 1)
 		) {
 			return rounds[loopingRoundIndex][0].duration;
 		} else if (
