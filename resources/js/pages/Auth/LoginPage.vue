@@ -11,7 +11,11 @@
           required
           type="text"
         >
-        <p class="login-page__error">
+        <span class="login-page__input-focused" />
+        <p
+          v-if="errors.username.errored"
+          class="login-page__error"
+        >
           {{ errors.username.text }}
         </p>
       </div>
@@ -24,7 +28,11 @@
           required
           type="password"
         >
-        <p class="login-page__error">
+        <span class="login-page__input-focused" />
+        <p
+          v-if="errors.password.errored"
+          class="login-page__error"
+        >
           {{ errors.password.text }}
         </p>
       </div>

@@ -15,7 +15,12 @@
   margin-top: space(2);
   display: flex;
   flex-direction: column;
-  width: 15vw;
+  min-width: 300px;
+	overflow: hidden;
+
+	& div:not(.login-page__remember-wrapper) {
+		margin-bottom: space(3);
+	}
 }
 
 .login-page__error {
@@ -32,51 +37,56 @@
   height: 32px;
 
   margin-top: space(1);
-  margin-bottom: space(1);
+  margin-bottom: space(2);
 
   border: none;
   border-radius: 6px;
 
   background: #ffffff;
   cursor: pointer;
-  transition: transform .4s ease-in-out, background-color .2s;
+  transition: background-color .2s;
 
   &:hover {
-    background: darken(#fff, 10%);
-    transform: scale(1.02);
+    background: darken(#fff, 20%);
   }
 
   & .loader {
     height: 16px;
     width: 16px;
     margin-right: space(1);
-
-    & spinning-dots {
-      width: 16px;
-      height: 16px;
-    }
   }
 }
 
+.login-page__input-focused {
+	display: block;
+	height: 2px;
+	transition: transform .3s;
+	background-color: #fff;
+	transform: translateX(-100%);
+}
+
 .login-page__input {
-  font-family: 'Sen', sans-serif;
-  display: inline-block;
+  font-family: inherit;
   background: var(--dark-background);
   color: #fff;
-  border: none;
-  padding: 0 0 space(1) space(1);
-  margin-top: space(2);
-  margin-bottom: space(2);
+	border: none;
+  border-bottom: rgba(255, 255, 255, 25%) 2px solid;
+  padding: space(1);
+  margin-top: space(1);
   width: 100%;
+	overflow: hidden;
 
   &.login-page__input-error {
     outline: none;
     border-bottom: var(--danger) solid 2px;
   }
 
+	&:focus + .login-page__input-focused {
+		transform: translateX(0);
+	}
+
   &:focus {
     outline: none;
-    border-bottom: #fff solid 2px;
 
     &::placeholder {
       opacity: 1;
@@ -85,16 +95,14 @@
   }
 }
 
-.login-page__input:focus::before {
-  width: 100px;
-}
-
 .login-page__remember-wrapper {
   display: flex;
   margin-left: space(1);
+	margin-bottom: space(1);
 }
 
 .login-page__remember-me {
   width: 16px;
   display: block;
+	margin: 0 0 0 4px;
 }
