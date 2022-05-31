@@ -21,6 +21,9 @@ class CreateUsersTable extends Migration
             $table->string('avatar')->default('/images/avatars/default.png');
             $table->string('password');
             $table->tinyInteger('level')->default(0);
+			$table->string('discord_id')->nullable();
+			$table->string('discord_token')->nullable();
+			$table->string('discord_refresh_token')->nullable();
             $table->timestamps();
         });
     }

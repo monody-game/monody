@@ -8,9 +8,8 @@ class OauthControllerTest extends TestCase
 {
     public function testDiscordOauthLink(): void
     {
-        $response = $this->get('/api/oauth/link/discord');
-
-        $response->assertStatus(302);
+        $response = $this->get('/api/oauth/link/discord')
+			->assertStatus(302);
 
         if (file_exists(dirname(__DIR__, 5) . DIRECTORY_SEPARATOR . '.env')) {
             $response->assertRedirect(
@@ -25,9 +24,8 @@ class OauthControllerTest extends TestCase
 
     public function testGoogleOauthLink(): void
     {
-        $response = $this->get('/api/oauth/link/google');
-
-        $response->assertStatus(302);
+        $response = $this->get('/api/oauth/link/google')
+			->assertStatus(302);
 
         if (file_exists(dirname(__DIR__, 5) . DIRECTORY_SEPARATOR . '.env')) {
             $response->assertRedirect(
