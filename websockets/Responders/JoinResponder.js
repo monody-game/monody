@@ -11,6 +11,9 @@ module.exports = class JoinResponder extends BaseResponder {
 
 	async emit(socket, data) {
 		const id = data.channel.split(".")[1];
+
+		if (!id) return;
+
 		const game = await StateManager.getState(id);
 
 		if (game && game.is_started) {
