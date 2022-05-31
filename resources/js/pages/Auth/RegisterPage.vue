@@ -2,45 +2,78 @@
   <div class="register-page">
     <h1>S'inscrire</h1>
     <form class="register-page__form">
-      <input
-        v-model="username"
-        :class="errors.username.errored ? 'login-page__input-error' : ''"
-        class="register-page__input"
-        name="username"
-        placeholder="Nom d'utilisateur"
-        required
-        type="text"
-      >
-      <input
-        v-model="email"
-        :class="errors.email.errored ? 'login-page__input-error' : ''"
-        class="register-page__input"
-        name="email"
-        placeholder="Email"
-        required
-        type="email"
-      >
-      <input
-        v-model="password"
-        :class="errors.password.errored ? 'login-page__input-error' : ''"
-        class="register-page__input"
-        name="password"
-        placeholder="Mot de passe"
-        required
-        type="password"
-      >
-      <input
-        v-model="password_confirmation"
-        :class="errors.password_confirmation.errored ? 'login-page__input-error' : ''"
-        class="register-page__input"
-        name="password_confirmation"
-        placeholder="Confirmez le mot de passe"
-        required
-        type="password"
-      >
-      <p class="login-page__error">
-        {{ errors.text }}
-      </p>
+      <div>
+        <input
+          v-model="username"
+          :class="errors.username.errored ? 'login-page__input-error' : ''"
+          class="register-page__input"
+          name="username"
+          placeholder="Nom d'utilisateur"
+          required
+          type="text"
+        >
+        <span class="login-page__input-focused" />
+        <p
+          v-if="errors.username.errored"
+          class="login-page__error"
+        >
+          {{ errors.username.text }}
+        </p>
+      </div>
+      <div>
+        <input
+          v-model="email"
+          :class="errors.email.errored ? 'login-page__input-error' : ''"
+          class="register-page__input"
+          name="email"
+          placeholder="Email"
+          required
+          type="email"
+        >
+        <span class="login-page__input-focused" />
+        <p
+          v-if="errors.email.errored"
+          class="login-page__error"
+        >
+          {{ errors.email.text }}
+        </p>
+      </div>
+      <div>
+        <input
+          v-model="password"
+          :class="errors.password.errored ? 'login-page__input-error' : ''"
+          class="register-page__input"
+          name="password"
+          placeholder="Mot de passe"
+          required
+          type="password"
+        >
+        <span class="login-page__input-focused" />
+        <p
+          v-if="errors.password.errored"
+          class="login-page__error"
+        >
+          {{ errors.password.text }}
+        </p>
+      </div>
+      <div>
+        <input
+          v-model="password_confirmation"
+          :class="errors.password_confirmation.errored ? 'login-page__input-error' : ''"
+          class="register-page__input"
+          name="password_confirmation"
+          placeholder="Confirmez le mot de passe"
+          required
+          type="password"
+        >
+        <span class="login-page__input-focused" />
+        <p
+          v-if="errors.password_confirmation.errored"
+          class="login-page__error"
+        >
+          {{ errors.password_confirmation.text }}
+        </p>
+      </div>
       <div>
         <button
           class="register-page__button"

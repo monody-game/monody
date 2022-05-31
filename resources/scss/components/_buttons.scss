@@ -4,11 +4,10 @@
   padding: 0;
   border: none;
   border-radius: 6px;
-  background: none;
-  color: #fff;
+	color: #fff;
   cursor: pointer;
-  background-color: var(--light-dark-background);
-  transition: background-color 0.4s;
+	background: var(--light-dark-background) none;
+	transition: background-color 0.4s;
 
   &:disabled {
     cursor: not-allowed;
@@ -30,14 +29,14 @@
 }
 
 .btn-primary {
-    background: #fff;
-    color: #0f1127;
-    padding: space(1) space(3);
-    border-radius: 5px;
-    transition: background-color .2s;
+	background: #fff;
+	color: #0f1127;
+	padding: space(1) space(3);
+	border-radius: 5px;
+	transition: background-color .2s;
 
-    &:hover {
-        color: #0f1127;
-        background: darken(#fff, $amount: 10%);
-    }
+	&:hover {
+		color: #0f1127;
+		background-color: darken(#fff, $amount: 15%);
+	}
 }
