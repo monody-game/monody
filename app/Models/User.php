@@ -25,6 +25,9 @@ class User extends Authenticatable
         'avatar',
         'email',
         'password',
+        'discord_id',
+        'discord_token',
+        'discord_refresh_token',
     ];
 
     /**
@@ -38,5 +41,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'email_verified_at',
+        'discord_token',
+        'discord_refresh_token',
     ];
 }
