@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use ArrayObject;
 use Illuminate\Http\JsonResponse;
@@ -13,7 +12,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
     public function login(LoginRequest $request): Response|JsonResponse
     {
@@ -33,20 +32,6 @@ class AuthController extends Controller
         return response('', 204)->cookie($cookie);
     }
 
-    public function register(RegisterRequest $request): JsonResponse
-    {
-        $data = $request->validated();
-
-        $data['password'] = bcrypt($request->password);
-
-        $user = User::create($data);
-
-        $accessToken = $user->createToken('authToken')->accessToken;
-        $cookie = cookie('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', false, true, false, 'Strict');
-
-        return response()->json([], 201)->cookie($cookie);
-    }
-
     public function logout(Request $request): JsonResponse
     {
         $request->user()?->token()?->revoke();
@@ -56,10 +41,5 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'You have been successfully logged out!'
         ]);
-    }
-
-    public function user(): JsonResponse
-    {
-        return response()->json(request()->user());
     }
 }

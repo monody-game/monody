@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Unit\Http\Controllers\Api;
+namespace Tests\Unit\Http\Controllers\Api\Auth;
 
 use App\Models\User;
 use Tests\TestCase;
 
-class AuthControllerTest extends TestCase
+class RegisterControllerTest extends TestCase
 {
     public function testWrongRegisterRequest()
     {
@@ -33,17 +33,6 @@ class AuthControllerTest extends TestCase
         $this->assertTrue(User::where('username', 'carlos')->exists());
     }
 
-    public function testWrongLoginRequest()
-    {
-        $response = $this->post('/api/auth/login', [
-            'username' => 'carlos',
-            'password' => 'carl',
-            'remember_me' => false,
-        ]);
-
-        $response->assertJsonValidationErrors(['password']);
-    }
-
     public function testRegisteringExistantUser()
     {
         $response = $this->post('/api/auth/register', [
@@ -54,45 +43,6 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertJsonValidationErrors(['username']);
-    }
-
-    public function testLoginWithWrongPassword()
-    {
-        $response = $this->post('/api/auth/login', [
-            'username' => 'carlos',
-            'password' => 'carlos',
-            'remember_me' => false,
-        ]);
-
-        $response->assertStatus(401);
-        $response->assertJson(['message' => 'Invalid Credentials']);
-        $response->assertCookieMissing('monody_access_token');
-    }
-
-    public function testLogin()
-    {
-        $response = $this->post('/api/auth/login', [
-            'username' => 'JohnTest',
-            'password' => 'johntest',
-            'remember_me' => false,
-        ]);
-
-        $response->assertCookie('monody_access_token');
-    }
-
-    public function testLogout()
-    {
-        $response = $this->post('/api/auth/login', [
-            'username' => 'JohnTest',
-            'password' => 'johntest',
-            'remember_me' => false,
-        ]);
-
-        $response->assertCookie('monody_access_token');
-
-        $response = $this->post('/api/auth/logout');
-
-        $response->assertCookieMissing('monody_access_token');
     }
 
     protected function setUp(): void
