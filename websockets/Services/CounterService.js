@@ -7,7 +7,6 @@ module.exports = class CounterService {
 
 	async cycle(channel) {
 		const manager = new StateManager(this.io);
-		console.log((await manager.getNextStateDuration(channel)), ((await manager.getNextStateDuration(channel)) + 1) * 1000);
 
 		this.counterId = setTimeout(async () => {
 			await this.cycle(channel);
