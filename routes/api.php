@@ -5,10 +5,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth/login', 'Auth\LoginController@login');
 Route::post('/auth/register', 'Auth\RegisterController@register');
 
-Route::get('/oauth/link/discord', 'OauthController@discordLink');
-Route::get('/oauth/link/google', 'OauthController@googleLink');
-Route::get('/oauth/check/discord', 'OauthController@discordCheck');
-Route::get('/oauth/check/google', 'OauthController@googleCheck');
+Route::get('/oauth/link/discord', 'Oauth\DiscordOauthController@link');
+Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
+Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
+Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/avatar/{path}', 'AvatarController@show');
