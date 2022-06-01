@@ -13,14 +13,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class DiscordOauthController extends Controller
 {
-
-	public function link(): RedirectResponse
+    public function link(): RedirectResponse
     {
         return Socialite::driver('discord')->stateless()->scopes(['identify', 'email'])->redirect();
     }
 
     public function check(Request $request): RedirectResponse|JsonResponse
-	{
+    {
         if (!$request->has('code')) {
             return new JsonResponse([
                 'message' => 'An error happened',
