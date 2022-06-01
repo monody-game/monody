@@ -34,7 +34,7 @@ class LoginControllerTest extends TestCase
 			'username' => 'JohnTest',
 			'password' => 'johntest',
 			'remember_me' => false,
-		]);
+		])->assertStatus(204);
 
 		$response->assertCookie('monody_access_token');
 	}
