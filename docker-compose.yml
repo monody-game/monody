@@ -58,6 +58,8 @@ services:
       ADMINER_DEFAULT_SERVER: db
     ports:
       - "8888:8080"
+    networks:
+      - monody
 
   redis:
     restart: unless-stopped
