@@ -8,5 +8,5 @@ parameters:
     checkMissingIterableValueType: false
     ignoreErrors:
         - '#Call to an undefined static method \w+#'
-        - '#Parameter \#1 \$json of function json_decode expects string, \w+ given.#'
+        - '#Parameter \#1 \$json of function json_decode expects string, string\|false given.#'
     reportUnmatchedIgnoredErrors: false
