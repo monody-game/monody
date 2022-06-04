@@ -8,19 +8,19 @@ use App\Models\User;
 use ArrayObject;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends Controller
 {
-    public function login(LoginRequest $request): Response|JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
         $attempt = new ArrayObject($request->validated());
         unset($attempt['remember_me']);
 
         if (!Auth::attempt($attempt->getArrayCopy())) {
-            return response()->json(['message' => 'Invalid Credentials'], 401);
+            return new JsonResponse(['message' => 'Invalid Credentials'], Response::HTTP_UNAUTHORIZED);
         }
 
         /** @var User $user */
@@ -29,7 +29,7 @@ class LoginController extends Controller
         $accessToken = $user->createToken('authToken')->accessToken;
         $cookie = cookie('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', false, true, false, 'Strict');
 
-        return response('', 204)->cookie($cookie);
+        return (new JsonResponse([], Response::HTTP_NO_CONTENT))->cookie($cookie);
     }
 
     public function logout(Request $request): JsonResponse
@@ -38,7 +38,7 @@ class LoginController extends Controller
 
         Cookie::queue(Cookie::forget('monody_access_token'));
 
-        return response()->json([
+        return new JsonResponse([
             'message' => 'You have been successfully logged out!'
         ]);
     }

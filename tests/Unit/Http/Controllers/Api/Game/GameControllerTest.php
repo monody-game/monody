@@ -5,6 +5,7 @@ namespace Tests\Unit\Http\Controllers\Api\Game;
 use App\Http\Controllers\Api\Game\GameController;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class GameControllerTest extends TestCase
@@ -116,7 +117,7 @@ class GameControllerTest extends TestCase
             ->post('/api/game/delete', [
                 'game_id' => $game->json('game')['id']
             ])
-            ->assertStatus(204);
+            ->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertNull(Redis::get("game:{$game->json('game')['id']}"));
         $this->assertNull(Redis::get("game:{$game->json('game')['id']}:state"));
@@ -141,7 +142,7 @@ class GameControllerTest extends TestCase
         $this->actingAs($this->user, 'api')
             ->post('/api/game/check', [
                 'game_id' => 'unexisting'
-            ])->assertStatus(404);
+            ])->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
     public function testCheckGame()
@@ -157,6 +158,6 @@ class GameControllerTest extends TestCase
         $this->actingAs($this->user, 'api')
             ->post('/api/game/check', [
                 'game_id' => $game->json('game')['id']
-            ])->assertStatus(200);
+            ])->assertStatus(Response::HTTP_OK);
     }
 }

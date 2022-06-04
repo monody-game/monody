@@ -2,6 +2,7 @@
 
 namespace Http\Controllers\Api\Auth;
 
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
@@ -23,7 +24,7 @@ class LoginControllerTest extends TestCase
 		'remember_me' => false,
 	]);
 
-	$response->assertStatus(401);
+	$response->assertStatus(Response::HTTP_UNAUTHORIZED);
 	$response->assertJson(['message' => 'Invalid Credentials']);
 	$response->assertCookieMissing('monody_access_token');
 }
@@ -34,7 +35,7 @@ class LoginControllerTest extends TestCase
 			'username' => 'JohnTest',
 			'password' => 'johntest',
 			'remember_me' => false,
-		])->assertStatus(204);
+		])->assertStatus(Response::HTTP_NO_CONTENT);
 
 		$response->assertCookie('monody_access_token');
 	}

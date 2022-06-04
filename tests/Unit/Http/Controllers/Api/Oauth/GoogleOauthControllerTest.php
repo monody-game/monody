@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Oauth;
 
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class GoogleOauthControllerTest extends TestCase
@@ -9,7 +10,7 @@ class GoogleOauthControllerTest extends TestCase
 	public function testGoogleOauthLink(): void
 	{
 		$response = $this->get('/api/oauth/link/google')
-			->assertStatus(302);
+			->assertStatus(Response::HTTP_FOUND);
 
 		if (file_exists(dirname(__DIR__, 6) . DIRECTORY_SEPARATOR . '.env')) {
 			$response->assertRedirect(

@@ -11,6 +11,8 @@ use App\Models\Game;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Redis;
+use Symfony\Component\HttpFoundation\Response;
+use function array_key_exists;
 
 class GameController extends Controller
 {
@@ -24,10 +26,10 @@ class GameController extends Controller
         $game = Redis::get("game:{$data['game_id']}");
 
         if ($game) {
-            return response()->json(['message' => 'Game found']);
+            return new JsonResponse(['message' => 'Game found']);
         }
 
-        return response()->json(['error' => 'Game not found'], 404);
+        return new JsonResponse(['error' => 'Game not found'], Response::HTTP_NOT_FOUND);
     }
 
     public function list(): JsonResponse
@@ -69,14 +71,14 @@ class GameController extends Controller
             }
         }
 
-        return response()->json(['games' => $list]);
+        return new JsonResponse(['games' => $list]);
     }
 
     public function new(CreateGameRequest $request): JsonResponse
     {
         $data = $request->validated();
 
-        $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
+        $data['users'] = array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
         $data['owner'] = $request->user()?->id;
@@ -96,7 +98,7 @@ class GameController extends Controller
 
         broadcast(new GameCreated(new Game($data)));
 
-        return response()->json(['game' => $data]);
+        return new JsonResponse(['game' => $data]);
     }
 
     public function generateGameId(): string
@@ -121,6 +123,6 @@ class GameController extends Controller
         Redis::del("game:{$gameId}:members");
         Redis::del("game:{$gameId}:votes");
 
-        return response()->json([], 204);
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 }
