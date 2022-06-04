@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Http\Controllers\Api;
+namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Models\User;
 use Tests\TestCase;

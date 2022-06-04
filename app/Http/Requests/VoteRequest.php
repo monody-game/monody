@@ -6,7 +6,7 @@ use App\Rules\GameExists;
 use App\Rules\InGame;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SendMessageRequest extends FormRequest
+class VoteRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,13 +14,15 @@ class SendMessageRequest extends FormRequest
     }
 
     /**
+     * Get the validation rules that apply to the request.
+     *
      * @return array<string, mixed>
      */
     public function rules(): array
     {
         return [
             'gameId' => ['string', 'required', new GameExists(), new InGame(null)],
-            'content' => 'required|string'
+            'userId' => ['exists:users,id', 'required', new InGame()]
         ];
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Unit\Http\Controllers\Api;
+namespace Tests\Unit\Http\Controllers\Api\Game;
 
-use App\Http\Controllers\Api\GameController;
+use App\Http\Controllers\Api\Game\GameController;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;

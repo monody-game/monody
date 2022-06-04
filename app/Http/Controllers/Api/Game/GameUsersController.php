@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Game;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
