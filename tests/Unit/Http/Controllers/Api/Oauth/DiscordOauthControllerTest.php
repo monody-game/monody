@@ -2,6 +2,7 @@
 
 namespace Http\Controllers\Api\Oauth;
 
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class DiscordOauthControllerTest extends TestCase
@@ -9,7 +10,7 @@ class DiscordOauthControllerTest extends TestCase
 	public function testDiscordOauthLink(): void
 	{
 		$response = $this->get('/api/oauth/link/discord')
-			->assertStatus(302);
+			->assertStatus(Response::HTTP_FOUND);
 
 		if (file_exists(dirname(__DIR__, 6) . DIRECTORY_SEPARATOR . '.env')) {
 			$response->assertRedirect(

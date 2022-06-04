@@ -17,7 +17,7 @@ class ExpController extends Controller
             ->where('exp.user_id', $request->user()?->id)
             ->get();
 
-        return response()->json(['experience' => [
+        return new JsonResponse(['experience' => [
             'user_id' => $exp->first()->user_id,
             'exp' => $exp->first()->exp,
         ]]);

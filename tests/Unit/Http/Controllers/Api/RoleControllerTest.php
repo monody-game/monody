@@ -4,6 +4,7 @@ namespace Tests\Unit\Http\Controllers\Api;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class RoleControllerTest extends TestCase
@@ -28,7 +29,7 @@ class RoleControllerTest extends TestCase
     {
         $response = $this->actingAs($this->user, 'api')->getJson('/api/roles/get/0');
 
-        $response->assertStatus(404);
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
     protected function setUp(): void

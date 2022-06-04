@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SendMessageRequest;
 use App\Models\Message;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class GameMessageController extends Controller
 {
@@ -19,6 +20,6 @@ class GameMessageController extends Controller
 
         MessageSended::dispatch($message);
 
-        return response()->json();
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 }

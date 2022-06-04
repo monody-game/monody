@@ -7,6 +7,7 @@ use App\Events\GameVote;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Redis;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class GameVoteControllerTest extends TestCase
@@ -17,7 +18,7 @@ class GameVoteControllerTest extends TestCase
 		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
 			'userId' => $this->user->id,
 			'gameId' => 'testVotingStateGame'
-		])->assertStatus(204);
+		])->assertStatus(Response::HTTP_NO_CONTENT);
 
 		Event::assertDispatched(GameVote::class);
 	}
@@ -50,7 +51,7 @@ class GameVoteControllerTest extends TestCase
 		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
 			'userId' => $this->secondUser->id,
 			'gameId' => $this->game['id']
-		])->assertStatus(403)->assertJson([
+		])->assertStatus(Response::HTTP_FORBIDDEN)->assertJson([
 			'Wait the game to start before voting'
 		]);
 
@@ -63,7 +64,7 @@ class GameVoteControllerTest extends TestCase
 		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
 			'userId' => $this->secondUser->id,
 			'gameId' => 'testStartedGame'
-		])->assertStatus(403)->assertJson([
+		])->assertStatus(Response::HTTP_FORBIDDEN)->assertJson([
 			'Wait your turn to vote'
 		]);
 
@@ -83,7 +84,7 @@ class GameVoteControllerTest extends TestCase
 		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
 			'userId' => $this->user->id,
 			'gameId' => 'testVotingStateGame'
-		])->assertStatus(204);
+		])->assertStatus(Response::HTTP_NO_CONTENT);
 
 		Event::assertDispatched(GameUnvote::class);
 		Event::assertNotDispatched(GameVote::class);

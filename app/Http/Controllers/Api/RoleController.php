@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
 {
@@ -12,7 +13,7 @@ class RoleController extends Controller
     {
         $roles = Role::all();
 
-        return response()->json(['roles' => $roles]);
+        return  new JsonResponse(['roles' => $roles]);
     }
 
     public function get(int $id): JsonResponse
@@ -20,9 +21,9 @@ class RoleController extends Controller
         $role = Role::find($id);
 
         if ($role) {
-            return response()->json(['role' => $role]);
+            return  new JsonResponse(['role' => $role]);
         }
 
-        return response()->json(['error' => 'Role not found'], 404);
+        return new JsonResponse(['error' => 'Role not found'], Response::HTTP_NOT_FOUND);
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class GameUsersControllerTest extends TestCase
@@ -27,7 +28,7 @@ class GameUsersControllerTest extends TestCase
     {
         $this->actingAs($this->user, 'api')
             ->call('GET', '/api/game/users', ['game_id' => 'unexisting id, obviously'])
-            ->assertStatus(404);
+            ->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
     protected function setUp(): void
