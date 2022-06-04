@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Http\Controllers\Api;
+namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Events\MessageSended;
 use App\Models\User;
@@ -25,7 +25,7 @@ class GameMessageControllerTest extends TestCase
         $this->actingAs($this->user, 'api')->post('/api/game/message/send', [
             'content' => 'A beautiful message',
             'gameId' => 'aeazrazerazerazeraze'
-        ])->assertStatus(404);
+        ])->assertJsonValidationErrorFor("gameId");
         Event::assertNotDispatched(MessageSended::class);
     }
 
@@ -35,7 +35,7 @@ class GameMessageControllerTest extends TestCase
         $this->actingAs($this->secondUser, 'api')->post('/api/game/message/send', [
             'content' => 'A beautiful message',
             'gameId' => $this->game['id']
-        ])->assertStatus(401);
+        ])->assertJsonValidationErrorFor("gameId");
         Event::assertNotDispatched(MessageSended::class);
     }
 

@@ -19,13 +19,14 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/user', 'UserController@user');
     Route::get('/user/avatar', 'UserController@avatar');
 
-    Route::get('/game/list', 'GameController@list');
-    Route::post('/game/new', 'GameController@new');
-    Route::post('/game/delete', 'GameController@delete');
-    Route::post('/game/check', 'GameController@check');
+    Route::get('/game/list', 'Game\GameController@list');
+    Route::post('/game/new', 'Game\GameController@new');
+    Route::post('/game/delete', 'Game\GameController@delete');
+    Route::post('/game/check', 'Game\GameController@check');
 
-    Route::get('/game/users', 'GameUsersController@list');
-    Route::post('/game/message/send', 'GameMessageController@send');
+    Route::get('/game/users', 'Game\GameUsersController@list');
+    Route::post('/game/message/send', 'Game\GameMessageController@send');
+    Route::post('/game/vote', 'Game\GameVoteController@vote');
 
     Route::get('/roles', 'RoleController@all');
     Route::get('/roles/get/{id}', 'RoleController@get');

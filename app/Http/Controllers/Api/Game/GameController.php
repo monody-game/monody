@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Game;
 
 use App\Events\GameCreated;
 use App\Http\Controllers\Controller;
@@ -19,7 +19,7 @@ class GameController extends Controller
     public function check(CheckGameRequest $request): JsonResponse
     {
         /** @var array $data */
-        $data = $request->post();
+        $data = $request->validated();
 
         $game = Redis::get("game:{$data['game_id']}");
 
@@ -41,22 +41,30 @@ class GameController extends Controller
 
         if ($games) {
             foreach ($games[1] as $game) {
-                if (1 === preg_match('/^game:[^:]+$/', $game)) {
-                    $gameData = Redis::get($game);
-                    if ($gameData) {
-                        $currentGame = json_decode($gameData, true);
-                        if ($currentGame['is_started']) {
-                            continue;
-                        }
-                        $owner = $user->find(['id' => $currentGame['owner']]);
-                        if ($owner) {
-                            $currentGame['owner'] = $owner->first();
-                            $currentGame['id'] = str_replace('game:', '', $game);
-                            unset($currentGame['assigned_roles']);
-                            unset($currentGame['is_started']);
-                            $list[] = $currentGame;
-                        }
-                    }
+                if (!(bool) preg_match('/^game:[^:]+$/', $game)) {
+                    continue;
+                }
+
+                $gameData = Redis::get($game);
+
+                if (!$gameData) {
+                    continue;
+                }
+
+                $currentGame = json_decode($gameData, true);
+
+                if ($currentGame['is_started']) {
+                    continue;
+                }
+
+                $owner = $user->find(['id' => $currentGame['owner']]);
+
+                if ($owner) {
+                    $currentGame['owner'] = $owner->first();
+                    $currentGame['id'] = str_replace('game:', '', $game);
+                    unset($currentGame['assigned_roles']);
+                    unset($currentGame['is_started']);
+                    $list[] = $currentGame;
                 }
             }
         }
@@ -79,8 +87,9 @@ class GameController extends Controller
             $data['users'] = array_merge($data['users'], [$data['owner']]);
         }
 
-        Redis::set("game:{$id}", json_encode($data));
-        Redis::set("game:{$id}:state", self::GAME_WAITING);
+        Redis::set("game:$id", json_encode($data));
+        Redis::set("game:$id:state", self::GAME_WAITING);
+        Redis::set("game:$id:votes", json_encode([]));
 
         $data['id'] = $id;
         $data['owner'] = $request->user();
@@ -105,15 +114,12 @@ class GameController extends Controller
 
     public function delete(DeleteGameRequest $request): JsonResponse
     {
-        /** @var string $gameId */
-        $gameId = $request->post('game_id');
-
-        if (!Redis::get("game:{$gameId}")) {
-            return response()->json("Game $gameId not found", 404);
-        }
+        $gameId = $request->validated('game_id');
 
         Redis::del("game:{$gameId}");
         Redis::del("game:{$gameId}:state");
+        Redis::del("game:{$gameId}:members");
+        Redis::del("game:{$gameId}:votes");
 
         return response()->json([], 204);
     }

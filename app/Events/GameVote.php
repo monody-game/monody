@@ -2,40 +2,29 @@
 
 namespace App\Events;
 
-use App\Models\Game;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class GameUpdated
+class GameVote implements ShouldBroadcastNow
 {
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
 
-    public Game $game;
-
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct(Game $game)
+    public function __construct(public readonly array $payload)
     {
-        $this->game = $game;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     */
     public function broadcastOn(): PresenceChannel
     {
-        return new PresenceChannel('game.' . $this->game->get('id'));
+        return new PresenceChannel("game.{$this->payload['gameId']}");
     }
 
     public function broadcastAs(): string
     {
-        return 'game.updated';
+        return 'game.vote';
     }
 }

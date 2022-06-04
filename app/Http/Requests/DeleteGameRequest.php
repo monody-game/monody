@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\GameExists;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteGameRequest extends FormRequest
@@ -24,7 +25,7 @@ class DeleteGameRequest extends FormRequest
     public function rules()
     {
         return [
-            'game_id' => 'required|string',
+            'game_id' => ['required', 'string', new GameExists()],
         ];
     }
 }
