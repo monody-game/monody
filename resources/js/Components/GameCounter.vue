@@ -118,6 +118,7 @@ export default {
 			case 3:
 			case 2:
 			case 1:
+				this.sound.load();
 				this.sound.play();
 				break;
 			}
