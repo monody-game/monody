@@ -6,7 +6,6 @@ use App\Events\GameUnvote;
 use App\Events\GameVote;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
-use function in_array;
 
 class VoteService
 {
@@ -15,7 +14,7 @@ class VoteService
         $votes = $this->getVotes($gameId);
         $authUserId = Auth::user()?->getAuthIdentifier();
 
-        if (array_key_exists($userId, $votes) && in_array($authUserId, $votes[$userId], true)) {
+        if (\array_key_exists($userId, $votes) && \in_array($authUserId, $votes[$userId], true)) {
             $this->unvote($userId, $gameId);
 
             return;
@@ -36,7 +35,7 @@ class VoteService
         $votes = $this->getVotes($gameId);
         $authUserId = Auth::user()?->getAuthIdentifier();
 
-        if (array_key_exists($userId, $votes) && !in_array($authUserId, $votes[$userId], true)) {
+        if (\array_key_exists($userId, $votes) && !\in_array($authUserId, $votes[$userId], true)) {
             $this->vote($userId, $gameId);
         }
 
@@ -45,7 +44,8 @@ class VoteService
             'gameId' => $gameId
         ]);
 
-		$userIndex = array_search($authUserId, $votes[$userId], true);
+        /** @var int $userIndex */
+        $userIndex = array_search($authUserId, $votes[$userId], true);
 
         array_splice($votes[$userId], $userIndex, 1);
 
