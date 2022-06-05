@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\AvatarGenerator;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use function dirname;
 use const DIRECTORY_SEPARATOR;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,7 +17,7 @@ class AvatarController extends Controller
 
     public function __construct()
     {
-        $this->basePath = dirname(__DIR__, 4) .
+        $this->basePath = \dirname(__DIR__, 4) .
             DIRECTORY_SEPARATOR . 'public' .
             DIRECTORY_SEPARATOR . 'images' .
             DIRECTORY_SEPARATOR . 'avatars';

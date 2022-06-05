@@ -13,7 +13,7 @@ class RoleController extends Controller
     {
         $roles = Role::all();
 
-        return  new JsonResponse(['roles' => $roles]);
+        return new JsonResponse(['roles' => $roles]);
     }
 
     public function get(int $id): JsonResponse
@@ -21,7 +21,7 @@ class RoleController extends Controller
         $role = Role::find($id);
 
         if ($role) {
-            return  new JsonResponse(['role' => $role]);
+            return new JsonResponse(['role' => $role]);
         }
 
         return new JsonResponse(['error' => 'Role not found'], Response::HTTP_NOT_FOUND);

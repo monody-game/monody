@@ -9,15 +9,16 @@ use Illuminate\Support\Facades\Redis;
 
 class VoteService
 {
-    public function vote(int $userId, string $gameId): void
+    /**
+     * @return array<int, array<int>>
+     */
+    public function vote(int $userId, string $gameId): array
     {
         $votes = $this->getVotes($gameId);
         $authUserId = Auth::user()?->getAuthIdentifier();
 
         if (\array_key_exists($userId, $votes) && \in_array($authUserId, $votes[$userId], true)) {
-            $this->unvote($userId, $gameId);
-
-            return;
+            return $this->unvote($userId, $gameId);
         }
 
         GameVote::dispatch([
@@ -28,9 +29,14 @@ class VoteService
         $votes[$userId][] = $authUserId;
 
         Redis::set("game:$gameId:votes", json_encode($votes));
+
+        return $votes;
     }
 
-    public function unvote(int $userId, string $gameId): void
+    /**
+     * @return array<int, array<int>>
+     */
+    public function unvote(int $userId, string $gameId): array
     {
         $votes = $this->getVotes($gameId);
         $authUserId = Auth::user()?->getAuthIdentifier();
@@ -50,6 +56,8 @@ class VoteService
         array_splice($votes[$userId], $userIndex, 1);
 
         Redis::set("game:$gameId:votes", json_encode($votes));
+
+        return $votes;
     }
 
     private function getVotes(string $gameId): array
