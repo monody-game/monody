@@ -16,18 +16,20 @@ class LoginControllerTest extends TestCase
 		]);
 
 		$response->assertJsonValidationErrors(['password']);
-	}public function testLoginWithWrongPassword()
-{
-	$response = $this->post('/api/auth/login', [
-		'username' => 'carlos',
-		'password' => 'carlos',
-		'remember_me' => false,
-	]);
+	}
 
-	$response->assertStatus(Response::HTTP_UNAUTHORIZED);
-	$response->assertJson(['message' => 'Invalid Credentials']);
-	$response->assertCookieMissing('monody_access_token');
-}
+	public function testLoginWithWrongPassword()
+	{
+		$response = $this->post('/api/auth/login', [
+			'username' => 'carlos',
+			'password' => 'carlos',
+			'remember_me' => false,
+		]);
+
+		$response->assertStatus(Response::HTTP_UNAUTHORIZED);
+		$response->assertJson(['message' => 'Invalid Credentials']);
+		$response->assertCookieMissing('monody_access_token');
+	}
 
 	public function testLogin()
 	{
@@ -38,6 +40,7 @@ class LoginControllerTest extends TestCase
 		])->assertStatus(Response::HTTP_NO_CONTENT);
 
 		$response->assertCookie('monody_access_token');
+		$this->assertAuthenticated();
 	}
 
 	public function testLogout()
