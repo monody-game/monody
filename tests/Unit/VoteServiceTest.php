@@ -18,8 +18,16 @@ class VoteServiceTest extends TestCase
 	public function testVoting()
 	{
 		Event::fake();
+		$gameId = $this->game['id'];
 		$this->service->vote(2, $this->game['id']);
-		Event::assertDispatched(GameVote::class);
+
+		Event::assertDispatched(function (GameVote $event) use ($gameId) {
+			return $event->payload === [
+					'votedUser' => 2,
+					'gameId' => $gameId,
+					'votedBy' => 1
+				];
+		});
 		Event::assertNotDispatched(GameUnVote::class);
 
 		$votes = json_decode(Redis::get("game:{$this->game['id']}:votes"), true);
@@ -30,15 +38,22 @@ class VoteServiceTest extends TestCase
 
 	public function testUnvoting()
 	{
-		$votes = $this->service->vote(2, $this->secondGame['id']);
+		$gameId = $this->secondGame['id'];
+		$votes = $this->service->vote(2, $gameId);
 
 		$this->assertSame([
 			2 => [1]
 		], $votes);
 
-		Event::fakeFor(function () {
-			$votes = $this->service->vote(2, $this->secondGame['id']);
-			Event::assertDispatched(GameUnvote::class);
+		Event::fakeFor(function () use ($gameId) {
+			$votes = $this->service->vote(2, $gameId);
+			Event::assertDispatched(function (GameUnvote $event) use ($gameId) {
+				return $event->payload === [
+						'votedUser' => 2,
+						'gameId' => $gameId,
+						'votedBy' => 1
+					];
+			});
 			Event::assertNotDispatched(GameVote::class);
 
 			$this->assertSame([

@@ -22,8 +22,9 @@ class VoteService
         }
 
         GameVote::dispatch([
-            'userId' => $userId,
-            'gameId' => $gameId
+            'votedUser' => $userId,
+            'gameId' => $gameId,
+            'votedBy' => $authUserId
         ]);
 
         $votes[$userId][] = $authUserId;
@@ -46,8 +47,9 @@ class VoteService
         }
 
         GameUnvote::dispatch([
-            'userId' => $userId,
-            'gameId' => $gameId
+            'votedUser' => $userId,
+            'gameId' => $gameId,
+            'votedBy' => $authUserId
         ]);
 
         /** @var int $userIndex */
