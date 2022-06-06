@@ -60,7 +60,7 @@ module.exports = class GameService {
 
 		this.timeouts.push(setTimeout(async () => {
 			await this.counterService.cycle(channel);
-		}, 10000));
+		}, 11000));
 	}
 
 	async stopGameLaunch(channel) {
