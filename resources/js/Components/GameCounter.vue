@@ -118,8 +118,8 @@ export default {
 			case 3:
 			case 2:
 			case 1:
+				this.sound.currentTime = 0;
 				this.sound.play();
-				this.sound.load();
 				break;
 			}
 		},
