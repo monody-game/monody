@@ -6,7 +6,8 @@ window.Echo = new Echo({
 	broadcaster: "socket.io",
 	host: window.location.hostname + ":6001",
 	transports: ["websocket", "polling", "flashsocket"],
-	secure: true
+	secure: true,
+	forceTLS: true
 });
 
 setTimeout(() => {
