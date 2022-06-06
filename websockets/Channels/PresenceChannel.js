@@ -120,6 +120,7 @@ module.exports.PresenceChannel = class {
 		await client.del(`game:${gameId}:members`);
 		await client.del(`game:${gameId}`);
 		await client.del(`game:${gameId}:state`);
+		await client.del(`game:${gameId}:votes`);
 
 		clearTimeout(this.counterService.counterId);
 
