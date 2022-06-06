@@ -51,6 +51,10 @@ class GameVoteController extends Controller
 
     private function isVoteState(string $gameId): bool
     {
-        return self::GAME_VOTE_STATE === $this->getGame($gameId)['state'];
+        /** @var string $state */
+        $state = Redis::get("game:{$gameId}:state");
+        $state = json_decode($state, true);
+
+        return self::GAME_VOTE_STATE === $state['status'];
     }
 }
