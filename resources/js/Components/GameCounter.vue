@@ -74,6 +74,7 @@ export default {
 	},
 	mounted() {
 		this.updateCircle();
+		this.sound.load();
 		window.Echo.join(`game.${this.$route.params.id}`)
 			.listen(".game.state", (data) => {
 				if (data) {
@@ -82,7 +83,6 @@ export default {
 					this.startingTime = data.startTimestamp;
 					this.totalTime = this.time;
 					this.status = data.state;
-					console.log(this.status, this.getIcon, this.getRound);
 					useStore().state = data.state;
 					this.updateCircle();
 					this.decount();
@@ -118,8 +118,8 @@ export default {
 			case 3:
 			case 2:
 			case 1:
-				this.sound.load();
 				this.sound.play();
+				this.sound.load();
 				break;
 			}
 		},
