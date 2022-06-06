@@ -53,8 +53,25 @@ module.exports = class StateManager {
 		let currentRound = state["round"] || 0;
 		let stateIndex = rounds[currentRound].indexOf(rounds[currentRound].find(roundState => roundState.identifier === currentState));
 		const loopingRoundIndex = rounds.length - 1;
+		const members = await this.getMembers(channel);
 
-		if (currentRound !== loopingRoundIndex && typeof rounds[currentRound][stateIndex] === "undefined" && typeof rounds[currentRound + 1] !== "undefined") {
+		if (typeof rounds[currentRound][stateIndex - 1] !== "undefined" && typeof rounds[currentRound][stateIndex - 1].after === "function") {
+			console.log("emitting vote close");
+			rounds[currentRound][stateIndex - 1].after(this.io, channel, members);
+		} else if (
+			typeof rounds[currentRound - 1] !== "undefined" &&
+			typeof rounds[currentRound - 1][rounds[currentRound - 1].length - 1] !== "undefined" &&
+			typeof rounds[currentRound - 1][rounds[currentRound - 1].length - 1].after === "function"
+		) {
+			console.log("emitting vote close");
+			rounds[currentRound - 1][rounds[currentRound - 1].length - 1].after(this.io, channel, members);
+		}
+
+		if (
+			currentRound !== loopingRoundIndex &&
+			typeof rounds[currentRound][stateIndex] === "undefined" &&
+			typeof rounds[currentRound + 1] !== "undefined"
+		) {
 			currentRound++;
 			currentState = rounds[currentRound][0].identifier;
 			stateIndex = 0;
@@ -73,6 +90,11 @@ module.exports = class StateManager {
 			counterId: counterId,
 			round: currentRound
 		}, channel);
+
+		if (typeof rounds[currentRound][stateIndex] !== "undefined" && typeof rounds[currentRound][stateIndex].before === "function") {
+			console.log("emitting vote open");
+			rounds[currentRound][stateIndex].before(this.io, channel, members);
+		}
 
 		return {
 			duration,
@@ -101,5 +123,11 @@ module.exports = class StateManager {
 		} else {
 			return rounds[currentRound][stateIndex].duration;
 		}
+	}
+
+	async getMembers(channel) {
+		const members = JSON.parse(await client.get(`game:${channel.split(".")[1]}:members`));
+		if (!members) return [];
+		return members;
 	}
 };
