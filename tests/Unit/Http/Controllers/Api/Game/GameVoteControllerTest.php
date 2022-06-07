@@ -117,7 +117,10 @@ class GameVoteControllerTest extends TestCase
 			'users' => [1, 2],
 			'is_started' => true,
 			'owner' => 1,
-			'state' => 5,
+		]));
+
+		Redis::set("game:testVotingStateGame:state", json_encode([
+			'status' => 5
 		]));
 
 		Redis::set("game:testStartedGame", json_encode([
@@ -126,7 +129,10 @@ class GameVoteControllerTest extends TestCase
 			'users' => [1, 2],
 			'is_started' => true,
 			'owner' => 1,
-			'state' => 1,
+		]));
+
+		Redis::set("game:testStartedGame:state", json_encode([
+			'status' => 1
 		]));
 	}
 }

@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 final class DiscordOauthController extends AbstractOauthController
 {
@@ -39,13 +38,13 @@ final class DiscordOauthController extends AbstractOauthController
 
         $user->avatar = '/images/avatar/default.png' === $user->avatar ? $discordUser->getAvatar() : $user->avatar;
 
-		try {
-			Http::post('bot/linked', [
-				'discord_user_id' => $discordUser->getId()
-			]);
-		} catch (Exception $e) {
-			Log::error($e->getMessage());
-		}
+        try {
+            Http::post('bot/linked', [
+                'discord_user_id' => $discordUser->getId()
+            ]);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
 
         Auth::login($user);
 
