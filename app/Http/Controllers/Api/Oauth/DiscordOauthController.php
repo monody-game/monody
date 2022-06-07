@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers\Api\Oauth;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-class DiscordOauthController extends Controller
+final class DiscordOauthController extends AbstractOauthController
 {
     public function link(): RedirectResponse
     {
-        return Socialite::driver('discord')->stateless()->scopes(['identify', 'email'])->redirect();
+        return $this->generateProvider('discord', ['identify', 'email'])->redirect();
     }
 
     public function check(Request $request): RedirectResponse|JsonResponse
@@ -37,11 +39,15 @@ class DiscordOauthController extends Controller
 
         $user->avatar = '/images/avatar/default.png' === $user->avatar ? $discordUser->getAvatar() : $user->avatar;
 
-        Auth::login($user);
+		try {
+			Http::post('bot/linked', [
+				'discord_user_id' => $discordUser->getId()
+			]);
+		} catch (Exception $e) {
+			Log::error($e->getMessage());
+		}
 
-        Http::post('bot/linked', [
-            'discord_user_id' => $discordUser->getId()
-        ]);
+        Auth::login($user);
 
         return new RedirectResponse('/play');
     }
