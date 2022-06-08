@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Blade\ViteAssetLoader;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,6 +14,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+		$this->app->singleton(ViteAssetLoader::class, function ($app) {
+			return new ViteAssetLoader(true);
+		});
     }
 
     /**
