@@ -5,7 +5,10 @@
         Comment jouer
       </router-link>
       <div class="links">
-        <svg class="icon">
+        <svg
+          class="icon"
+          tabindex="0"
+        >
           <use href="/sprite.svg#wheel" />
         </svg>
         <button
