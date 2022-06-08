@@ -1,3 +1,5 @@
+@use "../tools/functions" as *;
+
 .play-page {
 	background-image: url("/images/scenejour_wolfy.svg");
 	background-repeat: no-repeat;
@@ -41,19 +43,26 @@
 	padding: space(2) space(4);
 
 	& a {
-			color: rgba(255, 255, 255, 80%);
+		color: rgba(255, 255, 255, 80%);
+	}
+
+	& .links {
+		display: flex;
+		gap: space(4);
 	}
 
 	& .links .icon {
-			height: 35px;
-			width: 35px;
-			margin-left: space(4);
-			cursor: pointer;
+		height: 35px;
+		width: 35px;
+		cursor: pointer;
 	}
 
 	& .links button {
-			background: none;
-			border: none;
+		background: none;
+		border: none;
+		padding: 0;
+		height: 35px;
+		width: 35px;
 	}
 }
 
