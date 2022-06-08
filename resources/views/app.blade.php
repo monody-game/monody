@@ -8,27 +8,16 @@
 
     <title>Monody</title>
 
+	{!! Vite::asset('js/app.js') !!}
+
     <link
         as="style"
         href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap"
         onload="this.onload=null;this.rel='stylesheet'"
         rel="preload"
     />
-    <link
-        as="style"
-        href="{{ mix('css/style.css') }}"
-        onload="this.onload=null;this.rel='stylesheet'"
-        rel="preload"
-        type="text/css"
-    />
-    <noscript>
-        <link href="{{ mix('css/style.css') }}" rel="stylesheet" type="text/css"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap" rel="stylesheet">
-    </noscript>
 </head>
 <body>
 <main id="app"></main>
 </body>
-<script src="{{ mix('/js/app.js') }}" defer></script>
 </html>

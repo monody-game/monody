@@ -1,9 +1,9 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import router from "./router/Router";
+import router from "./router/Router.js";
 import { createPinia } from "pinia";
-
-require("./bootstrap.js");
+import "./bootstrap.js";
+import "../scss/style.scss";
 
 window.pinia = createPinia();
 
@@ -12,4 +12,4 @@ createApp(App)
 	.use(router)
 	.mount("#app");
 
-require("./Helpers.js");
+import "./Helpers.js";

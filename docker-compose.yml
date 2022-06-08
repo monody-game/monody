@@ -71,14 +71,14 @@ services:
     networks:
       - monody
 
-  mix:
+  vite:
     restart: unless-stopped
     build:
-      context: ./docker/mix
-    command: yarn run watch
-    working_dir: /usr/src/app
+      context: ./docker/vite
+    ports:
+      - "3000:3000"
     volumes:
-      - .:/usr/src/app
+      - ./:/usr/src/app
 
 networks:
   monody:

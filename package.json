@@ -7,14 +7,12 @@
     "email": "contact.moon250@gmail.com"
   },
   "scripts": {
-    "dev": "npx mix",
-    "prod": "npx mix --production",
-    "watch": "npx mix watch",
+  	"dev": "vite --host",
+  	"build": "vite build",
     "serve": "nodemon -L --watch /var/www/websockets /var/www/websockets/index.js"
   },
   "dependencies": {
     "@grafikart/spinning-dots-element": "^1.1.0",
-    "@vue/compiler-sfc": "^3.2.6",
     "devtools-detect": "^4.0.0",
     "dotenv": "^16.0.1",
     "laravel-echo": "^1.11.3",
@@ -23,21 +21,17 @@
     "redis": "^4.0.3",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
-    "vue": "^3.2.36",
+    "vue": "^3.2.37",
     "vue-router": "4"
   },
   "devDependencies": {
-    "css-loader": "^6.2.0",
+    "@vitejs/plugin-vue": "^2.3.3",
     "eslint": "^8.16.0",
     "eslint-plugin-vue": "^9.0.1",
-    "laravel-mix": "^6.0.41",
-    "postcss": "^8.3.6",
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.35.2",
-    "sass-loader": "^13.0.0",
-    "vue-loader": "^17.0.0",
-    "vue-template-compiler": "^2.6.14",
-    "webpack": "^5.51.1"
+    "vite": "^2.9.10",
+    "vue-template-compiler": "^2.6.14"
   },
   "version": "1.0.0"
 }
