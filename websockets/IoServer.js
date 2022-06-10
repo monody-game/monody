@@ -1,13 +1,20 @@
 const { Server } = require("socket.io");
 const { RedisSubscriber } = require("./Redis/RedisSubscriber");
 const { ResponderManager } = require("./Responders/ResponderManager");
+const { createSecureServer } = require("node:http2");
 const { Channel } = require("./Channels/Channel");
+const { readFileSync } = require("node:fs");
 
 module.exports.IoServer = class {
 	responders = [];
 
 	constructor() {
-		this.server = new Server({}, {
+		this.httpServer = createSecureServer({
+			allowHTTP1: true,
+			key: readFileSync("/var/www/cert.key"),
+			cert: readFileSync("/var/www/cert.pem")
+		});
+		this.server = new Server(this.httpServer, {
 			cors: {
 				credentials: true
 			}
@@ -26,7 +33,7 @@ module.exports.IoServer = class {
 		this.initResponders();
 		this.onConnect();
 		await this.listen();
-		this.server.listen(6001);
+		this.httpServer.listen(6001);
 	}
 
 	async listen() {
