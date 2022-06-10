@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Facade;
 
 class ViteFacade extends Facade
 {
-	protected static function getFacadeAccessor(): string
-	{
-		return ViteAssetLoader::class;
-	}
+    protected static function getFacadeAccessor(): string
+    {
+        return ViteAssetLoader::class;
+    }
 }

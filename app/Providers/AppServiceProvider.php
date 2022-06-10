@@ -14,9 +14,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-		$this->app->singleton(ViteAssetLoader::class, function ($app) {
-			return new ViteAssetLoader(true);
-		});
+        $this->app->singleton(ViteAssetLoader::class, function ($app) {
+            return new ViteAssetLoader(true);
+        });
     }
 
     /**
