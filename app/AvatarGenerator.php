@@ -2,11 +2,10 @@
 
 namespace App;
 
-use App\Exceptions\FileExtensionException;
-use App\Exceptions\FileLoadException;
 use App\Models\User;
-use const DIRECTORY_SEPARATOR;
-use GdImage;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image as ImageFacade;
+use Intervention\Image\Image;
 
 class AvatarGenerator
 {
@@ -18,96 +17,55 @@ class AvatarGenerator
         10,
         25,
         50,
-        70,
-        80,
-        90,
+        75,
         100
     ];
 
-    public function __construct(private string $basePath)
-    {
-    }
-
     /**
-     * @throws FileExtensionException
-     * @throws FileLoadException
+     * Generate brand-new user's avatar, with the overlay corresponding to his level.
      */
-    public function generate(User $user): bool
+    public function generate(User $user): Image|bool
     {
-        $formatted = $this->getFormattedUserAvatar($user->avatar);
-        $base = $this->getImageDependingOnExtension($formatted);
-        $overlayPath = $this->getOverlay($user->level);
+        $overlayLevel = Storage::get('levels/' . $this->getOverlay($user->level) . '.png');
+        $storageAvatar = Storage::get($this->toStoragePath($user->avatar));
 
-        if (false === $overlayPath) {
+        if (null === $storageAvatar) {
             return false;
         }
 
-        $overlay = $this->getImageDependingOnExtension($overlayPath);
-        /** @var GdImage $overlay */
-        $overlay = imagescale($overlay, 600, 600);
-        /** @var GdImage $base */
-        $base = imagescale($base, 600, 600);
+        $avatar = ImageFacade::make($storageAvatar)->resize(600, 600);
+        $overlay = ImageFacade::make($overlayLevel)->resize(600, 600);
 
-        imagecopy(
-            $base,
-            $overlay,
-            imagesx($overlay) - imagesx($base),
-            imagesy($overlay) - imagesy($base),
-            0,
-            0,
-            imagesx($overlay),
-            imagesy($overlay)
-        );
+        $avatar->insert($overlay);
+        $avatar->encode('png');
 
-        imagejpeg($base, $this->basePath . DIRECTORY_SEPARATOR . $user->id . '.jpg');
-
-        imagedestroy($base);
-
-        return true;
-    }
-
-    public function getFormattedUserAvatar(string $baseAvatar): string
-    {
-        $baseAvatar = str_replace('/images/avatars', '', $baseAvatar);
-
-        return $this->basePath . $baseAvatar;
+        return $avatar;
     }
 
     /**
-     * @throws FileExtensionException
-     * @throws FileLoadException
+     * Return the closest level overlay.
      */
-    public function getImageDependingOnExtension(string $filename): GdImage
+    public function getOverlay(int $level): int
     {
-        /** @var string $filetype */
-        $filetype = @mime_content_type($filename);
+        if (\in_array($level, $this->overlayLevels, true)) {
+            return $level;
+        }
 
-        if ($filetype) {
-            $image = match ($filetype) {
-                'image/jpeg' => imagecreatefromjpeg($filename),
-                'image/png' => imagecreatefrompng($filename),
-                default => throw new FileExtensionException($filetype),
-            };
+        foreach ($this->overlayLevels as $key => $overlayLevel) {
+            if ($level > $overlayLevel) {
+                continue;
+            }
 
-            if ($image) {
-                return $image;
+            if ($level < $overlayLevel) {
+                return $this->overlayLevels[$key - 1];
             }
         }
 
-        throw new FileLoadException($filename);
+        return 0;
     }
 
-    /**
-     * @return string|false
-     */
-    public function getOverlay(int $level = 100)
+    public function toStoragePath(string $path): string
     {
-        if (!\in_array($level, $this->overlayLevels, true)) {
-            return false;
-        }
-
-        return $this->basePath .
-            DIRECTORY_SEPARATOR . 'levels' .
-            DIRECTORY_SEPARATOR . $level . '.png';
+        return str_replace('/storage/', '', $path);
     }
 }
