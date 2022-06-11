@@ -18,7 +18,7 @@ class UserTableSeed extends Seeder
         DB::table('users')->insert([
             'username' => 'moon250',
             'email' => '***REMOVED***',
-            'avatar' => '/images/avatars/1.png',
+            'avatar' => '/storage/avatars/1.png',
             'level' => 100,
             'password' => bcrypt('***REMOVED***'),
 			'created_at' => Carbon::now(),
