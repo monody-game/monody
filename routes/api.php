@@ -11,6 +11,9 @@ Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
 Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
 
 Route::group(['middleware' => ['auth:api']], function () {
+	Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
+	Route::post('/oauth/unlink/google', 'Oauth\GoogleOauthController@unlink');
+
     Route::get('/avatar/{path}', 'AvatarController@show');
     Route::get('/avatars/generate', 'AvatarController@generate');
 

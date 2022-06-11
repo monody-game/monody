@@ -13,12 +13,18 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+		$discord_id = [
+			null,
+			random_int(100000, 10000000)
+		];
+
         return [
             'username' => $this->faker->userName,
             'email' => $this->faker->email,
             'avatar' => '/images/avatars/1.png',
             'password' => '$2y$10$DyQBGnv16XcrRLL.KraCqeW1gthGs1Mqnv.enZorm9PF8s0KO//ka',
-            'level' => 23
+            'level' => 23,
+			'discord_id' => $discord_id[random_int(0, 1)]
         ];
     }
 }

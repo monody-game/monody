@@ -12,8 +12,13 @@ final class GoogleOauthController extends AbstractOauthController
         return $this->generateProvider('google', ['openid', 'https://www.googleapis.com/auth/userinfo.email'])->redirect();
     }
 
-    public function check(Request $request): never
+    public function check(Request $request): void
     {
-        dd($request->all());
+        // TODO: implement
+    }
+
+    public function unlink(Request $request): void
+    {
+        // TODO: implement
     }
 }
