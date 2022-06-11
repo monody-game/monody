@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -19,13 +20,15 @@ class UserTableSeed extends Seeder
             'email' => '***REMOVED***',
             'avatar' => '/images/avatars/1.png',
             'level' => 100,
-            'password' => bcrypt('***REMOVED***')
+            'password' => bcrypt('***REMOVED***'),
+			'created_at' => Carbon::now(),
         ]);
 
         DB::table('users')->insert([
             'username' => 'JohnDoe',
             'email' => 'johndoe@gmail.com',
-            'password' => bcrypt('johndoe')
+            'password' => bcrypt('johndoe'),
+			'created_at' => Carbon::now(),
         ]);
     }
 }
