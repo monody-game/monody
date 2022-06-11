@@ -9,7 +9,6 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Image;
 use Symfony\Component\HttpFoundation\Response;
 
 class AvatarController extends Controller
@@ -25,6 +24,7 @@ class AvatarController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
+
         $result = $this->generator->generate($user);
 
         if (!$result) {
@@ -34,7 +34,6 @@ class AvatarController extends Controller
         $path = $this->generator->toStoragePath($user->avatar);
 
         Storage::delete("avatars/$path");
-        /* @var Image $result */
         $result->save(storage_path("app/public/$path"));
 
         $user->avatar = Storage::url("$path");
