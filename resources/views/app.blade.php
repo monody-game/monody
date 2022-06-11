@@ -9,13 +9,6 @@
     <title>Monody</title>
 
 	{!! Vite::asset('js/app.js') !!}
-
-    <link
-        as="style"
-        href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700&display=swap"
-        onload="this.onload=null;this.rel='stylesheet'"
-        rel="preload"
-    />
 </head>
 <body>
 <main id="app"></main>
