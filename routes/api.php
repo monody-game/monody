@@ -14,8 +14,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 	Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
 	Route::post('/oauth/unlink/google', 'Oauth\GoogleOauthController@unlink');
 
-    Route::get('/avatar/{path}', 'AvatarController@show');
     Route::get('/avatars/generate', 'AvatarController@generate');
+    Route::put('/avatars/upload', 'AvatarController@upload');
 
     Route::post('/auth/logout', 'Auth\LoginController@logout');
 

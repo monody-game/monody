@@ -4,24 +4,21 @@ namespace App\Http\Controllers\Api;
 
 use App\AvatarGenerator;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AvatarUploadRequest;
 use App\Models\User;
-use const DIRECTORY_SEPARATOR;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Image;
 use Symfony\Component\HttpFoundation\Response;
 
 class AvatarController extends Controller
 {
     private AvatarGenerator $generator;
-    private string $basePath;
 
     public function __construct()
     {
-        $this->basePath = \dirname(__DIR__, 4) .
-            DIRECTORY_SEPARATOR . 'public' .
-            DIRECTORY_SEPARATOR . 'images' .
-            DIRECTORY_SEPARATOR . 'avatars';
-        $this->generator = new AvatarGenerator($this->basePath);
+        $this->generator = new AvatarGenerator();
     }
 
     public function generate(Request $request): JsonResponse
@@ -29,10 +26,35 @@ class AvatarController extends Controller
         /** @var User $user */
         $user = $request->user();
         $result = $this->generator->generate($user);
-        if (true === $result) {
-            return new JsonResponse([], Response::HTTP_NO_CONTENT);
+
+        if (!$result) {
+            return new JsonResponse(['message' => 'Error while generating the avatar'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(['message' => 'Error while generating the avatar'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        $path = $this->generator->toStoragePath($user->avatar);
+
+        Storage::delete("avatars/$path");
+        /* @var Image $result */
+        $result->save(storage_path("app/public/$path"));
+
+        $user->avatar = Storage::url("$path");
+        $user->save();
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    public function upload(AvatarUploadRequest $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $request->validated('avatar')->storeAs(
+            'avatars', "{$user->id}.png"
+        );
+
+        $user->avatar = Storage::url((string) $user->id);
+        $user->save();
+
+        return new JsonResponse(['message' => 'Avatar uploaded !'], 201);
     }
 }
