@@ -62,6 +62,8 @@ final class DiscordOauthController extends AbstractOauthController
         }
 
         $user->discord_id = null;
+        $user->discord_token = null;
+        $user->discord_refresh_token = null;
         $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);

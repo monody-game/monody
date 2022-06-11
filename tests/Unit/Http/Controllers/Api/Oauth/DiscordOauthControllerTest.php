@@ -26,6 +26,8 @@ class DiscordOauthControllerTest extends TestCase
 		$user = $this->user->refresh();
 
 		$this->assertNull($user['discord_id']);
+		$this->assertNull($user['discord_token']);
+		$this->assertNull($user['discord_refresh_token']);
 	}
 
 	public function testUnlinkingAccountWithoutBeingLinked()
