@@ -34,7 +34,8 @@ class AvatarController extends Controller
         $path = $this->generator->toStoragePath($user->avatar);
 
         Storage::delete("avatars/$path");
-        $result->save(storage_path("app/public/$path"));
+
+        Storage::put("avatars/$path", $result);
 
         $user->avatar = Storage::url("$path");
         $user->save();
