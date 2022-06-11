@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 final class DiscordOauthController extends AbstractOauthController
 {
@@ -49,5 +50,20 @@ final class DiscordOauthController extends AbstractOauthController
         Auth::login($user);
 
         return new RedirectResponse('/play');
+    }
+
+    public function unlink(Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        if (!$user->discord_id) {
+            return new JsonResponse(['error' => 'Your Discord account is not linked'], Response::HTTP_FORBIDDEN);
+        }
+
+        $user->discord_id = null;
+        $user->save();
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 }
