@@ -52,7 +52,7 @@ class AvatarController extends Controller
             'avatars', "{$user->id}.png"
         );
 
-        $user->avatar = Storage::url((string) $user->id);
+        $user->avatar = Storage::url("avatars/$user->id.png");
         $user->save();
 
         return new JsonResponse(['message' => 'Avatar uploaded !'], 201);
