@@ -1,6 +1,6 @@
 <template>
   <img
-    :src="'http://localhost:8000' + message.author.avatar"
+    :src="'https://localhost' + message.author.avatar"
     alt=""
     class="message__avatar"
   >

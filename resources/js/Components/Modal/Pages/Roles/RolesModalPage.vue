@@ -1,7 +1,7 @@
 <template>
   <div class="roles__page">
     Choisissez les roles parmis les suivants :
-    <LoadingSpinner
+    <LogoSpinner
       v-if="loading"
       class="roles__loader"
     />
@@ -18,14 +18,14 @@
 
 <script>
 import RoleSelector from "./RoleSelector.vue";
-import LoadingSpinner from "../../../LoadingSpinner.vue";
+import LogoSpinner from "../../../Spinners/LogoSpinner.vue";
 import { useStore } from "../../../../stores/modal.js";
 
 export default {
 	name: "RolesModalPage",
 	components: {
 		RoleSelector,
-		LoadingSpinner: LoadingSpinner
+		LogoSpinner: LogoSpinner
 	},
 	data() {
 		return {
@@ -48,7 +48,7 @@ export default {
 				const res = await window.JSONFetch("/roles", "GET");
 				const list = res.data;
 				list.roles.forEach((role) => {
-					role.image = "http://localhost:8000" + role.image;
+					role.image = "https://localhost" + role.image;
 					if (role.limit === null) {
 						delete role.limit;
 					}

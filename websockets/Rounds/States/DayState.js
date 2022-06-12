@@ -1,5 +1,5 @@
 module.exports = {
 	name: "day",
-	duration: 40,
+	duration: 10,
 	identifier: 4
 };

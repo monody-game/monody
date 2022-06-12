@@ -52,7 +52,7 @@
           @keyup.enter="login()"
           @click.prevent="login()"
         >
-          <LoadingSpinner
+          <LogoSpinner
             v-if="loading === true"
             class="spinner__cloud-white"
           />
@@ -70,13 +70,13 @@
 </template>
 
 <script>
-import LoadingSpinner from "../../Components/LoadingSpinner.vue";
+import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/user.js";
 
 export default {
 	name: "LoginPage",
 	components: {
-		LoadingSpinner: LoadingSpinner
+		LogoSpinner: LogoSpinner
 	},
 	data() {
 		return {

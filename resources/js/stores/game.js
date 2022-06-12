@@ -12,10 +12,6 @@ export const useStore = defineStore("game", {
 		};
 	},
 	actions: {
-		removeGamePlayer(user) {
-			const index = this.playerList.indexOf(user);
-			this.playerList.splice(index, 1);
-		},
 		setRole(userId, role) {
 			const player = this.playerList.find(listItem => listItem.id === parseInt(userId));
 			if (player) {
@@ -45,6 +41,9 @@ export const useStore = defineStore("game", {
 			const index = votes.indexOf(votedBy);
 			votes.splice(index, 1);
 		},
+		clearVotes() {
+			this.currentVote = 0;
+		}
 	},
 	getters: {
 		getPlayerByID: (state) => (playerID) => {

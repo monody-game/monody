@@ -1,6 +1,6 @@
 <template>
   <div class="player-list__wrapper">
-    <LoadingSpinner v-if="loading" />
+    <LogoSpinner v-if="loading" />
     <GamePlayer
       v-for="player in playerList"
       :key="player.id"
@@ -12,14 +12,14 @@
 <script>
 import { createApp } from "vue";
 import GamePlayer from "./GamePlayer.vue";
-import LoadingSpinner from "../LoadingSpinner.vue";
+import LogoSpinner from "../Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/game.js";
 
 export default {
 	name: "PlayerList",
 	components: {
 		GamePlayer: GamePlayer,
-		LoadingSpinner: LoadingSpinner
+		LogoSpinner: LogoSpinner
 	},
 	data() {
 		return {

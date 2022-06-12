@@ -6,7 +6,7 @@
       viewBox="0 0 39 44"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      class="LoadingSpinner"
+      class="LogoSpinner"
     >
       <path
         id="moon"
@@ -29,7 +29,7 @@
 
 <script>
 export default {
-	name: "LoadingSpinner",
+	name: "LogoSpinner",
 };
 </script>
 

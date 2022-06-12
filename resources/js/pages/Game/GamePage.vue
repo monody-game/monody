@@ -27,7 +27,7 @@
     </div>
     <div class="game-page__main">
       <Chat />
-      <LoadingSpinner v-if="loading" />
+      <LogoSpinner v-if="loading" />
       <PlayerList />
     </div>
   </div>
@@ -37,7 +37,7 @@
 import GameCounter from "../../Components/GameCounter.vue";
 import TheChat from "../../Components/Chat/Chat.vue";
 import PlayerList from "../../Components/PlayerList/PlayerList.vue";
-import LoadingSpinner from "../../Components/LoadingSpinner.vue";
+import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/game.js";
 
 export default {
@@ -46,7 +46,7 @@ export default {
 		GameCounter: GameCounter,
 		Chat: TheChat,
 		PlayerList: PlayerList,
-		LoadingSpinner: LoadingSpinner
+		LogoSpinner: LogoSpinner
 	},
 	data() {
 		return {

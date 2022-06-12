@@ -81,7 +81,7 @@
           @keyup.enter="register()"
           @click.prevent="register()"
         >
-          <LoadingSpinner
+          <LogoSpinner
             v-if="loading === true"
             class="spinner__cloud-white"
           />
@@ -94,13 +94,13 @@
 
 <script>
 
-import LoadingSpinner from "../../Components/LoadingSpinner.vue";
+import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/user.js";
 
 export default {
 	name: "RegisterPage",
 	components: {
-		LoadingSpinner: LoadingSpinner
+		LogoSpinner: LogoSpinner
 	},
 	data() {
 		return {
