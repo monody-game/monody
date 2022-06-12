@@ -23,7 +23,7 @@ export default {
 		},
 		getAvatar(id) {
 			return (
-				"http://localhost:8000" + this.getPlayerByID(id).avatar
+				"https://localhost" + this.getPlayerByID(id).avatar
 			);
 		},
 	},
