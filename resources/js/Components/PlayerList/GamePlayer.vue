@@ -66,7 +66,7 @@ export default {
 			})
 			.listen(".vote.close", () => {
 				const player = this.$refs.player;
-				if (player.classList.contains("player__votable")) {
+				if (player && player.classList.contains("player__votable")) {
 					player.classList.remove("player__votable");
 				}
 				this.isVoted = false;
