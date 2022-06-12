@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'default' => env('FILESYSTEM_DRIVER', 'public'),
+    'default' => env('FILESYSTEM_DRIVER', 'local'),
 
     'disks' => [
         'local' => [

@@ -45,7 +45,7 @@ class AvatarControllerTest extends TestCase
 
 		Storage::assertExists("avatars/{$this->user->id}.png");
 
-		$this->assertSame("/storage/{$this->user->id}", $this->user->avatar);
+		$this->assertSame("/storage/avatars/{$this->user->id}.png", $this->user->avatar);
 	}
 
     protected function setUp(): void
