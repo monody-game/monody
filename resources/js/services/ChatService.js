@@ -19,7 +19,7 @@ export default class ChatService {
 		messageContainer.scrollTo(0, messageContainer.scrollHeight);
 	}
 
-	sendMessage(message, customClass) {
+	sendMessage(message, type, customClass) {
 		const messageContainer = document.querySelector(".chat__messages");
 		const wrapper = document.createElement("div");
 		wrapper.classList.add("message__main");
@@ -28,25 +28,19 @@ export default class ChatService {
 			wrapper.classList.add(customClass);
 		}
 
-		createApp(ChatMessage, {
-			message: message
-		}).mount(wrapper);
-
-		messageContainer.appendChild(wrapper);
-		messageContainer.scrollTo(0, messageContainer.scrollHeight);
-	}
-
-	sendAlert(type, message) {
-		const messageContainer = document.querySelector(".chat__messages");
-		const wrapper = document.createElement("div");
-		wrapper.classList.add("alert-message__" + type);
-
-		createApp(ChatAlert, {
-			type: type,
-			message: message
-		})
-			.use(window.pinia)
-			.mount(wrapper);
+		if (type !== "message") {
+			wrapper.classList.add("alert-message__" + type);
+			createApp(ChatAlert, {
+				type: type,
+				message: message
+			})
+				.use(window.pinia)
+				.mount(wrapper);
+		} else {
+			createApp(ChatMessage, {
+				message: message,
+			}).mount(wrapper);
+		}
 
 		messageContainer.appendChild(wrapper);
 		messageContainer.scrollTo(0, messageContainer.scrollHeight);
