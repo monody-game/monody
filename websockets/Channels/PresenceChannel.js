@@ -67,7 +67,7 @@ module.exports.PresenceChannel = class {
 		}
 
 		if (members.length === count && game.is_started === false) {
-			await this.gameService.startGame(channel, game, members);
+			await this.gameService.startGame(channel, game, members, socket);
 		}
 	}
 

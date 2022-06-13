@@ -1,17 +1,9 @@
-const fetch = require("node-fetch");
-const https = require("node:https");
-
-const agent = new https.Agent({
-	rejectUnauthorized: false,
-});
+const fetch = require("../Helpers/fetch");
 
 module.exports.PrivateChannel = class {
 	authenticate(socket, data) {
 		const options = {
 			form: { channel_name: data.channel },
-			headers: (data.auth && data.auth.headers) ? data.auth.headers : {},
-			rejectUnauthorized: false,
-			credentials: "include",
 		};
 
 		if (process.env.APP_DEBUG) {
@@ -21,14 +13,7 @@ module.exports.PrivateChannel = class {
 		return this.serverRequest(socket, options);
 	}
 
-	hasMatchingHost(referer, host) {
-		return (referer.hostname && referer.hostname.substring(referer.hostname.indexOf(".")) === host) ||
-      `${referer.protocol}//${referer.host}` === host ||
-      referer.host === host;
-	}
-
 	async serverRequest(socket, options) {
-		let body;
 		let response;
 		let status = 0;
 
@@ -39,25 +24,18 @@ module.exports.PrivateChannel = class {
 
 			response = await fetch("https://web/broadcasting/auth", {
 				method: "POST",
-				headers: this.prepareHeaders(socket, options),
 				body: params,
-				agent
-			});
+				headers: options
+			}, socket);
 
-			status = response.statusCode;
-			response = response.text();
+			status = response.status;
+			response = response.text;
 
 			if (process.env.APP_DEBUG) {
 				console.info(`[${new Date().toISOString()}] - ${socket.id} authenticated for: ${options.form.channel_name}`);
 			}
 
-			try {
-				body = JSON.parse(response);
-			} catch (e) {
-				body = response;
-			}
-
-			return body;
+			return response;
 		} catch (error) {
 			if (error) {
 				if (process.env.APP_DEBUG) {
@@ -74,12 +52,5 @@ module.exports.PrivateChannel = class {
 				throw ({ reason: "Client can not be authenticated, got HTTP status " + status, status });
 			}
 		}
-	}
-
-	prepareHeaders(socket, options) {
-		options.headers["Cookie"] = options.headers["Cookie"] || socket.request.headers.cookie;
-		options.headers["X-Requested-With"] = "XMLHttpRequest";
-
-		return options.headers;
 	}
 };

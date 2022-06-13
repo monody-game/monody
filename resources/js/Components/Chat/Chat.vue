@@ -43,19 +43,15 @@ export default {
 	mounted() {
 		window.Echo.join(`game.${this.$route.params.id}`)
 			.listen(".chat.send", (e) => {
-				const message = e.data.message;
-				this.service.sendMessage({ content: message.content, author: message.author });
+				this.service.sendMessage(e.data.message, e.data.type ?? "message");
 			})
 			.listen(".game.role-assign", async (role_id) => {
 				const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
 				const role = res.data.role;
-				setTimeout(() => {
-					this.gameStore.setRole(this.userStore.id, role);
-					this.service.sendAlert("info", "Votre role est : " + role.display_name);
-				}, 3000);
+				this.gameStore.setRole(this.userStore.id, role);
 			})
 			.listen(".chat.werewolf", (e) => {
-				this.service.sendMessage({ content: e.content, author: e.author }, "message__werewolf");
+				this.service.sendMessage({ content: e.content, author: e.author }, "message", "message__werewolf");
 			});
 	},
 	methods: {

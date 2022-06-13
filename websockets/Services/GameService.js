@@ -5,6 +5,8 @@ const CounterService = require("./CounterService");
 const UserService = require("./UserService");
 const StartingState = require("../Rounds/States/StartingState");
 const WaitingState = require("../Rounds/States/WaitingState");
+const ChatService = require("./ChatService");
+const fetch = require("../Helpers/fetch");
 const werewolves = [1];
 
 module.exports = class GameService {
@@ -39,7 +41,7 @@ module.exports = class GameService {
 		return game.owner === user.user_id;
 	}
 
-	async startGame(channel, game, members) {
+	async startGame(channel, game, members, socket) {
 		game.is_started = true;
 		const gameId = channel.split(".")[1];
 		await this.setGame(gameId, game);
@@ -55,7 +57,7 @@ module.exports = class GameService {
 		}
 
 		this.timeouts.push(setTimeout(async () => {
-			await this.roleManagement(game, channel, members);
+			await this.roleManagement(game, channel, members, socket);
 		}, 6000));
 
 		this.timeouts.push(setTimeout(async () => {
@@ -75,7 +77,7 @@ module.exports = class GameService {
 		}, channel);
 	}
 
-	async roleManagement(game, channel, members) {
+	async roleManagement(game, channel, members, socket) {
 		const gameWerewolves = [];
 		game.assigned_roles = RoleManager.assign(game.roles, members);
 
@@ -86,7 +88,12 @@ module.exports = class GameService {
 
 		for (const member of members) {
 			const user = await UserService.getUserBySocket(member.socketId, members);
+			const roleId = game.assigned_roles[user.user_id];
+			let role = await fetch(`https://web/api/roles/get/${roleId}`, { method: "GET" }, socket);
+
+			role = role.json.role;
 			this.io.to(member.socketId).emit("game.role-assign", channel, game.assigned_roles[user.user_id]);
+			ChatService.to(member.socketId).info(this.io, channel, `Votre role est : ${role.display_name}`);
 		}
 
 		await this.setGame(channel.split(".")[1], game);
