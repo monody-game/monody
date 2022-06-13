@@ -93,7 +93,7 @@ module.exports = class GameService {
 
 			role = role.json.role;
 			this.io.to(member.socketId).emit("game.role-assign", channel, game.assigned_roles[user.user_id]);
-			ChatService.to(member.socketId).info(this.io, channel, `Votre role est : ${role.display_name}`);
+			ChatService.info(this.io, channel, `Votre role est : ${role.display_name}`, member.socketId);
 		}
 
 		await this.setGame(channel.split(".")[1], game);
