@@ -5,12 +5,14 @@
         Comment jouer
       </router-link>
       <div class="links">
-        <svg
-          class="icon"
-          tabindex="0"
-        >
-          <use href="/sprite.svg#wheel" />
-        </svg>
+        <router-link to="profile">
+          <svg
+            class="icon"
+            tabindex="0"
+          >
+            <use href="/sprite.svg#wheel" />
+          </svg>
+        </router-link>
         <button
           title="Se déconnecter"
           @click="logout()"
