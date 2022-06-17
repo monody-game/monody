@@ -21,6 +21,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/auth/logout', 'Auth\LoginController@logout');
 
     Route::get('/user', 'UserController@user');
+	Route::patch('/user', 'UserController@update');
     Route::get('/user/avatar', 'UserController@avatar');
 
     Route::get('/game/list', 'Game\GameController@list');
