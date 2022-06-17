@@ -70,7 +70,7 @@ export default {
 					player.classList.remove("player__votable");
 				}
 				this.isVoted = false;
-				this.gameStore.clearVotes;
+				this.gameStore.currentVote = 0;
 			}).listen(".game.vote", ({ data }) => {
 				const payload = data.payload;
 				if (payload.votedUser !== this.player.id || payload.votedBy === this.userID) {
@@ -97,9 +97,9 @@ export default {
 			}
 
 			if (
-				this.gameStore.getCurrentVote > 0
+				this.gameStore.currentVote > 0
 			) {
-				await this.unVote(votedBy, this.gameStore.getCurrentVote);
+				await this.unVote(votedBy, this.gameStore.currentVote);
 				return;
 			}
 
