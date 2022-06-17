@@ -55,6 +55,19 @@ class AvatarController extends Controller
         $user->avatar = Storage::url("avatars/$user->id.png");
         $user->save();
 
-        return new JsonResponse(['message' => 'Avatar uploaded !'], 201);
+        return new JsonResponse(['message' => 'Avatar uploaded !'], Response::HTTP_CREATED);
+    }
+
+    public function delete(Request $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+        $path = str_replace('/storage/', '', $user->avatar);
+
+        Storage::delete($path);
+        $user->avatar = Storage::url('avatars/default.png');
+        $user->save();
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 }

@@ -38,7 +38,7 @@ class AvatarControllerTest extends TestCase
 
 		$this
 			->actingAs($this->user, 'api')
-			->put('/api/avatars/upload', [
+			->put('/api/avatars', [
 				'avatar' => UploadedFile::fake()->image('avatartest.png', 400, 400)
 			])
 			->assertStatus(Response::HTTP_CREATED);
@@ -46,6 +46,29 @@ class AvatarControllerTest extends TestCase
 		Storage::assertExists("avatars/{$this->user->id}.png");
 
 		$this->assertSame("/storage/avatars/{$this->user->id}.png", $this->user->avatar);
+	}
+
+	public function testDeletingAvatar(): void
+	{
+		Storage::fake();
+
+		$this
+			->actingAs($this->user, 'api')
+			->put('/api/avatars', [
+				'avatar' => UploadedFile::fake()->image('avatartest.png', 400, 400)
+			])
+			->assertStatus(Response::HTTP_CREATED);
+
+		Storage::assertExists("avatars/{$this->user->id}.png");
+		$this->assertSame("/storage/avatars/{$this->user->id}.png", $this->user->avatar);
+
+		$this
+			->actingAs($this->user, 'api')
+			->delete('/api/avatars')
+			->assertStatus(Response::HTTP_NO_CONTENT);
+
+		Storage::assertMissing("avatars/{$this->user->id}.png");
+		$this->assertSame("/storage/avatars/default.png", $this->user->avatar);
 	}
 
     protected function setUp(): void
