@@ -21,11 +21,11 @@ class UserController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-		foreach ($request->validated() as $field => $value) {
-			$user->{$field} = $value;
-		}
+        foreach ($request->validated() as $field => $value) {
+            $user->{$field} = $value;
+        }
 
-		$user->save();
+        $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
