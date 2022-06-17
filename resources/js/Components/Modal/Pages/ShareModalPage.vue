@@ -9,5 +9,3 @@ export default {
 	name: "ShareModalPage",
 };
 </script>
-
-<style scoped></style>

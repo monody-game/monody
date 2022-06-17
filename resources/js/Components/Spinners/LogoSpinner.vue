@@ -32,7 +32,3 @@ export default {
 	name: "LogoSpinner",
 };
 </script>
-
-<style scoped>
-
-</style>
