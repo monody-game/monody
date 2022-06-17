@@ -40,9 +40,6 @@ export const useStore = defineStore("game", {
 			}
 			const index = votes.indexOf(votedBy);
 			votes.splice(index, 1);
-		},
-		clearVotes() {
-			this.currentVote = 0;
 		}
 	},
 	getters: {
