@@ -19,7 +19,7 @@
 <script>
 import RoleSelector from "./RoleSelector.vue";
 import LogoSpinner from "../../../Spinners/LogoSpinner.vue";
-import { useStore } from "../../../../stores/modal.js";
+import { useStore } from "../../../../stores/GameCreationModal.js";
 
 export default {
 	name: "RolesModalPage",

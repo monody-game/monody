@@ -30,7 +30,7 @@
   </div>
 </template>
 <script>
-import { useStore } from "../../../../stores/modal.js";
+import { useStore } from "../../../../stores/GameCreationModal.js";
 
 export default {
 	name: "RoleSelector",
