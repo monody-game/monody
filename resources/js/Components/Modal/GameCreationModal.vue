@@ -5,8 +5,8 @@
     </p>
     <div class="modal__page">
       <RolesModalPage v-if="currentPage === 1" />
-      <GameStateModalPage v-if="currentPage === 2" />
-      <ShareModalPage v-if="currentPage === 3" />
+      <GameStateModalPage v-else-if="currentPage === 2" />
+      <ShareModalPage v-else-if="currentPage === 3" />
     </div>
     <div class="modal__buttons">
       <button
