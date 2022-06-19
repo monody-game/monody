@@ -46,7 +46,9 @@
       </div>
       <PlayerPresentation />
     </div>
-    <NewGameModal v-if="isModalOpenned()" />
+    <Transition name="modal">
+      <NewGameModal v-if="store.isOpenned" />
+    </Transition>
     <footer class="play-page__footer">
       <p>&copy; Monody 2022 — Tous droits reservés.</p>
     </footer>
@@ -102,9 +104,6 @@ export default {
 		},
 		openModal() {
 			this.store.isOpenned = true;
-		},
-		isModalOpenned() {
-			return this.store.isOpenned;
 		},
 	}
 };

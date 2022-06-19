@@ -4,6 +4,7 @@
     @click="closeModal()"
   >
     <div
+      v-if="store.isOpenned"
       ref="modal"
       aria-modal="true"
       role="dialog"
@@ -24,12 +25,17 @@ import { useModal } from "../../composables/modal";
 
 export default {
 	name: "BaseModal",
+	data() {
+		return {
+			store: useStore()
+		};
+	},
 	mounted() {
 		this.$refs.modal.focus();
 	},
 	methods: {
 		closeModal() {
-			useModal().closeModal(useStore());
+			useModal().closeModal(this.store);
 		},
 	}
 };

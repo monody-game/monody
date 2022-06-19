@@ -46,3 +46,13 @@
   height: 100%;
   margin: space(2) space(2) 0;
 }
+
+.modal-enter-active,
+.modal-leave-active {
+	transition: all .2s;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+	opacity: 0;
+}
