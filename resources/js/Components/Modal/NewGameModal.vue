@@ -1,73 +1,62 @@
 <template>
-  <div
-    class="modal__background"
-    @click="closeModal()"
-  >
-    <div
-      ref="modal"
-      aria-modal="true"
-      role="dialog"
-      class="modal__main"
-      tabindex="-1"
-      aria-labelledby="modal__title"
-      @click.stop=""
-      @keyup.esc="closeModal()"
-    >
-      <p id="modal__title">
-        Création d'une partie ({{ currentPage }}/{{ totalPage }})
-      </p>
-      <div class="modal__page">
-        <RolesModalPage v-if="currentPage === 1" />
-        <GameStateModalPage v-if="currentPage === 2" />
-        <ShareModalPage v-if="currentPage === 3" />
-      </div>
-      <div class="modal__buttons">
+  <BaseModal>
+    <p id="modal__title">
+      Création d'une partie ({{ currentPage }}/{{ totalPage }})
+    </p>
+    <div class="modal__page">
+      <RolesModalPage v-if="currentPage === 1" />
+      <GameStateModalPage v-if="currentPage === 2" />
+      <ShareModalPage v-if="currentPage === 3" />
+    </div>
+    <div class="modal__buttons">
+      <button
+        class="btn large"
+        @click="closeModal()"
+      >
+        Annuler
+      </button>
+      <div class="modal__buttons-right">
         <button
+          :class="currentPage === 1 ? 'disable-hover' : ''"
+          :disabled="currentPage === 1"
           class="btn large"
-          @click="closeModal()"
+          @click="previousPage()"
         >
-          Annuler
+          Précédent
         </button>
-        <div class="modal__buttons-right">
-          <button
-            :class="currentPage === 1 ? 'disable-hover' : ''"
-            :disabled="currentPage === 1"
-            class="btn large"
-            @click="previousPage()"
-          >
-            Précédent
-          </button>
-          <button
-            v-if="currentPage !== totalPage"
-            :class="notEnoughSelectedRoles() === true ? 'disable-hover' : ''"
-            :disabled="notEnoughSelectedRoles()"
-            class="btn large"
-            @click="nextPage()"
-          >
-            Suivant
-          </button>
-          <button
-            v-if="currentPage === totalPage"
-            class="btn large"
-            @click="finish()"
-          >
-            Terminer
-          </button>
-        </div>
+        <button
+          v-if="currentPage !== totalPage"
+          :class="notEnoughSelectedRoles() === true ? 'disable-hover' : ''"
+          :disabled="notEnoughSelectedRoles()"
+          class="btn large"
+          @click="nextPage()"
+        >
+          Suivant
+        </button>
+        <button
+          v-if="currentPage === totalPage"
+          class="btn large"
+          @click="finish()"
+        >
+          Terminer
+        </button>
       </div>
     </div>
-  </div>
+  </BaseModal>
 </template>
 
 <script>
 import RolesModalPage from "./Pages/Roles/RolesModalPage.vue";
 import GameStateModalPage from "./Pages/GameState/GameStateModalPage.vue";
 import ShareModalPage from "./Pages/ShareModalPage.vue";
+import BaseModal from "./BaseModal.vue";
 import { useStore } from "../../stores/modal.js";
+import { useModal } from "../../composables/modal.js";
 
 export default {
 	name: "NewGameModal",
 	components: {
+		BaseModal,
 		RolesModalPage,
 		GameStateModalPage,
 		ShareModalPage,
@@ -81,40 +70,31 @@ export default {
 			gameId: 0,
 		};
 	},
-	mounted() {
-		this.$refs.modal.focus();
-	},
 	methods: {
+		closeModal() { useModal().closeModal(this.store); },
 		notEnoughSelectedRoles() {
 			const selectedRoles = this.store.selectedRoles;
 			// return selectedRoles.length < 5;
 			// TODO: replace line below with line above
 			return selectedRoles.length < 2;
 		},
-		closeModal() {
-			this.store.isOpenned = false;
-		},
 		async nextPage() {
 			if (this.currentPage + 1 > this.totalPage) {
 				return;
 			}
 
-			if (this.currentPage === 2) {
-				this.currentPage = this.currentPage + 1;
-				const res = await window.JSONFetch("/game/new", "POST", {
-					roles: this.store.selectedRoles,
-					is_started: false,
-					users: []
-				});
-				this.gameId = res.data.game.id;
-			} else {
-				this.currentPage = this.currentPage + 1;
-			}
+			this.currentPage++;
 		},
-		finish() {
-			this.closeModal();
+		async finish() {
+			this.currentPage = this.currentPage + 1;
+			const res = await window.JSONFetch("/game/new", "POST", {
+				roles: this.store.selectedRoles,
+				is_started: false,
+				users: []
+			});
+			this.gameId = res.data.game.id;
 			if (this.gameId !== 0) {
-				this.$router.push("/game/" + this.gameId);
+				await this.$router.push("/game/" + this.gameId);
 			}
 		},
 		previousPage() {
