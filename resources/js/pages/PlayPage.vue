@@ -47,7 +47,7 @@
       <PlayerPresentation />
     </div>
     <Transition name="modal">
-      <NewGameModal v-if="store.isOpenned" />
+      <GameCreationModal v-if="store.isOpenned" />
     </Transition>
     <footer class="play-page__footer">
       <p>&copy; Monody 2022 — Tous droits reservés.</p>
@@ -57,7 +57,7 @@
 
 <script>
 import AuthService from "../services/AuthService.js";
-import NewGameModal from "../Components/Modal/NewGameModal.vue";
+import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
 import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";
 import { useStore } from "../stores/modal.js";
@@ -65,7 +65,7 @@ import { useStore } from "../stores/modal.js";
 export default {
 	name: "PlayPage",
 	components: {
-		NewGameModal: NewGameModal,
+		GameCreationModal: GameCreationModal,
 		GamePresentation: GamePresentation,
 		PlayerPresentation: PlayerPresentation
 	},

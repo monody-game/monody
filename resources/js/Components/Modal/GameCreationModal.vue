@@ -54,7 +54,7 @@ import { useStore } from "../../stores/modal.js";
 import { useModal } from "../../composables/modal.js";
 
 export default {
-	name: "NewGameModal",
+	name: "GameCreationModal",
 	components: {
 		BaseModal,
 		RolesModalPage,
