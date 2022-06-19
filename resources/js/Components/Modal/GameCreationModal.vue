@@ -50,8 +50,7 @@ import RolesModalPage from "./Pages/Roles/RolesModalPage.vue";
 import GameStateModalPage from "./Pages/GameState/GameStateModalPage.vue";
 import ShareModalPage from "./Pages/ShareModalPage.vue";
 import BaseModal from "./BaseModal.vue";
-import { useStore } from "../../stores/modal.js";
-import { useModal } from "../../composables/modal.js";
+import { useStore } from "../../stores/GameCreationModal.js";
 
 export default {
 	name: "GameCreationModal",
@@ -71,7 +70,9 @@ export default {
 		};
 	},
 	methods: {
-		closeModal() { useModal().closeModal(this.store); },
+		closeModal() {
+			this.store.isOpenned = false;
+		},
 		notEnoughSelectedRoles() {
 			const selectedRoles = this.store.selectedRoles;
 			// return selectedRoles.length < 5;

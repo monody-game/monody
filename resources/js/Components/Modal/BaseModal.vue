@@ -4,7 +4,7 @@
     @click="closeModal()"
   >
     <div
-      v-if="store.isOpenned"
+      v-if="gameCreationModal.isOpenned || profileModal.isOpenned"
       ref="modal"
       aria-modal="true"
       role="dialog"
@@ -20,14 +20,15 @@
 </template>
 
 <script>
-import { useStore } from "../../stores/modal";
-import { useModal } from "../../composables/modal";
+import { useStore as useGameCreationModal } from "../../stores/GameCreationModal";
+import { useStore as useProfileModal } from "../../stores/ProfileModal";
 
 export default {
 	name: "BaseModal",
 	data() {
 		return {
-			store: useStore()
+			gameCreationModal: useGameCreationModal(),
+			profileModal: useProfileModal(),
 		};
 	},
 	mounted() {
@@ -35,7 +36,11 @@ export default {
 	},
 	methods: {
 		closeModal() {
-			useModal().closeModal(this.store);
+			if (this.gameCreationModal.isOpenned) {
+				this.gameCreationModal.isOpenned = false;
+			} else if (this.profileModal.isOpenned) {
+				this.profileModal.isOpenned = false;
+			}
 		},
 	}
 };

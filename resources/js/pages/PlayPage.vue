@@ -60,7 +60,7 @@ import AuthService from "../services/AuthService.js";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
 import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";
-import { useStore } from "../stores/modal.js";
+import { useStore as useGameCreationModal } from "../stores/GameCreationModal";
 
 export default {
 	name: "PlayPage",
@@ -77,7 +77,7 @@ export default {
 		return {
 			games: [],
 			roles: [],
-			store: useStore()
+			store: useGameCreationModal()
 		};
 	},
 	async created() {

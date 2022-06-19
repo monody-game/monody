@@ -13,7 +13,7 @@
 <script>
 import RoleShow from "./RoleShow.vue";
 import RolesBalance from "./RolesBalance.vue";
-import { useStore } from "../../../../stores/modal.js";
+import { useStore } from "../../../../stores/GameCreationModal.js";
 
 export default {
 	name: "GameStateModalPage",
