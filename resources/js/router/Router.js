@@ -35,14 +35,6 @@ const routes = [
 		}
 	},
 	{
-		path: "/profile",
-		name: "profile",
-		component: ProfilePage,
-		meta: {
-			middleware: [user]
-		}
-	},
-	{
 		path: "/game/:id",
 		name: "game",
 		component: GamePage,
