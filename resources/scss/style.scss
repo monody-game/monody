@@ -11,29 +11,36 @@
 @import "./pages/register-page";
 
 // Components
-@import "./components/counter";
-@import "./components/buttons";
-@import "./components/player-list";
-@import "./components/game-presentation";
-@import "./components/pills";
-@import "./components/spinner";
-
+// - Chat
 @import "./components/Chat/message";
 @import "./components/Chat/chat";
 @import "./components/Chat/time-separator";
 
+// - Modal
 @import "./components/Modal/modal";
 @import "./components/Modal/role-selector";
 @import "./components/Modal/roles-page";
 @import "./components/Modal/role-show";
 @import "./components/Modal/game-state";
 @import "./components/Modal/roles-balance";
+@import "./components/Modal/profile-modal";
+@import "./components/Modal/game-creation-modal";
 
+// - Game player
 @import "./components/Player/player";
 @import "./components/Player/voted-by";
 
+// - Player Presentation
 @import "./components/PlayerPresentation/player-presentation";
 @import "./components/PlayerPresentation/progress-bar";
+
+// - Others
+@import "./components/counter";
+@import "./components/buttons";
+@import "./components/player-list";
+@import "./components/game-presentation";
+@import "./components/pills";
+@import "./components/spinner";
 
 *,
 *::before,
