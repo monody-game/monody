@@ -93,6 +93,14 @@ export default {
 				is_started: false,
 				users: []
 			});
+
+			document.documentElement.style.removeProperty(
+				"--villager-balance-width"
+			);
+			document.documentElement.style.removeProperty(
+				"--werewolf-balance-width"
+			);
+
 			this.gameId = res.data.game.id;
 			if (this.gameId !== 0) {
 				await this.$router.push("/game/" + this.gameId);
