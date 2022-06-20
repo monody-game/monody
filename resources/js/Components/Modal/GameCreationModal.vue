@@ -94,6 +94,8 @@ export default {
 				users: []
 			});
 
+			this.store.$reset();
+
 			document.documentElement.style.removeProperty(
 				"--villager-balance-width"
 			);
