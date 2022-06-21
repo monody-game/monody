@@ -34,7 +34,7 @@ class GameUsersControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::find(1);
+        $this->user = User::factory()->create();
 
         $this->game = $this->actingAs($this->user, 'api')->post('/api/game/new', [
             'roles' => [1, 2],

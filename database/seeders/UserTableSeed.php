@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class UserTableSeed extends Seeder
 {
@@ -15,20 +15,20 @@ class UserTableSeed extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'username' => 'moon250',
-            'email' => '***REMOVED***',
-            'avatar' => '/storage/avatars/1.png',
-            'level' => 100,
-            'password' => bcrypt('***REMOVED***'),
+		User::factory()->create([
+			'username' => 'moon250',
+			'email' => '***REMOVED***',
+			'level' => 100,
+			'password' => bcrypt('***REMOVED***'),
 			'created_at' => Carbon::now(),
-        ]);
+		]);
 
-        DB::table('users')->insert([
-            'username' => 'JohnDoe',
-            'email' => 'johndoe@gmail.com',
-            'password' => bcrypt('johndoe'),
+		User::factory()->create([
+			'username' => 'JohnDoe',
+			'avatar' => "/storage/avatars/default.png",
+			'email' => 'johndoe@gmail.com',
+			'password' => bcrypt('johndoe'),
 			'created_at' => Carbon::now(),
-        ]);
+		]);
     }
 }

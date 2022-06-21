@@ -3,6 +3,7 @@
 namespace Http\Controllers\Api;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -37,6 +38,6 @@ class UserControllerTest extends TestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->user = User::find(1);
+		$this->user = User::factory()->create();
 	}
 }
