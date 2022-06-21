@@ -38,7 +38,7 @@ const routes = [
 		name: "game",
 		component: GamePage,
 		meta: {
-			middleware: [exists, user]
+			middleware: [user, exists]
 		}
 	},
 	{
@@ -53,7 +53,7 @@ const router = createRouter({
 	routes
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, from) => {
 	if (to.meta.middleware) {
 		const middleware = Array.isArray(to.meta.middleware)
 			? to.meta.middleware
@@ -61,12 +61,10 @@ router.beforeEach(async (to, from, next) => {
 
 		for (let index = 0; index < middleware.length; index++) {
 			const method = middleware[index];
-			const result = await method({ to, from, next, router });
+			const result = await method({ to, from, router });
 			if (result === false) break;
 		}
-		return;
 	}
-	return next();
 });
 
 export default router;
