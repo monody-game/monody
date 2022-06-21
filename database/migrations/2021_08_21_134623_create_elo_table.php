@@ -15,7 +15,7 @@ class CreateEloTable extends Migration
     {
         Schema::create('elo', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('user_id')->constrained('users')->onDelete('cascade');
             $table->smallInteger('elo');
         });
     }

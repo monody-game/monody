@@ -100,21 +100,21 @@ class GameVoteControllerTest extends TestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->user = User::find(1);
-		$this->secondUser = User::find(2);
+		$this->user = User::factory()->create();
+		$this->secondUser = User::factory()->create();
 		$this->thirdUser = User::factory()->makeOne([
 			'id' => 3
 		]);
 
 		$this->game = $this->actingAs($this->user, 'api')->post('/api/game/new', [
 			'roles' => [1, 2],
-			'users' => [1, 2]
+			'users' => [$this->user->id, $this->secondUser->id]
 		])['game'];
 
 		Redis::set("game:testVotingStateGame", json_encode([
 			'id' => 'testVotingStateGame',
 			'roles' => [1, 2],
-			'users' => [1, 2],
+			'users' => [$this->user->id, $this->secondUser->id],
 			'is_started' => true,
 			'owner' => 1,
 		]));
@@ -126,7 +126,7 @@ class GameVoteControllerTest extends TestCase
 		Redis::set("game:testStartedGame", json_encode([
 			'id' => 'testStartedGame',
 			'roles' => [1, 2],
-			'users' => [1, 2],
+			'users' => [$this->user->id, $this->secondUser->id],
 			'is_started' => true,
 			'owner' => 1,
 		]));

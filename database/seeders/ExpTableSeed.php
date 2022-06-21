@@ -2,25 +2,23 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class ExpTableSeed extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
+		$users = User::all();
+
         DB::table('exp')->insert([
-            'user_id' => 1,
+            'user_id' => $users->first()->id,
             'exp' => 15,
         ]);
 
         DB::table('exp')->insert([
-            'user_id' => 2,
+            'user_id' => $users[1]->id,
             'exp' => 35,
         ]);
     }

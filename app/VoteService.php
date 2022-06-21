@@ -12,7 +12,7 @@ class VoteService
     /**
      * @return array<int, array<int>>
      */
-    public function vote(int $userId, string $gameId): array
+    public function vote(string $userId, string $gameId): array
     {
         $votes = $this->getVotes($gameId);
         $authUserId = Auth::user()?->getAuthIdentifier();
@@ -37,7 +37,7 @@ class VoteService
     /**
      * @return array<int, array<int>>
      */
-    public function unvote(int $userId, string $gameId): array
+    public function unvote(string $userId, string $gameId): array
     {
         $votes = $this->getVotes($gameId);
         $authUserId = Auth::user()?->getAuthIdentifier();

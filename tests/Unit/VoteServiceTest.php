@@ -19,45 +19,45 @@ class VoteServiceTest extends TestCase
 	{
 		Event::fake();
 		$gameId = $this->game['id'];
-		$this->service->vote(2, $this->game['id']);
+		$this->service->vote($this->secondUser->id, $this->game['id']);
 
 		Event::assertDispatched(function (GameVote $event) use ($gameId) {
 			return $event->payload === [
-					'votedUser' => 2,
+					'votedUser' => $this->secondUser->id,
 					'gameId' => $gameId,
-					'votedBy' => 1
+					'votedBy' => $this->user->id
 				];
 		});
 		Event::assertNotDispatched(GameUnVote::class);
 
 		$votes = json_decode(Redis::get("game:{$this->game['id']}:votes"), true);
 		$this->assertSame([
-			2 => [1]
+			$this->secondUser->id => [$this->user->id]
 		], $votes);
 	}
 
 	public function testUnvoting()
 	{
 		$gameId = $this->secondGame['id'];
-		$votes = $this->service->vote(2, $gameId);
+		$votes = $this->service->vote($this->secondUser->id, $gameId);
 
 		$this->assertSame([
-			2 => [1]
+			$this->secondUser->id => [$this->user->id]
 		], $votes);
 
 		Event::fakeFor(function () use ($gameId) {
-			$votes = $this->service->vote(2, $gameId);
+			$votes = $this->service->vote($this->secondUser->id, $gameId);
 			Event::assertDispatched(function (GameUnvote $event) use ($gameId) {
 				return $event->payload === [
-						'votedUser' => 2,
+						'votedUser' => $this->secondUser->id,
 						'gameId' => $gameId,
-						'votedBy' => 1
+						'votedBy' => $this->user->id
 					];
 			});
 			Event::assertNotDispatched(GameVote::class);
 
 			$this->assertSame([
-				2 => []
+				$this->secondUser->id => []
 			], $votes);
 		});
 	}
@@ -67,23 +67,19 @@ class VoteServiceTest extends TestCase
 		parent::setUp();
 		$this->service = new VoteService();
 
-		$user = User::factory()->makeOne([
-			'id' => 1
-		]);
-		User::factory()->makeOne([
-			'id' => 2
-		]);
+		$this->user = User::factory()->create();
+		$this->secondUser = User::factory()->create();
 
 		$this->game = json_decode($this
-			->actingAs($user, 'api')
+			->actingAs($this->user, 'api')
 			->post('/api/game/new', [
-				'users' => [1, 2],
+				'users' => [$this->user->id, $this->secondUser->id],
 				'roles' => [1, 2]
 			])->getContent(), true)['game'];
 		$this->secondGame = json_decode($this
-			->actingAs($user, 'api')
+			->actingAs($this->user, 'api')
 			->post('/api/game/new', [
-				'users' => [1, 2],
+				'users' => [$this->user->id, $this->secondUser->id],
 				'roles' => [1, 2]
 			])->getContent(), true)['game'];
 	}

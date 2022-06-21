@@ -18,7 +18,7 @@ class UserFactory extends Factory
 			random_int(100000, 10000000)
 		];
 
-		$id = random_int(1, 1000);
+		$id =  $this->faker->uuid;
 
         return [
 			'id' => $id,
