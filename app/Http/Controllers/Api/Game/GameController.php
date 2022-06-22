@@ -38,7 +38,6 @@ class GameController extends Controller
         /** @phpstan-ignore-next-line */
         $games = Redis::scan($cursor, ['MATCH' => 'game:*', 'COUNT' => 20]);
         $list = [];
-        $user = new User();
 
         if ($games) {
             foreach ($games[1] as $game) {
@@ -58,7 +57,7 @@ class GameController extends Controller
                     continue;
                 }
 
-                $owner = $user->find(['id' => $currentGame['owner']]);
+                $owner = User::find($currentGame['owner']);
 
                 if ($owner) {
                     $currentGame['owner'] = $owner->first();
