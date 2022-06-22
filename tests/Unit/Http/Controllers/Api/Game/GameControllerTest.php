@@ -72,6 +72,14 @@ class GameControllerTest extends TestCase
                 ],
             ]);
 
+		$this->actingAs($this->user, 'api')
+			->post('/api/game/new', [
+				'users' => [],
+				'roles' => [
+					1, 1, 2
+				],
+			]);
+
         $list = $this->actingAs($this->user, 'api')
             ->get('/api/game/list')
             ->assertJsonStructure([
