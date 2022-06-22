@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Builder;
 use Illuminate\Support\Facades\Schema;
 
 class CreateOauthClientsTable extends Migration
@@ -9,7 +10,7 @@ class CreateOauthClientsTable extends Migration
     /**
      * The database schema.
      *
-     * @var \Illuminate\Database\Schema\Builder
+     * @var Builder
      */
     protected $schema;
 
@@ -42,7 +43,7 @@ class CreateOauthClientsTable extends Migration
     {
         $this->schema->create('oauth_clients', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id')->nullable()->index();
+            $table->uuid('user_id')->nullable()->index();
             $table->string('name');
             $table->string('secret', 100)->nullable();
             $table->string('provider')->nullable();
