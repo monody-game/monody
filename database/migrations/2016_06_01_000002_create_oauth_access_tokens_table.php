@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Schema\Builder;
 use Illuminate\Support\Facades\Schema;
 
 class CreateOauthAccessTokensTable extends Migration
@@ -9,7 +10,7 @@ class CreateOauthAccessTokensTable extends Migration
     /**
      * The database schema.
      *
-     * @var \Illuminate\Database\Schema\Builder
+     * @var Builder
      */
     protected $schema;
 
@@ -32,7 +33,7 @@ class CreateOauthAccessTokensTable extends Migration
     {
         $this->schema->create('oauth_access_tokens', function (Blueprint $table) {
             $table->string('id', 100)->primary();
-            $table->unsignedBigInteger('user_id')->nullable()->index();
+            $table->uuid('user_id')->nullable()->index();
             $table->unsignedBigInteger('client_id');
             $table->string('name')->nullable();
             $table->text('scopes')->nullable();
