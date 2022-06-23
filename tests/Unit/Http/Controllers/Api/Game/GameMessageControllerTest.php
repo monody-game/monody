@@ -19,6 +19,25 @@ class GameMessageControllerTest extends TestCase
         Event::assertDispatched(MessageSended::class);
     }
 
+	public function testMessageAuthorIsRestrictedInformations()
+	{
+		$user = $this->user;
+		Event::fake();
+		$this->actingAs($user, 'api')->post('/api/game/message/send', [
+			'content' => 'A beautiful message',
+			'gameId' => $this->game['id']
+		]);
+		Event::assertDispatched(function (MessageSended $event) use ($user) {
+			$author = ((array)$event)['message']['author'];
+			
+			return $author === [
+				'id' => $user->id,
+				'username' => $user->username,
+				'avatar' => $user->avatar,
+			];
+		});
+	}
+
     public function testSendingMessageToUnexistingGame()
     {
         Event::fake();
