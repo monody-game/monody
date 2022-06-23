@@ -39,34 +39,44 @@ class GameController extends Controller
         $games = Redis::scan($cursor, ['MATCH' => 'game:*', 'COUNT' => 20]);
         $list = [];
 
-        if ($games) {
-            foreach ($games[1] as $game) {
-                if (!(bool) preg_match('/^game:[^:]+$/', $game)) {
-                    continue;
-                }
+        if (!$games) {
+            return new JsonResponse(['games' => []]);
+        }
 
-                $gameData = Redis::get($game);
-
-                if (!$gameData) {
-                    continue;
-                }
-
-                $currentGame = json_decode($gameData, true);
-
-                if ($currentGame['is_started']) {
-                    continue;
-                }
-
-                $owner = User::find($currentGame['owner']);
-
-                if ($owner) {
-                    $currentGame['owner'] = $owner->first();
-                    $currentGame['id'] = str_replace('game:', '', $game);
-                    unset($currentGame['assigned_roles']);
-                    unset($currentGame['is_started']);
-                    $list[] = $currentGame;
-                }
+        foreach ($games[1] as $game) {
+            if (!(bool) preg_match('/^game:[^:]+$/', $game)) {
+                continue;
             }
+
+            $gameData = Redis::get($game);
+
+            if (!$gameData) {
+                continue;
+            }
+
+            $currentGame = json_decode($gameData, true);
+
+            if ($currentGame['is_started']) {
+                continue;
+            }
+
+            $owner = User::find($currentGame['owner']);
+
+            if ($owner) {
+                /** @var User $owner */
+                $owner = $owner->first();
+                $currentGame['owner'] = [
+                    'id' => $owner->id,
+                    'username' => $owner->username,
+                    'avatar' => $owner->avatar,
+                ];
+            }
+
+            $currentGame['id'] = str_replace('game:', '', $game);
+            unset($currentGame['assigned_roles']);
+            unset($currentGame['is_started']);
+
+            $list[] = $currentGame;
         }
 
         return new JsonResponse(['games' => $list]);
@@ -92,7 +102,11 @@ class GameController extends Controller
         Redis::set("game:$id:votes", json_encode([]));
 
         $data['id'] = $id;
-        $data['owner'] = $request->user();
+        $data['owner'] = [
+            'id' => $request->user()?->id,
+            'username' => $request->user()?->username,
+            'avatar' => $request->user()?->avatar,
+        ];
 
         broadcast(new GameCreated(new Game($data)));
 

@@ -16,7 +16,11 @@ class GameMessageController extends Controller
         $data = $request->validated();
 
         $message = new Message($data);
-        $message->set('author', $request->user());
+        $message->set('author', [
+            'id' => $request->user()?->id,
+            'username' => $request->user()?->username,
+            'avatar' => $request->user()?->avatar,
+        ]);
 
         MessageSended::dispatch($message);
 

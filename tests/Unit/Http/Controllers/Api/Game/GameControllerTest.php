@@ -14,24 +14,6 @@ class GameControllerTest extends TestCase
     private User $user;
     private array $game;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->controller = new GameController();
-        $this->user = User::factory()->create();
-        $this->game = [
-            'owner' => $this->user->id,
-            'users' => [$this->user->id],
-            'roles' => [
-                1 => 2,
-                2 => 1,
-            ],
-            'assigned_roles' => [],
-            'is_started' => false,
-        ];
-    }
-
     public function testGeneratingGameId()
     {
         $id = $this->controller->generateGameId();
@@ -64,21 +46,13 @@ class GameControllerTest extends TestCase
 
     public function testListGames()
     {
-        $this->actingAs($this->user, 'api')
+		$this->actingAs($this->user, 'api')
             ->post('/api/game/new', [
                 'users' => [],
                 'roles' => [
                     1, 1, 2
                 ],
             ]);
-
-		$this->actingAs($this->user, 'api')
-			->post('/api/game/new', [
-				'users' => [],
-				'roles' => [
-					1, 1, 2
-				],
-			]);
 
         $list = $this->actingAs($this->user, 'api')
             ->get('/api/game/list')
@@ -97,9 +71,25 @@ class GameControllerTest extends TestCase
         $this->assertSame(sort($exceptedGame), sort($game));
     }
 
+	public function testThatOwnerDoesContainsRestrictedInformations() {
+		$game = $this->actingAs($this->user, 'api')
+			->post('/api/game/new', [
+				'users' => [],
+				'roles' => [
+					1, 1, 2
+				],
+			]);
+
+		$this->assertSame([
+			'id' => $this->user->id,
+			'username' => $this->user->username,
+			'avatar' => $this->user->avatar,
+		], json_decode($game->getContent(), true)['game']['owner']);
+	}
+
     public function testDeleteGameWithWrongRequest()
     {
-        $game = $this->actingAs($this->user, 'api')
+        $this->actingAs($this->user, 'api')
             ->post('/api/game/new', [
                 'users' => [],
                 'roles' => [
@@ -168,4 +158,22 @@ class GameControllerTest extends TestCase
                 'game_id' => $game->json('game')['id']
             ])->assertStatus(Response::HTTP_OK);
     }
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->controller = new GameController();
+		$this->user = User::factory()->create();
+		$this->game = [
+			'owner' => $this->user->id,
+			'users' => [$this->user->id],
+			'roles' => [
+				1 => 2,
+				2 => 1,
+			],
+			'assigned_roles' => [],
+			'is_started' => false,
+		];
+	}
 }

@@ -39,7 +39,6 @@ class User extends Authenticatable
      */
     // @phpstan-ignore-next-line
     protected $hidden = [
-        'email',
         'password',
         'remember_token',
         'email_verified_at',
