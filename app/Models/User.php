@@ -15,10 +15,6 @@ class User extends Authenticatable
     use Notifiable;
     use UUID;
 
-    // TODO: move to trait and fix UUID trait
-    public $incrementing = false;
-    public $keyType = 'string';
-
     protected $table = 'users';
 
     /**
