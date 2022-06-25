@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Game;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VoteRequest;
-use App\VoteService;
+use App\Services\VoteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redis;
