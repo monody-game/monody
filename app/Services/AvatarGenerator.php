@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as ImageFacade;
 use Intervention\Image\Image;
-use function in_array;
 
 class AvatarGenerator
 {
@@ -48,7 +47,7 @@ class AvatarGenerator
      */
     public function getOverlay(int $level): int
     {
-        if (in_array($level, $this->overlayLevels, true)) {
+        if (\in_array($level, $this->overlayLevels, true)) {
             return $level;
         }
 
