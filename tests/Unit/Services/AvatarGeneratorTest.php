@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Unit;
+namespace Services;
 
-use App\AvatarGenerator;
 use App\Models\User;
+use App\Services\AvatarGenerator;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
