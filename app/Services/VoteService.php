@@ -129,6 +129,7 @@ class VoteService
 
     private function kill(string $userId, string $gameId): void
     {
+        /** @var false|string|null $users */
         $users = Redis::get("game:$gameId:members");
         $users = null === $users || false === $users ? '' : $users;
         $users = json_decode($users, true);
