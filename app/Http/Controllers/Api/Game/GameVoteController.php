@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Game;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AfterVoteRequest;
 use App\Http\Requests\VoteRequest;
 use App\Services\VoteService;
 use Illuminate\Http\JsonResponse;
@@ -35,6 +36,24 @@ class GameVoteController extends Controller
         $service->vote($request->validated('userId'), $gameId);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    public function afterVote(AfterVoteRequest $request): JsonResponse
+    {
+        $service = new VoteService();
+        $gameId = $request->validated('gameId');
+
+        if (!$this->isStarted($gameId)) {
+            return new JsonResponse(['Game is not started'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $res = $service->afterVote($gameId);
+
+        if ($res) {
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        }
+
+        return new JsonResponse(['An error happened'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     private function getGame(string $id): array

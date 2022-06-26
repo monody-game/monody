@@ -16,6 +16,9 @@ Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
 Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
 Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
 
+Route::post('/game/aftervote', 'Game\GameVoteController@afterVote')
+	->middleware('restricted');
+
 Route::group(['middleware' => ['auth:api']], function () {
 	Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
 	Route::post('/oauth/unlink/google', 'Oauth\GoogleOauthController@unlink');
