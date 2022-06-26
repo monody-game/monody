@@ -88,6 +88,6 @@ class Kernel extends HttpKernel
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
         'token' => AddTokenToRequests::class,
-		'restricted' => RestrictToWebsockets::class
+        'restricted' => RestrictToWebsockets::class
     ];
 }

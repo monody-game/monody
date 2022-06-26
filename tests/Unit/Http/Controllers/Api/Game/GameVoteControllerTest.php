@@ -2,11 +2,14 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
+use App\Events\GameKill;
 use App\Events\GameUnvote;
 use App\Events\GameVote;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Redis;
+use Mockery;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -95,6 +98,26 @@ class GameVoteControllerTest extends TestCase
 				$this->secondUser->id
 			]
 		], $votes);
+	}
+
+	public function testTriggeringAfterVote() {
+		Event::fake();
+		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
+			'userId' => $this->user->id,
+			'gameId' => 'testVotingStateGame'
+		]);
+
+		$this
+			->post('/api/game/aftervote', [
+				'gameId' => 'testVotingStateGame'
+			])->assertStatus(Response::HTTP_NO_CONTENT);
+
+		Event::assertDispatched(function (GameKill $event) {
+			return $event->payload === [
+					'killedUser' => $this->user->id,
+					'gameId' => 'testVotingStateGame'
+				];
+		});
 	}
 
 	protected function setUp(): void
