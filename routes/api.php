@@ -1,6 +1,12 @@
 <?php
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpFoundation\Response;
+
+Route::get('/ping', function () {
+	return new JsonResponse([], Response::HTTP_NO_CONTENT);
+});
 
 Route::post('/auth/login', 'Auth\LoginController@login');
 Route::post('/auth/register', 'Auth\RegisterController@register');
