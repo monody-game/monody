@@ -58,6 +58,10 @@ class VoteService
 
         array_splice($votes[$userId], $userIndex, 1);
 
+        if ([] === $votes[$userId]) {
+            unset($votes[$userId]);
+        }
+
         Redis::set("game:$gameId:votes", json_encode($votes));
 
         return $votes;

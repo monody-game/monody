@@ -102,6 +102,9 @@ class GameVoteControllerTest extends TestCase
 
 	public function testTriggeringAfterVote() {
 		Event::fake();
+
+		Redis::set("game:testVotingStateGame:votes", "");
+
 		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
 			'userId' => $this->user->id,
 			'gameId' => 'testVotingStateGame'
