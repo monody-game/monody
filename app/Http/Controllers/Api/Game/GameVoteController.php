@@ -53,7 +53,7 @@ class GameVoteController extends Controller
             return new JsonResponse([], Response::HTTP_NO_CONTENT);
         }
 
-        return new JsonResponse(['An error happened'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        return new JsonResponse(['Not any player to vote, or vote cancelled'], Response::HTTP_OK);
     }
 
     private function getGame(string $id): array
