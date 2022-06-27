@@ -56,13 +56,13 @@ module.exports = class StateManager {
 		const members = await this.getMembers(channel);
 
 		if (typeof rounds[currentRound][stateIndex - 1] !== "undefined" && typeof rounds[currentRound][stateIndex - 1].after === "function") {
-			rounds[currentRound][stateIndex - 1].after(this.io, channel, members);
+			await rounds[currentRound][stateIndex - 1].after(this.io, channel, members);
 		} else if (
 			typeof rounds[currentRound - 1] !== "undefined" &&
 			typeof rounds[currentRound - 1][rounds[currentRound - 1].length - 1] !== "undefined" &&
 			typeof rounds[currentRound - 1][rounds[currentRound - 1].length - 1].after === "function"
 		) {
-			rounds[currentRound - 1][rounds[currentRound - 1].length - 1].after(this.io, channel, members);
+			await rounds[currentRound - 1][rounds[currentRound - 1].length - 1].after(this.io, channel, members);
 		}
 
 		if (
@@ -90,7 +90,7 @@ module.exports = class StateManager {
 		}, channel);
 
 		if (typeof rounds[currentRound][stateIndex] !== "undefined" && typeof rounds[currentRound][stateIndex].before === "function") {
-			rounds[currentRound][stateIndex].before(this.io, channel, members);
+			await rounds[currentRound][stateIndex].before(this.io, channel, members);
 		}
 
 		return {
