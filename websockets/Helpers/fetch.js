@@ -13,14 +13,17 @@ const agent = new https.Agent({
  * @param socket
  * @returns {Promise<Object>}
  */
-module.exports = async function(url, opts, socket) {
+module.exports = async function(url, opts, socket = null) {
 	opts = {
 		...opts,
 		headers: {
-			Cookie: socket.request.headers.cookie,
 			"X-Requested-With": "XMLHttpRequest"
 		}
 	};
+
+	if (socket) {
+		opts.headers.Cookie = socket.request.headers.cookie;
+	}
 
 	const response = await fetch(url, {
 		...opts,
