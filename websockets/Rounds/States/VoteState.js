@@ -1,3 +1,5 @@
+const fetch = require("../../Helpers/fetch");
+
 module.exports = {
 	name: "vote",
 	duration: 120,
@@ -7,9 +9,19 @@ module.exports = {
 			io.to(member.socketId).emit("vote.open", channel);
 		});
 	},
-	after(io, channel, members) {
+	async after(io, channel, members) {
 		members.forEach(member => {
 			io.to(member.socketId).emit("vote.close", channel);
 		});
+
+		const params = new URLSearchParams();
+		params.set("gameId", channel.split(".")[1]);
+
+		const res = await fetch("https://web/api/game/aftervote", {
+			method: "POST",
+			body: params
+		});
+
+		console.log(res);
 	},
 };
