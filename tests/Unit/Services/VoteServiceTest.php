@@ -57,9 +57,7 @@ class VoteServiceTest extends TestCase
 			});
 			Event::assertNotDispatched(GameVote::class);
 
-			$this->assertSame([
-				$this->secondUser->id => []
-			], $votes);
+			$this->assertSame([], $votes);
 		});
 	}
 
