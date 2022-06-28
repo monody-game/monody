@@ -2,6 +2,7 @@
 
 namespace Http\Controllers\Api\Auth;
 
+use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -53,7 +54,11 @@ class LoginControllerTest extends TestCase
 
 		$response->assertCookie('monody_access_token');
 
-		$response = $this->post('/api/auth/logout');
+		$user = User::where('username', 'JohnTest')->get()->first();
+
+		$response = $this
+			->actingAs($user, 'api')
+			->post('/api/auth/logout');
 
 		$response->assertCookieMissing('monody_access_token');
 	}
