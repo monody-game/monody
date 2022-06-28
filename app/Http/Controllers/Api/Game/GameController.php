@@ -34,16 +34,16 @@ class GameController extends Controller
     public function list(): JsonResponse
     {
         $cursor = '0';
-        /** @var array[] $games */
+        /** @var string[] $games */
         /** @phpstan-ignore-next-line */
-        $games = Redis::scan($cursor, ['MATCH' => 'game:*', 'COUNT' => 20]);
+        $games = Redis::scan($cursor, ['MATCH' => 'game:*', 'COUNT' => 20])[1];
         $list = [];
 
         if (!$games) {
             return new JsonResponse(['games' => []]);
         }
 
-        foreach ($games[1] as $game) {
+        foreach ($games as $game) {
             if (!(bool) preg_match('/^game:[^:]+$/', $game)) {
                 continue;
             }
@@ -55,6 +55,10 @@ class GameController extends Controller
             }
 
             $currentGame = json_decode($gameData, true);
+
+            if (!$currentGame) {
+                continue;
+            }
 
             if ($currentGame['is_started']) {
                 continue;
@@ -90,7 +94,7 @@ class GameController extends Controller
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
         $data['owner'] = $request->user()?->id;
-        $data['is_started'] = false;
+        $data['is_started'] = \array_key_exists('is_started', $data) ? $data['is_started'] : false;
         $id = $this->generateGameId();
 
         if (!array_search($data['owner'], $data['users'], true)) {

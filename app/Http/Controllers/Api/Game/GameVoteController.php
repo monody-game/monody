@@ -7,7 +7,6 @@ use App\Http\Requests\AfterVoteRequest;
 use App\Http\Requests\VoteRequest;
 use App\Services\VoteService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,11 +18,6 @@ class GameVoteController extends Controller
     {
         $service = new VoteService();
         $gameId = $request->validated('gameId');
-        $response = Gate::inspect('vote', $gameId);
-
-        if (!$response->allowed()) {
-            return new JsonResponse([$response->message()], Response::HTTP_FORBIDDEN);
-        }
 
         if (!$this->isStarted($gameId)) {
             return new JsonResponse(['Wait the game to start before voting'], Response::HTTP_FORBIDDEN);

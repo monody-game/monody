@@ -76,6 +76,7 @@ class VoteServiceTest extends TestCase
 				]
 			]
 		));
+		$this->service->vote($this->user->id, $this->game['id'], $this->thirdUser->id);
 		$this->service->vote($this->secondUser->id, $this->game['id']);
 		$this->service->vote($this->secondUser->id, $this->game['id'], $this->secondUser->id);
 		$this->service->afterVote($gameId);
@@ -138,6 +139,7 @@ class VoteServiceTest extends TestCase
 
 		$this->user = User::factory()->create();
 		$this->secondUser = User::factory()->create();
+		$this->thirdUser = User::factory()->create();
 
 		$this->game = json_decode($this
 			->actingAs($this->user, 'api')

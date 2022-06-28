@@ -58,7 +58,8 @@ class LoginControllerTest extends TestCase
 
 		$response = $this
 			->actingAs($user, 'api')
-			->post('/api/auth/logout');
+			->post('/api/auth/logout')
+			->assertStatus(200);
 
 		$response->assertCookieMissing('monody_access_token');
 	}
