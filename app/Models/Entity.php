@@ -28,13 +28,4 @@ class Entity
 
         $this->data[$key] = $value;
     }
-
-    public function get(string $key): ?string
-    {
-        if (!\in_array($key, $this->keys, true)) {
-            return null;
-        }
-
-        return $this->data[$key] ?? null;
-    }
 }
