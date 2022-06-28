@@ -43,10 +43,6 @@ class VoteService
         $votes = $this->getVotes($gameId);
         $authUserId = $votingUser ?? Auth::user()?->getAuthIdentifier();
 
-        if (\array_key_exists($userId, $votes) && !\in_array($authUserId, $votes[$userId], true)) {
-            $this->vote($userId, $gameId);
-        }
-
         GameUnvote::dispatch([
             'votedUser' => $userId,
             'gameId' => $gameId,
@@ -73,23 +69,24 @@ class VoteService
     }
 
     /**
-     * @return bool false: vote cancelled or not any player to vote, true: player killed successfully
+     * @return string|false vote cancelled or not any player to vote
      */
-    public function afterVote(string $gameId): bool
+    public function afterVote(string $gameId): string|false
     {
         $votes = $this->getVotes($gameId);
 
         if ([] === $votes) {
+            GameKill::dispatch([
+                'killedUser' => null,
+                'gameId' => $gameId,
+            ]);
+
             return false;
         }
 
         $majority = array_key_first($votes);
 
         foreach ($votes as $voted => $by) {
-            if ([] === $by) {
-                continue;
-            }
-
             if (\count($by) > \count($votes[$majority])) {
                 $majority = $voted;
                 continue;
@@ -105,15 +102,6 @@ class VoteService
             }
         }
 
-        if ([] === $votes[$majority]) {
-            GameKill::dispatch([
-                'killedUser' => null,
-                'gameId' => $gameId,
-            ]);
-
-            return false;
-        }
-
         $this->kill($majority, $gameId);
 
         GameKill::dispatch([
@@ -123,7 +111,7 @@ class VoteService
 
         $this->clearVotes($gameId);
 
-        return true;
+        return $majority;
     }
 
     private function clearVotes(string $gameId): void
