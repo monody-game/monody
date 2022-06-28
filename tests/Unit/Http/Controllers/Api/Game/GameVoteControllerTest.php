@@ -123,6 +123,30 @@ class GameVoteControllerTest extends TestCase
 		});
 	}
 
+	public function testTriggeringAfterVoteWithUnStartedGame() {
+		Redis::set("game:testVotingStateGame:votes", "");
+
+		$this
+			->post('/api/game/aftervote', [
+				'gameId' => 'testVotingStateGame'
+			])
+			->assertOk()
+			->assertJson([
+				'Not any player to vote, or vote cancelled'
+			]);
+	}
+
+	public function testTriggeringAfterVoteWithoutAnyVote() {
+		$this
+			->post('/api/game/aftervote', [
+				'gameId' => $this->game['id']
+			])
+			->assertStatus(Response::HTTP_INTERNAL_SERVER_ERROR)
+			->assertJson([
+				'Game is not started'
+			]);
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();

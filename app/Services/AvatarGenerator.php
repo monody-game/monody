@@ -23,7 +23,7 @@ class AvatarGenerator
     /**
      * Generate brand-new user's avatar, with the overlay corresponding to his level.
      */
-    public function generate(User $user): Image|false
+    public function generate(User $user): Image
     {
         $overlayLevel = Storage::get('levels/' . $this->getOverlay($user->level) . '.png');
         $storageAvatar = Storage::get($this->toStoragePath($user->avatar));

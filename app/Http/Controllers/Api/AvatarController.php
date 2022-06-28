@@ -27,10 +27,6 @@ class AvatarController extends Controller
 
         $result = $this->generator->generate($user);
 
-        if (!$result) {
-            return new JsonResponse(['message' => 'Error while generating the avatar'], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
         $path = $this->generator->toStoragePath($user->avatar);
 
         Storage::delete("avatars/$path");
