@@ -24,10 +24,9 @@ class AvatarGeneratorTest extends TestCase
 	}
 
 	public function testGettingAvatarOverlay() {
-		$same = $this->generator->getOverlay(10);
-		$below = $this->generator->getOverlay(52);
-		$this->assertSame(10, $same);
-		$this->assertSame(50, $below);
+		$this->assertSame(0, $this->generator->getOverlay(0));
+		$this->assertSame(10, $this->generator->getOverlay(10));
+		$this->assertSame(50, $this->generator->getOverlay(52));
 	}
 
     protected function setUp(): void

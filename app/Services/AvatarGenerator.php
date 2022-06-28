@@ -13,7 +13,6 @@ class AvatarGenerator
      * @var int[]
      */
     private array $overlayLevels = [
-        0,
         10,
         25,
         50,
@@ -28,10 +27,6 @@ class AvatarGenerator
     {
         $overlayLevel = Storage::get('levels/' . $this->getOverlay($user->level) . '.png');
         $storageAvatar = Storage::get($this->toStoragePath($user->avatar));
-
-        if (null === $storageAvatar) {
-            return false;
-        }
 
         $avatar = ImageFacade::make($storageAvatar)->resize(600, 600);
         $overlay = ImageFacade::make($overlayLevel)->resize(600, 600);
@@ -56,7 +51,11 @@ class AvatarGenerator
                 continue;
             }
 
-            if ($level < $overlayLevel) {
+            if (
+                $level < $overlayLevel &&
+                \array_key_exists($key - 1, $this->overlayLevels) &&
+                $this->overlayLevels[$key - 1] > $level === false
+            ) {
                 return $this->overlayLevels[$key - 1];
             }
         }

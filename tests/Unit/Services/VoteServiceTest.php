@@ -105,6 +105,32 @@ class VoteServiceTest extends TestCase
 		);
 	}
 
+	public function testReturnsFalseIfThereIsNoVotes() {
+		$this->assertFalse($this->service->afterVote($this->secondGame['id']));
+	}
+
+	public function testTakingRandomPlayerIfVoteEquality() {
+		$gameId = $this->secondGame['id'];
+		$this->service->vote($this->user->id, $gameId);
+		$this->service->vote($this->secondUser->id, $gameId);
+
+		$killedPlayer = $this->service->afterVote($gameId);
+
+		$this->assertTrue($this->user->id === $killedPlayer || $this->secondUser->id === $killedPlayer);
+	}
+
+	public function testVotingNobody() {
+		Event::fake();
+		$gameId = $this->secondGame['id'];
+		$this->assertFalse($this->service->afterVote($gameId));
+		Event::assertDispatched(function (GameKill $event) use ($gameId) {
+			return $event->payload === [
+					'killedUser' => null,
+					'gameId' => $gameId
+				];
+		});
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
