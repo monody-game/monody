@@ -1,5 +1,7 @@
+@use "../../tools/functions" as *;
+
 .roles__list {
-  display: grid;
+	display: grid;
   grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
   column-gap: 2%;
   box-sizing: border-box;
@@ -13,8 +15,16 @@
 }
 
 .roles__loader {
-  position: absolute;
-  top: calc(50% - 14px);
-  left: calc(50% - 14px);
-  z-index: 1000;
+	position: absolute;
+	background-color: var(--dark-background);
+	z-index: 1000;
+	height: 50%;
+	width: calc(100% - space(8));
+	display: grid;
+	place-items: center;
+
+	& > .spinner {
+		top: calc(50% - 14px);
+		left: calc(50% - 14px);
+	}
 }

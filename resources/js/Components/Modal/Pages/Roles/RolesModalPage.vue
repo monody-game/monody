@@ -1,10 +1,12 @@
 <template>
   <div class="roles__page">
     Choisissez les roles parmis les suivants :
-    <LogoSpinner
-      v-if="loading"
+    <div
+      v-if="loading === true"
       class="roles__loader"
-    />
+    >
+      <LogoSpinner />
+    </div>
     <div class="roles__list">
       <RoleSelector
         v-for="role in roles"
