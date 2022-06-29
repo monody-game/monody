@@ -13,6 +13,12 @@
     stroke: #fff;
 }
 
+.spinner__dots-container {
+	height: 24px;
+	width: 24px;
+	margin-right: space(2);
+}
+
 @keyframes animateCloud {
     20% {
         transform: translateX(100%);
