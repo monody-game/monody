@@ -52,9 +52,8 @@
           @keyup.enter="login()"
           @click.prevent="login()"
         >
-          <LogoSpinner
+          <DotsSpinner
             v-if="loading === true"
-            class="spinner__cloud-white"
           />
           Se connecter
         </button>
@@ -70,13 +69,13 @@
 </template>
 
 <script>
-import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
+import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { useStore } from "../../stores/user.js";
 
 export default {
 	name: "LoginPage",
 	components: {
-		LogoSpinner: LogoSpinner
+		DotsSpinner,
 	},
 	data() {
 		return {

@@ -81,9 +81,8 @@
           @keyup.enter="register()"
           @click.prevent="register()"
         >
-          <LogoSpinner
+          <DotsSpinner
             v-if="loading === true"
-            class="spinner__cloud-white"
           />
           S'inscrire
         </button>
@@ -93,14 +92,13 @@
 </template>
 
 <script>
-
-import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
+import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { useStore } from "../../stores/user.js";
 
 export default {
 	name: "RegisterPage",
 	components: {
-		LogoSpinner: LogoSpinner
+		DotsSpinner,
 	},
 	data() {
 		return {
