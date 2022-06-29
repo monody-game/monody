@@ -6,7 +6,7 @@
       viewBox="0 0 39 44"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      class="LogoSpinner"
+      class="spinner"
     >
       <path
         id="moon"
