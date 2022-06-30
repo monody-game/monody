@@ -1,0 +1,19 @@
+@use "../../tools/functions" as *;
+
+.share-page__container {
+	margin-top: space(1);
+}
+
+.share-page__twitter {
+	background-color: #1DA1F2;
+	height: 32px;
+	width: 32px;
+	display: grid;
+	place-items: center;
+	border-radius: 6px;
+
+	& > svg{
+		height: 24px;
+		width: 24px;
+	}
+}

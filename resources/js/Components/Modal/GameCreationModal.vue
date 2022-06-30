@@ -84,16 +84,19 @@ export default {
 				return;
 			}
 
+			if (this.currentPage === this.totalPage - 1) {
+				const res = await window.JSONFetch("/game/new", "POST", {
+					roles: this.store.selectedRoles,
+					users: []
+				});
+				const id = res.data.game.id;
+				this.gameId = id;
+				this.store.gameId = id;
+			}
+
 			this.currentPage++;
 		},
 		async finish() {
-			this.currentPage = this.currentPage + 1;
-			const res = await window.JSONFetch("/game/new", "POST", {
-				roles: this.store.selectedRoles,
-				is_started: false,
-				users: []
-			});
-
 			this.store.$reset();
 
 			document.documentElement.style.removeProperty(
@@ -103,7 +106,6 @@ export default {
 				"--werewolf-balance-width"
 			);
 
-			this.gameId = res.data.game.id;
 			if (this.gameId !== 0) {
 				await this.$router.push("/game/" + this.gameId);
 			}

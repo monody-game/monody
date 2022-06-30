@@ -7,6 +7,7 @@ export const useStore = defineStore("GameCreationModal", {
 			selectedRoles: [],
 			roles: [],
 			teams: [],
+			gameId: null
 		};
 	},
 	getters: {
