@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@grafikart/spinning-dots-element": "latest",
-    "devtools-detect": "latest",
     "dotenv": "latest",
     "laravel-echo": "latest",
     "node-fetch": "^2.*",
