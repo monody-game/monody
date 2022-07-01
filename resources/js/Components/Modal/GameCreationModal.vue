@@ -1,5 +1,5 @@
 <template>
-  <BaseModal>
+  <BaseModal @keyup.esc="closeModal()">
     <p id="modal__title">
       Création d'une partie ({{ currentPage }}/{{ totalPage }})
     </p>
@@ -71,7 +71,7 @@ export default {
 	},
 	methods: {
 		closeModal() {
-			this.store.$reset();
+			this.reset();
 		},
 		notEnoughSelectedRoles() {
 			const selectedRoles = this.store.selectedRoles;
@@ -97,6 +97,13 @@ export default {
 			this.currentPage++;
 		},
 		async finish() {
+			this.reset();
+
+			if (this.gameId !== 0) {
+				await this.$router.push("/game/" + this.gameId);
+			}
+		},
+		reset() {
 			this.store.$reset();
 
 			document.documentElement.style.removeProperty(
@@ -105,10 +112,6 @@ export default {
 			document.documentElement.style.removeProperty(
 				"--werewolf-balance-width"
 			);
-
-			if (this.gameId !== 0) {
-				await this.$router.push("/game/" + this.gameId);
-			}
 		},
 		previousPage() {
 			if (this.currentPage + 1 < this.totalPage) {
@@ -116,6 +119,6 @@ export default {
 			}
 			this.currentPage = this.currentPage - 1;
 		},
-	},
+	}
 };
 </script>

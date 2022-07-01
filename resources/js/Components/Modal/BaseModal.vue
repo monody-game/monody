@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="modal-background"
     class="modal__background"
     @click="closeModal()"
   >
@@ -38,6 +39,12 @@ export default {
 		closeModal() {
 			if (this.gameCreationModal.isOpenned) {
 				this.gameCreationModal.isOpenned = false;
+				document.documentElement.style.removeProperty(
+					"--villager-balance-width"
+				);
+				document.documentElement.style.removeProperty(
+					"--werewolf-balance-width"
+				);
 			} else if (this.profileModal.isOpenned) {
 				this.profileModal.isOpenned = false;
 			}
