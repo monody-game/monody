@@ -1,6 +1,6 @@
 <?php
 
-namespace Services;
+namespace Tests\Unit\Services;
 
 use App\Models\User;
 use App\Services\AvatarGenerator;

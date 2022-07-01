@@ -1,6 +1,6 @@
 <?php
 
-namespace Services;
+namespace Tests\Unit\Services;
 
 use App\Events\GameKill;
 use App\Events\GameUnvote;

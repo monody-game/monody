@@ -1,6 +1,6 @@
 <?php
 
-namespace Http\Middleware;
+namespace Tests\Unit\Http\Middleware;
 
 use App\Http\Middleware\AddTokenToRequests;
 use Illuminate\Http\Request;
