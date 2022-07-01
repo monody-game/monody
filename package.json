@@ -16,7 +16,7 @@
     "devtools-detect": "latest",
     "dotenv": "latest",
     "laravel-echo": "latest",
-    "node-fetch": "latest",
+    "node-fetch": "^2.*",
     "pinia": "latest",
     "redis": "latest",
     "socket.io": "latest",
