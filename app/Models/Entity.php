@@ -17,15 +17,17 @@ class Entity
         return $this->data;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function set(string $key, $value): void
+    public function set(string $key, mixed $value): void
     {
         if (!\in_array($key, $this->keys, true)) {
             return;
         }
 
         $this->data[$key] = $value;
+    }
+
+    public function setKeys(array $keys): void
+    {
+        $this->keys = array_merge($keys, $this->keys);
     }
 }
