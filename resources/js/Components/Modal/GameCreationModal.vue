@@ -71,7 +71,7 @@ export default {
 	},
 	methods: {
 		closeModal() {
-			this.store.isOpenned = false;
+			this.store.$reset();
 		},
 		notEnoughSelectedRoles() {
 			const selectedRoles = this.store.selectedRoles;
