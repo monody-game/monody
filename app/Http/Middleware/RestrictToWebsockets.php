@@ -10,13 +10,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RestrictToWebsockets
 {
-    public function __construct(private readonly Application $app)
+    /**
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next)
     {
-    }
-
-    public function handle(Request $request, Closure $next): Closure|JsonResponse
-    {
-        if (($request->getHost() && 'web' === $request->getHost()) || $this->app->runningUnitTests()) {
+        if ($request->getHost() && 'web' === $request->getHost()) {
             return $next($request);
         }
 

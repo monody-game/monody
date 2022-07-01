@@ -5,11 +5,10 @@ namespace Tests\Unit\Http\Controllers\Api\Game;
 use App\Events\GameKill;
 use App\Events\GameUnvote;
 use App\Events\GameVote;
+use App\Http\Middleware\RestrictToWebsockets;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Redis;
-use Mockery;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -105,12 +104,15 @@ class GameVoteControllerTest extends TestCase
 
 		Redis::set("game:testVotingStateGame:votes", "");
 
-		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
-			'userId' => $this->user->id,
-			'gameId' => 'testVotingStateGame'
-		]);
+		$this
+			->actingAs($this->user, 'api')
+			->post('/api/game/vote', [
+				'userId' => $this->user->id,
+				'gameId' => 'testVotingStateGame'
+			]);
 
 		$this
+			->withoutMiddleware(RestrictToWebsockets::class)
 			->post('/api/game/aftervote', [
 				'gameId' => 'testVotingStateGame'
 			])->assertStatus(Response::HTTP_NO_CONTENT);
@@ -127,6 +129,7 @@ class GameVoteControllerTest extends TestCase
 		Redis::set("game:testVotingStateGame:votes", "");
 
 		$this
+			->withoutMiddleware(RestrictToWebsockets::class)
 			->post('/api/game/aftervote', [
 				'gameId' => 'testVotingStateGame'
 			])
@@ -138,6 +141,7 @@ class GameVoteControllerTest extends TestCase
 
 	public function testTriggeringAfterVoteWithoutAnyVote() {
 		$this
+			->withoutMiddleware(RestrictToWebsockets::class)
 			->post('/api/game/aftervote', [
 				'gameId' => $this->game['id']
 			])
