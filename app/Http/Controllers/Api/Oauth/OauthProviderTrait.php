@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Api\Oauth;
 
-use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 
-abstract class AbstractOauthController extends Controller
+trait OauthProviderTrait
 {
     /**
      * @param string[] $scopes
