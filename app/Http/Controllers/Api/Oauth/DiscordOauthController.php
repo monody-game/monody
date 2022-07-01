@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Oauth;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -13,8 +14,10 @@ use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-final class DiscordOauthController extends AbstractOauthController
+final class DiscordOauthController extends Controller
 {
+    use OauthProviderTrait;
+
     public function link(): RedirectResponse
     {
         return $this->generateProvider('discord', ['identify', 'email'])->redirect();

@@ -29,7 +29,7 @@ class GameMessageControllerTest extends TestCase
 		]);
 		Event::assertDispatched(function (MessageSended $event) use ($user) {
 			$author = ((array)$event)['message']['author'];
-			
+
 			return $author === [
 				'id' => $user->id,
 				'username' => $user->username,
