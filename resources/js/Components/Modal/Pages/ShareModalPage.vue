@@ -5,6 +5,7 @@
       <a
         :href="twitterLink"
         class="share-page__twitter"
+        about="blank"
       >
         <svg>
           <use href="/sprite.svg#twitter" />
