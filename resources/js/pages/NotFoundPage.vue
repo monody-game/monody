@@ -17,6 +17,9 @@
       <aside>
         <h1>Oh non !</h1>
         <h2>Page introuvable ...</h2>
+        <a @click="$router.back()">
+          Retourner en arrière
+        </a>
       </aside>
     </main>
   </div>
@@ -38,17 +41,28 @@ div {
 main {
 	display: flex;
 	gap: 32px;
+	align-items: center;
+}
+
+a {
+	color: #ffffff;
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 h1 {
 	font-size: 104px;
+	line-height: 85px;
 }
 
-h2 {
+aside > *:not(h1) {
 	margin-left: 4px;
 }
 
 aside {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 	padding-inline: 32px;
 	border-left: #ffffff 2px solid;
 }
