@@ -12,26 +12,26 @@
     "serve": "nodemon -L --watch /var/www/websockets /var/www/websockets/index.js"
   },
   "dependencies": {
-    "@grafikart/spinning-dots-element": "^1.1.0",
-    "devtools-detect": "^4.0.0",
-    "dotenv": "^16.0.1",
-    "laravel-echo": "^1.11.3",
-    "node-fetch": "^2",
-    "pinia": "^2.0.11",
-    "redis": "^4.0.3",
-    "socket.io": "^4.4.1",
-    "socket.io-client": "^4.4.1",
-    "vue": "^3.2.37",
-    "vue-router": "^4"
+    "@grafikart/spinning-dots-element": "latest",
+    "devtools-detect": "latest",
+    "dotenv": "latest",
+    "laravel-echo": "latest",
+    "node-fetch": "latest",
+    "pinia": "latest",
+    "redis": "latest",
+    "socket.io": "latest",
+    "socket.io-client": "latest",
+    "vue": "latest",
+    "vue-router": "latest"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.3.3",
-    "eslint": "^8.16.0",
-    "eslint-plugin-vue": "^9.0.1",
-    "resolve-url-loader": "^5.0.0",
-    "sass": "^1.53.0",
-    "vite": "^2.9.10",
-    "vue-template-compiler": "^2.6.14"
+    "@vitejs/plugin-vue": "latest",
+    "eslint": "latest",
+    "eslint-plugin-vue": "latest",
+    "resolve-url-loader": "latest",
+    "sass": "latest",
+    "vite": "latest",
+    "vue-template-compiler": "latest"
   },
   "version": "1.0.0"
 }
