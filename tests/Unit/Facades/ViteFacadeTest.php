@@ -17,6 +17,6 @@ HTML;
 			->with('testFile')
 			->andReturn($tag);
 
-		Blade::render("{!! Vite::asset('testFile') !!}");
+		Blade::render("{!! Vite::asset('testFile') !!}", deleteCachedView: true);
 	}
 }
