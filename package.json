@@ -21,16 +21,16 @@
     "socket.io": "latest",
     "socket.io-client": "latest",
     "vue": "latest",
-    "vue-router": "latest"
+    "vue-router": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "latest",
-    "eslint": "latest",
+    "eslint": "^8.19.0",
     "eslint-plugin-vue": "latest",
     "resolve-url-loader": "latest",
     "sass": "latest",
     "vite": "latest",
-    "vue-template-compiler": "latest"
+    "vue-template-compiler": "^2.7.1"
   },
   "version": "1.0.0"
 }
