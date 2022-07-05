@@ -79,12 +79,14 @@ module.exports.PresenceChannel = class {
 
 		if (!game) return;
 
-		if (game.is_started) {
-			const state = await this.stateManager.getState(gameId);
-			if (state.status === StartingState.identifier) {
-				await this.gameService.stopGameLaunch(channel);
-				game.is_started = false;
-			}
+		if (!game.is_started) return;
+
+		const state = await this.stateManager.getState(gameId);
+		if (!state) return;
+
+		if (state.status === StartingState.identifier) {
+			await this.gameService.stopGameLaunch(channel);
+			game.is_started = false;
 		}
 
 		const member = members.find(m => m.socketId === socket.id);
