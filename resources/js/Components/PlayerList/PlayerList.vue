@@ -46,17 +46,9 @@ export default {
 	},
 	methods: {
 		addUser(player) {
-			const playerList = document.querySelector(".player-list__wrapper");
-			const wrapper = document.createElement("div");
 			player = this.injectPlayersProperties([player])[0];
-
-			createApp(GamePlayer, {
-				player: player
-			}).use(window.pinia).mount(wrapper);
-
+			this.playerList.push(player);
 			this.gameStore.playerList.push(player);
-
-			playerList.appendChild(wrapper);
 		},
 		removeUser(player) {
 			const players = document.querySelector(".player-list__wrapper");
