@@ -5,7 +5,10 @@
         Comment jouer
       </router-link>
       <div class="links">
-        <router-link to="profile">
+        <router-link
+          to="profile"
+          aria-label="Profil"
+        >
           <svg
             class="icon"
             tabindex="0"
