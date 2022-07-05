@@ -3,7 +3,7 @@
     ref="player"
     :data-id="player.id"
     class="player__container"
-    @click="vote(userID, player.id)"
+    @click="send(player.id, userID)"
   >
     <VotedBy
       v-if="isVoted"
@@ -44,15 +44,15 @@ export default {
 			isVoted: this.player.voted_by.length > 1,
 			gameStore: useGameStore(),
 			userStore: useUserStore(),
-			gameId: document.URL.split("/")[document.URL.split("/").length - 1]
+			votedBy: this.player.voted_by
 		};
 	},
 	computed: {
+		gameId() {
+			return document.URL.split("/")[document.URL.split("/").length - 1];
+		},
 		userID() {
 			return this.userStore.id;
-		},
-		votedBy() {
-			return this.player.voted_by;
 		},
 		getAvatar() {
 			return "https://localhost" + this.player.avatar;
@@ -73,29 +73,30 @@ export default {
 				this.gameStore.currentVote = 0;
 			}).listen(".game.vote", ({ data }) => {
 				const payload = data.payload;
-				if (payload.votedUser !== this.player.id || payload.votedBy === this.userID) {
+				if (payload.votedUser !== this.player.id) {
 					return;
 				}
-				this.vote(payload.votedBy, payload.votedUser, false);
+				this.vote(payload.votedBy, payload.votedUser);
 			}).listen(".game.unvote", ({ data }) => {
 				const payload = data.payload;
-				if (payload.votedUser !== this.player.id || payload.votedBy === this.userID) {
+				if (payload.votedUser !== this.player.id) {
 					return;
 				}
-				this.unVote(payload.votedBy, payload.votedUser, false);
+				this.unVote(payload.votedBy, payload.votedUser);
 			});
 	},
 	methods: {
-		vote: async function (votedBy, votedUser, makeRequest = true) {
-			if (typeof votedBy === "undefined") {
-				return;
-			}
+		async send(votedUser, votedBy) {
+			const res = await window.JSONFetch("/game/vote", "POST", {
+				gameId:	this.gameId,
+				userId: votedUser
+			});
 
-			if (this.votedBy.includes(votedBy)) {
+			if (res.status !== 204) {
 				await this.unVote(votedBy, votedUser);
-				return;
 			}
-
+		},
+		vote: async function (votedBy, votedUser) {
 			if (
 				this.gameStore.currentVote > 0
 			) {
@@ -104,47 +105,23 @@ export default {
 			}
 
 			this.isVoted = true;
-
 			this.gameStore.setVote({
 				userID: votedUser,
 				votedBy: votedBy,
 			});
-
-			if (makeRequest) {
-				const res = await window.JSONFetch("/game/vote", "POST", {
-					gameId:	this.gameId,
-					userId: votedUser
-				});
-
-				if (res.status !== 204) {
-					await this.unVote(votedBy, votedUser, false);
-				}
-			}
 		},
-		unVote: async function (votedBy, votedUser, makeRequest = true) {
-			if (typeof votedBy === "undefined") {
-				return;
-			}
-			if (this.player.id === votedUser) {
+		unVote: async function (votedBy, votedUser) {
+			console.log(this.gameStore.getVotes(votedUser));
+			if (this.gameStore.getVotes(votedUser).length - 1 < 1) {
 				this.isVoted = false;
 			}
+
 			this.gameStore.currentVote = 0;
 			this.votedBy.splice(this.votedBy.indexOf(votedBy), 1);
 			this.gameStore.unVote({
 				userID: votedUser,
 				votedBy: votedBy,
 			});
-
-			if (makeRequest) {
-				const res = await window.JSONFetch("/game/vote", "POST", {
-					gameId:	this.gameId,
-					userId: votedUser
-				});
-
-				if (res.status !== 204) {
-					await this.vote(votedBy, votedUser, false);
-				}
-			}
 		},
 	},
 };

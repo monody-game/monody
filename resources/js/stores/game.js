@@ -28,6 +28,9 @@ export const useStore = defineStore("game", {
 			this.getPlayerByID(userID).voted_by.push(votedBy);
 			this.currentVote = userID;
 		},
+		getVotes(userID) {
+			return this.getPlayerByID(userID).voted_by;
+		},
 		unVote({ userID, votedBy }) {
 			if (userID === 0) {
 				return;
