@@ -23,6 +23,6 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
 		'id' => $user->id,
 		'username' => $user->username,
 		'avatar' => $user->avatar,
-		'level' => $user->avatar,
+		'level' => $user->level,
 	];
 });
