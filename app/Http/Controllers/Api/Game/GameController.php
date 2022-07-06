@@ -64,17 +64,14 @@ class GameController extends Controller
                 continue;
             }
 
+            /** @var User $owner */
             $owner = User::find($currentGame['owner']);
 
-            if ($owner) {
-                /** @var User $owner */
-                $owner = $owner->first();
-                $currentGame['owner'] = [
-                    'id' => $owner->id,
-                    'username' => $owner->username,
-                    'avatar' => $owner->avatar,
-                ];
-            }
+            $currentGame['owner'] = [
+                'id' => $owner->id,
+                'username' => $owner->username,
+                'avatar' => $owner->avatar,
+            ];
 
             $currentGame['id'] = str_replace('game:', '', $game);
             unset($currentGame['assigned_roles']);
