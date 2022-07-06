@@ -1,5 +1,5 @@
 .time-separator__main {
-  border-top: thin solid rgba(var(--unchanged-color), 40%);
+  border-top: thin solid rgba(var(--unchanged-color), 20%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +14,8 @@
   position: absolute;
   color: rgba(var(--unchanged-color), 40%);
   background-color: var(--chat-background);
-  padding: space(1);
+  padding-block: space(1);
+	padding-inline: space(2);
   font-size: 14px;
   user-select: none;
 }
