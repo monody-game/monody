@@ -2,18 +2,18 @@
 
 namespace Tests\Unit\Http\Middleware;
 
-use App\Http\Middleware\RestrictToWebsockets;
+use App\Http\Middleware\RestrictToDockerNetwork;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Mockery;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class RestrictToWebsocketsTest extends TestCase
+class RestrictToDockerNetworkTest extends TestCase
 {
-	public function testGettingAccessWhileBeingWebHost() {
+	public function testGettingAccessWhileRequestingWebHost() {
 		$request = Mockery::mock(Request::class, ['getHost' => 'web']);
-		$middleware = new RestrictToWebsockets();
+		$middleware = new RestrictToDockerNetwork();
 
 		$res = $middleware->handle($request, function () {
 			return true;
@@ -22,8 +22,8 @@ class RestrictToWebsocketsTest extends TestCase
 		$this->assertTrue($res);
 	}
 
-	public function testGettingRejectedWhileNotBeingWebHost() {
-		$middleware = new RestrictToWebsockets();
+	public function testGettingRejectedWhileNotRequestingWebHost() {
+		$middleware = new RestrictToDockerNetwork();
 		$res = $middleware->handle(new Request(), function () {});
 
 		$this->assertInstanceOf(JsonResponse::class, $res);
