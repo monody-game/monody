@@ -2,7 +2,7 @@ const fetch = require("../../Helpers/fetch");
 
 module.exports = {
 	name: "vote",
-	duration: 120,
+	duration: 40,
 	identifier: 5,
 	before(io, channel, members) {
 		members.forEach(member => {
