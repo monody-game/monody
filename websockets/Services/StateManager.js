@@ -54,26 +54,27 @@ module.exports = class StateManager {
 		let stateIndex = rounds[currentRound].indexOf(rounds[currentRound].find(roundState => roundState.identifier === currentState));
 		const loopingRoundIndex = rounds.length - 1;
 		const members = await this.getMembers(channel);
+		const currentRoundObject = rounds[currentRound];
 
-		if (typeof rounds[currentRound][stateIndex - 1] !== "undefined" && typeof rounds[currentRound][stateIndex - 1].after === "function") {
-			await rounds[currentRound][stateIndex - 1].after(this.io, channel, members);
+		if (typeof currentRoundObject[stateIndex - 1] !== "undefined" && typeof currentRoundObject[stateIndex - 1].after === "function") {
+			await currentRoundObject[stateIndex - 1].after(this.io, channel, members);
 		} else if (
-			typeof rounds[currentRound - 1] !== "undefined" &&
-			typeof rounds[currentRound - 1][rounds[currentRound - 1].length - 1] !== "undefined" &&
-			typeof rounds[currentRound - 1][rounds[currentRound - 1].length - 1].after === "function"
+			typeof currentRoundObject !== "undefined" &&
+			typeof currentRoundObject[currentRoundObject.length - 1] !== "undefined" &&
+			typeof currentRoundObject[currentRoundObject.length - 1].after === "function"
 		) {
-			await rounds[currentRound - 1][rounds[currentRound - 1].length - 1].after(this.io, channel, members);
+			await currentRoundObject[currentRoundObject.length - 1].after(this.io, channel, members);
 		}
 
 		if (
 			currentRound !== loopingRoundIndex &&
-			typeof rounds[currentRound][stateIndex] === "undefined" &&
+			typeof currentRoundObject[stateIndex] === "undefined" &&
 			typeof rounds[currentRound + 1] !== "undefined"
 		) {
 			currentRound++;
 			currentState = rounds[currentRound][0].identifier;
 			stateIndex = 0;
-		} else if (currentRound === loopingRoundIndex && stateIndex === rounds[currentRound].length - 1) {
+		} else if (currentRound === loopingRoundIndex && stateIndex === currentRoundObject.length - 1) {
 			currentRound = loopingRoundIndex;
 			currentState = rounds[loopingRoundIndex][0].identifier;
 			stateIndex = 0;
