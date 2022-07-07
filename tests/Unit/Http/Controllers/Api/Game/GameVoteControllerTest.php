@@ -17,10 +17,11 @@ class GameVoteControllerTest extends TestCase
 	public function testVotingUser() {
 		Event::fake();
 
-		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
+		$this->actingAs($this->user, 'api')
+			->post('/api/game/vote', [
 			'userId' => $this->user->id,
 			'gameId' => 'testVotingStateGame'
-		])->assertStatus(Response::HTTP_NO_CONTENT);
+		])->assertNoContent();
 
 		Event::assertDispatched(GameVote::class);
 	}
@@ -53,7 +54,9 @@ class GameVoteControllerTest extends TestCase
 		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
 			'userId' => $this->secondUser->id,
 			'gameId' => $this->game['id']
-		])->assertStatus(Response::HTTP_FORBIDDEN)->assertJson([
+		])
+			->assertForbidden()
+			->assertJson([
 			'Wait the game to start before voting'
 		]);
 
@@ -66,7 +69,7 @@ class GameVoteControllerTest extends TestCase
 		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
 			'userId' => $this->secondUser->id,
 			'gameId' => 'testStartedGame'
-		])->assertStatus(Response::HTTP_FORBIDDEN)->assertJson([
+		])->assertForbidden()->assertJson([
 			'Wait your turn to vote'
 		]);
 
@@ -86,7 +89,7 @@ class GameVoteControllerTest extends TestCase
 		$this->actingAs($this->user, 'api')->post('/api/game/vote', [
 			'userId' => $this->user->id,
 			'gameId' => 'testVotingStateGame'
-		])->assertStatus(Response::HTTP_NO_CONTENT);
+		])->assertNoContent();
 
 		Event::assertDispatched(GameUnvote::class);
 		Event::assertNotDispatched(GameVote::class);
@@ -115,7 +118,7 @@ class GameVoteControllerTest extends TestCase
 			->withoutMiddleware(RestrictToDockerNetwork::class)
 			->post('/api/game/aftervote', [
 				'gameId' => 'testVotingStateGame'
-			])->assertStatus(Response::HTTP_NO_CONTENT);
+			])->assertNoContent();
 
 		Event::assertDispatched(function (GameKill $event) {
 			return $event->payload === [
@@ -151,6 +154,47 @@ class GameVoteControllerTest extends TestCase
 			]);
 	}
 
+	public function testVotingDeadPlayer() {
+		Redis::set("game:testVotingStateGame:members", json_encode([
+			["user_id" => $this->user->id, "user_info" => $this->user],
+			["user_id" => $this->secondUser->id, "user_info" => $this->secondUser],
+		]));
+
+		Event::fake();
+
+		Redis::set("game:testVotingStateGame:votes", json_encode([
+			$this->user->id => [
+				$this->secondUser->id
+			]
+		]));
+
+		$this
+			->withoutMiddleware(RestrictToDockerNetwork::class)
+			->post('/api/game/aftervote', [
+				'gameId' => "testVotingStateGame"
+			])
+			->assertNoContent();
+
+		Event::assertDispatched(function (GameKill $event) {
+			return $event->payload === [
+				'killedUser' => $this->user->id,
+				'gameId' => 'testVotingStateGame'
+			];
+		});
+
+		Event::fakeFor(function() {
+			$this
+				->actingAs($this->user, 'api')
+				->post('/api/game/vote', [
+					'userId' => $this->user->id,
+					'gameId' => 'testVotingStateGame'
+				])
+				->assertUnprocessable();
+
+			Event::assertNotDispatched(GameKill::class);
+		});
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -165,12 +209,22 @@ class GameVoteControllerTest extends TestCase
 			'users' => [$this->user->id, $this->secondUser->id]
 		])['game'];
 
+		Redis::set("game:{$this->game['id']}:members", json_encode([
+			["user_id" => $this->user->id, "user_info" => $this->user],
+			["user_id" => $this->secondUser->id, "user_info" => $this->secondUser],
+		]));
+
 		Redis::set("game:testVotingStateGame", json_encode([
 			'id' => 'testVotingStateGame',
 			'roles' => [1, 2],
 			'users' => [$this->user->id, $this->secondUser->id],
 			'is_started' => true,
 			'owner' => 1,
+		]));
+
+		Redis::set("game:testVotingStateGame:members", json_encode([
+			["user_id" => $this->user->id, "user_info" => $this->user],
+			["user_id" => $this->secondUser->id, "user_info" => $this->secondUser],
 		]));
 
 		Redis::set("game:testVotingStateGame:state", json_encode([
@@ -183,6 +237,11 @@ class GameVoteControllerTest extends TestCase
 			'users' => [$this->user->id, $this->secondUser->id],
 			'is_started' => true,
 			'owner' => 1,
+		]));
+
+		Redis::set("game:testStartedGame:members", json_encode([
+			["user_id" => $this->user->id, "user_info" => $this->user],
+			["user_id" => $this->secondUser->id, "user_info" => $this->secondUser],
 		]));
 
 		Redis::set("game:testStartedGame:state", json_encode([

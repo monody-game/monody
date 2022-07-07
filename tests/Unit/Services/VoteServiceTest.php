@@ -124,11 +124,37 @@ class VoteServiceTest extends TestCase
 		Event::fake();
 		$gameId = $this->secondGame['id'];
 		$this->assertFalse($this->service->afterVote($gameId));
+
 		Event::assertDispatched(function (GameKill $event) use ($gameId) {
 			return $event->payload === [
 					'killedUser' => null,
 					'gameId' => $gameId
 				];
+		});
+	}
+
+	public function testVotingDeadPlayer() {
+		$gameId = $this->secondGame['id'];
+
+		Event::fake();
+		$this->service->vote($this->user->id, $gameId);
+		$this->assertSame($this->user->id, $this->service->afterVote($gameId));
+
+		Event::assertDispatched(function (GameKill $event) use ($gameId) {
+			return $event->payload === [
+				'killedUser' => $this->user->id,
+				'gameId' => $gameId
+			];
+		});
+
+		$this->assertSame([], $this->service->vote($this->user->id, $gameId));
+		$this->assertFalse($this->service->afterVote($gameId));
+
+		Event::assertDispatched(function (GameKill $event) use ($gameId) {
+			return $event->payload === [
+				'killedUser' => null,
+				'gameId' => $gameId
+			];
 		});
 	}
 
@@ -148,11 +174,21 @@ class VoteServiceTest extends TestCase
 				'roles' => [1, 2]
 			])->getContent(), true)['game'];
 
+		Redis::set("game:{$this->game['id']}:members", json_encode([
+			["user_id" => $this->user->id, "user_info" => $this->user],
+			["user_id" => $this->secondUser->id, "user_info" => $this->secondUser],
+		]));
+
 		$this->secondGame = json_decode($this
 			->actingAs($this->user, 'api')
 			->post('/api/game/new', [
 				'users' => [$this->user->id, $this->secondUser->id],
 				'roles' => [1, 2]
 			])->getContent(), true)['game'];
+
+		Redis::set("game:{$this->secondGame['id']}:members", json_encode([
+			["user_id" => $this->user->id, "user_info" => $this->user],
+			["user_id" => $this->secondUser->id, "user_info" => $this->secondUser],
+		]));
 	}
 }
