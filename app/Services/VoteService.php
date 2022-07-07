@@ -15,6 +15,10 @@ class VoteService
      */
     public function vote(string $userId, string $gameId, ?string $votingUser = null): array
     {
+        if ($this->isDead($userId, $gameId)) {
+            return [];
+        }
+
         $votes = $this->getVotes($gameId);
         $authUserId = $votingUser ?? Auth::user()?->getAuthIdentifier();
 
@@ -63,11 +67,6 @@ class VoteService
         return $votes;
     }
 
-    private function getVotes(string $gameId): array
-    {
-        return json_decode(Redis::get("game:$gameId:votes"), true) ?? [];
-    }
-
     /**
      * @return string|false vote cancelled or not any player to vote
      */
@@ -102,6 +101,15 @@ class VoteService
             }
         }
 
+        if ($this->isDead($majority, $gameId)) {
+            GameKill::dispatch([
+                'killedUser' => null,
+                'gameId' => $gameId,
+            ]);
+
+            return false;
+        }
+
         $this->kill($majority, $gameId);
 
         GameKill::dispatch([
@@ -117,6 +125,11 @@ class VoteService
     private function clearVotes(string $gameId): void
     {
         Redis::set("game:$gameId:votes", json_encode([]));
+    }
+
+    private function getVotes(string $gameId): array
+    {
+        return json_decode(Redis::get("game:$gameId:votes"), true) ?? [];
     }
 
     private function kill(string $userId, string $gameId): void
@@ -140,5 +153,28 @@ class VoteService
         $users = [...$users, $user];
 
         Redis::set("game:$gameId:members", json_encode($users));
+    }
+
+    private function isDead(string $userId, string $gameId): bool
+    {
+        $members = json_decode(Redis::get("game:$gameId:members"), true) ?? [];
+        $member = array_filter($members, fn ($member) => $member['user_id'] === $userId);
+
+        if (1 === \count($member)) {
+            $member = $member[array_key_first($member)];
+        }
+
+        if (!$member) {
+            return true;
+        }
+
+        if (
+            \array_key_exists('is_dead', $member['user_info']) &&
+            true === $member['user_info']['is_dead']
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
