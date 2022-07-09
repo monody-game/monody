@@ -29,7 +29,7 @@
     "eslint-plugin-vue": "^9.2.0",
     "resolve-url-loader": "latest",
     "sass": "latest",
-    "vite": "latest",
+    "vite": "^2.9.14",
     "vue-template-compiler": "^2.7.1"
   },
   "version": "1.0.0"
