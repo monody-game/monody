@@ -5,11 +5,14 @@ namespace App\Services;
 use App\Events\GameKill;
 use App\Events\GameUnvote;
 use App\Events\GameVote;
+use App\Traits\MemberHelperTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 
 class VoteService
 {
+    use MemberHelperTrait;
+
     /**
      * @return array<int, array<int>>
      */
@@ -134,35 +137,24 @@ class VoteService
 
     private function kill(string $userId, string $gameId): void
     {
-        /** @var false|string|null $users */
-        $users = Redis::get("game:$gameId:members");
-        $users = null === $users || false === $users ? '' : $users;
-        $users = json_decode($users, true);
+        $member = $this->getMember($userId, $gameId);
 
-        if (!$users) {
+        $members = $this->getMembers($gameId);
+        $member = array_splice($members, (int) array_search($member, $members, true), 1)[0];
+
+        if (!$member) {
             return;
         }
 
-        $user = array_filter($users, fn ($user) => $user['user_id'] === $userId);
+        $member['user_info']['is_dead'] = true;
+        $members = [...$members, $member];
 
-        /** @var int $index */
-        $index = array_key_first($user);
-        $user = array_splice($users, $index, 1)[0];
-
-        $user['user_info']['is_dead'] = true;
-        $users = [...$users, $user];
-
-        Redis::set("game:$gameId:members", json_encode($users));
+        Redis::set("game:$gameId:members", json_encode($members));
     }
 
     private function isDead(string $userId, string $gameId): bool
     {
-        $members = json_decode(Redis::get("game:$gameId:members"), true) ?? [];
-        $member = array_filter($members, fn ($member) => $member['user_id'] === $userId);
-
-        if (1 === \count($member)) {
-            $member = $member[array_key_first($member)];
-        }
+        $member = $this->getMember($userId, $gameId);
 
         if (!$member) {
             return true;

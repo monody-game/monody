@@ -2,12 +2,14 @@
 
 namespace App\Rules;
 
+use App\Traits\MemberHelperTrait;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Redis;
 
 class PlayerAlive implements Rule, DataAwareRule
 {
+    use MemberHelperTrait;
+
     /**
      * @var string[]
      */
@@ -22,18 +24,8 @@ class PlayerAlive implements Rule, DataAwareRule
     public function passes($attribute, $value): bool
     {
         $gameId = 'gameId' === $attribute ? $value : $this->data['gameId'];
-        $key = "game:$gameId:members";
 
-        if (!Redis::exists($key)) {
-            return false;
-        }
-
-        $members = json_decode(Redis::get($key), true);
-        $member = array_filter($members, fn ($member) => $member['user_id'] === $value);
-
-        if (1 === \count($member)) {
-            $member = $member[array_key_first($member)];
-        }
+        $member = $this->getMember($value, $gameId);
 
         if (!$member) {
             return false;

@@ -7,6 +7,7 @@ use App\Events\GameUnvote;
 use App\Events\GameVote;
 use App\Models\User;
 use App\Services\VoteService;
+use App\Traits\MemberHelperTrait;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
