@@ -34,6 +34,10 @@ class MemberHelperTraitTest extends TestCase
 		$this->assertFalse($this->hasMember('ioauouihf135', $this->gameId));
 	}
 
+	public function testGettingMemberOnInexistantKey() {
+		$this->assertFalse($this->getMember($this->user['id'], '14U4Xohuxt'));
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();

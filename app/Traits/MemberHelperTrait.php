@@ -12,6 +12,10 @@ trait MemberHelperTrait
      */
     public function getMembers(string $gameId): array
     {
+        if (!$this->exists("game:$gameId:members")) {
+            return [];
+        }
+
         return json_decode(Redis::get("game:$gameId:members"), true);
     }
 
@@ -22,6 +26,10 @@ trait MemberHelperTrait
      */
     public function getMember(string $userId, string $gameId): array|false
     {
+        if (!$this->exists("game:$gameId:members")) {
+            return false;
+        }
+
         $members = $this->getMembers($gameId);
         $members = array_filter($members, fn ($member) => $member['user_id'] === $userId);
 
@@ -33,11 +41,20 @@ trait MemberHelperTrait
             throw new Exception("More than one user was found for the given id : $userId");
         }
 
-        return $members[0];
+        return $members[array_key_first($members)];
     }
 
     public function hasMember(string $userId, string $gameId): bool
     {
+        if (!$this->exists("game:$gameId:members")) {
+            return false;
+        }
+
         return (bool) $this->getMember($userId, $gameId);
+    }
+
+    public function exists(string $key): bool
+    {
+        return Redis::exists($key);
     }
 }
