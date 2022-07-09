@@ -55,6 +55,6 @@ trait MemberHelperTrait
 
     public function exists(string $key): bool
     {
-        return Redis::exists($key);
+        return (bool)Redis::exists($key);
     }
 }
