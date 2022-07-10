@@ -31,11 +31,13 @@ class MemberHelperTraitTest extends TestCase
 
 	public function testHasMember() {
 		$this->assertTrue($this->hasMember($this->user['id'], $this->gameId));
-		$this->assertFalse($this->hasMember('ioauouihf135', $this->gameId));
+		$this->assertFalse($this->hasMember('inexistantuserid', $this->gameId));
 	}
 
 	public function testGettingMemberOnInexistantKey() {
-		$this->assertFalse($this->getMember($this->user['id'], '14U4Xohuxt'));
+		$this->assertSame($this->getMembers('unexistantgame'), []);
+		$this->assertFalse($this->getMember($this->user['id'], 'unexistantgame'));
+		$this->assertFalse($this->hasMember($this->user['id'], 'unexistantgame'));
 	}
 
 	protected function setUp(): void
