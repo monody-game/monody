@@ -8,6 +8,7 @@ use App\Events\GameVote;
 use App\Models\User;
 use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
+use Closure;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
@@ -16,6 +17,10 @@ class VoteServiceTest extends TestCase
 {
 	private VoteService $service;
 	private array $game;
+	private array $secondGame;
+	private User $user;
+	private User $secondUser;
+	private User $thirdUser;
 
 	public function testVoting()
 	{
@@ -134,7 +139,7 @@ class VoteServiceTest extends TestCase
 		});
 	}
 
-	public function testVotingDeadPlayer() {
+	public function testVotingDeadPlayerInService() {
 		$gameId = $this->secondGame['id'];
 
 		Event::fake();
@@ -157,6 +162,35 @@ class VoteServiceTest extends TestCase
 				'gameId' => $gameId
 			];
 		});
+	}
+
+	public function testKillingInexistantMember() {
+		$this->assertFalse($this->service->kill('inexistantUser', $this->secondGame['id']));
+	}
+
+	public function testAfterVotingDeadMember() {
+		$gameId = $this->secondGame['id'];
+		Event::fake();
+
+		$this->service->kill($this->secondUser->id, $gameId);
+		Redis::set("game:$gameId:votes", json_encode([
+			$this->secondUser->id => [
+				$this->secondUser->id
+			]
+		]));
+
+		$this->assertFalse($this->service->afterVote($gameId));
+
+		Event::assertDispatched(function (GameKill $event) use ($gameId) {
+			return $event->payload === [
+				'killedUser' => null,
+				'gameId' => $gameId
+			];
+		});
+	}
+
+	public function testCheckingIfMemberIsDeadWhileMemberIsInexistant() {
+		$this->assertTrue($this->service->isDead('inexistantuser', $this->game['id']));
 	}
 
 	protected function setUp(): void
