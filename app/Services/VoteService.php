@@ -135,24 +135,27 @@ class VoteService
         return json_decode(Redis::get("game:$gameId:votes"), true) ?? [];
     }
 
-    private function kill(string $userId, string $gameId): void
+    public function kill(string $userId, string $gameId): bool
     {
         $member = $this->getMember($userId, $gameId);
-
         $members = $this->getMembers($gameId);
-        $member = array_splice($members, (int) array_search($member, $members, true), 1)[0];
+        $index = array_search($member, $members, true);
 
-        if (!$member) {
-            return;
+        if (!$member || false === $index) {
+            return false;
         }
+
+        $member = array_splice($members, (int) $index, 1)[0];
 
         $member['user_info']['is_dead'] = true;
         $members = [...$members, $member];
 
         Redis::set("game:$gameId:members", json_encode($members));
+
+        return true;
     }
 
-    private function isDead(string $userId, string $gameId): bool
+    public function isDead(string $userId, string $gameId): bool
     {
         $member = $this->getMember($userId, $gameId);
 
