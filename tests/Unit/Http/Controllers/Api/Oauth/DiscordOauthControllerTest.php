@@ -41,6 +41,13 @@ class DiscordOauthControllerTest extends TestCase
 			->assertStatus(Response::HTTP_FORBIDDEN);
 	}
 
+	public function testCreatingLink() {
+		$this
+			->actingAs($this->user, 'api')
+			->get('/api/oauth/link/discord')
+			->assertRedirect();
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
