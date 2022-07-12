@@ -83,6 +83,18 @@ export default {
 					return;
 				}
 				this.unVote(payload.votedBy, payload.votedUser);
+			}).listen(".game.kill", (e) => {
+				const killed = e.data.payload.killedUser;
+
+				if (killed === null) {
+					return;
+				}
+
+				const user = this.gameStore.getPlayerByID(killed);
+
+				if (user.id === this.player.id) {
+					this.$refs.player.setAttribute("data-is-dead", true);
+				}
 			});
 	},
 	methods: {

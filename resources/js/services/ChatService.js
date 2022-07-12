@@ -22,7 +22,6 @@ export default class ChatService {
 	sendMessage(message, type, customClass) {
 		const messageContainer = document.querySelector(".chat__messages");
 		const wrapper = document.createElement("div");
-		wrapper.classList.add("message__main");
 
 		if (customClass) {
 			wrapper.classList.add(customClass);
@@ -37,6 +36,7 @@ export default class ChatService {
 				.use(window.pinia)
 				.mount(wrapper);
 		} else {
+			wrapper.classList.add("message__main");
 			createApp(ChatMessage, {
 				message: message,
 			}).mount(wrapper);

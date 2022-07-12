@@ -19,6 +19,15 @@
     border-radius: 2px;
 }
 
+.alert-message__death {
+	@extend .message__main;
+	color: #fff;
+	height: 70px;
+	align-items: center;
+	background: var(--danger);
+	border-radius: 2px;
+}
+
 .alert-message__icon {
     height: 40px;
     width: 40px;
