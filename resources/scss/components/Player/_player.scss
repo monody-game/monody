@@ -1,18 +1,30 @@
 .player__container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: space(6);
-  height: min-content;
-  width: min-content;
-  user-select: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: space(6);
+	height: min-content;
+	width: min-content;
+	user-select: none;
 
-  &.player__votable {
-    cursor: pointer;
-  }
+	&.player__votable {
+		cursor: pointer;
+	}
+
+	&[data-is-dead="true"] .player__avatar-container::before {
+		content: '';
+		height: 125px;
+		width: 100%;
+		position: absolute;
+		background-color: #000000;
+		opacity: .5;
+		border-radius: 20px;
+		z-index: 100;
+	}
 }
 
 .player__avatar {
+	position: relative;
   height: 125px;
   width: 125px;
   border-radius: 20px;

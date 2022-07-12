@@ -52,6 +52,17 @@ export default {
 			})
 			.listen(".chat.werewolf", (e) => {
 				this.service.sendMessage({ content: e.content, author: e.author }, "message", "message__werewolf");
+			})
+			.listen(".game.kill", (e) => {
+				const killed = e.data.payload.killedUser;
+
+				if (killed === null) {
+					this.service.sendMessage("Personne n'a été tué !", "death");
+					return;
+				}
+
+				const user = this.gameStore.getPlayerByID(killed);
+				this.service.sendMessage(`${user.username} a été tué !`, "death");
 			});
 	},
 	methods: {
