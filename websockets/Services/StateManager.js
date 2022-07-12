@@ -54,15 +54,17 @@ module.exports = class StateManager {
 		let stateIndex = rounds[currentRound].indexOf(rounds[currentRound].find(roundState => roundState.identifier === currentState));
 		const loopingRoundIndex = rounds.length - 1;
 		const members = await this.getMembers(channel);
+		const isLast = stateIndex === -1;
 		const currentRoundObject = rounds[currentRound];
 
-		if (typeof currentRoundObject[stateIndex - 1] !== "undefined" && typeof currentRoundObject[stateIndex - 1].after === "function") {
-			await currentRoundObject[stateIndex - 1].after(this.io, channel, members);
-		} else if (
-			typeof currentRoundObject !== "undefined" &&
-			typeof currentRoundObject[currentRoundObject.length - 1] !== "undefined" &&
-			typeof currentRoundObject[currentRoundObject.length - 1].after === "function"
+		if (
+			!isLast &&
+			typeof currentRoundObject[stateIndex - 1] !== "undefined" &&
+			typeof currentRoundObject[stateIndex - 1].after === "function"
 		) {
+			await currentRoundObject[stateIndex - 1].after(this.io, channel, members);
+		} else if (isLast) {
+			console.log("should be the last state of the round");
 			await currentRoundObject[currentRoundObject.length - 1].after(this.io, channel, members);
 		}
 
@@ -82,6 +84,10 @@ module.exports = class StateManager {
 
 		const duration = rounds[currentRound][stateIndex].duration;
 
+		if (typeof rounds[currentRound][stateIndex] !== "undefined" && typeof rounds[currentRound][stateIndex].before === "function") {
+			await rounds[currentRound][stateIndex].before(this.io, channel, members);
+		}
+
 		await this.setState({
 			status: currentState,
 			startTimestamp: Date.now(),
@@ -89,10 +95,6 @@ module.exports = class StateManager {
 			counterId: counterId,
 			round: currentRound
 		}, channel);
-
-		if (typeof rounds[currentRound][stateIndex] !== "undefined" && typeof rounds[currentRound][stateIndex].before === "function") {
-			await rounds[currentRound][stateIndex].before(this.io, channel, members);
-		}
 
 		return {
 			duration,
