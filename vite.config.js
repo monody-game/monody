@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import fs from "node:fs";
+import path from "node:path";
 
 export default defineConfig({
 	plugins: [vue()],
@@ -9,6 +10,10 @@ export default defineConfig({
 		watch: {
 			usePolling: true
 		},
-		https: true
+		https: {
+			key: fs.readFileSync(path.join(__dirname, "cert.key")),
+			cert: fs.readFileSync(path.join(__dirname, "cert.pem")),
+		},
+		port: 3000
 	}
 });

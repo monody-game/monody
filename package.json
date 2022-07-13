@@ -15,22 +15,22 @@
     "@grafikart/spinning-dots-element": "latest",
     "dotenv": "latest",
     "laravel-echo": "latest",
-    "node-fetch": "^2.*",
-    "pinia": "latest",
+    "node-fetch": "^2",
+    "pinia": "2.0.16",
     "redis": "^4.2.0",
     "socket.io": "latest",
     "socket.io-client": "latest",
     "vue": "latest",
-    "vue-router": "^4.1.0"
+    "vue-router": "^4.1.2"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "latest",
+    "@vitejs/plugin-vue": "3.0.0",
     "eslint": "^8.19.0",
     "eslint-plugin-vue": "^9.2.0",
     "resolve-url-loader": "latest",
     "sass": "latest",
-    "vite": "^2.9.14",
-    "vue-template-compiler": "^2.7.1"
+    "vite": "^3.0.0",
+    "vue-template-compiler": "^2.7.5"
   },
   "version": "1.0.0"
 }
