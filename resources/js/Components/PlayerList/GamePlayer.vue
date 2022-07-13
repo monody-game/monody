@@ -17,6 +17,12 @@
         :src="getAvatar"
         class="player__avatar"
       >
+      <div class="player__is-dead">
+        <span class="player__is-dead-shadow" />
+        <svg v-if="isDead === true">
+          <use href="/sprite.svg#death" />
+        </svg>
+      </div>
       <span
         v-if="player.role.group === 'werewolf'"
         class="player__is-wolf"
@@ -42,6 +48,7 @@ export default {
 	data() {
 		return {
 			isVoted: this.player.voted_by.length > 1,
+			isDead: false,
 			gameStore: useGameStore(),
 			userStore: useUserStore(),
 			votedBy: this.player.voted_by
@@ -93,6 +100,7 @@ export default {
 				const user = this.gameStore.getPlayerByID(killed);
 
 				if (user.id === this.player.id) {
+					this.isDead = true;
 					this.$refs.player.setAttribute("data-is-dead", true);
 				}
 			});

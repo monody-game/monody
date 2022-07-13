@@ -1,3 +1,5 @@
+@use "../../tools/functions" as *;
+
 .player__container {
 	display: flex;
 	flex-direction: column;
@@ -11,31 +13,43 @@
 		cursor: pointer;
 	}
 
-	&[data-is-dead="true"] .player__avatar-container::before {
-		content: '';
+	&[data-is-dead="true"] .player__is-dead-shadow {
+		display: block;
 		height: 125px;
-		width: 100%;
-		position: absolute;
+		width: 125px;
 		background-color: #000000;
-		opacity: .5;
+		opacity: .45;
 		border-radius: 20px;
-		z-index: 100;
+	}
+}
+
+.player__is-dead {
+	position: absolute;
+	height: 125px;
+	width: 125px;
+	border-radius: 20px;
+
+	& > svg {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		height: 70px;
+		width: 70px;
 	}
 }
 
 .player__avatar {
-	position: relative;
   height: 125px;
   width: 125px;
   border-radius: 20px;
-  margin-bottom: space(1);
 }
 
 .player__avatar-container {
   position: relative;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+  display: grid;
+  place-items: center;
+	margin-bottom: space(1);
 }
 
 .player__is-voted {
