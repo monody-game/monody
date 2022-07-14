@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Enums\GameStates;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AfterVoteRequest;
 use App\Http\Requests\VoteRequest;
 use App\Services\VoteService;
+use App\Traits\GameHelperTrait;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 
 class GameVoteController extends Controller
 {
-    public const GAME_VOTE_STATE = 5;
+    use GameHelperTrait;
 
     public function vote(VoteRequest $request): JsonResponse
     {
@@ -41,20 +42,13 @@ class GameVoteController extends Controller
             return new JsonResponse(['Game is not started'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $res = $service->afterVote($gameId);
+        $res = $service->afterVote($gameId, $this->getContext($gameId));
 
         if ($res) {
             return new JsonResponse([], Response::HTTP_NO_CONTENT);
         }
 
         return new JsonResponse(['Not any player to vote, or vote cancelled'], Response::HTTP_OK);
-    }
-
-    private function getGame(string $id): array
-    {
-        $game = Redis::get("game:{$id}");
-
-        return json_decode($game, true);
     }
 
     private function isStarted(string $gameId): bool
@@ -64,10 +58,16 @@ class GameVoteController extends Controller
 
     private function isVoteState(string $gameId): bool
     {
-        /** @var string $state */
-        $state = Redis::get("game:{$gameId}:state");
-        $state = json_decode($state, true);
+        $state = $this->getState($gameId);
 
-        return self::GAME_VOTE_STATE === $state['status'];
+        return GameStates::VOTE_STATE === GameStates::from($state['status']);
+    }
+
+    private function getContext(string $gameId): string
+    {
+        $state = $this->getState($gameId)['status'];
+        $state = GameStates::from($state);
+
+        return $state->stringify();
     }
 }

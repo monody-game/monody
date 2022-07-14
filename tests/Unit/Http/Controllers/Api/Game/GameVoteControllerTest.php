@@ -122,9 +122,10 @@ class GameVoteControllerTest extends TestCase
 
 		Event::assertDispatched(function (GameKill $event) {
 			return $event->payload === [
-					'killedUser' => $this->user->id,
-					'gameId' => 'testVotingStateGame'
-				];
+				'killedUser' => $this->user->id,
+				'gameId' => 'testVotingStateGame',
+				'context' => 'vote'
+			];
 		});
 	}
 
@@ -178,7 +179,8 @@ class GameVoteControllerTest extends TestCase
 		Event::assertDispatched(function (GameKill $event) {
 			return $event->payload === [
 				'killedUser' => $this->user->id,
-				'gameId' => 'testVotingStateGame'
+				'gameId' => 'testVotingStateGame',
+				'context' => 'vote'
 			];
 		});
 
