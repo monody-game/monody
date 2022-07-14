@@ -55,14 +55,24 @@ export default {
 			})
 			.listen(".game.kill", (e) => {
 				const killed = e.data.payload.killedUser;
+				const context = e.data.payload.context;
 
 				if (killed === null) {
-					this.service.sendMessage("Personne n'a été tué !", "death");
+					if (context === "werewolf") {
+						this.service.sendMessage("Personne n'a été tué cette nuit !", "death");
+					} else if (context === "vote") {
+						this.service.sendMessage("Le village a décidé de ne tuer personne aujourd'hui !", "death");
+					}
 					return;
 				}
 
 				const user = this.gameStore.getPlayerByID(killed);
-				this.service.sendMessage(`${user.username} a été tué !`, "death");
+
+				if (context === "werewolf") {
+					this.service.sendMessage(`${user.username} a été tué cette nuit !`, "death");
+				} else if (context === "vote") {
+					this.service.sendMessage(`Le village a décidé de tuer ${user.username}`, "death");
+				}
 			});
 	},
 	methods: {
