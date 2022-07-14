@@ -14,7 +14,8 @@
       <button
         aria-label="Envoyer"
         class="chat__send-button"
-        @click="send()"
+        type="submit"
+        @click.prevent="send()"
         @keyup.stop
       >
         <svg class="chat__submit-icon">
