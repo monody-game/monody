@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\GameExists;
+use App\Rules\GameExistsRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AfterVoteRequest extends FormRequest
@@ -20,7 +20,7 @@ class AfterVoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'gameId' => ['string', 'required', new GameExists()],
+            'gameId' => ['string', 'required', new GameExistsRule()],
         ];
     }
 }

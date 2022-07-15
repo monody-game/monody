@@ -2,7 +2,9 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -16,7 +18,7 @@ class GameUsersControllerTest extends TestCase
     public function testListUsers()
     {
         $this->actingAs($this->user, 'api')
-            ->call('GET', '/api/game/users', ['game_id' => $this->game['id']])
+            ->call('GET', '/api/game/users', ['gameId' => $this->game['id']])
             ->assertJson([
                 'users' => [
                     $this->user['id']
@@ -27,9 +29,23 @@ class GameUsersControllerTest extends TestCase
     public function testListingUnexistingGameUsers()
     {
         $this->actingAs($this->user, 'api')
-            ->call('GET', '/api/game/users', ['game_id' => 'unexisting id, obviously'])
+            ->call('GET', '/api/game/users', ['gameId' => 'unexisting id, obviously'])
             ->assertStatus(Response::HTTP_NOT_FOUND);
     }
+
+	public function testGettingUserRole()
+	{
+		Redis::set("game:id", json_encode([
+			"assigned_roles" => [$this->user->id => 1]
+		]));
+
+		$response = $this->actingAs($this->user, 'api')
+			->call('GET', "/api/game/user/{$this->user->id}/role", ['gameId' => 'id'])
+			->assertOk()
+			->json();
+
+		$this->assertSame(Role::find(1)->getOriginal(), $response);
+	}
 
     protected function setUp(): void
     {
