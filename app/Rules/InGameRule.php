@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 
-class InGame implements Rule, DataAwareRule
+class InGameRule implements Rule, DataAwareRule
 {
     /**
      * @var string[]
