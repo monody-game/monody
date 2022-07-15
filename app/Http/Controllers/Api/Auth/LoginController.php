@@ -26,8 +26,12 @@ class LoginController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
+        if (Cookie::has('monody_access_token')) {
+            Cookie::forget('monody_access_token');
+        }
+
         $accessToken = $user->createToken('authToken')->accessToken;
-        $cookie = cookie('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', false, true, false, 'Strict');
+        $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Strict');
 
         return (new JsonResponse([], Response::HTTP_NO_CONTENT))->cookie($cookie);
     }
