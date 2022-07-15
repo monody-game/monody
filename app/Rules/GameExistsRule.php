@@ -5,7 +5,7 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Redis;
 
-class GameExists implements Rule
+class GameExistsRule implements Rule
 {
     /**
      * Determine if the validation rule passes.
