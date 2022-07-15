@@ -57,4 +57,22 @@ trait MemberHelperTrait
     {
         return (bool) Redis::exists($key);
     }
+
+    public function alive(string $userId, string $gameId): bool
+    {
+        $member = $this->getMember($userId, $gameId);
+
+        if (!$member) {
+            return false;
+        }
+
+        if (
+            \array_key_exists('is_dead', $member['user_info']) &&
+            true === $member['user_info']['is_dead']
+        ) {
+            return false;
+        }
+
+        return true;
+    }
 }
