@@ -42,6 +42,7 @@ class RolesTableSeeder extends Seeder
         DB::table('roles')->insert([
             'name' => 'witch',
             'display_name' => 'Sorcière',
+			'image' => '/images/roles/witch.png',
             'limit' => 1,
             'weight' => 3,
             'team_id' => 1
