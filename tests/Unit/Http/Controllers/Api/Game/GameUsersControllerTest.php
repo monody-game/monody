@@ -35,12 +35,14 @@ class GameUsersControllerTest extends TestCase
 
 	public function testGettingUserRole()
 	{
+		$this->secondUser->current_game = "id";
+
 		Redis::set("game:id", json_encode([
-			"assigned_roles" => [$this->user->id => 1]
+			"assigned_roles" => [$this->secondUser->id => 1]
 		]));
 
-		$response = $this->actingAs($this->user, 'api')
-			->call('GET', "/api/game/user/{$this->user->id}/role", ['gameId' => 'id'])
+		$response = $this->actingAs($this->secondUser, 'api')
+			->call('GET', "/api/game/user/{$this->secondUser->id}/role", ['gameId' => 'id'])
 			->assertOk()
 			->json();
 
@@ -50,7 +52,7 @@ class GameUsersControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        [$this->user, $this->secondUser] = User::factory(2)->create();
 
         $this->game = $this->actingAs($this->user, 'api')->post('/api/game/new', [
             'roles' => [1, 2],

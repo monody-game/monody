@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Game;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRoleRequest;
 use App\Models\Role;
+use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GameUsersController extends Controller
 {
+    use GameHelperTrait;
     use MemberHelperTrait;
 
     public function list(Request $request): JsonResponse
@@ -35,8 +37,9 @@ class GameUsersController extends Controller
 
     public function role(UserRoleRequest $request): JsonResponse
     {
-        $gameId = $request->validated('gameId');
-        $game = json_decode(Redis::get("game:$gameId"), true);
+        /** @var string $gameId */
+        $gameId = $request->user()?->current_game;
+        $game = $this->getGame($gameId);
         $userRole = $game['assigned_roles'][$request->validated('id')];
         $role = Role::find($userRole);
 
