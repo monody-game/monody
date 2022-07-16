@@ -3,6 +3,7 @@
 namespace Tests\Unit\Http\Controllers\Api\Auth;
 
 use App\Models\User;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -64,6 +65,28 @@ class LoginControllerTest extends TestCase
 		$response->assertCookieMissing('monody_access_token');
 	}
 
+	public function testLoginWhileAlreadyBeingLoggedIn() {
+		$response = $this->post('/api/auth/login', [
+			'username' => 'JohnTest',
+			'password' => 'johntest',
+			'remember_me' => false,
+		])->assertStatus(Response::HTTP_NO_CONTENT);
+
+		$response->assertCookie('monody_access_token');
+		$token = $response->getCookie('monody_access_token', false)->getValue();
+
+		$response = $this
+			->withCookie("monody_access_token", $token)
+			->post('/api/auth/login', [
+			'username' => 'second user',
+			'password' => '123456',
+			'remember_me' => false,
+		])
+			->assertStatus(Response::HTTP_NO_CONTENT);
+
+		$response->assertCookie('monody_access_token');
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -73,6 +96,13 @@ class LoginControllerTest extends TestCase
 			'email' => 'john.test@gmail.com',
 			'password' => 'johntest',
 			'password_confirmation' => 'johntest',
+		]);
+
+		$this->post('/api/auth/register', [
+			'username' => 'second user',
+			'email' => 'second.user@gmail.com',
+			'password' => '123456',
+			'password_confirmation' => '123456',
 		]);
 	}
 }
