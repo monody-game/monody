@@ -10,7 +10,7 @@ module.exports = class CounterService {
 
 		this.counterId = setTimeout(async () => {
 			await this.cycle(channel);
-		}, ((await manager.getNextStateDuration(channel)) + 5) * 1000);
+		}, ((await manager.getNextStateDuration(channel)) + 1) * 1000);
 
 		try {
 			await manager.nextState(channel, this.counterId[Symbol.toPrimitive]());
