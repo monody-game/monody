@@ -198,6 +198,43 @@ class VoteServiceTest extends TestCase
 		$this->assertTrue($this->service->isDead('inexistantuser', $this->game['id']));
 	}
 
+	public function testSwitchingVote() {
+		Event::fake();
+		$gameId = $this->game['id'];
+		$this->service->vote($this->secondUser->id, $this->game['id']);
+
+		Event::assertDispatched(function (GameVote $event) use ($gameId) {
+			return $event->payload === [
+				'votedUser' => $this->secondUser->id,
+				'gameId' => $gameId,
+				'votedBy' => $this->user->id
+			];
+		});
+
+		$this->service->vote($this->user->id, $this->game['id']);
+
+		Event::assertDispatched(function (GameUnvote $event) use ($gameId) {
+			return $event->payload === [
+				'votedUser' => $this->secondUser->id,
+				'gameId' => $gameId,
+				'votedBy' => $this->user->id
+			];
+		});
+
+		Event::assertDispatched(function (GameVote $event) use ($gameId) {
+			return $event->payload === [
+				'votedUser' => $this->user->id,
+				'gameId' => $gameId,
+				'votedBy' => $this->user->id
+			];
+		});
+
+		$votes = json_decode(Redis::get("game:{$this->game['id']}:votes"), true);
+		$this->assertSame([
+			$this->user->id => [$this->user->id]
+		], $votes);
+	}
+
 	protected function setUp(): void
 	{
 		parent::setUp();
