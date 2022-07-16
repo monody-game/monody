@@ -20,13 +20,14 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var array<string>
      */
     protected $fillable = [
         'username',
         'avatar',
         'email',
         'password',
+        'current_game',
         'discord_id',
         'discord_token',
         'discord_refresh_token',
@@ -35,9 +36,8 @@ class User extends Authenticatable
     /**
      * The attributes that should be hidden for arrays.
      *
-     * @var string[]
+     * @var array<int, string>
      */
-    // @phpstan-ignore-next-line
     protected $hidden = [
         'password',
         'remember_token',

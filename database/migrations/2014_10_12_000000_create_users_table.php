@@ -8,12 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 class CreateUsersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
@@ -23,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('avatar')->default('/storage/avatars/default.png');
             $table->string('password');
             $table->tinyInteger('level')->default(0);
+			$table->string('current_game')->nullable();
 			$table->string('discord_id')->nullable();
 			$table->string('discord_token')->nullable();
 			$table->string('discord_refresh_token')->nullable();
@@ -30,12 +26,7 @@ class CreateUsersTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('users');
     }
