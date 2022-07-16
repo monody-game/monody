@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Enums\GameStates;
 use App\Events\GameCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckGameRequest;
@@ -9,13 +10,14 @@ use App\Http\Requests\CreateGameRequest;
 use App\Http\Requests\DeleteGameRequest;
 use App\Models\Game;
 use App\Models\User;
+use App\Traits\RegisterHelperTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 
 class GameController extends Controller
 {
-    private const GAME_WAITING = 0;
+    use RegisterHelperTrait;
 
     public function check(CheckGameRequest $request): JsonResponse
     {
@@ -86,27 +88,31 @@ class GameController extends Controller
     public function new(CreateGameRequest $request): JsonResponse
     {
         $data = $request->validated();
+        /** @var User $user */
+        $user = $request->user();
 
         $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
-        $data['owner'] = $request->user()?->id;
+        $data['owner'] = $user->id;
         $data['is_started'] = \array_key_exists('is_started', $data) ? $data['is_started'] : false;
         $id = $this->generateGameId();
 
         if (!array_search($data['owner'], $data['users'], true)) {
+            $user->current_game = $id;
+            $user->save();
             $data['users'] = array_merge($data['users'], [$data['owner']]);
         }
 
         Redis::set("game:$id", json_encode($data));
-        Redis::set("game:$id:state", self::GAME_WAITING);
+        Redis::set("game:$id:state", GameStates::WAITING_STATE);
         Redis::set("game:$id:votes", json_encode([]));
 
         $data['id'] = $id;
         $data['owner'] = [
-            'id' => $request->user()?->id,
-            'username' => $request->user()?->username,
-            'avatar' => $request->user()?->avatar,
+            'id' => $user->id,
+            'username' => $user->username,
+            'avatar' => $user->avatar,
         ];
 
         broadcast(new GameCreated(new Game($data)));
