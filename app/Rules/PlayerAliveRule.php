@@ -3,12 +3,14 @@
 namespace App\Rules;
 
 use App\Traits\MemberHelperTrait;
+use App\Traits\RegisterHelperTrait;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\Rule;
 
 class PlayerAliveRule implements Rule, DataAwareRule
 {
     use MemberHelperTrait;
+    use RegisterHelperTrait;
 
     /**
      * @var string[]
@@ -23,9 +25,9 @@ class PlayerAliveRule implements Rule, DataAwareRule
      */
     public function passes($attribute, $value): bool
     {
-        $gameId = 'gameId' === $attribute ? $value : $this->data['gameId'];
+        $gameId = \array_key_exists('gameId', $this->data) ? $this->data['gameId'] : $this->getCurrentUserGameActivity($value);
 
-        return $this->alive($value, $gameId);
+        return $this->alive($value, $gameId ?: '');
     }
 
     /**
