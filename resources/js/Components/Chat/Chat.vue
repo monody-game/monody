@@ -54,7 +54,7 @@ export default {
 			.listen(".chat.werewolf", (e) => {
 				this.service.sendMessage({ content: e.content, author: e.author }, "message", "message__werewolf");
 			})
-			.listen(".game.kill", (e) => {
+			.listen(".game.kill", async (e) => {
 				const killed = e.data.payload.killedUser;
 				const context = e.data.payload.context;
 
@@ -68,11 +68,18 @@ export default {
 				}
 
 				const user = this.gameStore.getPlayerByID(killed);
+				const role = await window.JSONFetch(`/game/user/${user.id}/role`, "GET");
 
 				if (context === "werewolf") {
-					this.service.sendMessage(`${user.username} a été tué cette nuit !`, "death");
+					this.service.sendMessage(
+						`${user.username} a été tué cette nuit, il était ${role.data.display_name} !`,
+						"death"
+					);
 				} else if (context === "vote") {
-					this.service.sendMessage(`Le village a décidé de tuer ${user.username}`, "death");
+					this.service.sendMessage(
+						`Le village a décidé de tuer ${user.username} qui était ${role.data.display_name}`,
+						"death"
+					);
 				}
 			});
 	},
