@@ -1,7 +1,9 @@
 services:
   web:
-    image: nginx:alpine
     restart: unless-stopped
+    image: nginx:alpine
+    build:
+      context: ./docker/nginx
     ports:
       - "443:443"
       - "80:80"
