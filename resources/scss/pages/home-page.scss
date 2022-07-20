@@ -1,3 +1,5 @@
+@use "../tools/functions" as *;
+
 .home-page {
   color: #fff;
   height: 100vh;
@@ -55,7 +57,7 @@
     display: inline-block;
     content: "";
     border-top: 4px solid #fff;
-    width: 225px;
+    width: 32vw;
     margin: 0 space(3);
     transform: translateY(-.75rem);
 		transition: border-top .4s;
