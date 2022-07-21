@@ -44,14 +44,3 @@ jobs:
           php artisan key:generate --ansi
       - name: ⚙ Run tests
         run: make tests
-  Snyk:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: snyk/actions/setup@master
-      - uses: shivammathur/setup-php@2.21.0
-      - uses: actions/setup-node@v3.4.1
-      - name: 🛡️ Snyk
-        run: snyk test --all-projects
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
