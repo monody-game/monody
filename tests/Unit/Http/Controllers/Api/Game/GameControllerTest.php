@@ -3,6 +3,7 @@
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Http\Controllers\Api\Game\GameController;
+use App\Http\Middleware\RestrictToDockerNetwork;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
@@ -204,6 +205,42 @@ class GameControllerTest extends TestCase
                 'game_id' => $game->json('game')['id']
             ])->assertStatus(Response::HTTP_OK);
     }
+
+	public function testSettingUserGameActivityWhenCreatingGame() {
+		$game = $this
+			->actingAs($this->user, 'api')
+			->post('/api/game/new', [
+				'users' => [],
+				'roles' => [1, 3]
+			]);
+
+		$this->user->refresh();
+
+		$this->assertSame($game->json('game')['id'], $this->user->current_game);
+	}
+
+	public function testSettingActivityWhenJoining() {
+		$secondUser = User::factory()->create();
+
+		$game = $this
+			->actingAs($this->user, 'api')
+			->post('/api/game/new', [
+				'users' => [],
+				'roles' => [1, 3]
+			]);
+
+		$gameId = $game->json('game')['id'];
+
+		$this
+			->withoutMiddleware(RestrictToDockerNetwork::class)
+			->actingAs($secondUser, 'api')
+			->post('/api/game/join', [
+				'gameId' => $gameId
+			])
+			->assertNoContent();
+
+		$this->assertSame($gameId, $secondUser->current_game);
+	}
 
 	protected function setUp(): void
 	{
