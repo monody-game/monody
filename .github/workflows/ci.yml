@@ -49,8 +49,8 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - uses: snyk/actions/setup@master
-      - uses: actions/setup-php@2.21
-      - uses: actions/setup-node@3.4.1
+      - uses: shivammathur/setup-php@2.21.0
+      - uses: actions/setup-node@v3.4.1
       - name: 🛡️ Snyk
         run: snyk test
         env:
