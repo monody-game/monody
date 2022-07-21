@@ -44,8 +44,3 @@ jobs:
           php artisan key:generate --ansi
       - name: ⚙ Run tests
         run: make tests
-  Snyk:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🛡️ Snyk
-        uses: snyk/actions@0.3.0

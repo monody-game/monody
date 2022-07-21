@@ -1,0 +1,19 @@
+name: 'Snyk security check'
+on: [ push ]
+jobs:
+  Snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: snyk/actions/setup@master
+      - uses: actions/setup-node@v3.4.1
+      - name: ✨ Infos
+        run: |
+          echo "💼 Running tests on ${GITHUB_REPOSITORY}"
+          echo "🐘 PHP version: $(php -v)"
+          echo "🪢 Node version: $(node -v)"
+      - name: 🛡️ Snyk
+        run: snyk test --all-projects
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
