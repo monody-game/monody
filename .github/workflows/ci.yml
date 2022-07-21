@@ -45,5 +45,7 @@ jobs:
       - name: ⚙ Run tests
         run: make tests
   Snyk:
-      name: 🛡️ Snyk
-      uses: snyk/actions@0.3.0
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛡️ Snyk
+        uses: snyk/actions@0.3.0
