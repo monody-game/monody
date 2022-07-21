@@ -14,5 +14,6 @@ jobs:
           echo "🪢 Node version: $(node -v)"
       - name: 🛡️ Snyk
         run: snyk test --all-projects
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
