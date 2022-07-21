@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckGameRequest;
 use App\Http\Requests\CreateGameRequest;
 use App\Http\Requests\DeleteGameRequest;
+use App\Http\Requests\JoinGameRequest;
 use App\Models\Game;
 use App\Models\User;
 use App\Traits\RegisterHelperTrait;
@@ -141,6 +142,16 @@ class GameController extends Controller
         Redis::del("game:{$gameId}:state");
         Redis::del("game:{$gameId}:members");
         Redis::del("game:{$gameId}:votes");
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    public function join(JoinGameRequest $request): JsonResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+        $user->current_game = $request->validated('gameId');
+        $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
