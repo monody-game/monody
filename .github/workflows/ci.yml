@@ -47,8 +47,11 @@ jobs:
   Snyk:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
+      - uses: snyk/actions/setup@master
+      - uses: actions/setup-php@2.21
+      - uses: actions/setup-node@3.4.1
       - name: 🛡️ Snyk
-        uses: snyk/actions@0.3.0
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
