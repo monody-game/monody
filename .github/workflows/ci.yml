@@ -52,6 +52,6 @@ jobs:
       - uses: actions/setup-php@2.21
       - uses: actions/setup-node@3.4.1
       - name: 🛡️ Snyk
-        continue-on-error: true
+        run: snyk test
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
