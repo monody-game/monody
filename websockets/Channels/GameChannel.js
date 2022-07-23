@@ -1,8 +1,9 @@
 const { client } = require("../Redis/Connection");
 const StartingState = require("../Rounds/States/StartingState");
 const WaitingState = require("../Rounds/States/WaitingState");
+const fetch = require("../Helpers/fetch");
 
-module.exports.PresenceChannel = class {
+module.exports.GameChannel = class {
 	constructor(io) {
 		this.io = io;
 		this.gameService = new (require("../Services/GameService"))(io);
@@ -39,11 +40,12 @@ module.exports.PresenceChannel = class {
 
 		const isMember = await this.isMember(channel, member);
 		const members = await this.getMembers(channel);
+		const gameId = channel.split(".")[1];
 
 		member.socketId = socket.id;
 		members.push(member);
 
-		await client.set(`game:${channel.split(".")[1]}:members`, JSON.stringify(members));
+		await client.set(`game:${gameId}:members`, JSON.stringify(members));
 
 		this.onSubscribed(socket, channel, members);
 
@@ -51,14 +53,22 @@ module.exports.PresenceChannel = class {
 			this.onJoin(socket, channel, member);
 		}
 
-		const id = channel.split(".")[1];
-		const count = await this.gameService.getRolesCount(id);
-		const game = JSON.parse(await client.get("game:" + id));
+		await fetch("https://web/api/game/join", {
+			method: "POST",
+			body: JSON.stringify({
+				gameId,
+				userId: member.user_id
+			})
+		});
+
+		const count = await this.gameService.getRolesCount(gameId);
+		const game = this.gameService.getGame(gameId);
 
 		if (
-			await this.gameService.isAuthor(socket, id) &&
-      !await this.gameService.getGame(id).is_started &&
-      !members.length > 0) {
+			await this.gameService.isAuthor(socket, gameId) &&
+      !await game.is_started &&
+      !members.length > 0
+		) {
 			this.stateManager.setState({
 				status: WaitingState.identifier,
 				startTimestamp: Date.now(),
@@ -77,12 +87,14 @@ module.exports.PresenceChannel = class {
 		let members = await this.getMembers(channel);
 		members = members || [];
 
+		console.log(game);
 		if (!game) return;
 
-		if (!game.is_started) return;
+		// if (!game.is_started) return;
 
 		const state = await this.stateManager.getState(gameId);
-		if (!state) return;
+		console.log(state);
+		if (state) return;
 
 		if (state.status === StartingState.identifier) {
 			await this.gameService.stopGameLaunch(channel);
@@ -90,9 +102,9 @@ module.exports.PresenceChannel = class {
 		}
 
 		const member = members.find(m => m.socketId === socket.id);
+		console.log(members);
 		if (!member) return;
 		members = members.filter(m => m.socketId !== member.socketId);
-
 		if (members.length === 0) {
 			this.onLeave(channel, member);
 			await this.onDelete(gameId);
