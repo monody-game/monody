@@ -1,4 +1,4 @@
-const { PresenceChannel } = require("./PresenceChannel");
+const { GameChannel } = require("./GameChannel");
 const { PrivateChannel } = require("./PrivateChannel");
 const { ResponderManager } = require("../Responders/ResponderManager");
 
@@ -9,7 +9,7 @@ module.exports.Channel = class {
 
 	constructor(io) {
 		this.private = new PrivateChannel();
-		this.presence = new PresenceChannel(io);
+		this.presence = new GameChannel(io);
 		this.responderManager = new ResponderManager();
 		this.io = io;
 	}
@@ -90,7 +90,7 @@ module.exports.Channel = class {
 		let isClientEvent = false;
 
 		this.clientEvents.forEach(clientEvent => {
-			const regex = new RegExp(clientEvent.replace("\*", ".*"));
+			const regex = new RegExp(clientEvent.replace("*", ".*"));
 			if (regex.test(event)) isClientEvent = true;
 		});
 
