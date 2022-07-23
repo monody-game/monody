@@ -2,6 +2,7 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__ . '/app')
+    ->in(__DIR__ . '/routes')
 ;
 
 $config = new PhpCsFixer\Config();

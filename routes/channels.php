@@ -20,9 +20,9 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
     }
 
     return [
-		'id' => $user->id,
-		'username' => $user->username,
-		'avatar' => $user->avatar,
-		'level' => $user->level,
-	];
+        'id' => $user->id,
+        'username' => $user->username,
+        'avatar' => $user->avatar,
+        'level' => $user->level,
+    ];
 });
