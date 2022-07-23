@@ -17,8 +17,11 @@ Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
 Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
 Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
 
-Route::post('/game/aftervote', 'Game\GameVoteController@afterVote')
-    ->middleware(RestrictToDockerNetwork::class);
+Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
+	Route::post('/game/join', 'Game\GameController@join');
+	Route::post('/game/leave', 'Game\GameController@leave');
+	Route::post('/game/aftervote', 'Game\GameVoteController@afterVote');
+});
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
@@ -37,11 +40,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/game/new', 'Game\GameController@new');
     Route::post('/game/delete', 'Game\GameController@delete');
     Route::post('/game/check', 'Game\GameController@check');
-
-    Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
-        Route::post('/game/join', 'Game\GameController@join');
-        Route::post('/game/leave', 'Game\GameController@leave');
-    });
 
     Route::get('/game/users', 'Game\GameUsersController@list');
     Route::get('/game/user/{id}/role', 'Game\GameUsersController@role');
