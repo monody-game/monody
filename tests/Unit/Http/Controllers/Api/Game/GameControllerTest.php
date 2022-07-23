@@ -233,11 +233,13 @@ class GameControllerTest extends TestCase
 
 		$this
 			->withoutMiddleware(RestrictToDockerNetwork::class)
-			->actingAs($secondUser, 'api')
 			->post('/api/game/join', [
+				'userId' => $secondUser->id,
 				'gameId' => $gameId
 			])
 			->assertNoContent();
+
+		$secondUser->refresh();
 
 		$this->assertSame($gameId, $secondUser->current_game);
 	}
