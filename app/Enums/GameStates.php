@@ -22,4 +22,14 @@ enum GameStates: int
             self::VOTE_STATE => 'vote',
         };
     }
+
+    public function duration(): int
+    {
+        return match ($this) {
+            self::WAITING_STATE => -1,
+            self::STARTING_STATE, self::NIGHT_STATE, self::DAY_STATE => 10,
+            self::WEREWOLF_STATE => 20,
+            self::VOTE_STATE => 40,
+        };
+    }
 }
