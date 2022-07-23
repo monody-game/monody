@@ -57,7 +57,8 @@
     display: inline-block;
     content: "";
     border-top: 4px solid #fff;
-    width: 32vw;
+    width: 30vw;
+		max-width: 200px;
     margin: 0 space(3);
     transform: translateY(-.75rem);
 		transition: border-top .4s;
