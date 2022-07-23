@@ -53,12 +53,14 @@ module.exports.GameChannel = class {
 			this.onJoin(socket, channel, member);
 		}
 
+		const params = new URLSearchParams();
+
+		params.set("userId", member.user_id);
+		params.set("gameId", gameId);
+
 		await fetch("https://web/api/game/join", {
 			method: "POST",
-			body: JSON.stringify({
-				gameId,
-				userId: member.user_id
-			})
+			body: params
 		});
 
 		const count = await this.gameService.getRolesCount(gameId);
@@ -87,14 +89,10 @@ module.exports.GameChannel = class {
 		let members = await this.getMembers(channel);
 		members = members || [];
 
-		console.log(game);
 		if (!game) return;
 
-		// if (!game.is_started) return;
-
 		const state = await this.stateManager.getState(gameId);
-		console.log(state);
-		if (state) return;
+		if (!state) return;
 
 		if (state.status === StartingState.identifier) {
 			await this.gameService.stopGameLaunch(channel);
@@ -102,9 +100,20 @@ module.exports.GameChannel = class {
 		}
 
 		const member = members.find(m => m.socketId === socket.id);
-		console.log(members);
 		if (!member) return;
 		members = members.filter(m => m.socketId !== member.socketId);
+
+		const params = new URLSearchParams();
+
+		params.set("userId", member.user_id);
+
+		const res = await fetch("https://web/api/game/leave", {
+			method: "POST",
+			body: params
+		});
+
+		console.log(res);
+
 		if (members.length === 0) {
 			this.onLeave(channel, member);
 			await this.onDelete(gameId);
@@ -140,7 +149,7 @@ module.exports.GameChannel = class {
 
 		this.io.to("home").emit("game.delete", "home", gameId);
 
-		console.info(`Deleting game, id: ${gameId}`);
+		console.info(`[${new Date().toISOString()}] - Deleting game, id: ${gameId}`);
 	}
 
 	onSubscribed(socket, channel, members) {
