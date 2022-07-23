@@ -14,6 +14,7 @@ class GameControllerTest extends TestCase
 {
     private GameController $controller;
     private User $user;
+    private User $secondUser;
     private array $game;
 
     public function testGeneratingGameId()
@@ -227,8 +228,6 @@ class GameControllerTest extends TestCase
 	}
 
 	public function testSettingActivityWhenJoining() {
-		$secondUser = User::factory()->create();
-
 		$game = $this
 			->actingAs($this->user, 'api')
 			->post('/api/game/new', [
@@ -241,14 +240,49 @@ class GameControllerTest extends TestCase
 		$this
 			->withoutMiddleware(RestrictToDockerNetwork::class)
 			->post('/api/game/join', [
-				'userId' => $secondUser->id,
+				'userId' => $this->secondUser->id,
 				'gameId' => $gameId
 			])
 			->assertNoContent();
 
-		$secondUser->refresh();
+		$this->secondUser->refresh();
 
-		$this->assertSame($gameId, $secondUser->current_game);
+		$this->assertSame($gameId, $this->secondUser->current_game);
+	}
+
+	public function testRemovingActivityWhenLeaving() {
+		$game = $this
+			->actingAs($this->user, 'api')
+			->post('/api/game/new', [
+				'users' => [],
+				'roles' => [1, 3]
+			]);
+
+		$gameId = $game->json('game')['id'];
+
+		$this
+			->withoutMiddleware(RestrictToDockerNetwork::class)
+			->post('/api/game/join', [
+				'userId' => $this->secondUser->id,
+				'gameId' => $gameId
+			])
+			->assertNoContent();
+
+		$this->secondUser->refresh();
+
+		$this->assertSame($gameId, $this->secondUser->current_game);
+
+		$this
+			->withoutMiddleware(RestrictToDockerNetwork::class)
+			->post('/api/game/leave', [
+				'userId' => $this->secondUser->id,
+				'gameId' => $gameId
+			])
+			->assertNoContent();
+
+		$this->secondUser->refresh();
+
+		$this->assertSame(null, $this->secondUser->current_game);
 	}
 
 	protected function setUp(): void
@@ -257,6 +291,7 @@ class GameControllerTest extends TestCase
 
 		$this->controller = new GameController();
 		$this->user = User::factory()->create();
+		$this->secondUser = User::factory()->create();
 		$this->game = [
 			'owner' => $this->user->id,
 			'users' => [$this->user->id],
