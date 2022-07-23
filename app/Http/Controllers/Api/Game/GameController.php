@@ -13,6 +13,7 @@ use App\Models\Game;
 use App\Models\User;
 use App\Traits\RegisterHelperTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 use function array_key_exists;
@@ -155,6 +156,20 @@ class GameController extends Controller
         /** @var User $user */
         $user = User::find($request->validated('userId'));
         $user->current_game = $request->validated('gameId');
+        $user->save();
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    public function leave(Request $request): JsonResponse
+    {
+        if (!$request->has('userId')) {
+            return new JsonResponse(['userId' => 'Field required'], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        /** @var User $user */
+        $user = User::find($request->post('userId'));
+        $user->current_game = null;
         $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
