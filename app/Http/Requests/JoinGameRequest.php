@@ -10,6 +10,7 @@ class JoinGameRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'userId' => ['uuid', 'exists:users,id'],
             'gameId' => ['string', 'required', new GameExistsRule()]
         ];
     }

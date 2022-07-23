@@ -149,7 +149,7 @@ class GameController extends Controller
     public function join(JoinGameRequest $request): JsonResponse
     {
         /** @var User $user */
-        $user = $request->user();
+        $user = User::find($request->validated('userId'));
         $user->current_game = $request->validated('gameId');
         $user->save();
 
