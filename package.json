@@ -16,7 +16,7 @@
     "dotenv": "latest",
     "laravel-echo": "^1.12.1",
     "node-fetch": "^2",
-    "pinia": "2.0.16",
+    "pinia": "2.0.17",
     "redis": "^4.2.0",
     "socket.io": "latest",
     "socket.io-client": "latest",
