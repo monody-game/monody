@@ -18,11 +18,11 @@ down:
 
 .PHONY: format
 format: install
-	vendor/bin/php-cs-fixer fix --dry-run
+	vendor/bin/pint --test
 
 .PHONY: fix
 fix: install
-	vendor/bin/php-cs-fixer fix
+	vendor/bin/pint
 
 .PHONY: migrate
 migrate: install
