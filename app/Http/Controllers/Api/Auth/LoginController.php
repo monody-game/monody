@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 class LoginController extends Controller
@@ -18,13 +19,18 @@ class LoginController extends Controller
     {
         $attempt = new ArrayObject($request->validated());
         unset($attempt['remember_me']);
+        $attempt = $attempt->getArrayCopy();
 
-        if (!Auth::attempt($attempt->getArrayCopy())) {
+        if (!Auth::attempt($attempt)) {
             return new JsonResponse(['message' => 'Invalid Credentials'], Response::HTTP_UNAUTHORIZED);
         }
 
         /** @var User $user */
         $user = Auth::user();
+
+        if (Hash::needsRehash($user->password)) {
+            $user->password = Hash::make($attempt['password']);
+        }
 
         if (Cookie::has('monody_access_token')) {
             Cookie::forget('monody_access_token');
