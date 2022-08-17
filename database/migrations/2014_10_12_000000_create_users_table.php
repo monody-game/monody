@@ -1,10 +1,8 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Storage;
 
 class CreateUsersTable extends Migration
 {
@@ -18,10 +16,10 @@ class CreateUsersTable extends Migration
             $table->string('avatar')->default('/storage/avatars/default.png');
             $table->string('password');
             $table->tinyInteger('level')->default(0);
-			$table->string('current_game')->nullable();
-			$table->string('discord_id')->nullable();
-			$table->string('discord_token')->nullable();
-			$table->string('discord_refresh_token')->nullable();
+            $table->string('current_game')->nullable();
+            $table->string('discord_id')->nullable();
+            $table->string('discord_token')->nullable();
+            $table->string('discord_refresh_token')->nullable();
             $table->timestamps();
         });
     }

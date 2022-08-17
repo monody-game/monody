@@ -10,7 +10,7 @@ class ExpTableSeed extends Seeder
 {
     public function run()
     {
-		$users = User::all();
+        $users = User::all();
 
         DB::table('exp')->insert([
             'user_id' => $users->first()->id,

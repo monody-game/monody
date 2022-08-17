@@ -19,7 +19,7 @@ class RolesTableSeeder extends Seeder
             'display_name' => 'Loup-garou',
             'image' => '/images/roles/werewolf.png',
             'weight' => 2,
-            'team_id' => 2
+            'team_id' => 2,
         ]);
 
         DB::table('roles')->insert([
@@ -27,7 +27,7 @@ class RolesTableSeeder extends Seeder
             'display_name' => 'Simple villageois',
             'image' => '/images/roles/simple-villager.png',
             'weight' => 1,
-            'team_id' => 1
+            'team_id' => 1,
         ]);
 
         DB::table('roles')->insert([
@@ -36,16 +36,16 @@ class RolesTableSeeder extends Seeder
             'image' => '/images/roles/psychic.png',
             'limit' => 1,
             'weight' => 3,
-            'team_id' => 1
+            'team_id' => 1,
         ]);
 
         DB::table('roles')->insert([
             'name' => 'witch',
             'display_name' => 'Sorcière',
-			'image' => '/images/roles/witch.png',
+            'image' => '/images/roles/witch.png',
             'limit' => 1,
             'weight' => 3,
-            'team_id' => 1
+            'team_id' => 1,
         ]);
     }
 }

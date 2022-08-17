@@ -13,6 +13,6 @@ class Team extends Model
 
     protected $fillable = [
         'name',
-        'display_name'
+        'display_name',
     ];
 }

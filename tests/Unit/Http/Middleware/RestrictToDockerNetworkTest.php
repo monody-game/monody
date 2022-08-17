@@ -11,22 +11,25 @@ use Tests\TestCase;
 
 class RestrictToDockerNetworkTest extends TestCase
 {
-	public function testGettingAccessWhileRequestingWebHost() {
-		$request = Mockery::mock(Request::class, ['getHost' => 'web']);
-		$middleware = new RestrictToDockerNetwork();
+    public function testGettingAccessWhileRequestingWebHost()
+    {
+        $request = Mockery::mock(Request::class, ['getHost' => 'web']);
+        $middleware = new RestrictToDockerNetwork();
 
-		$res = $middleware->handle($request, function () {
-			return true;
-		});
+        $res = $middleware->handle($request, function () {
+            return true;
+        });
 
-		$this->assertTrue($res);
-	}
+        $this->assertTrue($res);
+    }
 
-	public function testGettingRejectedWhileNotRequestingWebHost() {
-		$middleware = new RestrictToDockerNetwork();
-		$res = $middleware->handle(new Request(), function () {});
+    public function testGettingRejectedWhileNotRequestingWebHost()
+    {
+        $middleware = new RestrictToDockerNetwork();
+        $res = $middleware->handle(new Request(), function () {
+        });
 
-		$this->assertInstanceOf(JsonResponse::class, $res);
-		$this->assertSame(Response::HTTP_FORBIDDEN, $res->status());
-	}
+        $this->assertInstanceOf(JsonResponse::class, $res);
+        $this->assertSame(Response::HTTP_FORBIDDEN, $res->status());
+    }
 }

@@ -24,7 +24,7 @@ class CheckGameRequest extends FormRequest
     public function rules()
     {
         return [
-            'game_id' => 'required|string'
+            'game_id' => 'required|string',
         ];
     }
 }

@@ -16,17 +16,17 @@ class TeamTableSeed extends Seeder
     {
         DB::table('teams')->insert([
             'name' => 'villagers',
-            'display_name' => 'Villageois'
+            'display_name' => 'Villageois',
         ]);
-        
+
         DB::table('teams')->insert([
             'name' => 'werewolfs',
-            'display_name' => 'Loups-garous'
+            'display_name' => 'Loups-garous',
         ]);
-        
+
         DB::table('teams')->insert([
             'name' => 'solos',
-            'display_name' => 'Solos'
+            'display_name' => 'Solos',
         ]);
     }
 }

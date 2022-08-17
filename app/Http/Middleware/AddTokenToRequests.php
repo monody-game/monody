@@ -20,7 +20,7 @@ class AddTokenToRequests
                 $token = $request->cookie('monody_access_token');
 
                 $request->headers->add([
-                    'Authorization' => 'Bearer ' . $token
+                    'Authorization' => 'Bearer ' . $token,
                 ]);
             }
         }

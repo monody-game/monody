@@ -16,7 +16,7 @@ class RoleControllerTest extends TestCase
         $response = $this->actingAs($this->user, 'api')->getJson('/api/roles');
         $parsed = json_decode($response->getContent(), true)['roles'];
 
-        $this->assertTrue(sizeof($parsed) > 1);
+        $this->assertTrue(count($parsed) > 1);
     }
 
     public function testGetOneRole(): void

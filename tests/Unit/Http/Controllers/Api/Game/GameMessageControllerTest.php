@@ -14,37 +14,37 @@ class GameMessageControllerTest extends TestCase
         Event::fake();
         $this->actingAs($this->user, 'api')->post('/api/game/message/send', [
             'content' => 'A beautiful message',
-            'gameId' => $this->game['id']
+            'gameId' => $this->game['id'],
         ]);
         Event::assertDispatched(MessageSended::class);
     }
 
-	public function testMessageAuthorIsRestrictedInformations()
-	{
-		$user = $this->user;
-		Event::fake();
-		$this->actingAs($user, 'api')->post('/api/game/message/send', [
-			'content' => 'A beautiful message',
-			'gameId' => $this->game['id']
-		]);
-		Event::assertDispatched(function (MessageSended $event) use ($user) {
-			$author = ((array)$event)['message']['author'];
+    public function testMessageAuthorIsRestrictedInformations()
+    {
+        $user = $this->user;
+        Event::fake();
+        $this->actingAs($user, 'api')->post('/api/game/message/send', [
+            'content' => 'A beautiful message',
+            'gameId' => $this->game['id'],
+        ]);
+        Event::assertDispatched(function (MessageSended $event) use ($user) {
+            $author = ((array) $event)['message']['author'];
 
-			return $author === [
-				'id' => $user->id,
-				'username' => $user->username,
-				'avatar' => $user->avatar,
-			];
-		});
-	}
+            return $author === [
+                'id' => $user->id,
+                'username' => $user->username,
+                'avatar' => $user->avatar,
+            ];
+        });
+    }
 
     public function testSendingMessageToUnexistingGame()
     {
         Event::fake();
         $this->actingAs($this->user, 'api')->post('/api/game/message/send', [
             'content' => 'A beautiful message',
-            'gameId' => 'aeazrazerazerazeraze'
-        ])->assertJsonValidationErrorFor("gameId");
+            'gameId' => 'aeazrazerazerazeraze',
+        ])->assertJsonValidationErrorFor('gameId');
         Event::assertNotDispatched(MessageSended::class);
     }
 
@@ -53,8 +53,8 @@ class GameMessageControllerTest extends TestCase
         Event::fake();
         $this->actingAs($this->secondUser, 'api')->post('/api/game/message/send', [
             'content' => 'A beautiful message',
-            'gameId' => $this->game['id']
-        ])->assertJsonValidationErrorFor("gameId");
+            'gameId' => $this->game['id'],
+        ])->assertJsonValidationErrorFor('gameId');
         Event::assertNotDispatched(MessageSended::class);
     }
 
@@ -66,7 +66,7 @@ class GameMessageControllerTest extends TestCase
 
         $this->game = $this->actingAs($this->user, 'api')->post('/api/game/new', [
             'roles' => [1, 2],
-            'users' => []
+            'users' => [],
         ])['game'];
     }
 }

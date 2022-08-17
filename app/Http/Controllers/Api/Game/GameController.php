@@ -109,7 +109,7 @@ class GameController extends Controller
         Redis::set("game:$id", json_encode($data));
         Redis::set("game:$id:state", json_encode([
             'state' => GameStates::WAITING_STATE->value,
-            'duration' => GameStates::WAITING_STATE->duration()
+            'duration' => GameStates::WAITING_STATE->duration(),
         ]));
         Redis::set("game:$id:votes", json_encode([]));
 

@@ -30,7 +30,7 @@ class PlayerNotAliveRule implements Rule, DataAwareRule
     }
 
     /**
-     * @param string[] $data
+     * @param  string[]  $data
      */
     public function setData($data): self
     {

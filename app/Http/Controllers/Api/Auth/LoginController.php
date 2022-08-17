@@ -49,7 +49,7 @@ class LoginController extends Controller
         Cookie::queue(Cookie::forget('monody_access_token'));
 
         return new JsonResponse([
-            'message' => 'You have been successfully logged out!'
+            'message' => 'You have been successfully logged out!',
         ]);
     }
 }

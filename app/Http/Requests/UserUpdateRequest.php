@@ -25,7 +25,7 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'username' => 'string|nullable',
-            'email' => 'email|nullable'
+            'email' => 'email|nullable',
         ];
     }
 }

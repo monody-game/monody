@@ -15,6 +15,6 @@ class Role extends Model
         'name',
         'display_name',
         'image',
-        'limit'
+        'limit',
     ];
 }

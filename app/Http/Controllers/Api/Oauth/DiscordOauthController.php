@@ -28,7 +28,7 @@ final class DiscordOauthController extends Controller
         if (!$request->has('code')) {
             return new JsonResponse([
                 'message' => 'An error happened',
-                'data' => $request->all()
+                'data' => $request->all(),
             ]);
         }
 
@@ -44,7 +44,7 @@ final class DiscordOauthController extends Controller
 
         try {
             Http::post('bot/linked', [
-                'discord_user_id' => $discordUser->getId()
+                'discord_user_id' => $discordUser->getId(),
             ]);
         } catch (Exception $e) {
             Log::error($e->getMessage());

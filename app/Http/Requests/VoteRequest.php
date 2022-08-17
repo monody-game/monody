@@ -23,7 +23,7 @@ class VoteRequest extends FormRequest
     {
         return [
             'gameId' => ['string', 'required', new GameExistsRule(), new InGameRule(null)],
-            'userId' => ['exists:users,id', 'required', new InGameRule(), new PlayerAliveRule()]
+            'userId' => ['exists:users,id', 'required', new InGameRule(), new PlayerAliveRule()],
         ];
     }
 }
