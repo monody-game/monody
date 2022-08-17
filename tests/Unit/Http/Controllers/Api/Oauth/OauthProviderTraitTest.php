@@ -8,13 +8,14 @@ use Tests\TestCase;
 
 class OauthProviderTraitTest extends TestCase
 {
-	use OauthProviderTrait;
+    use OauthProviderTrait;
 
-	public function testGeneratingDiscordProvider() {
-		$scopes = ['identify', 'email'];
-		$provider = $this->generateProvider('discord', $scopes);
+    public function testGeneratingDiscordProvider()
+    {
+        $scopes = ['identify', 'email'];
+        $provider = $this->generateProvider('discord', $scopes);
 
-		$this->assertInstanceOf(Provider::class, $provider);
-		$this->assertSame($scopes, $provider->getScopes());
-	}
+        $this->assertInstanceOf(Provider::class, $provider);
+        $this->assertSame($scopes, $provider->getScopes());
+    }
 }

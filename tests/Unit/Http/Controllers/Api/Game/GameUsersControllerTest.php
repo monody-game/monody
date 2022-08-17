@@ -21,8 +21,8 @@ class GameUsersControllerTest extends TestCase
             ->call('GET', '/api/game/users', ['gameId' => $this->game['id']])
             ->assertJson([
                 'users' => [
-                    $this->user['id']
-                ]
+                    $this->user['id'],
+                ],
             ]);
     }
 
@@ -33,21 +33,21 @@ class GameUsersControllerTest extends TestCase
             ->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-	public function testGettingUserRole()
-	{
-		$this->secondUser->current_game = "id";
+    public function testGettingUserRole()
+    {
+        $this->secondUser->current_game = 'id';
 
-		Redis::set("game:id", json_encode([
-			"assigned_roles" => [$this->secondUser->id => 1]
-		]));
+        Redis::set('game:id', json_encode([
+            'assigned_roles' => [$this->secondUser->id => 1],
+        ]));
 
-		$response = $this->actingAs($this->secondUser, 'api')
-			->call('GET', "/api/game/user/{$this->secondUser->id}/role", ['gameId' => 'id'])
-			->assertOk()
-			->json();
+        $response = $this->actingAs($this->secondUser, 'api')
+            ->call('GET', "/api/game/user/{$this->secondUser->id}/role", ['gameId' => 'id'])
+            ->assertOk()
+            ->json();
 
-		$this->assertSame(Role::find(1)->getOriginal(), $response);
-	}
+        $this->assertSame(Role::find(1)->getOriginal(), $response);
+    }
 
     protected function setUp(): void
     {
@@ -56,7 +56,7 @@ class GameUsersControllerTest extends TestCase
 
         $this->game = $this->actingAs($this->user, 'api')->post('/api/game/new', [
             'roles' => [1, 2],
-            'users' => []
+            'users' => [],
         ])['game'];
     }
 }

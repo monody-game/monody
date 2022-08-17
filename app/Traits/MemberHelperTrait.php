@@ -20,9 +20,9 @@ trait MemberHelperTrait
     }
 
     /**
-     * @throws Exception more than one user was found for the given id
-     *
      * @return array|false returns the user or false if it is not found
+     *
+     * @throws Exception more than one user was found for the given id
      */
     public function getMember(string $userId, string $gameId): array|false
     {

@@ -10,6 +10,7 @@ class Exp extends Model
     use HasFactory;
 
     protected $table = 'exp';
+
     public $timestamps = false;
 
     protected $fillable = [

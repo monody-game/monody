@@ -5,6 +5,7 @@ namespace App\Models;
 class Entity
 {
     protected array $keys = [];
+
     private array $data;
 
     public function __construct(array $data)

@@ -15,8 +15,8 @@ class ExpFactory extends Factory
     public function definition()
     {
         return [
-			'exp' => random_int(10, 1000),
-			'user_id' => User::all()->random()->id
+            'exp' => random_int(10, 1000),
+            'user_id' => User::all()->random()->id,
         ];
     }
 }

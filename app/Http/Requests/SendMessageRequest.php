@@ -20,7 +20,7 @@ class SendMessageRequest extends FormRequest
     {
         return [
             'gameId' => ['string', 'required', new GameExistsRule(), new InGameRule(null)],
-            'content' => 'required|string'
+            'content' => 'required|string',
         ];
     }
 }

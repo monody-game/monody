@@ -11,7 +11,7 @@ class JoinGameRequest extends FormRequest
     {
         return [
             'userId' => ['uuid', 'exists:users,id'],
-            'gameId' => ['string', 'required', new GameExistsRule()]
+            'gameId' => ['string', 'required', new GameExistsRule()],
         ];
     }
 }

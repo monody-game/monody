@@ -38,7 +38,7 @@ class VoteService
         GameVote::dispatch([
             'votedUser' => $userId,
             'gameId' => $gameId,
-            'votedBy' => $authUserId
+            'votedBy' => $authUserId,
         ]);
 
         $votes[$userId][] = $authUserId;
@@ -68,7 +68,7 @@ class VoteService
         GameUnvote::dispatch([
             'votedUser' => $userId,
             'gameId' => $gameId,
-            'votedBy' => $authUserId
+            'votedBy' => $authUserId,
         ]);
 
         Redis::set("game:$gameId:votes", json_encode($votes));
@@ -77,8 +77,7 @@ class VoteService
     }
 
     /**
-     * @param string $context How the player was killed (vote, ...)
-     *
+     * @param  string  $context How the player was killed (vote, ...)
      * @return string|false vote cancelled or not any player to vote
      */
     public function afterVote(string $gameId, string $context): string|false
@@ -89,7 +88,7 @@ class VoteService
             GameKill::dispatch([
                 'killedUser' => null,
                 'gameId' => $gameId,
-                'context' => $context
+                'context' => $context,
             ]);
 
             return false;
@@ -100,13 +99,14 @@ class VoteService
         foreach ($votes as $voted => $by) {
             if (\count($by) > \count($votes[$majority])) {
                 $majority = $voted;
+
                 continue;
             }
 
             if (\count($by) === \count($votes[$majority])) {
                 $toRandomPick = [
                     $majority,
-                    $voted
+                    $voted,
                 ];
 
                 $majority = $toRandomPick[random_int(0, 1)];
@@ -117,7 +117,7 @@ class VoteService
             GameKill::dispatch([
                 'killedUser' => null,
                 'gameId' => $gameId,
-                'context' => $context
+                'context' => $context,
             ]);
 
             return false;
@@ -128,7 +128,7 @@ class VoteService
         GameKill::dispatch([
             'killedUser' => $majority,
             'gameId' => $gameId,
-            'context' => $context
+            'context' => $context,
         ]);
 
         $this->clearVotes($gameId);
@@ -185,7 +185,7 @@ class VoteService
     }
 
     /**
-     * @param array<string, array<string>> $votes
+     * @param  array<string, array<string>>  $votes
      */
     private function isVotingUser(string $userId, array $votes, string $votingUser): bool
     {

@@ -9,51 +9,53 @@ use Tests\TestCase;
 
 class DiscordOauthControllerTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
 
-	private User $user;
-	private string $fakeId = "1298109238";
+    private User $user;
 
-	public function testUnlinkingDiscordAccount()
-	{
-		$this->assertSame($this->fakeId, $this->user['discord_id']);
+    private string $fakeId = '1298109238';
 
-		$this
-			->actingAs($this->user, 'api')
-			->post('/api/oauth/unlink/discord')
-			->assertStatus(Response::HTTP_NO_CONTENT);
+    public function testUnlinkingDiscordAccount()
+    {
+        $this->assertSame($this->fakeId, $this->user['discord_id']);
 
-		$user = $this->user->refresh();
+        $this
+            ->actingAs($this->user, 'api')
+            ->post('/api/oauth/unlink/discord')
+            ->assertStatus(Response::HTTP_NO_CONTENT);
 
-		$this->assertNull($user['discord_id']);
-		$this->assertNull($user['discord_token']);
-		$this->assertNull($user['discord_refresh_token']);
-	}
+        $user = $this->user->refresh();
 
-	public function testUnlinkingAccountWithoutBeingLinked()
-	{
-		$user = $this->user;
-		$user['discord_id'] = null;
+        $this->assertNull($user['discord_id']);
+        $this->assertNull($user['discord_token']);
+        $this->assertNull($user['discord_refresh_token']);
+    }
 
-		$this
-			->actingAs($user, 'api')
-			->post('/api/oauth/unlink/discord')
-			->assertStatus(Response::HTTP_FORBIDDEN);
-	}
+    public function testUnlinkingAccountWithoutBeingLinked()
+    {
+        $user = $this->user;
+        $user['discord_id'] = null;
 
-	public function testCreatingLink() {
-		$this
-			->actingAs($this->user, 'api')
-			->get('/api/oauth/link/discord')
-			->assertRedirect();
-	}
+        $this
+            ->actingAs($user, 'api')
+            ->post('/api/oauth/unlink/discord')
+            ->assertStatus(Response::HTTP_FORBIDDEN);
+    }
 
-	protected function setUp(): void
-	{
-		parent::setUp();
+    public function testCreatingLink()
+    {
+        $this
+            ->actingAs($this->user, 'api')
+            ->get('/api/oauth/link/discord')
+            ->assertRedirect();
+    }
 
-		$this->user = User::factory()->makeOne([
-			'discord_id' => $this->fakeId
- 		]);
-	}
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = User::factory()->makeOne([
+            'discord_id' => $this->fakeId,
+        ]);
+    }
 }

@@ -20,8 +20,8 @@ class PlayerAliveRule implements Rule, DataAwareRule
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value     User id
+     * @param  string  $attribute
+     * @param  mixed  $value     User id
      */
     public function passes($attribute, $value): bool
     {
@@ -39,7 +39,7 @@ class PlayerAliveRule implements Rule, DataAwareRule
     }
 
     /**
-     * @param string[] $data
+     * @param  string[]  $data
      */
     public function setData($data): self
     {

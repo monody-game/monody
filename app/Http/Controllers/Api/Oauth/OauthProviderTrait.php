@@ -8,7 +8,7 @@ use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 trait OauthProviderTrait
 {
     /**
-     * @param string[] $scopes
+     * @param  string[]  $scopes
      */
     public function generateProvider(string $provider, array $scopes): AbstractProvider
     {

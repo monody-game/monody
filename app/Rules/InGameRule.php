@@ -15,7 +15,7 @@ class InGameRule implements Rule, DataAwareRule
     private array $data;
 
     /**
-     * @param ?string $userIdField The validation field that contains the userId, if null, it's the current field
+     * @param  ?string  $userIdField The validation field that contains the userId, if null, it's the current field
      */
     public function __construct(private readonly ?string $userIdField = 'userId')
     {
@@ -24,8 +24,8 @@ class InGameRule implements Rule, DataAwareRule
     /**
      * Determine if the validation rule passes.
      *
-     * @param string $attribute
-     * @param mixed  $value
+     * @param  string  $attribute
+     * @param  mixed  $value
      */
     public function passes($attribute, $value): bool
     {
@@ -55,7 +55,7 @@ class InGameRule implements Rule, DataAwareRule
     }
 
     /**
-     * @param string[] $data
+     * @param  string[]  $data
      */
     public function setData($data): self
     {

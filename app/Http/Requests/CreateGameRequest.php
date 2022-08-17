@@ -26,7 +26,7 @@ class CreateGameRequest extends FormRequest
         return [
             'users' => 'array',
             'roles' => 'array|required',
-            'is_started' => 'bool'
+            'is_started' => 'bool',
         ];
     }
 }

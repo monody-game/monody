@@ -9,34 +9,36 @@ use Tests\TestCase;
 
 class AvatarGeneratorTest extends TestCase
 {
-	private User $user;
+    private User $user;
 
-	public function testGeneratingAvatar() {
-		Storage::fake();
-		Storage::putFileAs('avatars', base_path('tests/Helpers/avatars/1.png'), "{$this->user->id}.png");
-		Storage::putFileAs('levels', base_path('tests/Helpers/levels/100.png'), "100.png");
+    public function testGeneratingAvatar()
+    {
+        Storage::fake();
+        Storage::putFileAs('avatars', base_path('tests/Helpers/avatars/1.png'), "{$this->user->id}.png");
+        Storage::putFileAs('levels', base_path('tests/Helpers/levels/100.png'), '100.png');
 
-		$image = $this->generator->generate($this->user);
+        $image = $this->generator->generate($this->user);
 
-		$this->assertSame('image/png', $image->mime());
-		$this->assertSame(600, $image->height());
-		$this->assertSame(600, $image->width());
-	}
+        $this->assertSame('image/png', $image->mime());
+        $this->assertSame(600, $image->height());
+        $this->assertSame(600, $image->width());
+    }
 
-	public function testGettingAvatarOverlay() {
-		$this->assertSame(0, $this->generator->getOverlay(0));
-		$this->assertSame(10, $this->generator->getOverlay(10));
-		$this->assertSame(50, $this->generator->getOverlay(52));
-	}
+    public function testGettingAvatarOverlay()
+    {
+        $this->assertSame(0, $this->generator->getOverlay(0));
+        $this->assertSame(10, $this->generator->getOverlay(10));
+        $this->assertSame(50, $this->generator->getOverlay(52));
+    }
 
     protected function setUp(): void
     {
-		parent::setUp();
+        parent::setUp();
 
         $this->user = User::factory()->makeOne([
-			'level' => 100
-		]);
+            'level' => 100,
+        ]);
 
-		$this->generator = new AvatarGenerator();
+        $this->generator = new AvatarGenerator();
     }
 }
