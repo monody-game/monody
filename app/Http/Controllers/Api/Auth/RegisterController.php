@@ -14,7 +14,7 @@ class RegisterController extends Controller
     {
         $data = $request->validated();
 
-        $data['password'] = bcrypt($request->password);
+        $data['password'] = Hash::make($request->password);
 
         $user = User::create($data);
 
