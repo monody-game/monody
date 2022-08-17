@@ -920,10 +920,10 @@ json5@^2.1.2:
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.1.tgz#655d50ed1e6f95ad1a3caababd2b0efda10b395c"
   integrity sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==
 
-laravel-echo@^1.12.1:
-  version "1.12.1"
-  resolved "https://registry.yarnpkg.com/laravel-echo/-/laravel-echo-1.12.1.tgz#d5888d923c79b719ae3598f7e5af4b0e5072236d"
-  integrity sha512-zLI5z1Q+ipqsT4XInFMmHXHmk2Mh5KBH6+l8GAZg+tWc3IKSiOHni7XA8ndJAQCNqrDupnDX+TAk5P0XjwLjGA==
+laravel-echo@^1.13.0:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/laravel-echo/-/laravel-echo-1.13.1.tgz#fe7d0c997a38a6fb6eb36f147a57b23b4090cdd9"
+  integrity sha512-tvJtbE0ppEwlO/rcFyN1JCLunDUG5pIVFWORSCkzkGEcJQzB+Eevs9PpIvsMtkz2JTNbUPHU+5GSkSh1/TIr4A==
 
 levn@^0.4.1:
   version "0.4.1"
