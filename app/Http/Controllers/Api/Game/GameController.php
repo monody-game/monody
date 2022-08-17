@@ -16,7 +16,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
-use function array_key_exists;
 
 class GameController extends Controller
 {
@@ -94,11 +93,11 @@ class GameController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $data['users'] = array_key_exists('users', $data) ? $data['users'] : [];
+        $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
         $data['owner'] = $user->id;
-        $data['is_started'] = array_key_exists('is_started', $data) ? $data['is_started'] : false;
+        $data['is_started'] = \array_key_exists('is_started', $data) ? $data['is_started'] : false;
         $id = $this->generateGameId();
 
         if (!array_search($data['owner'], $data['users'], true)) {
