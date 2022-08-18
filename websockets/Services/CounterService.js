@@ -1,12 +1,12 @@
-const StateManager = require("./StateManager");
+const StateManager = import("./StateManager.js");
 
-module.exports = class CounterService {
+export default class CounterService {
 	constructor(io) {
 		this.io = io;
 	}
 
 	async cycle(channel) {
-		const manager = new StateManager(this.io);
+		const manager = new StateManager.default(this.io);
 
 		this.counterId = setTimeout(async () => {
 			await this.cycle(channel);
@@ -19,4 +19,4 @@ module.exports = class CounterService {
 			console.error(e);
 		}
 	}
-};
+}

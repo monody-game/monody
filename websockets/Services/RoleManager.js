@@ -1,4 +1,4 @@
-module.exports = class RoleManager {
+export default class RoleManager {
 	static assign(roles, members) {
 		const assigned = {};
 
@@ -23,4 +23,4 @@ module.exports = class RoleManager {
 		}
 		return member;
 	}
-};
+}

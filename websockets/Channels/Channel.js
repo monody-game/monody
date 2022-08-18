@@ -1,8 +1,8 @@
-const { GameChannel } = require("./GameChannel");
-const { PrivateChannel } = require("./PrivateChannel");
-const { ResponderManager } = require("../Responders/ResponderManager");
+import { GameChannel } from "./GameChannel.js";
+import { PrivateChannel } from "./PrivateChannel.js";
+import { ResponderManager } from "../Responders/ResponderManager.js";
 
-module.exports.Channel = class {
+export class Channel {
 	privateChannels = ["private-*", "presence-*"];
 
 	clientEvents = ["client-*"];
@@ -100,4 +100,4 @@ module.exports.Channel = class {
 	isInChannel(socket, channel) {
 		return socket.rooms.has(channel);
 	}
-};
+}

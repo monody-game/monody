@@ -1,5 +1,5 @@
-const fetch = require("node-fetch");
-const https = require("node:https");
+import fetch from "node-fetch";
+import https from "node:https";
 
 const agent = new https.Agent({
 	rejectUnauthorized: false,
@@ -13,7 +13,7 @@ const agent = new https.Agent({
  * @param socket
  * @returns {Promise<Object>}
  */
-module.exports = async function(url, opts, socket = null) {
+export default async function(url, opts, socket = null) {
 	opts = {
 		...opts,
 		headers: {
@@ -46,4 +46,4 @@ module.exports = async function(url, opts, socket = null) {
 		text: body,
 		status: response.status
 	};
-};
+}

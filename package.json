@@ -1,36 +1,37 @@
 {
-  "name": "monody",
-  "private": true,
-  "description": "The website of monody !",
-  "author": {
-    "name": "moon250",
-    "email": "contact.moon250@gmail.com"
-  },
-  "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
-    "serve": "nodemon -L --watch /var/www/websockets /var/www/websockets/index.js"
-  },
-  "dependencies": {
-    "@grafikart/spinning-dots-element": "latest",
-    "dotenv": "latest",
-    "laravel-echo": "^1.12.1",
-    "node-fetch": "^2",
-    "pinia": "2.0.16",
-    "redis": "^4.2.0",
-    "socket.io": "latest",
-    "socket.io-client": "latest",
-    "vue": "latest",
-    "vue-router": "^4.1.2"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "3.0.0",
-    "eslint": "^8.19.0",
-    "eslint-plugin-vue": "^9.2.0",
-    "resolve-url-loader": "latest",
-    "sass": "^1.53.0",
-    "vite": "^3.0.0",
-    "vue-template-compiler": "^2.7.5"
-  },
-  "version": "1.0.0"
+	"name": "monody",
+	"private": true,
+	"description": "The website of monody !",
+	"author": {
+		"name": "moon250",
+		"email": "contact.moon250@gmail.com"
+	},
+	"type": "module",
+	"scripts": {
+		"dev": "vite --host",
+		"build": "vite build",
+		"serve": "nodemon -L --watch /var/www/websockets /var/www/websockets/index.js"
+	},
+	"dependencies": {
+		"@grafikart/spinning-dots-element": "latest",
+		"dotenv": "latest",
+		"laravel-echo": "^1.12.1",
+		"node-fetch": "^3.2.10",
+		"pinia": "2.0.18",
+		"redis": "^4.2.0",
+		"socket.io": "latest",
+		"socket.io-client": "latest",
+		"vue": "latest",
+		"vue-router": "^4.1.2"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-vue": "3.0.3",
+		"eslint": "^8.19.0",
+		"eslint-plugin-vue": "^9.2.0",
+		"resolve-url-loader": "latest",
+		"sass": "^1.53.0",
+		"vite": "^3.0.0",
+		"vue-template-compiler": "^2.7.5"
+	},
+	"version": "1.0.0"
 }

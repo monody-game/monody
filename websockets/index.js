@@ -1,4 +1,5 @@
-const { IoServer } = require("./IoServer");
-require("dotenv").config();
+import "dotenv/config";
+
+import { IoServer } from "./IoServer.js";
 
 new IoServer().start();

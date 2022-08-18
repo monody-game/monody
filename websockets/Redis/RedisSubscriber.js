@@ -1,6 +1,6 @@
-const { client } = require("./Connection");
+import { client } from "./Connection.js";
 
-module.exports.RedisSubscriber = class {
+export class RedisSubscriber {
 	constructor() {
 		this.sub = client.duplicate();
 
@@ -21,4 +21,4 @@ module.exports.RedisSubscriber = class {
 		await this.sub.pUnsubscribe("*");
 		await this.sub.disconnect();
 	}
-};
+}

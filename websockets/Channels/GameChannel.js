@@ -1,14 +1,17 @@
-const { client } = require("../Redis/Connection");
-const StartingState = require("../Rounds/States/StartingState");
-const WaitingState = require("../Rounds/States/WaitingState");
-const fetch = require("../Helpers/fetch");
+import { StateManager } from "../Services/StateManager.js";
+import { client } from "../Redis/Connection.js";
+import StartingState from "../Rounds/States/StartingState.js";
+import WaitingState from "../Rounds/States/WaitingState.js";
+import GameService from "../Services/GameService.js";
+import CounterService from "../Services/CounterService.js";
+import fetch from "../Helpers/fetch.js";
 
-module.exports.GameChannel = class {
+export class GameChannel {
 	constructor(io) {
 		this.io = io;
-		this.gameService = new (require("../Services/GameService"))(io);
-		this.stateManager = new (require("../Services/StateManager"))(io);
-		this.counterService = new (require("../Services/CounterService"))(io);
+		this.gameService = new GameService(io);
+		this.stateManager = new StateManager(io);
+		this.counterService = new CounterService(io);
 	}
 
 	async getMembers(channel) {
@@ -107,12 +110,10 @@ module.exports.GameChannel = class {
 
 		params.set("userId", member.user_id);
 
-		const res = await fetch("https://web/api/game/leave", {
+		await fetch("https://web/api/game/leave", {
 			method: "POST",
 			body: params
 		});
-
-		console.log(res);
 
 		if (members.length === 0) {
 			this.onLeave(channel, member);
@@ -155,4 +156,4 @@ module.exports.GameChannel = class {
 	onSubscribed(socket, channel, members) {
 		this.io.to(socket.id).emit("presence:subscribed", channel, members);
 	}
-};
+}

@@ -1,7 +1,7 @@
-const BaseResponder = require("./BaseResponder");
-const { client } = require("../Redis/Connection");
+import { BaseResponder } from "./BaseResponder.js";
+import { client } from "../Redis/Connection.js";
 
-module.exports = class ChatResponder extends BaseResponder {
+export default class ChatResponder extends BaseResponder {
 	constructor() {
 		super();
 		this.respondTo = [
@@ -33,4 +33,4 @@ module.exports = class ChatResponder extends BaseResponder {
 		if (!members) return [];
 		return members;
 	}
-};
+}
