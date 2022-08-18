@@ -1,13 +1,16 @@
-const rounds = [];
-const fs = require("node:fs");
-const path = require("node:path");
-const directory = path.join(__dirname, "../Rounds");
-const files = fs.readdirSync(directory).filter(file => file.endsWith("Round.js"));
+import { readdirSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
-files.forEach(file => {
-	file = require(directory + "/" + file);
-	const position = file.splice(0, 1)[0];
-	rounds[position] = file;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const rounds = [];
+const directory = join(__dirname, "../Rounds");
+const files = readdirSync(directory).filter(file => file.endsWith("Round.js"));
+
+files.forEach(async file => {
+	file = await import(directory + "/" + file);
+	const position = file.default.splice(0, 1)[0];
+	rounds[position] = file.default;
 });
 
-module.exports = rounds;
+export default rounds;

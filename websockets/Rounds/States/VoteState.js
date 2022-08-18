@@ -1,6 +1,6 @@
-const fetch = require("../../Helpers/fetch");
+import fetch from "../../Helpers/fetch.js";
 
-module.exports = {
+export default {
 	name: "vote",
 	duration: 40,
 	identifier: 5,

@@ -1,11 +1,11 @@
-const { Server } = require("socket.io");
-const { RedisSubscriber } = require("./Redis/RedisSubscriber");
-const { ResponderManager } = require("./Responders/ResponderManager");
-const { createSecureServer } = require("node:http2");
-const { Channel } = require("./Channels/Channel");
-const { readFileSync } = require("node:fs");
+import { Server } from "socket.io";
+import { RedisSubscriber } from "./Redis/RedisSubscriber.js";
+import { ResponderManager } from "./Responders/ResponderManager.js";
+import { Channel } from "./Channels/Channel.js";
+import { createSecureServer } from "node:http2";
+import { readFileSync } from "node:fs";
 
-module.exports.IoServer = class {
+export class IoServer {
 	responders = [];
 
 	constructor() {
@@ -30,7 +30,7 @@ module.exports.IoServer = class {
 			console.info("\nIoServer is running in debug mode.\n");
 		}
 
-		this.initResponders();
+		await this.initResponders();
 		this.onConnect();
 		await this.listen();
 		this.httpServer.listen(6001);
@@ -98,9 +98,12 @@ module.exports.IoServer = class {
 		});
 	}
 
-	initResponders() {
-		ResponderManager.getAll().forEach(responder => {
-			this.responders.push(new responder(this.server));
-		});
+	async initResponders() {
+		const responders = ResponderManager.getAll();
+		await Promise.all(responders);
+		for (let responder of responders) {
+			responder = await responder;
+			this.responders.push(new responder.default(this.server));
+		}
 	}
-};
+}

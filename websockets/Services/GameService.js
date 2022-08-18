@@ -1,15 +1,15 @@
-const { client } = require("../Redis/Connection");
-const RoleManager = require("./RoleManager");
-const StateManager = require("./StateManager");
-const CounterService = require("./CounterService");
-const UserService = require("./UserService");
-const StartingState = require("../Rounds/States/StartingState");
-const WaitingState = require("../Rounds/States/WaitingState");
-const ChatService = require("./ChatService");
-const fetch = require("../Helpers/fetch");
+import { client } from "../Redis/Connection.js";
+const RoleManager = (await import("./RoleManager.js")).default;
+import { StateManager } from "./StateManager.js";
+const CounterService = (await import("./CounterService.js")).default;
+const UserService = (await import("./UserService.js")).default;
+const StartingState = (await import("../Rounds/States/StartingState.js")).default;
+const WaitingState = (await import("../Rounds/States/WaitingState.js")).default;
+const ChatService = (await import("./ChatService.js")).default;
+const fetch = (await import("../Helpers/fetch.js")).default;
 const werewolves = [1];
 
-module.exports = class GameService {
+export default class GameService {
 	/**
    * @type {NodeJS.Timeout[]}
    */
@@ -109,4 +109,4 @@ module.exports = class GameService {
 		}
 		return count;
 	}
-};
+}

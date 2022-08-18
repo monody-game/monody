@@ -1,7 +1,7 @@
-module.exports = [
+export default [
 	1,
-	require("./States/NightState"),
-	require("./States/WerewolfState"),
-	require("./States/DayState"),
-	require("./States/VoteState"),
+	await import("./States/NightState.js"),
+	await import("./States/WerewolfState.js"),
+	await import("./States/DayState.js"),
+	await import("./States/VoteState.js"),
 ];

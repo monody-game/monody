@@ -1,4 +1,4 @@
-module.exports = class ChatService {
+export default class ChatService {
 	static send(socket, channel, message, type = "message", to = null) {
 		if (to) {
 			socket = socket.to(to);
@@ -31,4 +31,4 @@ module.exports = class ChatService {
 	static error(socket, channel, message, to = null) {
 		this.send(socket, channel, message, "error", to);
 	}
-};
+}

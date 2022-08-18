@@ -1,7 +1,7 @@
-const { client } = require("../Redis/Connection");
-const rounds = require("./RoundService");
+import { client } from "../Redis/Connection.js";
+const rounds = (await import("./RoundService.js")).default;
 
-module.exports = class StateManager {
+export class StateManager {
 	constructor(io) {
 		this.io = io;
 	}
@@ -130,4 +130,4 @@ module.exports = class StateManager {
 		if (!members) return [];
 		return members;
 	}
-};
+}

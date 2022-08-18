@@ -1,6 +1,6 @@
-const fetch = require("../Helpers/fetch");
+import fetch from "../Helpers/fetch.js";
 
-module.exports.PrivateChannel = class {
+export class PrivateChannel {
 	authenticate(socket, data) {
 		const options = {
 			form: { channel_name: data.channel },
@@ -53,4 +53,4 @@ module.exports.PrivateChannel = class {
 			}
 		}
 	}
-};
+}
