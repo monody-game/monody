@@ -26,4 +26,13 @@ class RoleController extends Controller
 
         return new JsonResponse(['error' => 'Role not found'], Response::HTTP_NOT_FOUND);
     }
+
+    public function group(int $group): JsonResponse
+    {
+        $roles = Role::where('team_id', '=', $group)->get('id')->toArray();
+
+        $roles = array_map(fn ($role) => $role['id'], $roles);
+
+        return new JsonResponse(['roles' => $roles]);
+    }
 }

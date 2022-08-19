@@ -19,6 +19,7 @@ Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
 
 Route::get('/roles', 'RoleController@all');
 Route::get('/roles/get/{id}', 'RoleController@get');
+Route::get('/roles/{group}', 'RoleController@group');
 
 Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
     Route::post('/game/join', 'Game\GameController@join');
