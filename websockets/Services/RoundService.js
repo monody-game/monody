@@ -7,10 +7,10 @@ const rounds = [];
 const directory = join(__dirname, "../Rounds");
 const files = readdirSync(directory).filter(file => file.endsWith("Round.js"));
 
-files.forEach(async file => {
+for (let file of files) {
 	file = await import(directory + "/" + file);
 	const position = file.default.splice(0, 1)[0];
 	rounds[position] = file.default;
-});
+}
 
 export default rounds;

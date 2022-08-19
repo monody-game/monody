@@ -67,7 +67,7 @@ export class GameChannel {
 		});
 
 		const count = await this.gameService.getRolesCount(gameId);
-		const game = this.gameService.getGame(gameId);
+		const game = await this.gameService.getGame(gameId);
 
 		if (
 			await this.gameService.isAuthor(socket, gameId) &&
