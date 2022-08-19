@@ -5,7 +5,6 @@ export default async function user({ router }) {
 	const status = await service.getUser();
 
 	if (!status) {
-		await service.logout();
 		router.push("/login");
 	}
 }
