@@ -17,6 +17,9 @@ Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
 Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
 Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
 
+Route::get('/roles', 'RoleController@all');
+Route::get('/roles/get/{id}', 'RoleController@get');
+
 Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
     Route::post('/game/join', 'Game\GameController@join');
     Route::post('/game/leave', 'Game\GameController@leave');
@@ -46,9 +49,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/game/message/send', 'Game\GameMessageController@send');
     Route::post('/game/vote', 'Game\GameVoteController@vote');
-
-    Route::get('/roles', 'RoleController@all');
-    Route::get('/roles/get/{id}', 'RoleController@get');
 
     Route::get('/teams', 'TeamController@all');
 

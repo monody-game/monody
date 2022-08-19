@@ -13,7 +13,7 @@ class RoleControllerTest extends TestCase
 
     public function testGetAllRoles(): void
     {
-        $response = $this->actingAs($this->user, 'api')->getJson('/api/roles');
+        $response = $this->getJson('/api/roles');
         $parsed = json_decode($response->getContent(), true)['roles'];
 
         $this->assertTrue(count($parsed) > 1);
@@ -21,13 +21,13 @@ class RoleControllerTest extends TestCase
 
     public function testGetOneRole(): void
     {
-        $response = $this->actingAs($this->user, 'api')->getJson('/api/roles/get/1');
+        $response = $this->getJson('/api/roles/get/1');
         $response->assertJsonPath('role.id', 1);
     }
 
     public function testGetUnexistentRole(): void
     {
-        $response = $this->actingAs($this->user, 'api')->getJson('/api/roles/get/0');
+        $response = $this->getJson('/api/roles/get/0');
 
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
