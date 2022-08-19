@@ -1,5 +1,5 @@
 import { client } from "../Redis/Connection.js";
-import { RoleManager } from "./RoleManager.js";
+import { RoleService } from "./RoleService.js";
 import { StateManager } from "./StateManager.js";
 import { CounterService } from "./CounterService.js";
 import { UserService } from "./UserService.js";
@@ -7,7 +7,6 @@ import StartingState from "../Rounds/States/StartingState.js";
 import WaitingState from "../Rounds/States/WaitingState.js";
 import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
-const werewolves = [1];
 
 export class GameService {
 	/**
@@ -79,7 +78,8 @@ export class GameService {
 
 	async roleManagement(game, channel, members, socket) {
 		const gameWerewolves = [];
-		game.assigned_roles = RoleManager.assign(game.roles, members);
+		const werewolves = await RoleService.getWerewolvesRoles();
+		game.assigned_roles = RoleService.assign(game.roles, members);
 
 		Object.keys(game.assigned_roles).forEach(member => {
 			if (werewolves.indexOf(game.assigned_roles[member]) >= 0) gameWerewolves.push(parseInt(member));
