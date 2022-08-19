@@ -1,4 +1,4 @@
-export default class RoleManager {
+export class RoleManager {
 	static assign(roles, members) {
 		const assigned = {};
 
