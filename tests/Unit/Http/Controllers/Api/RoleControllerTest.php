@@ -32,6 +32,26 @@ class RoleControllerTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
+    public function testGettingWerewolvesRoles()
+    {
+        $this
+            ->getJson('/api/roles/2')
+            ->assertJson([
+                'roles' => [1],
+            ])
+            ->assertStatus(Response::HTTP_OK);
+    }
+
+    public function testGettingVillagersRoles()
+    {
+        $this
+            ->getJson('/api/roles/1')
+            ->assertJson([
+                'roles' => [2, 3, 4],
+            ])
+            ->assertStatus(Response::HTTP_OK);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
