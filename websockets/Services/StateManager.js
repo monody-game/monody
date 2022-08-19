@@ -1,5 +1,5 @@
 import { client } from "../Redis/Connection.js";
-const rounds = (await import("./RoundService.js")).default;
+import rounds from "./RoundService.js";
 
 export class StateManager {
 	constructor(io) {

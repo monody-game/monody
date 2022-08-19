@@ -1,12 +1,12 @@
-const StateManager = import("./StateManager.js");
+import { StateManager } from "./StateManager.js";
 
-export default class CounterService {
+export class CounterService {
 	constructor(io) {
 		this.io = io;
 	}
 
 	async cycle(channel) {
-		const manager = new StateManager.default(this.io);
+		const manager = new StateManager(this.io);
 
 		this.counterId = setTimeout(async () => {
 			await this.cycle(channel);
