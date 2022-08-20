@@ -49,13 +49,14 @@ export class StateManager {
 			return;
 		}
 
-		let currentState = state["status"] + 1;
 		let currentRound = state["round"] || 0;
-		let stateIndex = rounds[currentRound].indexOf(rounds[currentRound].find(roundState => roundState.identifier === currentState));
-		const loopingRoundIndex = rounds.length - 1;
-		const members = await this.getMembers(channel);
-		const isLast = stateIndex === -1;
 		const currentRoundObject = rounds[currentRound];
+		let stateIndex = currentRoundObject.indexOf(currentRoundObject.find(roundState => roundState.identifier === state["status"])) + 1;
+		const loopingRoundIndex = rounds.length - 1;
+		let currentState = currentRoundObject[stateIndex].identifier;
+
+		const members = await this.getMembers(channel);
+		const isLast = stateIndex === currentRoundObject.length;
 
 		if (
 			!isLast &&
@@ -64,7 +65,6 @@ export class StateManager {
 		) {
 			await currentRoundObject[stateIndex - 1].after(this.io, channel, members);
 		} else if (isLast) {
-			console.log("should be the last state of the round");
 			await currentRoundObject[currentRoundObject.length - 1].after(this.io, channel, members);
 		}
 
@@ -73,19 +73,21 @@ export class StateManager {
 			typeof currentRoundObject[stateIndex] === "undefined" &&
 			typeof rounds[currentRound + 1] !== "undefined"
 		) {
+			// We are at the end of the current round
 			currentRound++;
-			currentState = rounds[currentRound][0].identifier;
+			currentState = currentRoundObject[0].identifier;
 			stateIndex = 0;
 		} else if (currentRound === loopingRoundIndex && stateIndex === currentRoundObject.length - 1) {
+			// We are at the end of the looping round
 			currentRound = loopingRoundIndex;
 			currentState = rounds[loopingRoundIndex][0].identifier;
 			stateIndex = 0;
 		}
 
-		const duration = rounds[currentRound][stateIndex].duration;
+		const duration = currentRoundObject[stateIndex].duration;
 
-		if (typeof rounds[currentRound][stateIndex] !== "undefined" && typeof rounds[currentRound][stateIndex].before === "function") {
-			await rounds[currentRound][stateIndex].before(this.io, channel, members);
+		if (typeof currentRoundObject[stateIndex] !== "undefined" && typeof currentRoundObject[stateIndex].before === "function") {
+			await currentRoundObject[stateIndex].before(this.io, channel, members);
 		}
 
 		await this.setState({
@@ -106,22 +108,25 @@ export class StateManager {
 		const state = await this.getState(channel.split(".")[1]);
 		if (!state) return;
 
-		const currentState = state["status"] + 1;
 		const currentRound = state["round"] || 0;
-		const stateIndex = rounds[currentRound].indexOf(rounds[currentRound].find(roundState => roundState.identifier === currentState));
+		const currentRoundObject = rounds[currentRound];
+		const stateIndex = currentRoundObject.indexOf(currentRoundObject.find(roundState => roundState.identifier === state["status"])) + 1;
 		const loopingRoundIndex = rounds.length - 1;
 
 		if (
-			(currentRound !== loopingRoundIndex && typeof rounds[currentRound][stateIndex] === "undefined" && currentRound + 1 === loopingRoundIndex) ||
-			(currentRound === loopingRoundIndex && stateIndex === rounds[currentRound].length - 1)
+			(currentRound !== loopingRoundIndex && typeof currentRoundObject[stateIndex] === "undefined" && currentRound + 1 === loopingRoundIndex) ||
+			(currentRound === loopingRoundIndex && stateIndex === currentRoundObject.length - 1)
 		) {
+			// If we are at the end of the looping round
 			return rounds[loopingRoundIndex][0].duration;
 		} else if (
-			currentRound !== loopingRoundIndex && typeof rounds[currentRound][stateIndex] === "undefined"
+			currentRound !== loopingRoundIndex && typeof currentRoundObject[stateIndex] === "undefined"
 		) {
+			// If we are at the end of the current round
 			return rounds[currentRound + 1][0].duration;
 		} else {
-			return rounds[currentRound][stateIndex].duration;
+			// Otherwise return the next duration
+			return currentRoundObject[stateIndex].duration;
 		}
 	}
 
