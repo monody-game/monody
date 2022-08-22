@@ -39,7 +39,7 @@ lint: install
 
 .PHONY: tests
 tests: install
-	vendor/bin/phpunit
+	php artisan test --coverage
 
 .PHONY: tt
 tt: install
