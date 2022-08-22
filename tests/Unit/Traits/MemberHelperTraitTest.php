@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Traits;
 
+use App\Facades\Redis;
 use App\Models\User;
 use App\Traits\MemberHelperTrait;
 use Exception;
-use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 
 class MemberHelperTraitTest extends TestCase
@@ -20,7 +20,7 @@ class MemberHelperTraitTest extends TestCase
 
     public function testGettingMembers()
     {
-        $this->assertSame(json_decode(Redis::get($this->key), true), $this->getMembers($this->gameId));
+        $this->assertSame(Redis::get($this->key), $this->getMembers($this->gameId));
     }
 
     public function testGettingSpecificMember()
@@ -69,14 +69,14 @@ class MemberHelperTraitTest extends TestCase
 
         $this->key = "game:$this->gameId:members";
 
-        Redis::set($this->key, json_encode([
+        Redis::set($this->key, [
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
             ['user_id' => $secondUser['id'], 'user_info' => $secondUser],
-        ]));
+        ]);
 
-        Redis::set("game:{$this->gameId}1:members", json_encode([
+        Redis::set("game:{$this->gameId}1:members", [
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
-        ]));
+        ]);
     }
 }

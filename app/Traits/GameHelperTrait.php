@@ -2,21 +2,17 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Facades\Redis;
+use App\Facades\Redis;
 
 trait GameHelperTrait
 {
     public function getGame(string $gameId): array
     {
-        $game = Redis::get("game:{$gameId}");
-
-        return json_decode($game, true);
+        return Redis::get("game:{$gameId}");
     }
 
     public function getState(string $gameId): array
     {
-        $game = Redis::get("game:$gameId:state");
-
-        return json_decode($game, true);
+        return Redis::get("game:$gameId:state");
     }
 }

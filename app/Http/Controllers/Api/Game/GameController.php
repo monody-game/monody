@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\GameStates;
 use App\Events\GameCreated;
+use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CheckGameRequest;
 use App\Http\Requests\CreateGameRequest;
@@ -11,22 +12,24 @@ use App\Http\Requests\DeleteGameRequest;
 use App\Http\Requests\JoinGameRequest;
 use App\Models\Game;
 use App\Models\User;
+use App\Traits\GameHelperTrait;
 use App\Traits\RegisterHelperTrait;
+use function array_key_exists;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 
 class GameController extends Controller
 {
-    use RegisterHelperTrait;
+    use RegisterHelperTrait, GameHelperTrait;
 
     public function check(CheckGameRequest $request): JsonResponse
     {
         /** @var array $data */
         $data = $request->validated();
 
-        $game = Redis::get("game:{$data['game_id']}");
+        /** @var bool $game */
+        $game = Redis::exists("game:{$data['game_id']}");
 
         if ($game) {
             return new JsonResponse(['message' => 'Game found']);
@@ -58,30 +61,24 @@ class GameController extends Controller
                 continue;
             }
 
-            $currentGame = json_decode($gameData, true);
-
-            if (!$currentGame) {
-                continue;
-            }
-
-            if ($currentGame['is_started']) {
+            if ($gameData['is_started']) {
                 continue;
             }
 
             /** @var User $owner */
-            $owner = User::find($currentGame['owner']);
+            $owner = User::find($gameData['owner']);
 
-            $currentGame['owner'] = [
+            $gameData['owner'] = [
                 'id' => $owner->id,
                 'username' => $owner->username,
                 'avatar' => $owner->avatar,
             ];
 
-            $currentGame['id'] = str_replace('game:', '', $game);
-            unset($currentGame['assigned_roles']);
-            unset($currentGame['is_started']);
+            $gameData['id'] = str_replace('game:', '', $game);
+            unset($gameData['assigned_roles']);
+            unset($gameData['is_started']);
 
-            $list[] = $currentGame;
+            $list[] = $gameData;
         }
 
         return new JsonResponse(['games' => $list]);
@@ -93,11 +90,11 @@ class GameController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $data['users'] = \array_key_exists('users', $data) ? $data['users'] : [];
+        $data['users'] = array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
         $data['owner'] = $user->id;
-        $data['is_started'] = \array_key_exists('is_started', $data) ? $data['is_started'] : false;
+        $data['is_started'] = array_key_exists('is_started', $data) ? $data['is_started'] : false;
         $id = $this->generateGameId();
 
         if (!array_search($data['owner'], $data['users'], true)) {
@@ -106,12 +103,12 @@ class GameController extends Controller
             $data['users'] = array_merge($data['users'], [$data['owner']]);
         }
 
-        Redis::set("game:$id", json_encode($data));
-        Redis::set("game:$id:state", json_encode([
-            'state' => GameStates::WAITING_STATE->value,
+        Redis::set("game:$id", $data);
+        Redis::set("game:$id:state", [
+            'state' => GameStates::WAITING_STATE,
             'duration' => GameStates::WAITING_STATE->duration(),
-        ]));
-        Redis::set("game:$id:votes", json_encode([]));
+        ]);
+        Redis::set("game:$id:votes", []);
 
         $data['id'] = $id;
         $data['owner'] = [
@@ -142,10 +139,7 @@ class GameController extends Controller
     {
         $gameId = $request->validated('game_id');
 
-        Redis::del("game:{$gameId}");
-        Redis::del("game:{$gameId}:state");
-        Redis::del("game:{$gameId}:members");
-        Redis::del("game:{$gameId}:votes");
+        Redis::del("game:{$gameId}", "game:{$gameId}:state", "game:{$gameId}:members", "game:{$gameId}:votes");
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

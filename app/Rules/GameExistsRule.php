@@ -2,8 +2,8 @@
 
 namespace App\Rules;
 
+use App\Facades\Redis;
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Redis;
 
 class GameExistsRule implements Rule
 {

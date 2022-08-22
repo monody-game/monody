@@ -5,9 +5,12 @@ namespace App\Services;
 use App\Events\GameKill;
 use App\Events\GameUnvote;
 use App\Events\GameVote;
+use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
+use function array_key_exists;
+use function count;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redis;
+use function in_array;
 
 class VoteService
 {
@@ -43,7 +46,7 @@ class VoteService
 
         $votes[$userId][] = $authUserId;
 
-        Redis::set("game:$gameId:votes", json_encode($votes));
+        Redis::set("game:$gameId:votes", $votes);
 
         return $votes;
     }
@@ -71,7 +74,7 @@ class VoteService
             'votedBy' => $authUserId,
         ]);
 
-        Redis::set("game:$gameId:votes", json_encode($votes));
+        Redis::set("game:$gameId:votes", $votes);
 
         return $votes;
     }
@@ -97,13 +100,13 @@ class VoteService
         $majority = array_key_first($votes);
 
         foreach ($votes as $voted => $by) {
-            if (\count($by) > \count($votes[$majority])) {
+            if (count($by) > count($votes[$majority])) {
                 $majority = $voted;
 
                 continue;
             }
 
-            if (\count($by) === \count($votes[$majority])) {
+            if (count($by) === count($votes[$majority])) {
                 $toRandomPick = [
                     $majority,
                     $voted,
@@ -151,7 +154,7 @@ class VoteService
         $member['user_info']['is_dead'] = true;
         $members = [...$members, $member];
 
-        Redis::set("game:$gameId:members", json_encode($members));
+        Redis::set("game:$gameId:members", $members);
 
         return true;
     }
@@ -165,7 +168,7 @@ class VoteService
         }
 
         if (
-            \array_key_exists('is_dead', $member['user_info']) &&
+            array_key_exists('is_dead', $member['user_info']) &&
             true === $member['user_info']['is_dead']
         ) {
             return true;
@@ -176,12 +179,20 @@ class VoteService
 
     private function clearVotes(string $gameId): void
     {
-        Redis::set("game:$gameId:votes", json_encode([]));
+        Redis::set("game:$gameId:votes", []);
     }
 
     private function getVotes(string $gameId): array
     {
-        return json_decode(Redis::get("game:$gameId:votes"), true) ?? [];
+        /** @var array|null|string $votes */
+        $votes = Redis::get("game:$gameId:votes");
+
+        if ($votes === '') {
+            return [];
+        }
+
+        /** @var array|null $votes */
+        return $votes ?? [];
     }
 
     /**
@@ -189,13 +200,13 @@ class VoteService
      */
     private function isVotingUser(string $userId, array $votes, string $votingUser): bool
     {
-        return \array_key_exists($userId, $votes) && \in_array($votingUser, $votes[$userId], true);
+        return array_key_exists($userId, $votes) && in_array($votingUser, $votes[$userId], true);
     }
 
     private function isVoting(string $userId, array $votes): string|false
     {
         foreach ($votes as $voted => $vote) {
-            if (\in_array($userId, $vote, true)) {
+            if (in_array($userId, $vote, true)) {
                 return $voted;
             }
         }
