@@ -5,10 +5,10 @@ namespace Tests\Unit\Services;
 use App\Events\GameKill;
 use App\Events\GameUnvote;
 use App\Events\GameVote;
+use App\Facades\Redis;
 use App\Models\User;
 use App\Services\VoteService;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 
 class VoteServiceTest extends TestCase
@@ -40,7 +40,7 @@ class VoteServiceTest extends TestCase
         });
         Event::assertNotDispatched(GameUnVote::class);
 
-        $votes = json_decode(Redis::get("game:{$this->game['id']}:votes"), true);
+        $votes = Redis::get("game:{$this->game['id']}:votes");
         $this->assertSame([
             $this->secondUser->id => [$this->user->id],
         ], $votes);
@@ -113,7 +113,7 @@ class VoteServiceTest extends TestCase
                     ],
                 ],
             ],
-            json_decode(Redis::get("game:$gameId:members"), true)
+            Redis::get("game:$gameId:members")
         );
     }
 
@@ -241,7 +241,7 @@ class VoteServiceTest extends TestCase
             ];
         });
 
-        $votes = json_decode(Redis::get("game:{$this->game['id']}:votes"), true);
+        $votes = Redis::get("game:{$this->game['id']}:votes");
         $this->assertSame([
             $this->user->id => [$this->user->id],
         ], $votes);
@@ -263,10 +263,10 @@ class VoteServiceTest extends TestCase
                 'roles' => [1, 2],
             ])->getContent(), true)['game'];
 
-        Redis::set("game:{$this->game['id']}:members", json_encode([
+        Redis::set("game:{$this->game['id']}:members", [
             ['user_id' => $this->user->id, 'user_info' => $this->user],
             ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
-        ]));
+        ]);
 
         $this->secondGame = json_decode($this
             ->actingAs($this->user, 'api')
@@ -275,9 +275,9 @@ class VoteServiceTest extends TestCase
                 'roles' => [1, 2],
             ])->getContent(), true)['game'];
 
-        Redis::set("game:{$this->secondGame['id']}:members", json_encode([
+        Redis::set("game:{$this->secondGame['id']}:members", [
             ['user_id' => $this->user->id, 'user_info' => $this->user],
             ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
-        ]));
+        ]);
     }
 }

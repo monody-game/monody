@@ -2,8 +2,10 @@
 
 namespace App\Traits;
 
+use App\Facades\Redis;
+use function array_key_exists;
+use function count;
 use Exception;
-use Illuminate\Support\Facades\Redis;
 
 trait MemberHelperTrait
 {
@@ -16,7 +18,7 @@ trait MemberHelperTrait
             return [];
         }
 
-        return json_decode(Redis::get("game:$gameId:members"), true);
+        return Redis::get("game:$gameId:members");
     }
 
     /**
@@ -33,11 +35,11 @@ trait MemberHelperTrait
         $members = $this->getMembers($gameId);
         $members = array_filter($members, fn ($member) => $member['user_id'] === $userId);
 
-        if (0 === \count($members)) {
+        if (0 === count($members)) {
             return false;
         }
 
-        if (\count($members) > 1) {
+        if (count($members) > 1) {
             throw new Exception("More than one user was found for the given id : $userId");
         }
 
@@ -67,7 +69,7 @@ trait MemberHelperTrait
         }
 
         if (
-            \array_key_exists('is_dead', $member['user_info']) &&
+            array_key_exists('is_dead', $member['user_info']) &&
             true === $member['user_info']['is_dead']
         ) {
             return false;

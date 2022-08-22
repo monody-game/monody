@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Blade\ViteAssetLoader;
+use App\Services\RedisService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,8 +15,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(ViteAssetLoader::class, function ($app) {
+        $this->app->singleton(ViteAssetLoader::class, function () {
             return new ViteAssetLoader(true);
+        });
+
+        $this->app->singleton(RedisService::class, function ($app) {
+            return new RedisService();
         });
     }
 

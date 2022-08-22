@@ -3,10 +3,10 @@
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Enums\GameStates;
+use App\Facades\Redis;
 use App\Http\Controllers\Api\Game\GameController;
 use App\Http\Middleware\RestrictToDockerNetwork;
 use App\Models\User;
-use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -43,15 +43,13 @@ class GameControllerTest extends TestCase
         ]);
 
         $game = Redis::get("game:{$res->json('game')['id']}");
-        $this->assertJson($game);
-        $game = json_decode($game, true);
 
         $this->assertSame(
             [
                 'state' => GameStates::WAITING_STATE->value,
                 'duration' => GameStates::WAITING_STATE->duration(),
             ],
-            json_decode(Redis::get("game:{$res->json('game')['id']}:state"), true)
+            Redis::get("game:{$res->json('game')['id']}:state")
         );
         $this->assertSame(sort($this->game), sort($game));
 

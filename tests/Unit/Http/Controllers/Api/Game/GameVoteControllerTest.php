@@ -5,10 +5,10 @@ namespace Tests\Unit\Http\Controllers\Api\Game;
 use App\Events\GameKill;
 use App\Events\GameUnvote;
 use App\Events\GameVote;
+use App\Facades\Redis;
 use App\Http\Middleware\RestrictToDockerNetwork;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -85,12 +85,12 @@ class GameVoteControllerTest extends TestCase
     {
         Event::fake();
 
-        Redis::set('game:testVotingStateGame:votes', json_encode([
+        Redis::set('game:testVotingStateGame:votes', [
             $this->user->id => [
                 $this->user->id,
                 $this->secondUser->id,
             ],
-        ]));
+        ]);
 
         $this->actingAs($this->user, 'api')->post('/api/game/vote', [
             'userId' => $this->user->id,
@@ -100,7 +100,7 @@ class GameVoteControllerTest extends TestCase
         Event::assertDispatched(GameUnvote::class);
         Event::assertNotDispatched(GameVote::class);
 
-        $votes = json_decode(Redis::get('game:testVotingStateGame:votes'), true);
+        $votes = Redis::get('game:testVotingStateGame:votes');
         $this->assertSame([
             $this->user->id => [
                 $this->secondUser->id,
@@ -166,18 +166,18 @@ class GameVoteControllerTest extends TestCase
 
     public function testVotingDeadPlayer()
     {
-        Redis::set('game:testVotingStateGame:members', json_encode([
+        Redis::set('game:testVotingStateGame:members', [
             ['user_id' => $this->user->id, 'user_info' => $this->user],
             ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
-        ]));
+        ]);
 
         Event::fake();
 
-        Redis::set('game:testVotingStateGame:votes', json_encode([
+        Redis::set('game:testVotingStateGame:votes', [
             $this->user->id => [
                 $this->secondUser->id,
             ],
-        ]));
+        ]);
 
         $this
             ->withoutMiddleware(RestrictToDockerNetwork::class)
@@ -221,43 +221,43 @@ class GameVoteControllerTest extends TestCase
             'users' => [$this->user->id, $this->secondUser->id],
         ])['game'];
 
-        Redis::set("game:{$this->game['id']}:members", json_encode([
+        Redis::set("game:{$this->game['id']}:members", [
             ['user_id' => $this->user->id, 'user_info' => $this->user],
             ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
-        ]));
+        ]);
 
-        Redis::set('game:testVotingStateGame', json_encode([
+        Redis::set('game:testVotingStateGame', [
             'id' => 'testVotingStateGame',
             'roles' => [1, 2],
             'users' => [$this->user->id, $this->secondUser->id],
             'is_started' => true,
             'owner' => 1,
-        ]));
+        ]);
 
-        Redis::set('game:testVotingStateGame:members', json_encode([
+        Redis::set('game:testVotingStateGame:members', [
             ['user_id' => $this->user->id, 'user_info' => $this->user],
             ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
-        ]));
+        ]);
 
-        Redis::set('game:testVotingStateGame:state', json_encode([
+        Redis::set('game:testVotingStateGame:state', [
             'status' => 5,
-        ]));
+        ]);
 
-        Redis::set('game:testStartedGame', json_encode([
+        Redis::set('game:testStartedGame', [
             'id' => 'testStartedGame',
             'roles' => [1, 2],
             'users' => [$this->user->id, $this->secondUser->id],
             'is_started' => true,
             'owner' => 1,
-        ]));
+        ]);
 
-        Redis::set('game:testStartedGame:members', json_encode([
+        Redis::set('game:testStartedGame:members', [
             ['user_id' => $this->user->id, 'user_info' => $this->user],
             ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
-        ]));
+        ]);
 
-        Redis::set('game:testStartedGame:state', json_encode([
+        Redis::set('game:testStartedGame:state', [
             'status' => 1,
-        ]));
+        ]);
     }
 }
