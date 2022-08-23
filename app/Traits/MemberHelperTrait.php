@@ -57,7 +57,7 @@ trait MemberHelperTrait
 
     public function exists(string $key): bool
     {
-        return (bool) Redis::exists($key);
+        return Redis::exists($key);
     }
 
     public function alive(string $userId, string $gameId): bool
@@ -77,4 +77,32 @@ trait MemberHelperTrait
 
         return true;
     }
+
+	public function getUserIdByRole(int $roleId, string $gameId) {
+		if(!$this->exists($gameId)) {
+			return false;
+		}
+
+		$game = Redis::get("game:$gameId");
+
+		if(!$game['is_started']) {
+			return false;
+		}
+
+		return array_search($roleId, $game['assigned_roles']);
+	}
+
+	public function getRoleByUserId(string $userId, string $gameId) {
+		if(!$this->exists($gameId)) {
+			return false;
+		}
+
+		$game = Redis::get("game:$gameId");
+
+		if(!$game['is_started']) {
+			return false;
+		}
+
+		return $game['assigned_roles'][$gameId];
+	}
 }
