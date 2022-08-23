@@ -23,15 +23,15 @@ class GameUsersController extends Controller
             return new JsonResponse(['error' => 'Game id is required'], Response::HTTP_BAD_REQUEST);
         }
 
-		$id = $request->get('gameId');
+        $id = $request->get('gameId');
 
-		if(!Redis::exists("game:$id")) {
-			return new JsonResponse(['error' => 'Game not found'], Response::HTTP_NOT_FOUND);
-		}
+        if (!Redis::exists("game:$id")) {
+            return new JsonResponse(['error' => 'Game not found'], Response::HTTP_NOT_FOUND);
+        }
 
         $game = $this->getGame($id);
 
-		return new JsonResponse(['users' => $game['users']]);
+        return new JsonResponse(['users' => $game['users']]);
     }
 
     public function role(UserRoleRequest $request): JsonResponse
