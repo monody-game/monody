@@ -39,7 +39,7 @@ lint: install
 
 .PHONY: tests
 tests: install
-	php artisan test --coverage
+	php artisan test
 
 .PHONY: tt
 tt: install
