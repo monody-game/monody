@@ -59,4 +59,11 @@ class InteractionService
             'interactionId' => $interaction['interactionId'],
         ]);
     }
+
+    public function exists(string $gameId, string $interactionId): bool
+    {
+        $interactions = Redis::get("game:$gameId:interactions");
+
+        return in_array($interactionId, array_column($interactions, 'interactionId'), true);
+    }
 }
