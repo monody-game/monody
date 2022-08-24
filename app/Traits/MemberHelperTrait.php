@@ -2,7 +2,9 @@
 
 namespace App\Traits;
 
+use App\Enums\Teams;
 use App\Facades\Redis;
+use App\Models\Role;
 use function array_key_exists;
 use function count;
 use Exception;
@@ -78,9 +80,14 @@ trait MemberHelperTrait
         return true;
     }
 
-    public function getUserIdByRole(int $roleId, string $gameId): string|int|false
+    /**
+     * @param  int  $roleId
+     * @param  string  $gameId
+     * @return array<int|string>|string|false
+     */
+    public function getUserIdByRole(int $roleId, string $gameId): array|string|false
     {
-        if (!$this->exists($gameId)) {
+        if (!$this->exists("game:$gameId")) {
             return false;
         }
 
@@ -90,12 +97,12 @@ trait MemberHelperTrait
             return false;
         }
 
-        return array_search($roleId, $game['assigned_roles'], true);
+        return array_keys($game['assigned_roles'], $roleId, true);
     }
 
     public function getRoleByUserId(string $userId, string $gameId): int|false
     {
-        if (!$this->exists($gameId)) {
+        if (!$this->exists("game:$gameId")) {
             return false;
         }
 
@@ -106,5 +113,21 @@ trait MemberHelperTrait
         }
 
         return $game['assigned_roles'][$userId];
+    }
+
+    public function getWerewolves(string $gameId): array|false
+    {
+        if (!$this->exists("game:$gameId")) {
+            return false;
+        }
+
+        $werewolvesRoles = Role::where('team_id', '=', Teams::Werewolves->value)->get()->toArray();
+        $werewolves = [];
+
+        foreach ($werewolvesRoles as $role) {
+            $werewolves[] = $this->getUserIdByRole($role['id'], $gameId);
+        }
+
+        return $werewolves;
     }
 }

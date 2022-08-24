@@ -10,6 +10,10 @@ use Illuminate\Support\Str;
 
 class InteractionService
 {
+    const INTERACTION_DOES_NOT_EXISTS = 1;
+
+    const NOT_ANY_INTERACTION_STARTED = 2;
+
     /**
      * Creates and start an interaction with the given parameters
      *
@@ -38,17 +42,17 @@ class InteractionService
         return $interaction;
     }
 
-    public function close(string $gameId, string $interactionId): void
+    public function close(string $gameId, string $interactionId): int|null
     {
         if (!Redis::exists("game:$gameId:interactions")) {
-            return;
+            return self::NOT_ANY_INTERACTION_STARTED;
         }
 
         $interactions = Redis::get("game:$gameId:interactions");
         $interaction = array_search($interactionId, array_column($interactions, 'interactionId'), true);
 
         if ($interaction === false) {
-            return;
+            return self::INTERACTION_DOES_NOT_EXISTS;
         }
 
         $interaction = array_splice($interactions, $interaction, 1)[0];
@@ -58,6 +62,8 @@ class InteractionService
             'gameId' => $interaction['gameId'],
             'interactionId' => $interaction['interactionId'],
         ]);
+
+        return null;
     }
 
     public function exists(string $gameId, string $interactionId): bool
