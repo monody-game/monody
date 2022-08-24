@@ -78,31 +78,33 @@ trait MemberHelperTrait
         return true;
     }
 
-	public function getUserIdByRole(int $roleId, string $gameId) {
-		if(!$this->exists($gameId)) {
-			return false;
-		}
+    public function getUserIdByRole(int $roleId, string $gameId): string|int|false
+    {
+        if (!$this->exists($gameId)) {
+            return false;
+        }
 
-		$game = Redis::get("game:$gameId");
+        $game = Redis::get("game:$gameId");
 
-		if(!$game['is_started']) {
-			return false;
-		}
+        if (!$game['is_started']) {
+            return false;
+        }
 
-		return array_search($roleId, $game['assigned_roles']);
-	}
+        return array_search($roleId, $game['assigned_roles'], true);
+    }
 
-	public function getRoleByUserId(string $userId, string $gameId) {
-		if(!$this->exists($gameId)) {
-			return false;
-		}
+    public function getRoleByUserId(string $userId, string $gameId): int|false
+    {
+        if (!$this->exists($gameId)) {
+            return false;
+        }
 
-		$game = Redis::get("game:$gameId");
+        $game = Redis::get("game:$gameId");
 
-		if(!$game['is_started']) {
-			return false;
-		}
+        if (!$game['is_started']) {
+            return false;
+        }
 
-		return $game['assigned_roles'][$gameId];
-	}
+        return $game['assigned_roles'][$userId];
+    }
 }
