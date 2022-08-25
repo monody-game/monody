@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\Actions\PsychicAction;
 use App\Enums\GameInteractions;
+use App\Enums\InteractionActions;
 use App\Events\InteractionClose;
 use App\Events\InteractionCreate;
 use App\Facades\Redis;
+use App\Traits\RegisterHelperTrait;
 use Illuminate\Support\Str;
 
 class InteractionService
@@ -13,6 +16,10 @@ class InteractionService
     const INTERACTION_DOES_NOT_EXISTS = 1;
 
     const NOT_ANY_INTERACTION_STARTED = 2;
+
+    const USER_CANNOT_USE_THIS_INTERACTION = 3;
+
+    use RegisterHelperTrait;
 
     /**
      * Creates and start an interaction with the given parameters
@@ -71,5 +78,33 @@ class InteractionService
         $interactions = Redis::get("game:$gameId:interactions");
 
         return in_array($interactionId, array_column($interactions, 'interactionId'), true);
+    }
+
+    public function call(InteractionActions $action, string $emitterId, string $targetId, string $gameId): mixed
+    {
+        $role = explode(':', $action->value);
+
+        switch ($role[0]) {
+            case 'psychic':
+                $service = new PsychicAction();
+                break;
+            case 'witch':
+                // TODO implement witch action
+                break;
+            case 'werewolves':
+                // TODO implement werewolves action
+                break;
+            case 'vote':
+                // TODO implement vote action
+                break;
+        }
+
+        /** @phpstan-ignore-next-line */
+        if (!$service->canInteract($emitterId)) {
+            return self::USER_CANNOT_USE_THIS_INTERACTION;
+        }
+
+        /** @phpstan-ignore-next-line */
+        return $service->call($targetId, $action);
     }
 }
