@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
+use App\Enums\GameStates;
 use App\Events\GameKill;
 use App\Events\GameUnvote;
 use App\Events\GameVote;
@@ -240,7 +241,7 @@ class GameVoteControllerTest extends TestCase
         ]);
 
         Redis::set('game:testVotingStateGame:state', [
-            'status' => 5,
+            'status' => GameStates::Vote,
         ]);
 
         Redis::set('game:testStartedGame', [
@@ -257,7 +258,7 @@ class GameVoteControllerTest extends TestCase
         ]);
 
         Redis::set('game:testStartedGame:state', [
-            'status' => 1,
+            'status' => GameStates::Starting,
         ]);
     }
 }

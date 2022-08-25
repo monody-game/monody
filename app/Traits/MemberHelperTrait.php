@@ -131,4 +131,28 @@ trait MemberHelperTrait
 
         return $werewolves;
     }
+
+    public function kill(string $userId, string $gameId): bool
+    {
+        if (!$this->exists("game:$gameId")) {
+            return false;
+        }
+
+        $member = $this->getMember($userId, $gameId);
+        $members = $this->getMembers($gameId);
+        $index = array_search($member, $members, true);
+
+        if (!$member || false === $index) {
+            return false;
+        }
+
+        $member = array_splice($members, (int) $index, 1)[0];
+
+        $member['user_info']['is_dead'] = true;
+        $members = [...$members, $member];
+
+        Redis::set("game:$gameId:members", $members);
+
+        return true;
+    }
 }

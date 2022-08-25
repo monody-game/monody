@@ -21,7 +21,7 @@ class VoteService
      */
     public function vote(string $userId, string $gameId, ?string $votingUser = null): array
     {
-        if ($this->isDead($userId, $gameId)) {
+        if (!$this->alive($userId, $gameId)) {
             return [];
         }
 
@@ -116,7 +116,7 @@ class VoteService
             }
         }
 
-        if ($this->isDead($majority, $gameId)) {
+        if (!$this->alive($majority, $gameId)) {
             GameKill::dispatch([
                 'killedUser' => null,
                 'gameId' => $gameId,
@@ -137,44 +137,6 @@ class VoteService
         $this->clearVotes($gameId);
 
         return $majority;
-    }
-
-    public function kill(string $userId, string $gameId): bool
-    {
-        $member = $this->getMember($userId, $gameId);
-        $members = $this->getMembers($gameId);
-        $index = array_search($member, $members, true);
-
-        if (!$member || false === $index) {
-            return false;
-        }
-
-        $member = array_splice($members, (int) $index, 1)[0];
-
-        $member['user_info']['is_dead'] = true;
-        $members = [...$members, $member];
-
-        Redis::set("game:$gameId:members", $members);
-
-        return true;
-    }
-
-    public function isDead(string $userId, string $gameId): bool
-    {
-        $member = $this->getMember($userId, $gameId);
-
-        if (!$member) {
-            return true;
-        }
-
-        if (
-            array_key_exists('is_dead', $member['user_info']) &&
-            true === $member['user_info']['is_dead']
-        ) {
-            return true;
-        }
-
-        return false;
     }
 
     private function clearVotes(string $gameId): void

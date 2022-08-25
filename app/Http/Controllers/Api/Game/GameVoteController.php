@@ -60,7 +60,7 @@ class GameVoteController extends Controller
     {
         $state = $this->getState($gameId);
 
-        return GameStates::VOTE_STATE === GameStates::from($state['status']);
+        return GameStates::Vote === GameStates::from($state['status']);
     }
 
     private function getContext(string $gameId): string
