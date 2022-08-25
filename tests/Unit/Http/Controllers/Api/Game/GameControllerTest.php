@@ -46,8 +46,8 @@ class GameControllerTest extends TestCase
 
         $this->assertSame(
             [
-                'state' => GameStates::WAITING_STATE->value,
-                'duration' => GameStates::WAITING_STATE->duration(),
+                'state' => GameStates::Waiting->value,
+                'duration' => GameStates::Waiting->duration(),
             ],
             Redis::get("game:{$res->json('game')['id']}:state")
         );

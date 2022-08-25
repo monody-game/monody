@@ -204,11 +204,6 @@ class VoteServiceTest extends TestCase
         });
     }
 
-    public function testCheckingIfMemberIsDeadWhileMemberIsInexistant()
-    {
-        $this->assertTrue($this->service->isDead('inexistantuser', $this->game['id']));
-    }
-
     public function testSwitchingVote()
     {
         Event::fake();
