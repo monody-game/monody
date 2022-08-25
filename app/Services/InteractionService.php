@@ -80,7 +80,7 @@ class InteractionService
         return in_array($interactionId, array_column($interactions, 'interactionId'), true);
     }
 
-    public function call(InteractionActions $action, string $emitterId, string $targetId, string $gameId): mixed
+    public function call(InteractionActions $action, string $emitterId, string $targetId): mixed
     {
         $role = explode(':', $action->value);
 
