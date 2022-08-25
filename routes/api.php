@@ -28,10 +28,11 @@ Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
 
     Route::post('/interactions', 'Game\GameInteractionController@create');
     Route::delete('/interactions', 'Game\GameInteractionController@close');
-    Route::post('/interactions/use', 'Game\GameInteractionController@interact');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::post('/interactions/use', 'Game\GameInteractionController@interact');
+
     Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
     Route::post('/oauth/unlink/google', 'Oauth\GoogleOauthController@unlink');
 
