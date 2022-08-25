@@ -78,7 +78,7 @@ class GameInteractionController extends Controller
         }
 
         $action = InteractionActions::from($interaction);
-        $result = $this->service->call($action, $userId, $request->validated('targetId'), $gameId);
+        $result = $this->service->call($action, $userId, $request->validated('targetId'));
 
         if ($result === $this->service::USER_CANNOT_USE_THIS_INTERACTION) {
             return new JsonResponse([
