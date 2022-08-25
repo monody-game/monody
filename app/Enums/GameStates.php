@@ -4,32 +4,36 @@ namespace App\Enums;
 
 enum GameStates: int
 {
-    case WAITING_STATE = 0;
-    case STARTING_STATE = 1;
-    case NIGHT_STATE = 2;
-    case WEREWOLF_STATE = 3;
-    case DAY_STATE = 4;
-    case VOTE_STATE = 5;
+    case Waiting = 0;
+    case Starting = 1;
+    case Night = 2;
+    case Werwolf = 3;
+    case Witch = 4;
+    case Psychic = 5;
+    case Day = 6;
+    case Vote = 7;
 
     public function stringify(): string
     {
         return match ($this) {
-            self::WAITING_STATE => 'wait',
-            self::STARTING_STATE => 'starting',
-            self::NIGHT_STATE => 'night',
-            self::WEREWOLF_STATE => 'werewolves',
-            self::DAY_STATE => 'day',
-            self::VOTE_STATE => 'vote',
+            self::Waiting => 'wait',
+            self::Starting => 'starting',
+            self::Night => 'night',
+            self::Werwolf => 'werewolves',
+            self::Witch => 'witch',
+            self::Psychic => 'psychic',
+            self::Day => 'day',
+            self::Vote => 'vote',
         };
     }
 
     public function duration(): int
     {
         return match ($this) {
-            self::WAITING_STATE => -1,
-            self::STARTING_STATE, self::NIGHT_STATE, self::DAY_STATE => 10,
-            self::WEREWOLF_STATE => 20,
-            self::VOTE_STATE => 40,
+            self::Waiting => -1,
+            self::Starting, self::Night, self::Day => 10,
+            self::Werwolf, self::Witch, self::Psychic => 20,
+            self::Vote => 40,
         };
     }
 }
