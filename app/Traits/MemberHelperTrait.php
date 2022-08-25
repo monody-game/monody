@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Enums\Roles;
 use App\Enums\Teams;
 use App\Facades\Redis;
 use App\Models\Role;
@@ -100,7 +101,7 @@ trait MemberHelperTrait
         return array_keys($game['assigned_roles'], $roleId, true);
     }
 
-    public function getRoleByUserId(string $userId, string $gameId): int|false
+    public function getRoleByUserId(string $userId, string $gameId): Roles|false
     {
         if (!$this->exists("game:$gameId")) {
             return false;
@@ -112,7 +113,7 @@ trait MemberHelperTrait
             return false;
         }
 
-        return $game['assigned_roles'][$userId];
+        return Roles::from($game['assigned_roles'][$userId]);
     }
 
     public function getWerewolves(string $gameId): array|false
