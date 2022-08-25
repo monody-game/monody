@@ -12,11 +12,11 @@ class PsychicAction implements ActionInterface
 {
     use MemberHelperTrait, RegisterHelperTrait;
 
-    public function canInteract(string $userId): bool
+    public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
     {
         $role = $this->getRole($userId);
 
-        return $role !== false && $role === Roles::Psychic;
+        return $role !== false && $role === Roles::Psychic && $this->alive($targetId, $this->getCurrentUserGameActivity($userId) ?? '');
     }
 
     public function call(string $targetId, InteractionActions $action): int

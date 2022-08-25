@@ -6,7 +6,7 @@ use App\Enums\InteractionActions;
 
 interface ActionInterface
 {
-    public function canInteract(string $userId): bool;
+    public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool;
 
     public function call(string $targetId, InteractionActions $action): mixed;
 }
