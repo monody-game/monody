@@ -90,6 +90,12 @@ class InteractionServiceTest extends TestCase
         $this->assertFalse($this->alive($this->user->id, $this->game['id']));
         $this->service->call(InteractionActions::RevivePotion, $this->witch->id, $this->user->id);
         $this->assertTrue($this->alive($this->user->id, $this->game['id']));
+
+        // Vote
+        $vote = $this->service->call(InteractionActions::Vote, $this->user->id, $this->witch->id);
+        $this->assertSame([$this->witch->id => [$this->user->id]], $vote);
+        $vote = $this->service->call(InteractionActions::Vote, $this->user->id, $this->witch->id);
+        $this->assertSame([], $vote);
     }
 
     protected function setUp(): void

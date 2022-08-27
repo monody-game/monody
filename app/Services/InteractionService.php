@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Actions\PsychicAction;
+use App\Actions\VoteAction;
 use App\Actions\WitchAction;
 use App\Enums\GameInteractions;
 use App\Enums\InteractionActions;
@@ -87,16 +88,16 @@ class InteractionService
 
         switch ($role[0]) {
             case 'psychic':
-                $service = new PsychicAction();
+                $service = new PsychicAction;
                 break;
             case 'witch':
-                $service = new WitchAction();
+                $service = new WitchAction;
                 break;
             case 'werewolves':
                 // TODO implement werewolves action
                 break;
             case 'vote':
-                // TODO implement vote action
+                $service = new VoteAction;
                 break;
         }
 
