@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Actions\PsychicAction;
 use App\Actions\VoteAction;
+use App\Actions\WerewolvesAction;
 use App\Actions\WitchAction;
 use App\Enums\GameInteractions;
 use App\Enums\InteractionActions;
@@ -94,7 +95,7 @@ class InteractionService
                 $service = new WitchAction;
                 break;
             case 'werewolves':
-                // TODO implement werewolves action
+                $service = new WerewolvesAction;
                 break;
             case 'vote':
                 $service = new VoteAction;
@@ -105,7 +106,6 @@ class InteractionService
         if (!$service->canInteract($action, $emitterId, $targetId)) {
             return self::USER_CANNOT_USE_THIS_INTERACTION;
         }
-
         /** @phpstan-ignore-next-line */
         return $service->call($targetId, $action);
     }
