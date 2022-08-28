@@ -2,9 +2,9 @@
 
 namespace App\Actions;
 
-use App\Enums\GameStates;
 use App\Enums\InteractionActions;
 use App\Enums\Roles;
+use App\Enums\States;
 use App\Events\GameKill;
 use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
@@ -70,7 +70,7 @@ class WitchAction implements ActionInterface
         GameKill::broadcast([
             'killedUser' => $targetId,
             'gameId' => $gameId,
-            'context' => GameStates::Witch->stringify(),
+            'context' => States::Witch->stringify(),
         ]);
     }
 

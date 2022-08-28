@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum GameStates: int
+enum States: int
 {
     case Waiting = 0;
     case Starting = 1;

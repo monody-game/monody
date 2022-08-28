@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Services;
 
-use App\Enums\GameInteractions;
 use App\Enums\InteractionActions;
+use App\Enums\Interactions;
 use App\Enums\Roles;
 use App\Events\InteractionClose;
 use App\Events\InteractionCreate;
@@ -40,7 +40,7 @@ class InteractionServiceTest extends TestCase
             'type' => 'vote',
         ];
 
-        $interaction = $this->service->create('test', GameInteractions::Vote);
+        $interaction = $this->service->create('test', Interactions::Vote);
 
         Event::assertDispatched(function (InteractionCreate $event) use ($interaction) {
             $event = (array) $event;
@@ -49,7 +49,7 @@ class InteractionServiceTest extends TestCase
                 'gameId' => 'test',
                 'interactionId' => $interaction['interactionId'],
                 'authorizedCallers' => '*',
-                'type' => GameInteractions::Vote->value,
+                'type' => Interactions::Vote->value,
             ];
         });
 
@@ -64,7 +64,7 @@ class InteractionServiceTest extends TestCase
     {
         Event::fake();
 
-        $interaction = $this->service->create('otherGame', GameInteractions::Vote);
+        $interaction = $this->service->create('otherGame', Interactions::Vote);
         $this->service->close('otherGame', $interaction['interactionId']);
 
         $this->assertEmpty(Redis::get('game:otherGame:interactions'));

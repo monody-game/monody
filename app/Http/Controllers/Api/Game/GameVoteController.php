@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Game;
 
-use App\Enums\GameStates;
+use App\Enums\States;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AfterVoteRequest;
 use App\Http\Requests\VoteRequest;
@@ -60,13 +60,13 @@ class GameVoteController extends Controller
     {
         $state = $this->getState($gameId);
 
-        return GameStates::Vote === GameStates::from($state['status']);
+        return States::Vote === States::from($state['status']);
     }
 
     private function getContext(string $gameId): string
     {
         $state = $this->getState($gameId)['status'];
-        $state = GameStates::from($state);
+        $state = States::from($state);
 
         return $state->stringify();
     }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\GameInteractions;
+use App\Enums\Interactions;
 use App\Rules\GameExistsRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -13,7 +13,7 @@ class CreateInteractionRequest extends FormRequest
     {
         return [
             'gameId' => ['required', 'string', new GameExistsRule],
-            'type' => ['string', new Enum(GameInteractions::class)],
+            'type' => ['string', new Enum(Interactions::class)],
         ];
     }
 }

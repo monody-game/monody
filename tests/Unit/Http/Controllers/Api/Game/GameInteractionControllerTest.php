@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
-use App\Enums\GameInteractions;
 use App\Enums\InteractionActions;
+use App\Enums\Interactions;
 use App\Enums\Roles;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToDockerNetwork;
@@ -24,13 +24,13 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'type' => GameInteractions::Vote->value,
+                'type' => Interactions::Vote->value,
             ])
             ->assertJson([
                 'interaction' => [
                     'gameId' => $this->game['id'],
                     'authorizedCallers' => '*',
-                    'type' => GameInteractions::Vote->value,
+                    'type' => Interactions::Vote->value,
                 ],
             ])
             ->assertOk();
@@ -42,7 +42,7 @@ class GameInteractionControllerTest extends TestCase
             'gameId' => $this->game['id'],
             'interactionId' => $interactionId,
             'authorizedCallers' => '*',
-            'type' => GameInteractions::Vote->value,
+            'type' => Interactions::Vote->value,
         ], $interactions[0]);
     }
 
@@ -52,7 +52,7 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'type' => GameInteractions::Vote->value,
+                'type' => Interactions::Vote->value,
             ]);
 
         $interactionId = $res->json('interaction')['interactionId'];
@@ -73,13 +73,13 @@ class GameInteractionControllerTest extends TestCase
     public function testGettingCorrectCallAuthorization()
     {
         $expectedAuthorized = [
-            GameInteractions::Vote->name => '*',
-            GameInteractions::Witch->name => 'superWitch',
-            GameInteractions::Psychic->name => $this->user->id,
-            GameInteractions::Werewolves->name => json_encode([$this->secondUser->id, 'superWerewolf']),
+            Interactions::Vote->name => '*',
+            Interactions::Witch->name => 'superWitch',
+            Interactions::Psychic->name => $this->user->id,
+            Interactions::Werewolves->name => json_encode([$this->secondUser->id, 'superWerewolf']),
         ];
 
-        foreach (GameInteractions::cases() as $interaction) {
+        foreach (Interactions::cases() as $interaction) {
             $this
                 ->withoutMiddleware(RestrictToDockerNetwork::class)
                 ->post('/api/interactions', [
@@ -100,7 +100,7 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'type' => GameInteractions::Psychic->value,
+                'type' => Interactions::Psychic->value,
             ])
             ->assertOk()
             ->json('interaction');

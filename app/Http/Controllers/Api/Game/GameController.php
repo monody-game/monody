@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Game;
 
-use App\Enums\GameStates;
+use App\Enums\States;
 use App\Events\GameCreated;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
@@ -105,8 +105,8 @@ class GameController extends Controller
 
         Redis::set("game:$id", $data);
         Redis::set("game:$id:state", [
-            'state' => GameStates::Waiting,
-            'duration' => GameStates::Waiting->duration(),
+            'state' => States::Waiting,
+            'duration' => States::Waiting->duration(),
         ]);
         Redis::set("game:$id:votes", []);
 
