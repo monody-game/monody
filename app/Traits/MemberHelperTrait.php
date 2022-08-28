@@ -126,7 +126,6 @@ trait MemberHelperTrait
         $werewolves = [];
 
         foreach ($werewolvesRoles as $role) {
-            /** @phpstan-ignore-next-line  */
             $werewolves[] = $this->getUserIdByRole($role['id'], $gameId);
         }
 
