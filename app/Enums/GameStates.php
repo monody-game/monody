@@ -7,7 +7,7 @@ enum GameStates: int
     case Waiting = 0;
     case Starting = 1;
     case Night = 2;
-    case Werwolf = 3;
+    case Werewolf = 3;
     case Witch = 4;
     case Psychic = 5;
     case Day = 6;
@@ -19,7 +19,7 @@ enum GameStates: int
             self::Waiting => 'wait',
             self::Starting => 'starting',
             self::Night => 'night',
-            self::Werwolf => 'werewolves',
+            self::Werewolf => 'werewolves',
             self::Witch => 'witch',
             self::Psychic => 'psychic',
             self::Day => 'day',
@@ -32,7 +32,7 @@ enum GameStates: int
         return match ($this) {
             self::Waiting => -1,
             self::Starting, self::Night, self::Day => 10,
-            self::Werwolf, self::Witch, self::Psychic => 20,
+            self::Werewolf, self::Witch, self::Psychic => 20,
             self::Vote => 40,
         };
     }
