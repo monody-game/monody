@@ -2,8 +2,8 @@
 
 namespace App\Actions;
 
-use App\Enums\GameStates;
 use App\Enums\InteractionActions;
+use App\Enums\States;
 use App\Events\GameKill;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
@@ -31,7 +31,7 @@ class WerewolvesAction implements ActionInterface
         GameKill::broadcast([
             'killedUser' => $targetId,
             'gameId' => $gameId,
-            'context' => GameStates::Werewolf->stringify(),
+            'context' => States::Werewolf->stringify(),
         ]);
 
         return null;

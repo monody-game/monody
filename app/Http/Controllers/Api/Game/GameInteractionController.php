@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Game;
 
-use App\Enums\GameInteractions;
 use App\Enums\InteractionActions;
+use App\Enums\Interactions;
 use App\Enums\Roles;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CloseInteractionRequest;
@@ -26,7 +26,7 @@ class GameInteractionController extends Controller
     public function create(CreateInteractionRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $type = GameInteractions::from($validated['type']);
+        $type = Interactions::from($validated['type']);
         $gameId = $validated['gameId'];
 
         $interaction = $this->service->create(
@@ -93,15 +93,15 @@ class GameInteractionController extends Controller
         ], Response::HTTP_OK);
     }
 
-    private function getAuthorizedMembersByType(GameInteractions $type, string $gameId): string|array
+    private function getAuthorizedMembersByType(Interactions $type, string $gameId): string|array
     {
         $authorized = '*';
 
-        if ($type === GameInteractions::Witch) {
+        if ($type === Interactions::Witch) {
             $authorized = $this->getUserIdByRole(Roles::Witch->value, $gameId);
-        } elseif ($type === GameInteractions::Psychic) {
+        } elseif ($type === Interactions::Psychic) {
             $authorized = $this->getUserIdByRole(Roles::Psychic->value, $gameId);
-        } elseif ($type === GameInteractions::Werewolves) {
+        } elseif ($type === Interactions::Werewolves) {
             $authorized = $this->getWerewolves($gameId);
         }
 

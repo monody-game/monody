@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
-use App\Enums\GameStates;
+use App\Enums\States;
 use App\Facades\Redis;
 use App\Http\Controllers\Api\Game\GameController;
 use App\Http\Middleware\RestrictToDockerNetwork;
@@ -46,8 +46,8 @@ class GameControllerTest extends TestCase
 
         $this->assertSame(
             [
-                'state' => GameStates::Waiting->value,
-                'duration' => GameStates::Waiting->duration(),
+                'state' => States::Waiting->value,
+                'duration' => States::Waiting->duration(),
             ],
             Redis::get("game:{$res->json('game')['id']}:state")
         );

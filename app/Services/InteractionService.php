@@ -6,8 +6,8 @@ use App\Actions\PsychicAction;
 use App\Actions\VoteAction;
 use App\Actions\WerewolvesAction;
 use App\Actions\WitchAction;
-use App\Enums\GameInteractions;
 use App\Enums\InteractionActions;
+use App\Enums\Interactions;
 use App\Events\InteractionClose;
 use App\Events\InteractionCreate;
 use App\Facades\Redis;
@@ -28,11 +28,11 @@ class InteractionService
      * Creates and start an interaction with the given parameters
      *
      * @param  string  $gameId The id of the game
-     * @param  GameInteractions  $type The type of the interaction (vote, ...)
+     * @param  Interactions  $type The type of the interaction (vote, ...)
      * @param  array|string  $authorizedCallers The authorized users to use the interaction (by default it is everyone)
      * @return string[]
      */
-    public function create(string $gameId, GameInteractions $type, array|string $authorizedCallers = '*'): array
+    public function create(string $gameId, Interactions $type, array|string $authorizedCallers = '*'): array
     {
         $key = "game:$gameId:interactions";
         /** @var string $callers */
