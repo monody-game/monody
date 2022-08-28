@@ -84,9 +84,9 @@ trait MemberHelperTrait
     /**
      * @param  int  $roleId
      * @param  string  $gameId
-     * @return array<int|string>|string|false
+     * @return array<int|string>|false
      */
-    public function getUserIdByRole(int $roleId, string $gameId): array|string|false
+    public function getUserIdByRole(int $roleId, string $gameId): array|false
     {
         if (!$this->exists("game:$gameId")) {
             return false;
@@ -116,16 +116,17 @@ trait MemberHelperTrait
         return Roles::from($game['assigned_roles'][$userId]);
     }
 
-    public function getWerewolves(string $gameId): array|false
+    public function getWerewolves(string $gameId): array
     {
         if (!$this->exists("game:$gameId")) {
-            return false;
+            return [];
         }
 
         $werewolvesRoles = Role::where('team_id', '=', Teams::Werewolves->value)->get()->toArray();
         $werewolves = [];
 
         foreach ($werewolvesRoles as $role) {
+            /** @phpstan-ignore-next-line  */
             $werewolves[] = $this->getUserIdByRole($role['id'], $gameId);
         }
 
