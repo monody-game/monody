@@ -21,6 +21,9 @@ Route::get('/roles', 'RoleController@all');
 Route::get('/roles/get/{id}', 'RoleController@get');
 Route::get('/roles/{group}', 'RoleController@group');
 
+Route::get('/rounds', 'RoundController@all');
+Route::get('/round/{round}', 'RoundController@get');
+
 Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
     Route::post('/game/join', 'Game\GameController@join');
     Route::post('/game/leave', 'Game\GameController@leave');
