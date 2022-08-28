@@ -61,7 +61,7 @@ class WitchAction implements ActionInterface
     private function killPotion(string $targetId): void
     {
         $gameId = $this->getCurrentUserGameActivity($targetId) ?? '';
-        $success = $this->kill($targetId, $this->getCurrentUserGameActivity($targetId) ?? '');
+        $success = $this->kill($targetId, $gameId);
 
         if (!$success) {
             return;
