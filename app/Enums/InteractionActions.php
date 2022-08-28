@@ -16,7 +16,7 @@ enum InteractionActions: string
     case WitchSkip = 'witch:skip'; // Case where the witch decide to do nothing
 
     // Werwolves
-    case Kill = 'werwolves:kill';
+    case Kill = 'werewolves:kill';
 
     /**
      * @return InteractionActions[]
