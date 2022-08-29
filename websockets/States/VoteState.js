@@ -1,9 +1,9 @@
-import fetch from "../../Helpers/fetch.js";
+import fetch from "../Helpers/fetch.js";
 
 export default {
 	name: "vote",
 	duration: 40,
-	identifier: 5,
+	identifier: 7,
 	before(io, channel, members) {
 		members.forEach(member => {
 			io.to(member.socketId).emit("vote.open", channel);

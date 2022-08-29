@@ -1,5 +1,5 @@
 export default {
-	name: "day",
-	duration: 10,
+	name: "witch",
+	duration: 20,
 	identifier: 4
 };
