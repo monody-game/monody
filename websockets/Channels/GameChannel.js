@@ -1,7 +1,7 @@
 import { StateManager } from "../Services/StateManager.js";
 import { client } from "../Redis/Connection.js";
-import StartingState from "../Rounds/States/StartingState.js";
-import WaitingState from "../Rounds/States/WaitingState.js";
+import StartingState from "../States/StartingState.js";
+import WaitingState from "../States/WaitingState.js";
 import { GameService } from "../Services/GameService.js";
 import { CounterService } from "../Services/CounterService.js";
 import fetch from "../Helpers/fetch.js";
