@@ -16,4 +16,4 @@ yarn-error.log
 /public/css/style.css
 /public/js/app.js
 cert.*
-/public/assets
+/public/build
