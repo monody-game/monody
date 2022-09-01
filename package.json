@@ -14,20 +14,21 @@
 	},
 	"dependencies": {
 		"@grafikart/spinning-dots-element": "latest",
-		"dotenv": "latest",
+		"dotenv": "^16.0.2",
 		"laravel-echo": "^1.12.1",
 		"node-fetch": "^3.2.10",
 		"pinia": "2.0.18",
 		"redis": "^4.2.0",
 		"socket.io": "latest",
 		"socket.io-client": "latest",
-		"vue": "latest",
+		"vue": "^3.2.38",
 		"vue-router": "^4.1.2"
 	},
 	"devDependencies": {
 		"@vitejs/plugin-vue": "3.0.3",
 		"eslint": "8.22.0",
 		"eslint-plugin-vue": "^9.2.0",
+		"laravel-vite-plugin": "^0.6.0",
 		"resolve-url-loader": "latest",
 		"sass": "^1.53.0",
 		"vite": "^3.0.0",

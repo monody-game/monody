@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="Monody is a online werewolf game !"/>
-
     <title>Monody</title>
 
-	{!! Vite::asset('js/app.js') !!}
+	@vite('resources/js/app.js')
 </head>
 <body>
-<main id="app"></main>
+	<main id="app"></main>
 </body>
 </html>
