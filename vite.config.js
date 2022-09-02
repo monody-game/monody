@@ -24,7 +24,9 @@ export default defineConfig({
 			key: fs.readFileSync(path.join(__dirname, "cert.key")),
 			cert: fs.readFileSync(path.join(__dirname, "cert.pem")),
 		},
-		host: "localhost",
-		port: 3000
+		host: "0.0.0.0",
+		hmr: {
+			host: "localhost"
+		},
 	},
 });
