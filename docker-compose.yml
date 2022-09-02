@@ -1,6 +1,6 @@
 services:
   web:
-    image: nginx:alpine
+    image: macbre/nginx-http3:latest
     restart: unless-stopped
     ports:
       - "443:443"
