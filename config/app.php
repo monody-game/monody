@@ -1,7 +1,5 @@
 <?php
 
-use App\Facades\ViteFacade;
-
 return [
     'name' => env('APP_NAME', 'Laravel'),
 
