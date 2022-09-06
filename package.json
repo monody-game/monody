@@ -19,8 +19,8 @@
 		"node-fetch": "^3.2.10",
 		"pinia": "2.0.18",
 		"redis": "^4.2.0",
-		"socket.io": "latest",
-		"socket.io-client": "latest",
+		"socket.io": "^4.5.2",
+		"socket.io-client": "^4.5.2",
 		"vue": "^3.2.38",
 		"vue-router": "^4.1.2"
 	},
