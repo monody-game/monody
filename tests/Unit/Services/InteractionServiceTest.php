@@ -77,6 +77,14 @@ class InteractionServiceTest extends TestCase
         });
     }
 
+	public function testEndingUnexistantInteraction() {
+		$this->service->create('otherGame', Interactions::Vote);
+		$res = $this->service->close('otherGame', 'unexistantInteraction');
+		$this->assertSame($this->service::INTERACTION_DOES_NOT_EXISTS, $res);
+		$res = $this->service->close('unexistingGame', 'unexistantInteraction');
+		$this->assertSame($this->service::NOT_ANY_INTERACTION_STARTED, $res);
+	}
+
     public function testUsingInteraction()
     {
         // Psychic
@@ -101,6 +109,21 @@ class InteractionServiceTest extends TestCase
         $vote = $this->service->call(InteractionActions::Vote, $this->user->id, $this->witch->id);
         $this->assertSame([], $vote);
     }
+
+	public function testBeingUnAllowedToUseInteraction() {
+		$this->assertSame(
+			$this->service::USER_CANNOT_USE_THIS_INTERACTION,
+			$this->service->call(InteractionActions::WitchSkip, $this->werewolf->id, '')
+		);
+	}
+
+	public function testCheckingIfInteractionExists() {
+		$interaction = $this->service->create('otherGame', Interactions::Vote);
+		$existant = $this->service->exists('otherGame', $interaction['interactionId']);
+		$this->assertTrue($existant);
+		$unexistant = $this->service->exists('otherGame', 'unexistantInteraction');
+		$this->assertFalse($unexistant);
+	}
 
     protected function setUp(): void
     {
