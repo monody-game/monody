@@ -17,6 +17,7 @@ use App\Traits\RegisterHelperTrait;
 use function array_key_exists;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class GameController extends Controller
@@ -124,15 +125,7 @@ class GameController extends Controller
 
     public function generateGameId(): string
     {
-        $bytes = random_bytes(10);
-        $id = base64_encode($bytes);
-        $id = str_replace(['+', '/', '='], '', $id);
-
-        if (Redis::exists("game:{$id}")) {
-            return $this->generateGameId();
-        }
-
-        return $id;
+        return Str::random(12);
     }
 
     public function delete(DeleteGameRequest $request): JsonResponse
