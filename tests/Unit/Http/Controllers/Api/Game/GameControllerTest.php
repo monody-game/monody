@@ -292,6 +292,14 @@ class GameControllerTest extends TestCase
         $this->assertSame(null, $this->secondUser->current_game);
     }
 
+    public function testLeavingGameWithoutGivingUserId()
+    {
+        $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->post('/api/game/leave')
+            ->assertUnprocessable();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
