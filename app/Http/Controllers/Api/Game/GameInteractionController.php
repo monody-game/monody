@@ -105,10 +105,6 @@ class GameInteractionController extends Controller
             $authorized = $this->getWerewolves($gameId);
         }
 
-        if ($authorized === false) {
-            return '*';
-        }
-
         if (is_array($authorized) && count($authorized) === 1) {
             $authorized = $authorized[0];
         }
