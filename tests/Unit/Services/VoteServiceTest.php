@@ -3,8 +3,6 @@
 namespace Tests\Unit\Services;
 
 use App\Events\GameKill;
-use App\Events\GameUnvote;
-use App\Events\GameVote;
 use App\Facades\Redis;
 use App\Models\User;
 use App\Services\VoteService;
@@ -27,18 +25,7 @@ class VoteServiceTest extends TestCase
 
     public function testVoting()
     {
-        Event::fake();
-        $gameId = $this->game['id'];
         $this->service->vote($this->secondUser->id, $this->game['id']);
-
-        Event::assertDispatched(function (GameVote $event) use ($gameId) {
-            return $event->payload === [
-                'votedUser' => $this->secondUser->id,
-                'gameId' => $gameId,
-                'votedBy' => $this->user->id,
-            ];
-        });
-        Event::assertNotDispatched(GameUnVote::class);
 
         $votes = Redis::get("game:{$this->game['id']}:votes");
         $this->assertSame([
@@ -55,19 +42,9 @@ class VoteServiceTest extends TestCase
             $this->secondUser->id => [$this->user->id],
         ], $votes);
 
-        Event::fakeFor(function () use ($gameId) {
-            $votes = $this->service->vote($this->secondUser->id, $gameId);
-            Event::assertDispatched(function (GameUnvote $event) use ($gameId) {
-                return $event->payload === [
-                    'votedUser' => $this->secondUser->id,
-                    'gameId' => $gameId,
-                    'votedBy' => $this->user->id,
-                ];
-            });
-            Event::assertNotDispatched(GameVote::class);
+        $votes = $this->service->vote($this->secondUser->id, $gameId);
 
-            $this->assertSame([], $votes);
-        });
+        $this->assertSame([], $votes);
     }
 
     public function testKillingVotedPlayer()
@@ -206,35 +183,8 @@ class VoteServiceTest extends TestCase
 
     public function testSwitchingVote()
     {
-        Event::fake();
-        $gameId = $this->game['id'];
         $this->service->vote($this->secondUser->id, $this->game['id']);
-
-        Event::assertDispatched(function (GameVote $event) use ($gameId) {
-            return $event->payload === [
-                'votedUser' => $this->secondUser->id,
-                'gameId' => $gameId,
-                'votedBy' => $this->user->id,
-            ];
-        });
-
         $this->service->vote($this->user->id, $this->game['id']);
-
-        Event::assertDispatched(function (GameUnvote $event) use ($gameId) {
-            return $event->payload === [
-                'votedUser' => $this->secondUser->id,
-                'gameId' => $gameId,
-                'votedBy' => $this->user->id,
-            ];
-        });
-
-        Event::assertDispatched(function (GameVote $event) use ($gameId) {
-            return $event->payload === [
-                'votedUser' => $this->user->id,
-                'gameId' => $gameId,
-                'votedBy' => $this->user->id,
-            ];
-        });
 
         $votes = Redis::get("game:{$this->game['id']}:votes");
         $this->assertSame([

@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Events\GameKill;
-use App\Events\GameUnvote;
-use App\Events\GameVote;
 use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
 use function array_key_exists;
@@ -38,12 +36,6 @@ class VoteService
             $votes = $this->unvote($isVoting, $gameId);
         }
 
-        GameVote::dispatch([
-            'votedUser' => $userId,
-            'gameId' => $gameId,
-            'votedBy' => $authUserId,
-        ]);
-
         $votes[$userId][] = $authUserId;
 
         Redis::set("game:$gameId:votes", $votes);
@@ -67,12 +59,6 @@ class VoteService
         if ([] === $votes[$userId]) {
             unset($votes[$userId]);
         }
-
-        GameUnvote::dispatch([
-            'votedUser' => $userId,
-            'gameId' => $gameId,
-            'votedBy' => $authUserId,
-        ]);
 
         Redis::set("game:$gameId:votes", $votes);
 
@@ -157,9 +143,6 @@ class VoteService
         return $votes ?? [];
     }
 
-    /**
-     * @param  array<string, array<string>>  $votes
-     */
     private function isVotingUser(string $userId, array $votes, string $votingUser): bool
     {
         return array_key_exists($userId, $votes) && in_array($votingUser, $votes[$userId], true);
