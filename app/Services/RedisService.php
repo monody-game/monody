@@ -16,10 +16,6 @@ class RedisService extends Redis
     {
         $content = parent::get($key);
 
-        if ($content === false) {
-            return null;
-        }
-
         if (Str::isJson($content)) {
             $content = json_decode($content, true);
 
