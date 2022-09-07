@@ -14,6 +14,7 @@ class RedisService extends Redis
 
     public function get(string $key): mixed
     {
+        /** @var string $content */
         $content = parent::get($key);
 
         if (Str::isJson($content)) {
