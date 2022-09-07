@@ -31,10 +31,6 @@ trait MemberHelperTrait
      */
     public function getMember(string $userId, string $gameId): array|false
     {
-        if (!$this->exists("game:$gameId:members")) {
-            return false;
-        }
-
         $members = $this->getMembers($gameId);
         $members = array_filter($members, fn ($member) => $member['user_id'] === $userId);
 
@@ -88,10 +84,6 @@ trait MemberHelperTrait
      */
     public function getUserIdByRole(int $roleId, string $gameId): array|false
     {
-        if (!$this->exists("game:$gameId")) {
-            return false;
-        }
-
         $game = Redis::get("game:$gameId");
 
         if (!$game['is_started']) {
@@ -103,10 +95,6 @@ trait MemberHelperTrait
 
     public function getRoleByUserId(string $userId, string $gameId): Roles|false
     {
-        if (!$this->exists("game:$gameId")) {
-            return false;
-        }
-
         $game = Redis::get("game:$gameId");
 
         if (!$game['is_started']) {
@@ -118,10 +106,6 @@ trait MemberHelperTrait
 
     public function getWerewolves(string $gameId): array
     {
-        if (!$this->exists("game:$gameId")) {
-            return [];
-        }
-
         $werewolvesRoles = Role::where('team_id', '=', Teams::Werewolves->value)->get()->toArray();
         $werewolves = [];
 
@@ -134,10 +118,6 @@ trait MemberHelperTrait
 
     public function kill(string $userId, string $gameId): bool
     {
-        if (!$this->exists("game:$gameId")) {
-            return false;
-        }
-
         $member = $this->getMember($userId, $gameId);
         $members = $this->getMembers($gameId);
         $index = array_search($member, $members, true);
