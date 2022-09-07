@@ -4,8 +4,6 @@ namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Enums\States;
 use App\Events\GameKill;
-use App\Events\GameUnvote;
-use App\Events\GameVote;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToDockerNetwork;
 use App\Models\User;
@@ -17,45 +15,31 @@ class GameVoteControllerTest extends TestCase
 {
     public function testVotingUser()
     {
-        Event::fake();
-
         $this->actingAs($this->user, 'api')
             ->post('/api/game/vote', [
                 'userId' => $this->user->id,
                 'gameId' => 'testVotingStateGame',
             ])->assertNoContent();
-
-        Event::assertDispatched(GameVote::class);
     }
 
     public function testVotingWithoutBeingInGame()
     {
-        Event::fake();
-
         $this->actingAs($this->thirdUser, 'api')->post('/api/game/vote', [
             'userId' => $this->user->id,
             'gameId' => $this->game['id'],
         ])->assertJsonValidationErrorFor('gameId');
-
-        Event::assertNotDispatched(GameVote::class);
     }
 
     public function testVotingUserThatIsNotInTheGame()
     {
-        Event::fake();
-
         $this->actingAs($this->user, 'api')->post('/api/game/vote', [
             'userId' => $this->thirdUser->id,
             'gameId' => $this->game['id'],
         ])->assertJsonValidationErrorFor('userId');
-
-        Event::assertNotDispatched(GameVote::class);
     }
 
     public function testVotingWhileGameIsNotStarted()
     {
-        Event::fake();
-
         $this->actingAs($this->user, 'api')->post('/api/game/vote', [
             'userId' => $this->secondUser->id,
             'gameId' => $this->game['id'],
@@ -64,28 +48,20 @@ class GameVoteControllerTest extends TestCase
             ->assertJson([
                 'Wait the game to start before voting',
             ]);
-
-        Event::assertNotDispatched(GameVote::class);
     }
 
     public function testVotingWhileGameIsNotInVotingState()
     {
-        Event::fake();
-
         $this->actingAs($this->user, 'api')->post('/api/game/vote', [
             'userId' => $this->secondUser->id,
             'gameId' => 'testStartedGame',
         ])->assertForbidden()->assertJson([
             'Wait your turn to vote',
         ]);
-
-        Event::assertNotDispatched(GameVote::class);
     }
 
     public function testUnvoting()
     {
-        Event::fake();
-
         Redis::set('game:testVotingStateGame:votes', [
             $this->user->id => [
                 $this->user->id,
@@ -97,9 +73,6 @@ class GameVoteControllerTest extends TestCase
             'userId' => $this->user->id,
             'gameId' => 'testVotingStateGame',
         ])->assertNoContent();
-
-        Event::assertDispatched(GameUnvote::class);
-        Event::assertNotDispatched(GameVote::class);
 
         $votes = Redis::get('game:testVotingStateGame:votes');
         $this->assertSame([
