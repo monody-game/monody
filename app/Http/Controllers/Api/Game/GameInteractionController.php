@@ -70,6 +70,8 @@ class GameInteractionController extends Controller
         $userId = $request->user()?->id;
         $interaction = $request->validated('interaction');
         $gameId = $request->validated('gameId');
+        $interactionId = $request->validated('interactionId');
+        $targetId = $request->validated('targetId');
 
         if (!$this->alive($userId, $gameId)) {
             return new JsonResponse([
@@ -78,19 +80,24 @@ class GameInteractionController extends Controller
         }
 
         $action = InteractionActions::from($interaction);
-        $result = $this->service->call($action, $userId, $request->validated('targetId'));
+        $result = $this->service->call($action, $interactionId, $userId, $targetId);
 
-        if ($result === $this->service::USER_CANNOT_USE_THIS_INTERACTION) {
-            return new JsonResponse([
+        return match ($result) {
+            $this->service::USER_CANNOT_USE_THIS_INTERACTION => new JsonResponse([
                 'message' => "You can't use the interaction {$interaction}",
-            ], Response::HTTP_FORBIDDEN);
-        }
-
-        return new JsonResponse([
-            'interaction' => $action->value,
-            'interactionId' => $request->validated('interactionId'),
-            'response' => $result,
-        ], Response::HTTP_OK);
+            ], Response::HTTP_FORBIDDEN),
+            $this->service::INVALID_ACTION_ON_INTERACTION => new JsonResponse([
+                'message' => "You can't use the action {$interaction} on the interaction {$interactionId}",
+            ], Response::HTTP_BAD_REQUEST),
+            $this->service::INTERACTION_DOES_NOT_EXISTS => new JsonResponse([
+                'message' => "Interaction {$interactionId} does not exists",
+            ], Response::HTTP_BAD_REQUEST),
+            default => new JsonResponse([
+                'interaction' => $action->value,
+                'interactionId' => $interactionId,
+                'response' => $result,
+            ], Response::HTTP_OK),
+        };
     }
 
     private function getAuthorizedMembersByType(Interactions $type, string $gameId): string|array

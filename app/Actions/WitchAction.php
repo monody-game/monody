@@ -16,7 +16,7 @@ class WitchAction implements ActionInterface
 
     public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
     {
-        $gameId = $this->getCurrentUserGameActivity($userId) ?? '';
+        $gameId = $this->getCurrentUserGameActivity($userId);
 
         switch ($action) {
             case InteractionActions::KillPotion:
@@ -60,7 +60,7 @@ class WitchAction implements ActionInterface
 
     private function killPotion(string $targetId): void
     {
-        $gameId = $this->getCurrentUserGameActivity($targetId) ?? '';
+        $gameId = $this->getCurrentUserGameActivity($targetId);
         $success = $this->kill($targetId, $gameId);
 
         if (!$success) {
@@ -76,7 +76,7 @@ class WitchAction implements ActionInterface
 
     private function revivePotion(string $targetId): void
     {
-        $gameId = $this->getCurrentUserGameActivity($targetId) ?? '';
+        $gameId = $this->getCurrentUserGameActivity($targetId);
         $member = $this->getMember($targetId, $gameId);
         $members = $this->getMembers($gameId);
         $index = array_search($member, $members, true);
@@ -95,6 +95,6 @@ class WitchAction implements ActionInterface
 
     private function getRole(string $userId): Roles|false
     {
-        return $this->getRoleByUserId($userId, $this->getCurrentUserGameActivity($userId) ?? '');
+        return $this->getRoleByUserId($userId, $this->getCurrentUserGameActivity($userId));
     }
 }

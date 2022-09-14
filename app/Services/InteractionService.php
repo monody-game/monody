@@ -22,10 +22,12 @@ class InteractionService
 
     const USER_CANNOT_USE_THIS_INTERACTION = 3;
 
+    const INVALID_ACTION_ON_INTERACTION = 4;
+
     use RegisterHelperTrait;
 
     /**
-     * Creates and start an interaction with the given parameters
+     * Create and start an interaction with the given parameters
      *
      * @param  string  $gameId The id of the game
      * @param  Interactions  $type The type of the interaction (vote, ...)
@@ -76,18 +78,28 @@ class InteractionService
         return null;
     }
 
-    public function exists(string $gameId, string $interactionId): bool
+    public function getInteraction(string $gameId, string $interactionId): array
     {
-        $interactions = Redis::get("game:$gameId:interactions");
+        $interactions = Redis::get("game:$gameId:interactions") ?? [];
+        $interaction = array_search($interactionId, array_column($interactions, 'interactionId'), true);
 
-        return in_array($interactionId, array_column($interactions, 'interactionId'), true);
+        if ($interaction === false) {
+            return [];
+        }
+
+        return $interactions[$interaction];
     }
 
-    public function call(InteractionActions $action, string $emitterId, string $targetId): mixed
+    public function call(InteractionActions $action, string $interactionId, string $emitterId, string $targetId): mixed
     {
-        $role = explode(':', $action->value);
+        $interaction = $this->getInteraction($this->getCurrentUserGameActivity($emitterId), $interactionId);
+        $type = explode(':', $action->value);
 
-        switch ($role[0]) {
+        if ($type[0] !== $interaction['type']) {
+            return self::INVALID_ACTION_ON_INTERACTION;
+        }
+
+        switch ($type[0]) {
             case 'psychic':
                 $service = new PsychicAction;
                 break;
@@ -106,6 +118,7 @@ class InteractionService
         if (!$service->canInteract($action, $emitterId, $targetId)) {
             return self::USER_CANNOT_USE_THIS_INTERACTION;
         }
+
         /** @phpstan-ignore-next-line */
         return $service->call($targetId, $action);
     }

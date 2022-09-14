@@ -4,12 +4,12 @@ namespace App\Enums;
 
 use App\Models\Role;
 
-enum Roles: int
+enum Roles: string
 {
-    case Werewolf = 1;
-    case SimpleVillager = 2;
-    case Psychic = 3;
-    case Witch = 4;
+    case Werewolf = '1';
+    case SimpleVillager = '2';
+    case Psychic = '3';
+    case Witch = '4';
 
     public function stringify(): string
     {

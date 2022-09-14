@@ -14,11 +14,11 @@ trait RegisterHelperTrait
         $user->save();
     }
 
-    public function getCurrentUserGameActivity(string $userId): ?string
+    public function getCurrentUserGameActivity(string $userId): string
     {
         /** @var User $user */
         $user = User::find($userId);
 
-        return $user->current_game;
+        return $user->current_game ?? '';
     }
 }

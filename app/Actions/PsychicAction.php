@@ -16,10 +16,10 @@ class PsychicAction implements ActionInterface
     {
         $role = $this->getRole($userId);
 
-        return $role !== false && $role === Roles::Psychic && $this->alive($targetId, $this->getCurrentUserGameActivity($userId) ?? '');
+        return $role !== false && $role === Roles::Psychic && $this->alive($targetId, $this->getCurrentUserGameActivity($userId));
     }
 
-    public function call(string $targetId, InteractionActions $action): int
+    public function call(string $targetId, InteractionActions $action): string
     {
         $role = $this->getRole($targetId);
 
@@ -32,6 +32,6 @@ class PsychicAction implements ActionInterface
 
     private function getRole(string $userId): Roles|false
     {
-        return $this->getRoleByUserId($userId, $this->getCurrentUserGameActivity($userId) ?? '');
+        return $this->getRoleByUserId($userId, $this->getCurrentUserGameActivity($userId));
     }
 }
