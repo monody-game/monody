@@ -78,11 +78,9 @@ trait MemberHelperTrait
     }
 
     /**
-     * @param  int  $roleId
-     * @param  string  $gameId
      * @return array<int|string>|false
      */
-    public function getUserIdByRole(int $roleId, string $gameId): array|false
+    public function getUserIdByRole(string $roleId, string $gameId): array|false
     {
         $game = Redis::get("game:$gameId");
 
@@ -90,7 +88,7 @@ trait MemberHelperTrait
             return false;
         }
 
-        return array_keys($game['assigned_roles'], $roleId, true);
+        return array_keys($game['assigned_roles'], (int) $roleId, true);
     }
 
     public function getRoleByUserId(string $userId, string $gameId): Roles|false

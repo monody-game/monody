@@ -25,6 +25,6 @@ class VoteAction implements ActionInterface
 
     private function getGameId(string $userId): string
     {
-        return $this->getCurrentUserGameActivity($userId) ?? '';
+        return $this->getCurrentUserGameActivity($userId);
     }
 }
