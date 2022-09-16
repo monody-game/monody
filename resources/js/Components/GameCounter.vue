@@ -54,7 +54,9 @@ export default {
 				"Attente",
 				"Début de la partie",
 				"Nuit",
+				"Voyante",
 				"Tour des Loups",
+				"Sorcière",
 				"Jour",
 				"Vote",
 			];
@@ -64,6 +66,8 @@ export default {
 			const icons = [
 				"wait",
 				"wait",
+				"night",
+				"night",
 				"night",
 				"night",
 				"day",
@@ -149,13 +153,15 @@ export default {
 				this.chatService.timeSeparator("Tombée de la nuit");
 				break;
 			case 3:
+			case 4:
+			case 5:
 				this.counterService.onNight();
 				break;
-			case 4:
+			case 6:
 				this.counterService.onDay();
 				this.chatService.timeSeparator("Lever du jour");
 				break;
-			case 5:
+			case 7:
 				this.counterService.onDay();
 				break;
 			}

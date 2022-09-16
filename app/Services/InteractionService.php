@@ -8,8 +8,6 @@ use App\Actions\WerewolvesAction;
 use App\Actions\WitchAction;
 use App\Enums\InteractionActions;
 use App\Enums\Interactions;
-use App\Events\InteractionClose;
-use App\Events\InteractionCreate;
 use App\Facades\Redis;
 use App\Traits\RegisterHelperTrait;
 use Illuminate\Support\Str;
@@ -49,8 +47,6 @@ class InteractionService
 
         Redis::set($key, [$interaction, ...(Redis::get($key) ?? [])]);
 
-        InteractionCreate::broadcast($interaction);
-
         return $interaction;
     }
 
@@ -67,13 +63,9 @@ class InteractionService
             return self::INTERACTION_DOES_NOT_EXISTS;
         }
 
-        $interaction = array_splice($interactions, $interaction, 1)[0];
-        Redis::set("game:$gameId:interactions", $interactions);
+        array_splice($interactions, $interaction, 1);
 
-        InteractionClose::broadcast([
-            'gameId' => $interaction['gameId'],
-            'interactionId' => $interaction['interactionId'],
-        ]);
+        Redis::set("game:$gameId:interactions", $interactions);
 
         return null;
     }
