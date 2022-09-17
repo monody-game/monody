@@ -9,6 +9,8 @@ use Tests\TestCase;
 
 class RoundControllerTest extends TestCase
 {
+    private array $game;
+
     public function testGettingAllRounds()
     {
         $rounds = Rounds::cases();

@@ -11,18 +11,23 @@ use Illuminate\Http\JsonResponse;
 
 class RoundController extends Controller
 {
-    public function all(): JsonResponse
+    public function all(?string $gameId = null): JsonResponse
     {
-        $rounds = Rounds::cases();
+        $rounds = [];
 
-        $rounds = array_map(function ($round) {
-            return $round->stateify();
-        }, $rounds);
+        foreach (Rounds::cases() as $round) {
+            $rounds[] = $this->getRound($round->value, $gameId);
+        }
 
         return new JsonResponse($rounds);
     }
 
-    public function get(int $round): JsonResponse
+    public function get(?int $round = null, ?string $gameId = null): JsonResponse
+    {
+        return new JsonResponse($this->getRound($round, $gameId));
+    }
+
+    private function getRound(?int $round, ?string $gameId = null): array
     {
         $round = Rounds::tryFrom($round);
 
@@ -57,6 +62,6 @@ class RoundController extends Controller
             }
         }
 
-        return new JsonResponse($round);
+        return $round;
     }
 }
