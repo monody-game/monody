@@ -17,4 +17,11 @@ enum Roles: string
 
         return $name['display_name'];
     }
+
+    public function name(): string
+    {
+        $name = Role::where('id', '=', $this->value)->get('name')->toArray()[0];
+
+        return $name['name'];
+    }
 }

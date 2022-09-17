@@ -1,5 +1,5 @@
 export default {
-	name: "werewolves",
+	name: "werewolf",
 	duration: 20,
 	identifier: 3,
 	before(socket, channel) {
