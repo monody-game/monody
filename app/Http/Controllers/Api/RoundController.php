@@ -27,6 +27,6 @@ class RoundController extends Controller
             $round = Rounds::LoopRound;
         }
 
-        return new JsonResponse($round);
+        return new JsonResponse($round->stateify());
     }
 }
