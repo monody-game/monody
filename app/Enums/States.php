@@ -19,7 +19,7 @@ enum States: int
             self::Waiting => 'wait',
             self::Starting => 'starting',
             self::Night => 'night',
-            self::Werewolf => 'werewolves',
+            self::Werewolf => 'werewolf',
             self::Witch => 'witch',
             self::Psychic => 'psychic',
             self::Day => 'day',
