@@ -17,14 +17,14 @@
         />
       </svg>
       <svg class="counter__icon">
-        <use :href="'/sprite.svg#' + getIcon" />
+        <use :href="'/sprite.svg#' + icon" />
       </svg>
     </span>
     <p class="counter__seconds">
       {{ new Date(time * 1000).toISOString().substr(14, 5) }}
     </p>
     <p class="counter__round">
-      &nbsp;- {{ getRound }}
+      &nbsp;- {{ roundText }}
     </p>
   </div>
 </template>
@@ -36,7 +36,7 @@ import { useStore } from "../stores/game";
 
 export default {
 	name: "GameCounter",
-	data: function () {
+	data() {
 		return {
 			time: 0,
 			startingTime: 0,
@@ -45,48 +45,31 @@ export default {
 			status: 0,
 			counterService: new CounterCycleService(),
 			chatService: new ChatService(),
-			sound: new Audio("../sounds/bip.mp3")
+			sound: new Audio("../sounds/bip.mp3"),
+			roundText: this.getRound(),
+			round: 0,
+			icon: ""
 		};
 	},
-	computed: {
-		getRound() {
-			const rounds = [
-				"Attente",
-				"Début de la partie",
-				"Nuit",
-				"Voyante",
-				"Tour des Loups",
-				"Sorcière",
-				"Jour",
-				"Vote",
-			];
-			return rounds[this.status];
-		},
-		getIcon() {
-			const icons = [
-				"wait",
-				"wait",
-				"night",
-				"night",
-				"night",
-				"night",
-				"day",
-				"day",
-			];
-			return icons[this.status];
-		}
-	},
-	mounted() {
+	async mounted() {
 		this.updateCircle();
+		let state = await this.getState();
 		this.sound.load();
+		this.roundText = state.name;
+		this.icon = state.icon;
+
 		window.Echo.join(`game.${this.$route.params.id}`)
-			.listen(".game.state", (data) => {
+			.listen(".game.state", async (data) => {
 				if (data) {
 					clearInterval(this.counterId);
 					this.time = data.counterDuration === -1 ? 0 : data.counterDuration;
 					this.startingTime = data.startTimestamp;
 					this.totalTime = this.time;
 					this.status = data.state;
+					this.round = data.round;
+					state = await this.getState(data.state);
+					this.roundText = state.name;
+					this.icon = state.icon;
 					useStore().state = data.state;
 					this.updateCircle();
 					this.decount();
@@ -165,7 +148,15 @@ export default {
 				this.counterService.onDay();
 				break;
 			}
+		},
+		async getRound() {
+			const round = await window.JSONFetch(`/rounds/${this.$route.params.id}`, "GET");
+			return round.data[this.round][this.status];
+		},
+		async getState(status) {
+			const state = await window.JSONFetch(`/states/${status ?? this.status}`, "GET");
+			return state.data;
 		}
-	},
+	}
 };
 </script>
