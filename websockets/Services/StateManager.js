@@ -1,5 +1,5 @@
 import { client } from "../Redis/Connection.js";
-import rounds from "./RoundService.js";
+import getRounds from "./RoundService.js";
 
 export class StateManager {
 	constructor(io) {
@@ -19,7 +19,8 @@ export class StateManager {
 		this.io.to(channel).emit("game.state", channel, {
 			state: state.status,
 			counterDuration: state.counterDuration,
-			startTimestamp: state.startTimestamp
+			startTimestamp: state.startTimestamp,
+			round: state.round
 		});
 
 		return this;
@@ -43,7 +44,10 @@ export class StateManager {
    * @returns {Promise<{duration: number, state: number}>} context The next round context
    */
 	async nextState(channel, counterId) {
-		const state = (await this.getState(channel.split(".")[1]));
+		const gameId = channel.split(".")[1];
+		const state = await this.getState(gameId);
+		const rounds = await getRounds(gameId);
+
 		if (!state) {
 			clearTimeout(counterId);
 			return;
@@ -105,7 +109,9 @@ export class StateManager {
 	}
 
 	async getNextStateDuration(channel) {
-		const state = await this.getState(channel.split(".")[1]);
+		const gameId = channel.split(".")[1];
+		const state = await this.getState(gameId);
+		const rounds = await getRounds(gameId);
 		if (!state) return;
 
 		const currentRound = state["round"] || 0;
