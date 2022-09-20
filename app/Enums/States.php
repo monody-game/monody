@@ -27,6 +27,20 @@ enum States: int
         };
     }
 
+    public function readeableStringify(): string
+    {
+        return match ($this) {
+            self::Waiting => 'Attente',
+            self::Starting => 'Démarrage',
+            self::Night => 'Nuit',
+            self::Werewolf => 'Tour des loup-garous',
+            self::Witch => 'Tour de la sorcière',
+            self::Psychic => 'Tour de la voyante',
+            self::Day => 'Jour',
+            self::Vote => 'Vote',
+        };
+    }
+
     public function duration(): int
     {
         return match ($this) {
@@ -34,6 +48,15 @@ enum States: int
             self::Starting, self::Night, self::Day => 10,
             self::Werewolf, self::Witch, self::Psychic => 20,
             self::Vote => 40,
+        };
+    }
+
+    public function iconify(): string
+    {
+        return match ($this) {
+            self::Waiting, self::Starting => 'wait',
+            self::Night, self::Witch, self::Werewolf, self::Psychic => 'night',
+            self::Day, self::Vote => 'day',
         };
     }
 }
