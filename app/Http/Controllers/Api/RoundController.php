@@ -22,12 +22,12 @@ class RoundController extends Controller
         return new JsonResponse($rounds);
     }
 
-    public function get(?int $round = null, ?string $gameId = null): JsonResponse
+    public function get(int $round, ?string $gameId = null): JsonResponse
     {
         return new JsonResponse($this->getRound($round, $gameId));
     }
 
-    private function getRound(?int $round, ?string $gameId = null): array
+    private function getRound(int $round, ?string $gameId = null): array
     {
         $round = Rounds::tryFrom($round);
 
