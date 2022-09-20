@@ -48,6 +48,38 @@ class RoundControllerTest extends TestCase
         ], $round);
     }
 
+    public function testGettingAllRoundsForOneGame()
+    {
+        $this
+            ->get("/api/rounds/{$this->game['id']}")
+            ->assertOk()
+            ->assertExactJson([
+                [
+                    States::Waiting->value,
+                    States::Starting->value,
+                    States::Night->value,
+                    States::Psychic->value,
+                    States::Werewolf->value,
+                    States::Day->value,
+                    States::Vote->value,
+                ],
+                [
+                    States::Night->value,
+                    States::Psychic->value,
+                    States::Werewolf->value,
+                    States::Day->value,
+                    States::Vote->value,
+                ],
+                [
+                    States::Night->value,
+                    States::Psychic->value,
+                    States::Werewolf->value,
+                    States::Day->value,
+                    States::Vote->value,
+                ],
+            ]);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
