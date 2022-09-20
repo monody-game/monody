@@ -22,7 +22,7 @@ Route::get('/roles/get/{id}', 'RoleController@get');
 Route::get('/roles/{group}', 'RoleController@group');
 
 Route::get('/rounds/{gameId?}', 'RoundController@all');
-Route::get('/round/{round?}/{gameId?}', 'RoundController@get');
+Route::get('/round/{round}/{gameId?}', 'RoundController@get');
 
 Route::get('/states/{state}', 'StateController@get');
 
