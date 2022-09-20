@@ -2,24 +2,32 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Roles;
 use App\Enums\Rounds;
+use App\Enums\States;
+use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 
 class RoundController extends Controller
 {
-    public function all(): JsonResponse
+    public function all(?string $gameId = null): JsonResponse
     {
-        $rounds = Rounds::cases();
+        $rounds = [];
 
-        $rounds = array_map(function ($round) {
-            return $round->stateify();
-        }, $rounds);
+        foreach (Rounds::cases() as $round) {
+            $rounds[] = $this->getRound($round->value, $gameId);
+        }
 
         return new JsonResponse($rounds);
     }
 
-    public function get(int $round): JsonResponse
+    public function get(?int $round = null, ?string $gameId = null): JsonResponse
+    {
+        return new JsonResponse($this->getRound($round, $gameId));
+    }
+
+    private function getRound(?int $round, ?string $gameId = null): array
     {
         $round = Rounds::tryFrom($round);
 
@@ -27,6 +35,33 @@ class RoundController extends Controller
             $round = Rounds::LoopRound;
         }
 
-        return new JsonResponse($round);
+        $round = $round->stateify();
+
+        if ($gameId !== null) {
+            $game = Redis::get("game:$gameId");
+            $roles = array_keys($game['roles']);
+
+            $roles = array_map(function ($role) {
+                return Roles::from($role)->name();
+            }, $roles);
+
+            foreach ($round as $key => $state) {
+                if (
+                    $state === States::Waiting ||
+                    $state === States::Starting ||
+                    $state === States::Night ||
+                    $state === States::Day ||
+                    $state === States::Vote
+                ) {
+                    continue;
+                }
+
+                if (!in_array($state->stringify(), $roles, true)) {
+                    array_splice($round, $key, 1);
+                }
+            }
+        }
+
+        return $round;
     }
 }

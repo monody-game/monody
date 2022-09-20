@@ -3,10 +3,14 @@
 namespace Tests\Unit\Http\Controllers\Api;
 
 use App\Enums\Rounds;
+use App\Enums\States;
+use App\Models\User;
 use Tests\TestCase;
 
 class RoundControllerTest extends TestCase
 {
+    private array $game;
+
     public function testGettingAllRounds()
     {
         $rounds = Rounds::cases();
@@ -23,6 +27,70 @@ class RoundControllerTest extends TestCase
         $this
             ->get('/api/round/1')
             ->assertOk()
-            ->assertExactJson([Rounds::FirstRound]);
+            ->assertExactJson(Rounds::FirstRound->stateify());
+    }
+
+    public function testGettingOneRoundForASpecificGame()
+    {
+        $round = $this
+            ->get("/api/round/1/{$this->game['id']}")
+            ->assertOk()
+            ->json();
+
+        $this->assertSame([
+            States::Waiting->value,
+            States::Starting->value,
+            States::Night->value,
+            States::Psychic->value,
+            States::Werewolf->value,
+            States::Day->value,
+            States::Vote->value,
+        ], $round);
+    }
+
+    public function testGettingAllRoundsForOneGame()
+    {
+        $this
+            ->get("/api/rounds/{$this->game['id']}")
+            ->assertOk()
+            ->assertExactJson([
+                [
+                    States::Waiting->value,
+                    States::Starting->value,
+                    States::Night->value,
+                    States::Psychic->value,
+                    States::Werewolf->value,
+                    States::Day->value,
+                    States::Vote->value,
+                ],
+                [
+                    States::Night->value,
+                    States::Psychic->value,
+                    States::Werewolf->value,
+                    States::Day->value,
+                    States::Vote->value,
+                ],
+                [
+                    States::Night->value,
+                    States::Psychic->value,
+                    States::Werewolf->value,
+                    States::Day->value,
+                    States::Vote->value,
+                ],
+            ]);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $user = User::factory()->create();
+
+        $this->game = $this
+            ->actingAs($user, 'api')
+            ->post('/api/game/new', [
+                'roles' => [1, 3],
+            ])
+            ->json('game');
     }
 }
