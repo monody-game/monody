@@ -11,7 +11,10 @@
           required
           type="text"
         >
-        <span class="login-page__input-focused" />
+        <span
+          class="login-page__input-focused"
+          :class="errors.username.errored ? 'login-page__input-focus-errored' : ''"
+        />
         <p
           v-if="errors.username.errored"
           class="login-page__error"
@@ -28,7 +31,10 @@
           required
           type="password"
         >
-        <span class="login-page__input-focused" />
+        <span
+          class="login-page__input-focused"
+          :class="errors.password.errored ? 'login-page__input-focus-errored' : ''"
+        />
         <p
           v-if="errors.password.errored"
           class="login-page__error"

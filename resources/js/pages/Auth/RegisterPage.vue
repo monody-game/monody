@@ -12,7 +12,10 @@
           required
           type="text"
         >
-        <span class="login-page__input-focused" />
+        <span
+          class="login-page__input-focused"
+          :class="errors.username.errored ? 'login-page__input-focus-errored' : ''"
+        />
         <p
           v-if="errors.username.errored"
           class="login-page__error"
@@ -30,7 +33,10 @@
           required
           type="email"
         >
-        <span class="login-page__input-focused" />
+        <span
+          class="login-page__input-focused"
+          :class="errors.email.errored ? 'login-page__input-focus-errored' : ''"
+        />
         <p
           v-if="errors.email.errored"
           class="login-page__error"
@@ -48,7 +54,10 @@
           required
           type="password"
         >
-        <span class="login-page__input-focused" />
+        <span
+          class="login-page__input-focused"
+          :class="errors.password.errored ? 'login-page__input-focus-errored' : ''"
+        />
         <p
           v-if="errors.password.errored"
           class="login-page__error"
@@ -66,7 +75,10 @@
           required
           type="password"
         >
-        <span class="login-page__input-focused" />
+        <span
+          class="login-page__input-focused"
+          :class="errors.password_confirmation.errored ? 'login-page__input-focus-errored' : ''"
+        />
         <p
           v-if="errors.password_confirmation.errored"
           class="login-page__error"

@@ -63,6 +63,10 @@
 	transition: transform .3s;
 	background-color: #fff;
 	transform: translateX(-100%);
+
+	&.login-page__input-focus-errored {
+		background-color: var(--danger);
+	}
 }
 
 .login-page__input {
@@ -76,7 +80,7 @@
   width: 100%;
 	overflow: hidden;
 
-  &.login-page__input-error {
+  &.login-page__input-error:not(:focus) {
     outline: none;
     border-bottom: var(--danger) solid 2px;
   }
