@@ -103,124 +103,105 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
-import { useStore } from "../../stores/user.js";
+import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
 
-export default {
-	name: "RegisterPage",
-	components: {
-		DotsSpinner,
+const router = useRouter();
+const username = ref("");
+const email = ref("");
+const password = ref("");
+const password_confirmation = ref("");
+const loading = ref(false);
+const errors = ref({
+	text: "",
+	username: {
+		errored: false,
+		text: ""
 	},
-	data() {
-		return {
-			store: useStore(),
-			username: "",
-			email: "",
-			password: "",
-			password_confirmation: "",
-			loading: false,
-			errors: {
-				text: "",
-				username: {
-					errored: false,
-					text: ""
-				},
-				email: {
-					errored: false,
-					text: ""
-				},
-				password: {
-					errored: false,
-					text: ""
-				},
-				password_confirmation: {
-					errored: false,
-					text: ""
-				}
-			}
-		};
+	email: {
+		errored: false,
+		text: ""
 	},
-	watch: {
-		username() {
-			this.validate(this.username, "username");
-		},
-		email() {
-			this.validate(this.email, "email");
-		},
-		password() {
-			this.validate(this.password, "password");
+	password: {
+		errored: false,
+		text: ""
+	},
+	password_confirmation: {
+		errored: false,
+		text: ""
+	}
+});
+
+watch(username, () => validate(username.value, "username"));
+watch(email, () => validate(email.value, "email"));
+watch(password, () => validate(password.value, "password"));
+
+const register = async function() {
+	if (checkInput()) {
+		loading.value = true;
+		await window
+			.JSONFetch("/auth/register", "POST", {
+				username: username.value,
+				email: email.value,
+				password: password.value,
+				password_confirmation: password_confirmation.value,
+			});
+		loading.value = false;
+		await router.push("play");
+	}
+};
+
+const checkInput = function () {
+	errors.value.username.errored = username.value === "";
+	errors.value.email.errored = email.value === "";
+	errors.value.password.errored = password.value === "";
+	errors.value.password_confirmation.errored = password_confirmation.value === "";
+
+	if (username.value === "" || email.value === "" || password.value === "" || password_confirmation.value === "") {
+		errors.value.text = "Merci de remplir tous les champs";
+		loading.value = false;
+		return false;
+	}
+
+	if (password.value !== password_confirmation.value) {
+		errors.value.password.errored = true;
+		errors.value.password_confirmation.errored = true;
+		errors.value.text = "Les mots-de-passe doivent être identiques";
+		loading.value = false;
+		return false;
+	}
+	return true;
+};
+
+const validate = function (data, type) {
+	if (type === "email") {
+		if (data.match(/^([a-z.]+)@([a-z]+)\.([a-z]+)$/gm) === null) {
+			errors.value.email.errored = true;
+			errors.value.text = "Veuillez rentrer un email valide";
+		} else {
+			errors.value.email.errored = false;
+			errors.value.text = "";
 		}
-	},
-	methods: {
-		async register() {
-			if (this.checkInput()) {
-				this.loading = true;
-				await window
-					.JSONFetch("/auth/register", "POST", {
-						username: this.username,
-						email: this.email,
-						password: this.password,
-						password_confirmation: this.password_confirmation,
-					});
-				this.loading = false;
-				await this.$router.push("play");
-			}
-		},
-		checkInput() {
-			this.errors.username.errored = this.username === "";
-			this.errors.email.errored = this.email === "";
-			this.errors.password.errored = this.password === "";
-			this.errors.password_confirmation.errored = this.password_confirmation === "";
+	}
+	if (type === "username") {
+		if (data.length > 24) {
+			errors.value.username.errored = true;
+			errors.value.text = "Votre pseudo doit faire moins de 24 caractères";
+		} else {
+			errors.value.username.errored = false;
+			errors.value.text = "";
+		}
+	}
 
-			if (this.username === "" || this.email === "" || this.password === "" || this.password_confirmation === "") {
-				this.errors.text = "Merci de remplir tous les champs";
-				this.loading = false;
-				return false;
-			}
-
-			if (this.password !== this.password_confirmation) {
-				this.errors.password.errored = true;
-				this.errors.password_confirmation.errored = true;
-				this.errors.text = "Les mots-de-passe doivent être identiques";
-				this.loading = false;
-				return false;
-			}
-			return true;
-		},
-		/**
-     * @param {String} data
-     * @param {String} type
-     */
-		validate(data, type) {
-			if (type === "email") {
-				if (data.match(/^([a-z.]+)@([a-z]+)\.([a-z]+)$/gm) === null) {
-					this.errors.email.errored = true;
-					this.errors.text = "Veuillez rentrer un email valide";
-				} else {
-					this.errors.email.errored = false;
-					this.errors.text = "";
-				}
-			}
-			if (type === "username") {
-				if (data.length > 24) {
-					this.errors.username.errored = true;
-					this.errors.text = "Votre pseudo doit faire moins de 24 caractères";
-				} else {
-					this.errors.username.errored = false;
-					this.errors.text = "";
-				}
-			}
-
-			if (type === "password") {
-				if (data.length < 6) {
-					this.errors.password.errored = true;
-					this.errors.text = "Votre mot-de-passe doit faire plus de 6 caractères";
-				} else {
-					this.errors.password.errored = false;
-					this.errors.text = "";
-				}
-			}
+	if (type === "password") {
+		if (data.length < 6) {
+			errors.value.password.errored = true;
+			errors.value.text = "Votre mot-de-passe doit faire plus de 6 caractères";
+		} else {
+			errors.value.password.errored = false;
+			errors.value.text = "";
 		}
 	}
 };

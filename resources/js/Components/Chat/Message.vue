@@ -1,24 +1,24 @@
 <template>
   <img
-    :src="'https://localhost' + message.author.avatar"
+    :src="'https://localhost' + props.message.author.avatar"
     alt=""
     class="message__avatar"
   >
   <div class="message__texts">
     <p class="message__author">
-      {{ message.author.username }}
+      {{ props.message.author.username }}
     </p>
     <p class="message__content">
-      {{ message.content }}
+      {{ props.message.content }}
     </p>
   </div>
 </template>
 
-<script>
-export default {
-	name: "ChatMessage",
-	props: {
-		message: Object
+<script setup>
+const props = defineProps({
+	message: {
+		type: Object,
+		required: true
 	}
-};
+});
 </script>

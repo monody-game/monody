@@ -1,7 +1,7 @@
 <template>
   <div class="roles-balance__container">
     <p class="roles-balance__status">
-      La partie est <span>{{ current_status }}</span>
+      La partie est <span>{{ currentStatus }}</span>
     </p>
     <div class="roles-balance__balance">
       <span class="roles-balance__werewolf" />
@@ -9,81 +9,69 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-	name: "RolesBalance",
-	props: {
-		selectedRoles: Array
-	},
-	data () {
-		return {
-			werewolfWidth: 0,
-			villagerWidth: 0,
-		};
-	},
-	computed: {
-		varContainer () {
-			return document.documentElement.style;
-		},
-		current_status () {
-			return this.getCurrentStatus();
-		},
-	},
-	created () {
-		this.calcBalancesWidths();
-	},
-	methods: {
-		getCurrentStatus () {
-			const werewolfCount = this.werewolfWidth;
-			const villagerCount = this.villagerWidth;
-			if (
-				villagerCount >= "50" &&
-        villagerCount <= "60" &&
-        werewolfCount >= "40" &&
-        werewolfCount <= "50"
-			) {
-				return "équilibrée";
-			}
-			if (werewolfCount >= "40") {
-				return "avantagée aux loups-garous";
-			}
-			if (villagerCount >= "60") {
-				return "avantagée aux villageois";
-			}
-		},
-		calcBalancesWidths () {
-			const roles = this.selectedRoles;
-			let villagerWeight = 0;
-			let werewolfWeight = 0;
 
-			roles.forEach((role) => {
-				if (role.team_id === 1) {
-					villagerWeight = villagerWeight + role.weight * role.count;
-				} else if (role.team_id === 2) {
-					werewolfWeight = werewolfWeight + role.weight * role.count;
-				}
-			});
+<script setup>
 
-			const totalWeight = villagerWeight + werewolfWeight;
+import { computed, reactive, ref } from "vue";
 
-			this.werewolfWidth = Math.floor((werewolfWeight * 100) / totalWeight);
-			this.villagerWidth = Math.floor((villagerWeight * 100) / totalWeight);
+const props = defineProps({
+	selectedRoles: {
+		type: Array,
+		required: true
+	}
+});
 
-			if (this.werewolfWidth + this.villagerWidth !== 100) {
-				const gap = 100 - (this.villagerWidth + this.werewolfWidth);
-				this.werewolfWidth = this.werewolfWidth + gap;
-			}
+const werewolfWidth = ref(0);
+const villagerWidth = ref(0);
+const varContainer = computed(() => document.documentElement.style);
+const currentStatus = computed(() => getCurrentStatus());
 
-			this.varContainer.setProperty(
-				"--villager-balance-width",
-				this.villagerWidth + "%"
-			);
-
-			this.varContainer.setProperty(
-				"--werewolf-balance-width",
-				this.werewolfWidth + "%"
-			);
-		},
-	},
+const getCurrentStatus = function () {
+	if (
+		villagerWidth.value >= "50" &&
+		villagerWidth.value <= "60" &&
+		werewolfWidth.value >= "40" &&
+		werewolfWidth.value <= "50"
+	) {
+		return "équilibrée";
+	}
+	if (werewolfWidth.value >= "40") {
+		return "avantagée aux loups-garous";
+	}
+	if (villagerWidth.value >= "60") {
+		return "avantagée aux villageois";
+	}
 };
+
+const roles = reactive(props.selectedRoles);
+let villagerWeight = 0;
+let werewolfWeight = 0;
+
+roles.forEach((role) => {
+	if (role.team_id === 1) {
+		villagerWeight = villagerWeight + role.weight * role.count;
+	} else if (role.team_id === 2) {
+		werewolfWeight = werewolfWeight + role.weight * role.count;
+	}
+});
+
+const totalWeight = villagerWeight + werewolfWeight;
+
+werewolfWidth.value = Math.floor((werewolfWeight * 100) / totalWeight);
+villagerWidth.value = Math.floor((villagerWeight * 100) / totalWeight);
+
+if (werewolfWidth.value + villagerWidth.value !== 100) {
+	const gap = 100 - (villagerWidth.value + werewolfWidth.value);
+	werewolfWidth.value = werewolfWidth.value + gap;
+}
+
+varContainer.value.setProperty(
+	"--villager-balance-width",
+	villagerWidth.value + "%"
+);
+
+varContainer.value.setProperty(
+	"--werewolf-balance-width",
+	werewolfWidth.value + "%"
+);
 </script>

@@ -22,21 +22,18 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { useStore } from "../../../../stores/GameCreationModal.js";
+import { reactive } from "vue";
 
-export default {
-	name: "RoleShow",
-	props: {
-		selectedRole: Object
-	},
-	data() {
-		return {
-			role: this.selectedRole,
-		};
-	},
-	created() {
-		this.role.team = useStore().getTeamById(this.role.team_id);
-	},
-};
+const props = defineProps({
+	selectedRole: {
+		type: Object,
+		required: true
+	}
+});
+
+const store = useStore();
+const role = reactive(props.selectedRole);
+role.team = store.getTeamById(role.team_id);
 </script>
