@@ -58,56 +58,49 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import AuthService from "../services/AuthService.js";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
 import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";
 import { useStore as useGameCreationModal } from "../stores/GameCreationModal";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
 
-export default {
-	name: "PlayPage",
-	components: {
-		GameCreationModal: GameCreationModal,
-		GamePresentation: GamePresentation,
-		PlayerPresentation: PlayerPresentation
-	},
-	beforeRouteLeave(to, from, next) {
-		window.Echo.leave("home");
-		next();
-	},
-	data() {
-		return {
-			games: [],
-			roles: [],
-			store: useGameCreationModal()
-		};
-	},
-	async created() {
-		const res = await window.JSONFetch("/roles", "GET");
+const games = ref([]);
+const roles = ref([]);
+const store = useGameCreationModal();
+const router = useRouter();
 
-		this.roles = res.data.roles;
-		const games = await window.JSONFetch("/game/list", "GET");
-		if (games.data) {
-			this.games = games.data.games;
-		}
+onBeforeRouteLeave((to, from, next) => {
+	window.Echo.leave("home");
+	next();
+});
 
-		window.Echo.channel("home").listen(".game.created", (e) => {
-			this.games.push(e.data.game);
-		}).listen(".game.delete", (id) => {
-			this.games = this.games.filter(game => game.id !== id);
-		});
-	},
-	methods: {
-		logout() {
-			const auth = new AuthService();
-			auth.logout().then(() => {
-				this.$router.push({ name: "home_page" });
-			});
-		},
-		openModal() {
-			this.store.isOpenned = true;
-		},
+onMounted(async () => {
+	const res = await window.JSONFetch("/roles", "GET");
+
+	roles.value = res.data.roles;
+	const retrievedGames = await window.JSONFetch("/game/list", "GET");
+	if (retrievedGames.data) {
+		games.value = retrievedGames.data.games;
 	}
+
+	window.Echo.channel("home").listen(".game.created", (e) => {
+		games.value.push(e.data.game);
+	}).listen(".game.delete", (id) => {
+		games.value = games.value.filter(game => game.id !== id);
+	});
+});
+
+const logout = function () {
+	const auth = new AuthService();
+	auth.logout().then(() => {
+		router.push({ name: "home_page" });
+	});
+};
+
+const openModal = function () {
+	store.isOpenned = true;
 };
 </script>

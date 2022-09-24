@@ -15,26 +15,21 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useStore } from "../../../stores/GameCreationModal.js";
+import { computed } from "vue";
 
-export default {
-	name: "ShareModalPage",
-	data() {
-		return {
-			store: useStore()
-		};
-	},
-	computed: {
-		twitterLink() {
-			return "https://twitter.com/intent/tweet?text=Rejoignez%20moi%20dans%20ma%20partie%20Monody%F0%9F%8C%99%20%21%20" + encodeURIComponent(this.getLink);
-		},
-		getLink() {
-			const id = this.store.gameId;
-			if (id) {
-				return "https://localhost/game/" + id;
-			}
-		}
-	},
-};
+const store = useStore();
+
+const twitterLink = computed(() => {
+	return "https://twitter.com/intent/tweet?text=Rejoignez%20moi%20dans%20ma%20partie%20Monody%F0%9F%8C%99%20%21%20" + encodeURIComponent(getLink);
+});
+
+const getLink = computed(() => {
+	const id = store.gameId;
+	if (id) {
+		return "https://localhost/game/" + id;
+	}
+	return null;
+});
 </script>

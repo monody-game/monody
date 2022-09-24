@@ -1,14 +1,14 @@
 <template>
   <p class="time-separator__message">
-    {{ message }}
+    {{ props.message }}
   </p>
 </template>
 
-<script>
-export default {
-	name: "TimeSeparator",
-	props: {
-		message: String
+<script setup>
+const props = defineProps({
+	message: {
+		type: String,
+		required: true
 	}
-};
+});
 </script>

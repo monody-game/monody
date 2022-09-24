@@ -74,53 +74,43 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
-import { useStore } from "../../stores/user.js";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-export default {
-	name: "LoginPage",
-	components: {
-		DotsSpinner,
+const router = useRouter();
+const username = ref("");
+const password = ref("");
+const remember_me = ref(false);
+const loading = ref(false);
+const errors = ref({
+	username: {
+		errored: false,
+		text: ""
 	},
-	data() {
-		return {
-			store: useStore(),
-			username: "",
-			password: "",
-			remember_me: false,
-			loading: false,
-			errors: {
-				username: {
-					errored: false,
-					text: ""
-				},
-				password: {
-					errored: false,
-					text: ""
-				}
-			}
-		};
-	},
-	methods: {
-		login: async function () {
-			if (this.username === "" || this.password === "") {
-				this.errors.username.errored = true;
-				this.errors.password.errored = true;
-				this.errors.password.text = "Vous devez rentrer vos identifiants";
-				return;
-			}
-			this.loading = true;
-			await window
-				.JSONFetch("/auth/login", "POST", {
-					username: this.username,
-					password: this.password,
-					remember_me: this.remember_me,
-				});
+	password: {
+		errored: false,
+		text: ""
+	}
+});
 
-			this.loading = false;
-			await this.$router.push("play");
-		},
-	},
+const login = async function () {
+	if (username.value === "" || password.value === "") {
+		errors.value.username.errored = true;
+		errors.value.password.errored = true;
+		errors.value.password.text = "Vous devez rentrer vos identifiants";
+		return;
+	}
+	loading.value = true;
+	await window
+		.JSONFetch("/auth/login", "POST", {
+			username: username.value,
+			password: password.value,
+			remember_me: remember_me.value,
+		});
+
+	loading.value = false;
+	await router.push("play");
 };
 </script>

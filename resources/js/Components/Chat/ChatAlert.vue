@@ -1,18 +1,21 @@
 <template>
   <svg class="alert-message__icon">
-    <use :href="'/sprite.svg#' + type" />
+    <use :href="'/sprite.svg#' + props.type" />
   </svg>
   <p class="alert-message__text">
-    {{ message }}
+    {{ props.message }}
   </p>
 </template>
 
-<script>
-export default {
-	name: "ChatAlert",
-	props: {
+<script setup>
+const props = defineProps({
+	message: {
 		type: String,
-		message: String
+		required: true
+	},
+	type: {
+		type: String,
+		required: true
 	}
-};
+});
 </script>

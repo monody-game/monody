@@ -27,8 +27,5 @@
   </div>
 </template>
 
-<script>
-export default {
-	name: "LogoSpinner",
-};
+<script setup>
 </script>

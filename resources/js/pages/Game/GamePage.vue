@@ -23,7 +23,7 @@
         </svg>
         <p>Accueil</p>
       </a>
-      <GameCounter />
+      <Suspense><GameCounter /></Suspense>
     </div>
     <div class="game-page__main">
       <Chat />
@@ -33,37 +33,28 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import GameCounter from "../../Components/GameCounter.vue";
-import TheChat from "../../Components/Chat/Chat.vue";
+import Chat from "../../Components/Chat/TheChat.vue";
 import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/game.js";
+import { ref } from "vue";
+import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 
-export default {
-	name: "GamePage",
-	components: {
-		GameCounter: GameCounter,
-		Chat: TheChat,
-		PlayerList: PlayerList,
-		LogoSpinner: LogoSpinner
-	},
-	data() {
-		return {
-			gameId: this.$route.params.id,
-			loading: false,
-			isStarted: false,
-			store: useStore()
-		};
-	},
-	beforeUnmount() {
-		window.Echo.leave(`game.${this.gameId}`);
-		this.store.playerList = [];
-	},
-	methods: {
-		disconnect: async function () {
-			await this.$router.push("/play");
-		},
-	}
+const route = useRoute();
+const router = useRouter();
+const store = useStore();
+
+const gameId = route.params.id;
+const loading = ref(false);
+
+onBeforeRouteLeave(() => {
+	window.Echo.leave(`game.${gameId}`);
+	store.playerList = [];
+});
+
+const disconnect = async function () {
+	await router.push("/play");
 };
 </script>

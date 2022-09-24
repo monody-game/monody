@@ -20,35 +20,30 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useStore as useGameCreationModal } from "../../stores/GameCreationModal";
 import { useStore as useProfileModal } from "../../stores/ProfileModal";
+import { ref, onMounted } from "vue";
 
-export default {
-	name: "BaseModal",
-	data() {
-		return {
-			gameCreationModal: useGameCreationModal(),
-			profileModal: useProfileModal(),
-		};
-	},
-	mounted() {
-		this.$refs.modal.focus();
-	},
-	methods: {
-		closeModal() {
-			if (this.gameCreationModal.isOpenned) {
-				this.gameCreationModal.isOpenned = false;
-				document.documentElement.style.removeProperty(
-					"--villager-balance-width"
-				);
-				document.documentElement.style.removeProperty(
-					"--werewolf-balance-width"
-				);
-			} else if (this.profileModal.isOpenned) {
-				this.profileModal.isOpenned = false;
-			}
-		},
+const gameCreationModal = useGameCreationModal();
+const profileModal = useProfileModal();
+const modal = ref(null);
+
+onMounted(() => {
+	modal.value.focus();
+});
+
+const closeModal = function () {
+	if (gameCreationModal.isOpenned) {
+		gameCreationModal.isOpenned = false;
+		document.documentElement.style.removeProperty(
+			"--villager-balance-width"
+		);
+		document.documentElement.style.removeProperty(
+			"--werewolf-balance-width"
+		);
+	} else if (profileModal.isOpenned) {
+		profileModal.isOpenned = false;
 	}
 };
 </script>

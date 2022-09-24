@@ -18,19 +18,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useStore } from "../../stores/user";
-import ExpProgressBar from "./ExpProgressBar.vue";
+import ProgressBar from "./ExpProgressBar.vue";
 
-export default {
-	name: "PlayerPresentation",
-	components: {
-		ProgressBar: ExpProgressBar
-	},
-	data() {
-		return {
-			store: useStore(),
-		};
-	},
-};
+const store = useStore();
 </script>

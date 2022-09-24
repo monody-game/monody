@@ -45,80 +45,72 @@
   </BaseModal>
 </template>
 
-<script>
+<script setup>
 import RolesModalPage from "./Pages/Roles/RolesModalPage.vue";
 import GameStateModalPage from "./Pages/GameState/GameStateModalPage.vue";
 import ShareModalPage from "./Pages/ShareModalPage.vue";
 import BaseModal from "./BaseModal.vue";
 import { useStore } from "../../stores/GameCreationModal.js";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
 
-export default {
-	name: "GameCreationModal",
-	components: {
-		BaseModal,
-		RolesModalPage,
-		GameStateModalPage,
-		ShareModalPage,
-	},
-	data() {
-		return {
-			currentPage: 1,
-			totalPage: 3,
-			error: "",
-			store: useStore(),
-			gameId: 0,
-		};
-	},
-	methods: {
-		closeModal() {
-			this.reset();
-		},
-		notEnoughSelectedRoles() {
-			const selectedRoles = this.store.selectedRoles;
-			// return selectedRoles.length < 5;
-			// TODO: replace line below with line above
-			return selectedRoles.length < 2;
-		},
-		async nextPage() {
-			if (this.currentPage + 1 > this.totalPage) {
-				return;
-			}
+const currentPage = ref(1);
+const totalPage = ref(3);
+const store = useStore();
+const router = useRouter();
+const gameId = ref("");
 
-			if (this.currentPage === this.totalPage - 1) {
-				const res = await window.JSONFetch("/game/new", "POST", {
-					roles: this.store.selectedRoles,
-					users: []
-				});
-				const id = res.data.game.id;
-				this.gameId = id;
-				this.store.gameId = id;
-			}
+const closeModal = function () {
+	reset();
+};
 
-			this.currentPage++;
-		},
-		async finish() {
-			this.reset();
+const notEnoughSelectedRoles = function () {
+	const selectedRoles = store.selectedRoles;
+	// return selectedRoles.length < 5;
+	// TODO: replace line below with line above
+	return selectedRoles.length < 2;
+};
 
-			if (this.gameId !== 0) {
-				await this.$router.push("/game/" + this.gameId);
-			}
-		},
-		reset() {
-			this.store.$reset();
-
-			document.documentElement.style.removeProperty(
-				"--villager-balance-width"
-			);
-			document.documentElement.style.removeProperty(
-				"--werewolf-balance-width"
-			);
-		},
-		previousPage() {
-			if (this.currentPage + 1 < this.totalPage) {
-				return;
-			}
-			this.currentPage = this.currentPage - 1;
-		},
+const nextPage = async function() {
+	if (currentPage.value + 1 > totalPage.value) {
+		return;
 	}
+
+	if (currentPage.value === totalPage.value - 1) {
+		const res = await window.JSONFetch("/game/new", "POST", {
+			roles: store.selectedRoles
+		});
+
+		store.gameId = res.data.game.id;
+		gameId.value = res.data.game.id;
+	}
+
+	currentPage.value++;
+};
+
+const finish = async function() {
+	reset();
+
+	if (store.gameId !== 0) {
+		await router.push("/game/" + gameId.value);
+	}
+};
+
+const reset = function () {
+	store.$reset();
+
+	document.documentElement.style.removeProperty(
+		"--villager-balance-width"
+	);
+	document.documentElement.style.removeProperty(
+		"--werewolf-balance-width"
+	);
+};
+
+const previousPage = function () {
+	if (currentPage.value + 1 < totalPage.value) {
+		return;
+	}
+	currentPage.value = currentPage.value - 1;
 };
 </script>

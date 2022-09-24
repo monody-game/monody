@@ -1,20 +1,20 @@
 <template>
   <div
     ref="player"
-    :data-id="player.id"
+    :data-id="props.player.id"
     class="player__container"
-    @click="send(player.id, userID)"
+    @click="send(props.player.id, userID)"
   >
     <VotedBy
       v-if="isVoted"
-      :player="player"
-      :voted-by="votedBy"
+      :player="props.player"
+      :voted-by="props.player.voted_by"
     />
     <div class="player__avatar-container">
       <img
-        :alt="player.username + `'s avatar`"
+        :alt="props.player.username + `'s avatar`"
         :class="isVoted === true ? 'player__is-voted' : ''"
-        :src="getAvatar"
+        :src="avatar"
         class="player__avatar"
       >
       <div class="player__is-dead">
@@ -24,125 +24,120 @@
         </svg>
       </div>
       <span
-        v-if="player.role.group === 'werewolf'"
+        v-if="props.player.role.group === 'werewolf'"
         class="player__is-wolf"
       />
     </div>
     <p class="player__username">
-      {{ player.username }}
+      {{ props.player.username }}
     </p>
   </div>
 </template>
 
-<script>
+<script setup>
 import VotedBy from "./VotedBy.vue";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
+import { computed, reactive, ref } from "vue";
 
-export default {
-	name: "GamePlayer",
-	components: { VotedBy },
-	props: {
-		player: Object
-	},
-	data() {
-		return {
-			isVoted: this.player.voted_by.length > 1,
-			isDead: false,
-			gameStore: useGameStore(),
-			userStore: useUserStore(),
-			votedBy: this.player.voted_by
-		};
-	},
-	computed: {
-		gameId() {
-			return document.URL.split("/")[document.URL.split("/").length - 1];
-		},
-		userID() {
-			return this.userStore.id;
-		},
-		getAvatar() {
-			return "https://localhost" + this.player.avatar;
+const props = defineProps({
+	player: {
+		type: Object,
+		required: true
+	}
+});
+
+let isVoted = props.player.voted_by.length > 1;
+const isDead = ref(false);
+const votedBy = reactive(props.player.voted_by);
+const gameStore = useGameStore();
+const userStore = useUserStore();
+const player = ref(null);
+
+const gameId = computed(() => {
+	return document.URL.split("/")[document.URL.split("/").length - 1];
+});
+const userID = computed(() => {
+	return userStore.id;
+});
+const avatar = computed(() => {
+	return "https://localhost" + props.player.avatar;
+});
+
+window.Echo
+	.join(`game.${gameId.value}`)
+	.listen(".vote.open", () => {
+		player.value.classList.add("player__votable");
+	})
+	.listen(".vote.close", () => {
+		if (player.value && player.value.classList.contains("player__votable")) {
+			player.value.classList.remove("player__votable");
 		}
-	},
-	created() {
-		window.Echo
-			.join(`game.${this.gameId}`)
-			.listen(".vote.open", () => {
-				this.$refs.player.classList.add("player__votable");
-			})
-			.listen(".vote.close", () => {
-				const player = this.$refs.player;
-				if (player && player.classList.contains("player__votable")) {
-					player.classList.remove("player__votable");
-				}
-				this.isVoted = false;
-				this.gameStore.currentVote = 0;
-			}).listen(".game.vote", ({ data }) => {
-				const payload = data.payload;
-				if (payload.votedUser !== this.player.id) {
-					return;
-				}
-				this.vote(payload.votedBy, payload.votedUser);
-			}).listen(".game.unvote", ({ data }) => {
-				const payload = data.payload;
-				if (payload.votedUser !== this.player.id) {
-					return;
-				}
-				this.unVote(payload.votedBy, payload.votedUser);
-			}).listen(".game.kill", (e) => {
-				const killed = e.data.payload.killedUser;
+		isVoted = false;
+		gameStore.currentVote = 0;
+	}).listen(".game.vote", ({ data }) => {
+		const payload = data.payload;
+		if (payload.votedUser !== props.player.id) {
+			return;
+		}
+		vote(payload.votedBy, payload.votedUser);
+	}).listen(".game.unvote", ({ data }) => {
+		const payload = data.payload;
+		if (payload.votedUser !== props.player.id) {
+			return;
+		}
+		unVote(payload.votedBy, payload.votedUser);
+	}).listen(".game.kill", (e) => {
+		const killed = e.data.payload.killedUser;
 
-				if (killed === null) {
-					return;
-				}
+		if (killed === null) {
+			return;
+		}
 
-				const user = this.gameStore.getPlayerByID(killed);
+		const user = gameStore.getPlayerByID(killed);
 
-				if (user.id === this.player.id) {
-					this.isDead = true;
-					this.$refs.player.setAttribute("data-is-dead", true);
-				}
-			});
-	},
-	methods: {
-		async send(votedUser, votedBy) {
-			const res = await window.JSONFetch("/game/vote", "POST", {
-				gameId:	this.gameId,
-				userId: votedUser
-			});
+		if (user.id === props.player.id) {
+			isDead.value = true;
+			player.value.setAttribute("data-is-dead", true);
+		}
+	});
 
-			if (res.status !== 204) {
-				await this.unVote(votedBy, votedUser);
-			}
-		},
-		vote: async function (votedBy, votedUser) {
-			if (
-				this.gameStore.currentVote > 0
-			) {
-				await this.unVote(votedBy, this.gameStore.currentVote);
-				return;
-			}
+const send = async function(votedUser, votedBy) {
+	const res = await window.JSONFetch("/game/vote", "POST", {
+		gameId:	gameId.value,
+		userId: votedUser
+	});
 
-			this.isVoted = true;
-			this.gameStore.setVote({
-				userID: votedUser,
-				votedBy: votedBy,
-			});
-		},
-		unVote: async function (votedBy, votedUser) {
-			console.log(this.gameStore.getVotes(votedUser));
-			if (this.gameStore.getVotes(votedUser).length - 1 < 1) {
-				this.isVoted = false;
-			}
+	if (res.status !== 204) {
+		await unVote(votedBy, votedUser);
+	}
+};
 
-			this.gameStore.currentVote = 0;
-			this.votedBy.splice(this.votedBy.indexOf(votedBy), 1);
-			this.gameStore.unVote({
-				userID: votedUser,
-				votedBy: votedBy,
-			});
-		},
-	},
+const vote = async function (votingUser, votedUser) {
+	if (
+		gameStore.currentVote > 0
+	) {
+		await unVote(votingUser, gameStore.currentVote);
+		return;
+	}
+
+	isVoted = true;
+	gameStore.setVote({
+		userID: votedUser,
+		votedBy: votingUser,
+	});
+};
+
+const unVote = async function (votingUser, votedUser) {
+	if (gameStore.getVotes(votedUser).length - 1 < 1) {
+		isVoted = false;
+	}
+
+	gameStore.currentVote = 0;
+	votedBy.splice(votedBy.indexOf(votedBy), 1);
+	gameStore.unVote({
+		userID: votedUser,
+		votedBy: votingUser,
+	});
 };
 </script>
