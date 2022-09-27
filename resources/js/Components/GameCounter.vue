@@ -47,33 +47,33 @@ const status = ref(0);
 const counterService = new CounterCycleService();
 const chatService = new ChatService();
 const sound = new Audio("../sounds/bip.mp3");
+const roundText = ref("");
 
-const getState = async function(toRetrieveState) {
-	const parameter = typeof toRetrieveState === "undefined" ? status.value : toRetrieveState.value;
+const getState = async function(toRetrieveState = null) {
+	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
 	const state = await window.JSONFetch(`/states/${parameter}`, "GET");
+	console.log(state.data);
 	return state.data;
 };
-
-let roundText = (await getState()).name;
 
 onMounted(async () => {
 	updateCircle();
 	let state = await getState();
 	sound.load();
-	roundText = state.name;
+	roundText.value = state.name;
 	icon.value = state.icon;
 
 	window.Echo.join(`game.${route.params.id}`)
 		.listen(".game.state", async (data) => {
 			if (data) {
-				clearInterval(counterId);
+				clearInterval(counterId.value);
 				time.value = data.counterDuration === -1 ? 0 : data.counterDuration;
 				startingTime.value = data.startTimestamp;
 				totalTime.value = time.value;
 				status.value = data.state;
 				round.value = data.round;
 				state = await getState(data.state);
-				roundText = state.name;
+				roundText.value = state.name;
 				icon.value = state.icon;
 				useStore().state = data.state;
 				updateCircle();
@@ -84,7 +84,7 @@ onMounted(async () => {
 });
 
 onBeforeRouteLeave(() => {
-	clearInterval(counterId);
+	clearInterval(counterId.value);
 });
 
 const decount = function () {
@@ -97,7 +97,7 @@ const decount = function () {
 		updateCircle();
 
 		if (time.value === 0) {
-			clearInterval(counterId);
+			clearInterval(counterId.value);
 		}
 	}, 1000);
 };

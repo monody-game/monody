@@ -3,7 +3,7 @@
     ref="player"
     :data-id="props.player.id"
     class="player__container"
-    @click="send(props.player.id, userID)"
+    @click="send(userID, props.player.id)"
   >
     <VotedBy
       v-if="isVoted"
@@ -57,9 +57,11 @@ const player = ref(null);
 const gameId = computed(() => {
 	return document.URL.split("/")[document.URL.split("/").length - 1];
 });
+
 const userID = computed(() => {
 	return userStore.id;
 });
+
 const avatar = computed(() => {
 	return "https://localhost" + props.player.avatar;
 });
@@ -102,14 +104,14 @@ window.Echo
 		}
 	});
 
-const send = async function(votedUser, votedBy) {
+const send = async function(votingUser, votedUser) {
 	const res = await window.JSONFetch("/game/vote", "POST", {
 		gameId:	gameId.value,
 		userId: votedUser
 	});
 
 	if (res.status !== 204) {
-		await unVote(votedBy, votedUser);
+		await unVote(votingUser, votedUser);
 	}
 };
 
