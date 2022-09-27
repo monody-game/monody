@@ -37,7 +37,7 @@ class RoundController extends Controller
 
         $round = $round->stateify();
 
-        if ($gameId !== null) {
+        if ($gameId !== null && Redis::exists("game:$gameId")) {
             $game = Redis::get("game:$gameId");
             $roles = array_keys($game['roles']);
 
