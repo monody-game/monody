@@ -3,7 +3,9 @@
   overflow: hidden;
   height: 92%;
   margin: space(3) space(4) 0 space(4);
-  width: 25vw;
+	min-width: 20vw;
+	max-width: 30vw;
+	width: auto;
   border-radius: 10px;
   flex-shrink: 0;
 }

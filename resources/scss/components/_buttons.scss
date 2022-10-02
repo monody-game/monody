@@ -11,11 +11,11 @@
 
   &:disabled {
     cursor: not-allowed;
-    background-color: color.scale(#273097, $lightness: -40%);
+    background-color: var(--light-dark-background-hover);
   }
 
   &:not(.disable-hover):hover {
-    background-color: color.scale(#273097, $lightness: -20%);
+    background-color: var(--light-dark-background-hover);
   }
 
   &.small {
