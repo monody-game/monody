@@ -56,32 +56,31 @@ const getState = async function(toRetrieveState = null) {
 	return state.data;
 };
 
-onMounted(async () => {
-	updateCircle();
-	let state = await getState();
-	sound.load();
-	roundText.value = state.name;
-	icon.value = state.icon;
+onMounted(() =>	updateCircle());
 
-	window.Echo.join(`game.${route.params.id}`)
-		.listen(".game.state", async (data) => {
-			if (data) {
-				clearInterval(counterId.value);
-				time.value = data.counterDuration === -1 ? 0 : data.counterDuration;
-				startingTime.value = data.startTimestamp;
-				totalTime.value = time.value;
-				status.value = data.state;
-				round.value = data.round;
-				state = await getState(data.state);
-				roundText.value = state.name;
-				icon.value = state.icon;
-				useStore().state = data.state;
-				updateCircle();
-				decount();
-				updateOverlay();
-			}
-		});
-});
+let state = await getState();
+sound.load();
+roundText.value = state.name;
+icon.value = state.icon;
+
+window.Echo.join(`game.${route.params.id}`)
+	.listen(".game.state", async (data) => {
+		if (data) {
+			clearInterval(counterId.value);
+			time.value = data.counterDuration === -1 ? 0 : data.counterDuration;
+			startingTime.value = data.startTimestamp;
+			totalTime.value = time.value;
+			status.value = data.state;
+			round.value = data.round;
+			state = await getState(data.state);
+			roundText.value = state.name;
+			icon.value = state.icon;
+			useStore().state = data.state;
+			updateCircle();
+			decount();
+			updateOverlay();
+		}
+	});
 
 onBeforeRouteLeave(() => {
 	clearInterval(counterId.value);

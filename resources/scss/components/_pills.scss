@@ -9,11 +9,11 @@
 
     &.white-pill {
         background-color: #fff;
-        color: #0F1127;
+        color: var(--dark-background);
     }
 
     &.primary-pill {
-        background-color: #171D5B;
+        background-color: var(--light-dark-background);
         color: #fff;
     }
 
