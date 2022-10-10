@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 Route::get('/ping', function () {
-    return new JsonResponse(['message' => 'Alive'], Response::HTTP_OK);
+    return new JsonResponse(['message' => 'Alive 🌙'], Response::HTTP_OK);
 });
 
 Route::post('/auth/login', 'Auth\LoginController@login');
