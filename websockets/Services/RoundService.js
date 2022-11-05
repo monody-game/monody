@@ -3,7 +3,7 @@ import { readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-export default async function getRounds(gameId) {
+export default async function getRounds(gameId = 0) {
 	const apiRounds = await fetch(`https://web/api/rounds/${gameId}`, {
 		"method": "GET"
 	});
@@ -19,14 +19,20 @@ export default async function getRounds(gameId) {
 		imported[file.identifier] = file;
 	}
 
-	for (const round of apiRounds.json) {
-		const currentState = [];
-		for (const state of round) {
-			currentState.push(imported[state]);
-			if (round.indexOf(state) === round.length - 1) {
-				rounds.push(currentState);
+	try {
+		for (const round of apiRounds.json) {
+			const currentState = [];
+			for (const state of round) {
+				currentState.push(imported[state]);
+				if (round.indexOf(state) === round.length - 1) {
+					rounds.push(currentState);
+				}
 			}
 		}
+	} catch (e) {
+		console.error(e);
+		console.error(apiRounds);
 	}
+
 	return rounds;
 }

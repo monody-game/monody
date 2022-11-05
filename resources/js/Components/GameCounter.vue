@@ -52,7 +52,6 @@ const roundText = ref("");
 const getState = async function(toRetrieveState = null) {
 	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
 	const state = await window.JSONFetch(`/states/${parameter}`, "GET");
-	console.log(state.data);
 	return state.data;
 };
 
@@ -72,7 +71,7 @@ window.Echo.join(`game.${route.params.id}`)
 			totalTime.value = time.value;
 			status.value = data.state;
 			round.value = data.round;
-			state = await getState(data.state);
+			state = await getState(data.state.value);
 			roundText.value = state.name;
 			icon.value = state.icon;
 			useStore().state = data.state;
