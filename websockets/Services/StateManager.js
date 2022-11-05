@@ -1,5 +1,6 @@
 import { client } from "../Redis/Connection.js";
 import getRounds from "./RoundService.js";
+import { CacheService } from "./CacheService.js";
 
 export class StateManager {
 	constructor(io) {
@@ -46,7 +47,7 @@ export class StateManager {
 	async nextState(channel, counterId) {
 		const gameId = channel.split(".")[1];
 		const state = await this.getState(gameId);
-		const rounds = await getRounds(gameId);
+		const rounds = await CacheService.process(`${gameId}:rounds`, await getRounds(gameId));
 
 		if (!state) {
 			clearTimeout(counterId);
@@ -57,7 +58,7 @@ export class StateManager {
 		const currentRoundObject = rounds[currentRound];
 		let stateIndex = currentRoundObject.indexOf(currentRoundObject.find(roundState => roundState.identifier === state["status"])) + 1;
 		const loopingRoundIndex = rounds.length - 1;
-		let currentState = currentRoundObject[stateIndex].identifier;
+		let currentState = typeof currentRoundObject[stateIndex].identifier === "undefined" ? {} : currentRoundObject[stateIndex].identifier;
 
 		const members = await this.getMembers(channel);
 		const isLast = stateIndex === currentRoundObject.length;
@@ -111,7 +112,7 @@ export class StateManager {
 	async getNextStateDuration(channel) {
 		const gameId = channel.split(".")[1];
 		const state = await this.getState(gameId);
-		const rounds = await getRounds(gameId);
+		const rounds = await CacheService.process(`${gameId}:rounds`, await getRounds(gameId));
 		if (!state) return;
 
 		const currentRound = state["round"] || 0;
