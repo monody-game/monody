@@ -58,7 +58,7 @@ export class StateManager {
 		const currentRoundObject = rounds[currentRound];
 		let stateIndex = currentRoundObject.indexOf(currentRoundObject.find(roundState => roundState.identifier === state["status"])) + 1;
 		const loopingRoundIndex = rounds.length - 1;
-		let currentState = typeof currentRoundObject[stateIndex].identifier === "undefined" ? {} : currentRoundObject[stateIndex].identifier;
+		let currentState = typeof currentRoundObject[stateIndex] === "undefined" ? {} : currentRoundObject[stateIndex].identifier;
 
 		const members = await this.getMembers(channel);
 		const isLast = stateIndex === currentRoundObject.length;
