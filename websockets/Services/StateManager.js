@@ -14,7 +14,10 @@ export class StateManager {
    * @returns self
    */
 	async setState(state, channel) {
-		await client.set(`game:${channel.split(".")[1]}:state`, JSON.stringify(state));
+		const gameId = channel.split(".")[1];
+
+		console.info(`Setting state of game ${gameId} to ${state.status} in round ${state.round} for a duration of ${state.counterDuration}`);
+		await client.set(`game:${gameId}:state`, JSON.stringify(state));
 
 		this.io.to(channel).emit("game.state", channel, {
 			state: state.status,
@@ -58,7 +61,6 @@ export class StateManager {
 		let stateIndex = currentRoundObject.indexOf(currentRoundObject.find(roundState => roundState.identifier === state["status"])) + 1;
 		const loopingRoundIndex = rounds.length - 1;
 		let currentState = typeof currentRoundObject[stateIndex] === "undefined" ? {} : currentRoundObject[stateIndex].identifier;
-
 		const members = await this.getMembers(channel);
 		const isLast = stateIndex === currentRoundObject.length;
 
@@ -68,7 +70,10 @@ export class StateManager {
 			typeof currentRoundObject[stateIndex - 1].after === "function"
 		) {
 			await currentRoundObject[stateIndex - 1].after(this.io, channel, members);
-		} else if (isLast) {
+		} else if (
+			isLast &&
+			typeof currentRoundObject[currentRoundObject.length - 1].after === "function"
+		) {
 			await currentRoundObject[currentRoundObject.length - 1].after(this.io, channel, members);
 		}
 
@@ -79,7 +84,7 @@ export class StateManager {
 		) {
 			// We are at the end of the current round
 			currentRound++;
-			currentState = currentRoundObject[0].identifier;
+			currentState = rounds[currentRound][0].identifier;
 			stateIndex = 0;
 		} else if (currentRound === loopingRoundIndex && stateIndex === currentRoundObject.length - 1) {
 			// We are at the end of the looping round
