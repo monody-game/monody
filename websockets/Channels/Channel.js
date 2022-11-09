@@ -57,10 +57,12 @@ export class Channel {
 			if (this.isPresence(data.channel)) {
 				let member = res.channel_data;
 
-				try {
-					member = JSON.parse(res.channel_data);
-				} catch (e) {
-					console.error(e);
+				if (typeof res.channel_data === "string") {
+					try {
+						member = JSON.parse(res.channel_data);
+					} catch (e) {
+						console.error(e);
+					}
 				}
 
 				await this.presence.join(socket, data.channel, member);
