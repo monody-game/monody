@@ -5,7 +5,5 @@ export default async function getRounds(gameId = 0) {
 		"method": "GET"
 	});
 
-	console.log(apiRounds.json);
-
 	return apiRounds.json;
 }
