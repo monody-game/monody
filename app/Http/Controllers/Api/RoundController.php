@@ -62,6 +62,12 @@ class RoundController extends Controller
             }
         }
 
-        return $round;
+        return array_map(function ($state) {
+            return [
+                'identifier' => $state->value,
+                'raw_name' => $state->stringify(),
+                'duration' => $state->duration(),
+            ];
+        }, $round);
     }
 }

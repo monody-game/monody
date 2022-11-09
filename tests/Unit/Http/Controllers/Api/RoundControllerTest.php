@@ -11,10 +11,24 @@ class RoundControllerTest extends TestCase
 {
     private array $game;
 
+    private array $firstRound;
+
+    private array $secondRound;
+
     public function testGettingAllRounds()
     {
         $rounds = Rounds::cases();
-        $rounds = array_map(fn ($round) => $round->stateify(), $rounds);
+        $rounds = array_map(function ($round) {
+            $states = $round->stateify();
+
+            return array_map(function ($state) {
+                return [
+                    'identifier' => $state->value,
+                    'raw_name' => $state->stringify(),
+                    'duration' => $state->duration(),
+                ];
+            }, $states);
+        }, $rounds);
 
         $this
             ->get('/api/rounds')
@@ -24,10 +38,18 @@ class RoundControllerTest extends TestCase
 
     public function testGettingOneRound()
     {
+        $round = array_map(function ($state) {
+            return [
+                'identifier' => $state,
+                'raw_name' => $state->stringify(),
+                'duration' => $state->duration(),
+            ];
+        }, Rounds::FirstRound->stateify());
+
         $this
             ->get('/api/round/1')
             ->assertOk()
-            ->assertExactJson(Rounds::FirstRound->stateify());
+            ->assertExactJson($round);
     }
 
     public function testGettingOneRoundForASpecificGame()
@@ -37,15 +59,7 @@ class RoundControllerTest extends TestCase
             ->assertOk()
             ->json();
 
-        $this->assertSame([
-            States::Waiting->value,
-            States::Starting->value,
-            States::Night->value,
-            States::Psychic->value,
-            States::Werewolf->value,
-            States::Day->value,
-            States::Vote->value,
-        ], $round);
+        $this->assertSame($this->firstRound, $round);
     }
 
     public function testGettingAllRoundsForOneGame()
@@ -54,29 +68,9 @@ class RoundControllerTest extends TestCase
             ->get("/api/rounds/{$this->game['id']}")
             ->assertOk()
             ->assertExactJson([
-                [
-                    States::Waiting->value,
-                    States::Starting->value,
-                    States::Night->value,
-                    States::Psychic->value,
-                    States::Werewolf->value,
-                    States::Day->value,
-                    States::Vote->value,
-                ],
-                [
-                    States::Night->value,
-                    States::Psychic->value,
-                    States::Werewolf->value,
-                    States::Day->value,
-                    States::Vote->value,
-                ],
-                [
-                    States::Night->value,
-                    States::Psychic->value,
-                    States::Werewolf->value,
-                    States::Day->value,
-                    States::Vote->value,
-                ],
+                $this->firstRound,
+                $this->secondRound,
+                $this->secondRound,
             ]);
     }
 
@@ -92,5 +86,47 @@ class RoundControllerTest extends TestCase
                 'roles' => [1, 3],
             ])
             ->json('game');
+
+        $this->secondRound = [
+            [
+                'identifier' => States::Night->value,
+                'raw_name' => States::Night->stringify(),
+                'duration' => States::Night->duration(),
+            ],
+            [
+                'identifier' => States::Psychic->value,
+                'raw_name' => States::Psychic->stringify(),
+                'duration' => States::Psychic->duration(),
+            ],
+            [
+                'identifier' => States::Werewolf->value,
+                'raw_name' => States::Werewolf->stringify(),
+                'duration' => States::Werewolf->duration(),
+            ],
+            [
+                'identifier' => States::Day->value,
+                'raw_name' => States::Day->stringify(),
+                'duration' => States::Day->duration(),
+            ],
+            [
+                'identifier' => States::Vote->value,
+                'raw_name' => States::Vote->stringify(),
+                'duration' => States::Vote->duration(),
+            ],
+        ];
+
+        $this->firstRound = [
+            [
+                'identifier' => States::Waiting->value,
+                'raw_name' => States::Waiting->stringify(),
+                'duration' => States::Waiting->duration(),
+            ],
+            [
+                'identifier' => States::Starting->value,
+                'raw_name' => States::Starting->stringify(),
+                'duration' => States::Starting->duration(),
+            ],
+            ...$this->secondRound,
+        ];
     }
 }
