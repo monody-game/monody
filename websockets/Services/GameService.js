@@ -3,10 +3,11 @@ import { RoleService } from "./RoleService.js";
 import { StateManager } from "./StateManager.js";
 import { CounterService } from "./CounterService.js";
 import { UserService } from "./UserService.js";
-import StartingState from "../States/StartingState.js";
-import WaitingState from "../States/WaitingState.js";
 import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
+
+const StartingState = (await fetch("https://web/api/states/0", { "method": "GET" })).json;
+const WaitingState = (await fetch("https://web/api/states/1", { "method": "GET" })).json;
 
 export class GameService {
 	/**
@@ -46,7 +47,7 @@ export class GameService {
 		await this.setGame(gameId, game);
 
 		this.StateManager.setState({
-			status: StartingState.identifier,
+			status: StartingState.state,
 			startTimestamp: Date.now(),
 			counterDuration: StartingState.duration
 		}, channel);
@@ -70,7 +71,7 @@ export class GameService {
 		}
 
 		await this.StateManager.setState({
-			status: WaitingState.identifier,
+			status: WaitingState.state,
 			startTimestamp: Date.now(),
 			counterDuration: WaitingState.duration
 		}, channel);
