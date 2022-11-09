@@ -1,6 +1,5 @@
 import { GameChannel } from "./GameChannel.js";
 import { PrivateChannel } from "./PrivateChannel.js";
-import { ResponderManager } from "../Responders/ResponderManager.js";
 
 export class Channel {
 	privateChannels = ["private-*", "presence-*"];
@@ -10,7 +9,6 @@ export class Channel {
 	constructor(io) {
 		this.private = new PrivateChannel();
 		this.presence = new GameChannel(io);
-		this.responderManager = new ResponderManager();
 		this.io = io;
 	}
 
@@ -44,7 +42,7 @@ export class Channel {
 		let isPrivate = false;
 
 		this.privateChannels.forEach(privateChannel => {
-			const regex = new RegExp(privateChannel.replace("\*", ".*"));
+			const regex = new RegExp(privateChannel.replace("*", ".*"));
 			if (regex.test(channel)) isPrivate = true;
 		});
 
@@ -62,6 +60,7 @@ export class Channel {
 				try {
 					member = JSON.parse(res.channel_data);
 				} catch (e) {
+					console.error(e);
 				}
 
 				await this.presence.join(socket, data.channel, member);
