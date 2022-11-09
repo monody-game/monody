@@ -10,10 +10,10 @@ export default class ChatResponder extends BaseResponder {
 	}
 
 	async emit(socket, data) {
+		const game = JSON.parse(await client.get("game:" + data.channel.split(".")[1]));
+		const members = await this.getMembers(data.channel);
 		switch (data.event) {
 		case "client-chat.werewolf.send":
-			const game = JSON.parse(await client.get("game:" + data.channel.split(".")[1]));
-			const members = await this.getMembers(data.channel);
 			data.data.author = members.find(member => member.user_id === data.data.author).user_info;
 
 			members.forEach(member => {
