@@ -1,10 +1,11 @@
 import { StateManager } from "../Services/StateManager.js";
 import { client } from "../Redis/Connection.js";
-import StartingState from "../States/StartingState.js";
-import WaitingState from "../States/WaitingState.js";
 import { GameService } from "../Services/GameService.js";
 import { CounterService } from "../Services/CounterService.js";
 import fetch from "../Helpers/fetch.js";
+
+const StartingState = (await fetch("https://web/api/states/0", { "method": "GET" })).json;
+const WaitingState = (await fetch("https://web/api/states/1", { "method": "GET" })).json;
 
 export class GameChannel {
 	constructor(io) {
@@ -75,7 +76,7 @@ export class GameChannel {
       !members.length > 0
 		) {
 			this.stateManager.setState({
-				status: WaitingState.identifier,
+				status: WaitingState.state,
 				startTimestamp: Date.now(),
 				counterDuration: WaitingState.duration
 			}, channel);
@@ -97,7 +98,7 @@ export class GameChannel {
 		const state = await this.stateManager.getState(gameId);
 		if (!state) return;
 
-		if (state.status === StartingState.identifier) {
+		if (state.status === StartingState.state) {
 			await this.gameService.stopGameLaunch(channel);
 			game.is_started = false;
 		}
