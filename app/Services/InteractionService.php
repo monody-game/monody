@@ -40,7 +40,7 @@ class InteractionService
 
         $interaction = [
             'gameId' => $gameId,
-            'interactionId' => (string) Str::uuid(),
+            'id' => (string) Str::uuid(),
             'authorizedCallers' => $callers,
             'type' => $type->value,
         ];
@@ -50,14 +50,17 @@ class InteractionService
         return $interaction;
     }
 
-    public function close(string $gameId, string $interactionId): int|null
+    /**
+     * @param  string  $id Interaction id
+     */
+    public function close(string $gameId, string $id): int|null
     {
         if (!Redis::exists("game:$gameId:interactions")) {
             return self::NOT_ANY_INTERACTION_STARTED;
         }
 
         $interactions = Redis::get("game:$gameId:interactions");
-        $interaction = array_search($interactionId, array_column($interactions, 'interactionId'), true);
+        $interaction = array_search($id, array_column($interactions, 'id'), true);
 
         if ($interaction === false) {
             return self::INTERACTION_DOES_NOT_EXISTS;
@@ -70,10 +73,13 @@ class InteractionService
         return null;
     }
 
-    public function getInteraction(string $gameId, string $interactionId): array
+    /**
+     * @param  string  $id Interaction id
+     */
+    public function getInteraction(string $gameId, string $id): array
     {
         $interactions = Redis::get("game:$gameId:interactions") ?? [];
-        $interaction = array_search($interactionId, array_column($interactions, 'interactionId'), true);
+        $interaction = array_search($id, array_column($interactions, 'id'), true);
 
         if ($interaction === false) {
             return [];
@@ -82,36 +88,29 @@ class InteractionService
         return $interactions[$interaction];
     }
 
-    public function call(InteractionActions $action, string $interactionId, string $emitterId, string $targetId): mixed
+    /**
+     * @param  string  $id Interaction id
+     */
+    public function call(InteractionActions $action, string $id, string $emitterId, string $targetId): mixed
     {
-        $interaction = $this->getInteraction($this->getCurrentUserGameActivity($emitterId), $interactionId);
+        $interaction = $this->getInteraction($this->getCurrentUserGameActivity($emitterId), $id);
         $type = explode(':', $action->value);
 
         if ($type[0] !== $interaction['type']) {
             return self::INVALID_ACTION_ON_INTERACTION;
         }
 
-        switch ($type[0]) {
-            case 'psychic':
-                $service = new PsychicAction;
-                break;
-            case 'witch':
-                $service = new WitchAction;
-                break;
-            case 'werewolves':
-                $service = new WerewolvesAction;
-                break;
-            case 'vote':
-                $service = new VoteAction;
-                break;
-        }
+        $service = match (Interactions::from($type[0])) {
+            Interactions::Vote => new VoteAction(),
+            Interactions::Witch => new WitchAction,
+            Interactions::Psychic => new PsychicAction,
+            Interactions::Werewolves => new WerewolvesAction,
+        };
 
-        /** @phpstan-ignore-next-line */
         if (!$service->canInteract($action, $emitterId, $targetId)) {
             return self::USER_CANNOT_USE_THIS_INTERACTION;
         }
 
-        /** @phpstan-ignore-next-line */
         return $service->call($targetId, $action);
     }
 }

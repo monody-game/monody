@@ -11,7 +11,7 @@ class CloseInteractionRequest extends FormRequest
     {
         return [
             'gameId' => ['required', 'string', new GameExistsRule],
-            'interactionId' => ['required', 'uuid'],
+            'id' => ['required', 'uuid'],
         ];
     }
 }

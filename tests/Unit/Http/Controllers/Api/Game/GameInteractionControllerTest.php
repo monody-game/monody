@@ -37,12 +37,12 @@ class GameInteractionControllerTest extends TestCase
             ])
             ->assertOk();
 
-        $interactionId = $res->json('interaction')['interactionId'];
+        $interactionId = $res->json('interaction')['id'];
         $interactions = Redis::get("game:{$this->game['id']}:interactions");
 
         $this->assertSame([
             'gameId' => $this->game['id'],
-            'interactionId' => $interactionId,
+            'id' => $interactionId,
             'authorizedCallers' => '*',
             'type' => Interactions::Vote->value,
         ], $interactions[0]);
@@ -57,7 +57,7 @@ class GameInteractionControllerTest extends TestCase
                 'type' => Interactions::Vote->value,
             ]);
 
-        $interactionId = $res->json('interaction')['interactionId'];
+        $interactionId = $res->json('interaction')['id'];
 
         $this->assertNotEmpty(Redis::get("game:{$this->game['id']}:interactions"));
 
@@ -65,7 +65,7 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->delete('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'interactionId' => $interactionId,
+                'id' => $interactionId,
             ])
             ->assertNoContent();
 
@@ -75,7 +75,7 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->delete('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'interactionId' => $interactionId,
+                'id' => $interactionId,
             ])
             ->assertNotFound();
 
@@ -83,7 +83,7 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->delete('/api/interactions', [
                 'gameId' => $this->secondGame['id'],
-                'interactionId' => $interactionId,
+                'id' => $interactionId,
             ])
             ->assertNotFound();
     }
@@ -127,13 +127,13 @@ class GameInteractionControllerTest extends TestCase
             ->actingAs($this->user, 'api')
             ->post('/api/interactions/use', [
                 'gameId' => $this->game['id'],
-                'interactionId' => $res['interactionId'],
+                'id' => $res['id'],
                 'targetId' => $this->secondUser->id,
                 'interaction' => InteractionActions::Spectate->value,
             ])
             ->assertOk()
             ->assertExactJson([
-                'interactionId' => $res['interactionId'],
+                'id' => $res['id'],
                 'interaction' => InteractionActions::Spectate->value,
                 'response' => Roles::Werewolf->value,
             ]);
@@ -160,7 +160,7 @@ class GameInteractionControllerTest extends TestCase
             ->actingAs($this->user)
             ->post('/api/interactions/use', [
                 'gameId' => $gameId,
-                'interactionId' => $res['interactionId'],
+                'id' => $res['id'],
                 'targetId' => $this->secondUser->id,
                 'interaction' => InteractionActions::Spectate->value,
             ])
@@ -182,7 +182,7 @@ class GameInteractionControllerTest extends TestCase
             ->actingAs($this->secondUser, 'api')
             ->post('/api/interactions/use', [
                 'gameId' => $this->game['id'],
-                'interactionId' => $res['interactionId'],
+                'id' => $res['id'],
                 'targetId' => $this->user->id,
                 'interaction' => InteractionActions::Spectate->value,
             ])

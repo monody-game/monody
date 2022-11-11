@@ -42,13 +42,13 @@ class GameInteractionController extends Controller
 
     public function close(CloseInteractionRequest $request): JsonResponse
     {
-        $errors = $this->service->close(...$request->safe(['gameId', 'interactionId']));
+        $errors = $this->service->close(...$request->safe(['gameId', 'id']));
 
         if ($errors) {
             switch ($errors) {
                 case $this->service::INTERACTION_DOES_NOT_EXISTS:
                     return new JsonResponse([
-                        'message' => "Given interaction with id {$request->validated('interactionId')} does not exists",
+                        'message' => "Given interaction with id {$request->validated('id')} does not exists",
                     ],
                         Response::HTTP_NOT_FOUND
                     );
@@ -70,7 +70,7 @@ class GameInteractionController extends Controller
         $userId = $request->user()?->id;
         $interaction = $request->validated('interaction');
         $gameId = $request->validated('gameId');
-        $interactionId = $request->validated('interactionId');
+        $id = $request->validated('id');
         $targetId = $request->validated('targetId');
 
         if (!$this->alive($userId, $gameId)) {
@@ -80,21 +80,21 @@ class GameInteractionController extends Controller
         }
 
         $action = InteractionActions::from($interaction);
-        $result = $this->service->call($action, $interactionId, $userId, $targetId);
+        $result = $this->service->call($action, $id, $userId, $targetId);
 
         return match ($result) {
             $this->service::USER_CANNOT_USE_THIS_INTERACTION => new JsonResponse([
                 'message' => "You can't use the interaction {$interaction}",
             ], Response::HTTP_FORBIDDEN),
             $this->service::INVALID_ACTION_ON_INTERACTION => new JsonResponse([
-                'message' => "You can't use the action {$interaction} on the interaction {$interactionId}",
+                'message' => "You can't use the action {$interaction} on the interaction {$id}",
             ], Response::HTTP_BAD_REQUEST),
             $this->service::INTERACTION_DOES_NOT_EXISTS => new JsonResponse([
-                'message' => "Interaction {$interactionId} does not exists",
+                'message' => "Interaction {$id} does not exists",
             ], Response::HTTP_BAD_REQUEST),
             default => new JsonResponse([
                 'interaction' => $action->value,
-                'interactionId' => $interactionId,
+                'id' => $id,
                 'response' => $result,
             ], Response::HTTP_OK),
         };
