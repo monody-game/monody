@@ -38,7 +38,7 @@ class InteractionServiceTest extends TestCase
         $interaction = $this->service->create('test', Interactions::Vote);
 
         $redisInteraction = Redis::get('game:test:interactions');
-        $expectedInteraction['interactionId'] = $interaction['interactionId'];
+        $expectedInteraction['id'] = $interaction['id'];
 
         $this->assertSame(sort($expectedInteraction), sort($interaction));
         $this->assertSame(sort($expectedInteraction), sort($redisInteraction[0]));
@@ -47,7 +47,7 @@ class InteractionServiceTest extends TestCase
     public function testEndingInteraction()
     {
         $interaction = $this->service->create('otherGame', Interactions::Vote);
-        $this->assertNull($this->service->close('otherGame', $interaction['interactionId']));
+        $this->assertNull($this->service->close('otherGame', $interaction['id']));
 
         $this->assertEmpty(Redis::get('game:otherGame:interactions'));
     }
@@ -64,12 +64,12 @@ class InteractionServiceTest extends TestCase
     public function testUsingInteraction()
     {
         // Psychic
-        $id = $this->service->create($this->game['id'], Interactions::Psychic)['interactionId'];
+        $id = $this->service->create($this->game['id'], Interactions::Psychic)['id'];
         $spectate = $this->service->call(InteractionActions::Spectate, $id, $this->psychic->id, $this->user->id);
         $this->assertSame(Roles::SimpleVillager->value, $spectate);
 
         // Witch
-        $id = $this->service->create($this->game['id'], Interactions::Witch)['interactionId'];
+        $id = $this->service->create($this->game['id'], Interactions::Witch)['id'];
         $witchNone = $this->service->call(InteractionActions::WitchSkip, $id, $this->witch->id, $this->witch->id);
         $this->assertNull($witchNone);
         $this->service->call(InteractionActions::KillPotion, $id, $this->witch->id, $this->user->id);
@@ -78,12 +78,12 @@ class InteractionServiceTest extends TestCase
         $this->assertTrue($this->alive($this->user->id, $this->game['id']));
 
         // Werewolves
-        $id = $this->service->create($this->game['id'], Interactions::Werewolves)['interactionId'];
+        $id = $this->service->create($this->game['id'], Interactions::Werewolves)['id'];
         $this->service->call(InteractionActions::Kill, $id, $this->werewolf->id, $this->psychic->id);
         $this->assertFalse($this->alive($this->psychic->id, $this->game['id']));
 
         // Vote
-        $id = $this->service->create($this->game['id'], Interactions::Vote)['interactionId'];
+        $id = $this->service->create($this->game['id'], Interactions::Vote)['id'];
         $vote = $this->service->call(InteractionActions::Vote, $id, $this->user->id, $this->witch->id);
         $this->assertSame([$this->witch->id => [$this->user->id]], $vote);
         $vote = $this->service->call(InteractionActions::Vote, $id, $this->user->id, $this->witch->id);
@@ -92,7 +92,7 @@ class InteractionServiceTest extends TestCase
 
     public function testBeingUnAllowedToUseInteraction()
     {
-        $id = $this->service->create($this->game['id'], Interactions::Witch)['interactionId'];
+        $id = $this->service->create($this->game['id'], Interactions::Witch)['id'];
         $this->assertSame(
             $this->service::USER_CANNOT_USE_THIS_INTERACTION,
             $this->service->call(InteractionActions::WitchSkip, $id, $this->werewolf->id, '')
