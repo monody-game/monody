@@ -29,7 +29,6 @@ Route::get('/states/{state}', 'StateController@get');
 Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
     Route::post('/game/join', 'Game\GameController@join');
     Route::post('/game/leave', 'Game\GameController@leave');
-    Route::post('/game/aftervote', 'Game\GameVoteController@afterVote');
 
     Route::post('/interactions', 'Game\GameInteractionController@create');
     Route::delete('/interactions', 'Game\GameInteractionController@close');
@@ -59,7 +58,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/game/user/{id}/role', 'Game\GameUsersController@role');
 
     Route::post('/game/message/send', 'Game\GameMessageController@send');
-    Route::post('/game/vote', 'Game\GameVoteController@vote');
 
     Route::get('/teams', 'TeamController@all');
 
