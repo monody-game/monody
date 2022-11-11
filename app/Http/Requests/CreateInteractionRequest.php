@@ -13,7 +13,7 @@ class CreateInteractionRequest extends FormRequest
     {
         return [
             'gameId' => ['required', 'string', new GameExistsRule],
-            'type' => ['string', new Enum(Interactions::class)],
+            'type' => ['required', 'string', new Enum(Interactions::class)],
         ];
     }
 }
