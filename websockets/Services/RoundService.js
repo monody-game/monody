@@ -2,8 +2,13 @@ import fetch from "../Helpers/fetch.js";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
 import { readdirSync } from "node:fs";
+import { GameService } from "./GameService.js";
 
 export default async function getRounds(gameId = 0) {
+	if (!await GameService.exists(gameId)) {
+		return;
+	}
+
 	const apiRounds = await fetch(`https://web/api/rounds/${gameId}`, {
 		"method": "GET"
 	});
