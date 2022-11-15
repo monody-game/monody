@@ -134,7 +134,7 @@ export class GameChannel {
 	}
 
 	onJoin(socket, channel, member) {
-		this.io.sockets.sockets.get(socket.id).broadcast.to(channel).emit("presence:joining", channel, member);
+		socket.broadcast.to(channel).emit("presence:joining", channel, member);
 	}
 
 	onLeave(channel, member) {
