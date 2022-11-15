@@ -142,10 +142,11 @@ export class GameChannel {
 	}
 
 	async onDelete(gameId) {
-		await client.del(`game:${gameId}:members`);
 		await client.del(`game:${gameId}`);
+		await client.del(`game:${gameId}:members`);
 		await client.del(`game:${gameId}:state`);
 		await client.del(`game:${gameId}:votes`);
+		await client.del(`game:${gameId}:interactions`);
 
 		clearTimeout(this.counterService.counterId);
 
