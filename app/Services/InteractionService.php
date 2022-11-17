@@ -111,6 +111,8 @@ class InteractionService
             return self::USER_CANNOT_USE_THIS_INTERACTION;
         }
 
+        $service->updateClients($action, $emitterId);
+
         return $service->call($targetId, $action);
     }
 }

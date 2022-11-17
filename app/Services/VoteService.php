@@ -130,7 +130,7 @@ class VoteService
         Redis::set("game:$gameId:votes", []);
     }
 
-    private function getVotes(string $gameId): array
+    public function getVotes(string $gameId): array
     {
         /** @var array|null|string $votes */
         $votes = Redis::get("game:$gameId:votes");
