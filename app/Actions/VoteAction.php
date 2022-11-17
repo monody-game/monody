@@ -36,9 +36,9 @@ class VoteAction implements ActionInterface
 
     public function updateClients(InteractionActions $action, string $userId): void
     {
-		$gameId = $this->getGameId($userId);
+        $gameId = $this->getGameId($userId);
         broadcast(new InteractionUpdate([
-			'gameId' => $gameId,
+            'gameId' => $gameId,
             'type' => $action->value,
             'votedPlayers' => $this->service->getVotes($gameId),
         ]));
