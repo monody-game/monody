@@ -34,4 +34,8 @@ class PsychicAction implements ActionInterface
     {
         return $this->getRoleByUserId($userId, $this->getCurrentUserGameActivity($userId));
     }
+
+    public function updateClients(InteractionActions $action, string $userId): void
+    {
+    }
 }

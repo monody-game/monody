@@ -41,4 +41,9 @@ class WerewolvesAction implements ActionInterface
     {
         return $this->getCurrentUserGameActivity($userId);
     }
+
+    public function updateClients(InteractionActions $action, string $userId): void
+    {
+        // TODO: need to do research on how to emit events server side to only some users
+    }
 }
