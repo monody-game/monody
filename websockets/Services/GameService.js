@@ -21,7 +21,7 @@ export class GameService {
 		this.counterService = new CounterService(io);
 	}
 
-	async getGame(id) {
+	static async getGame(id) {
 		return JSON.parse(await client.get("game:" + id));
 	}
 
@@ -33,8 +33,8 @@ export class GameService {
 		await client.set("game:" + id, JSON.stringify(data));
 	}
 
-	async isAuthor(socket, gameId) {
-		const game = await this.getGame(gameId);
+	static async isAuthor(socket, gameId) {
+		const game = await GameService.getGame(gameId);
 		if (!game) return false;
 
 		const members = JSON.parse(await client.get("game:" + gameId + ":members")) ?? [];
@@ -65,7 +65,7 @@ export class GameService {
 		}, 6000));
 
 		this.timeouts.push(setTimeout(async () => {
-			await this.counterService.cycle(channel);
+			await this.counterService.cycle(channel, socket);
 		}, 11000));
 	}
 
@@ -105,7 +105,7 @@ export class GameService {
 	}
 
 	async getRolesCount(gameId) {
-		const game = await this.getGame(gameId);
+		const game = await GameService.getGame(gameId);
 		if (!game) return;
 		let count = 0;
 

@@ -68,10 +68,10 @@ export class GameChannel {
 		});
 
 		const count = await this.gameService.getRolesCount(gameId);
-		const game = await this.gameService.getGame(gameId);
+		const game = await GameService.getGame(gameId);
 
 		if (
-			await this.gameService.isAuthor(socket, gameId) &&
+			await GameService.isAuthor(socket, gameId) &&
       !await game.is_started &&
       !members.length > 0
 		) {
@@ -89,7 +89,7 @@ export class GameChannel {
 
 	async leave(socket, channel) {
 		const gameId = channel.split(".")[1];
-		const game = await this.gameService.getGame(gameId);
+		const game = await GameService.getGame(gameId);
 		let members = await this.getMembers(channel);
 		members = members || [];
 

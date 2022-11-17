@@ -1,5 +1,6 @@
 import { client } from "../Redis/Connection.js";
 import getRounds from "./RoundService.js";
+import { GameService } from "./GameService.js";
 
 export class StateManager {
 	constructor(io) {
@@ -61,7 +62,6 @@ export class StateManager {
 		let stateIndex = currentRoundObject.indexOf(currentRoundObject.find(roundState => roundState.identifier === state["status"])) + 1;
 		const loopingRoundIndex = rounds.length - 1;
 		let currentState = typeof currentRoundObject[stateIndex] === "undefined" ? {} : currentRoundObject[stateIndex].identifier;
-		const members = await this.getMembers(channel);
 		const isLast = stateIndex === currentRoundObject.length;
 
 		if (
@@ -69,12 +69,12 @@ export class StateManager {
 			typeof currentRoundObject[stateIndex - 1] !== "undefined" &&
 			typeof currentRoundObject[stateIndex - 1].after === "function"
 		) {
-			await currentRoundObject[stateIndex - 1].after(this.io, channel, members);
+			await currentRoundObject[stateIndex - 1].after(this.io, channel);
 		} else if (
 			isLast &&
 			typeof currentRoundObject[currentRoundObject.length - 1].after === "function"
 		) {
-			await currentRoundObject[currentRoundObject.length - 1].after(this.io, channel, members);
+			await currentRoundObject[currentRoundObject.length - 1].after(this.io, channel);
 		}
 
 		if (
@@ -96,7 +96,7 @@ export class StateManager {
 		const duration = currentRoundObject[stateIndex].duration;
 
 		if (typeof currentRoundObject[stateIndex] !== "undefined" && typeof currentRoundObject[stateIndex].before === "function") {
-			await currentRoundObject[stateIndex].before(this.io, channel, members);
+			await currentRoundObject[stateIndex].before(this.io, channel);
 		}
 
 		await this.setState({
@@ -139,11 +139,5 @@ export class StateManager {
 			// Otherwise return the next duration
 			return currentRoundObject[stateIndex].duration;
 		}
-	}
-
-	async getMembers(channel) {
-		const members = JSON.parse(await client.get(`game:${channel.split(".")[1]}:members`));
-		if (!members) return [];
-		return members;
 	}
 }
