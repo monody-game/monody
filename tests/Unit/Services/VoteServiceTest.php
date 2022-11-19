@@ -66,7 +66,7 @@ class VoteServiceTest extends TestCase
         $this->service->vote($this->user->id, $this->game['id'], $this->thirdUser->id);
         $this->service->vote($this->secondUser->id, $this->game['id']);
         $this->service->vote($this->secondUser->id, $this->game['id'], $this->secondUser->id);
-        $this->service->afterVote($gameId, 'vote');
+        $this->service->afterVote($gameId);
 
         Event::assertDispatched(function (GameKill $event) use ($gameId) {
             return $event->payload === [
@@ -96,7 +96,7 @@ class VoteServiceTest extends TestCase
 
     public function testReturnsFalseIfThereIsNoVotes()
     {
-        $this->assertFalse($this->service->afterVote($this->secondGame['id'], 'vote'));
+        $this->assertFalse($this->service->afterVote($this->secondGame['id']));
     }
 
     public function testTakingRandomPlayerIfVoteEquality()
@@ -105,7 +105,7 @@ class VoteServiceTest extends TestCase
         $this->service->vote($this->user->id, $gameId);
         $this->service->vote($this->secondUser->id, $gameId);
 
-        $killedPlayer = $this->service->afterVote($gameId, 'vote');
+        $killedPlayer = $this->service->afterVote($gameId);
 
         $this->assertTrue($this->user->id === $killedPlayer || $this->secondUser->id === $killedPlayer);
     }
@@ -114,7 +114,7 @@ class VoteServiceTest extends TestCase
     {
         Event::fake();
         $gameId = $this->secondGame['id'];
-        $this->assertFalse($this->service->afterVote($gameId, 'vote'));
+        $this->assertFalse($this->service->afterVote($gameId));
 
         Event::assertDispatched(function (GameKill $event) use ($gameId) {
             return $event->payload === [
@@ -131,7 +131,7 @@ class VoteServiceTest extends TestCase
 
         Event::fake();
         $this->service->vote($this->user->id, $gameId);
-        $this->assertSame($this->user->id, $this->service->afterVote($gameId, 'vote'));
+        $this->assertSame($this->user->id, $this->service->afterVote($gameId));
 
         Event::assertDispatched(function (GameKill $event) use ($gameId) {
             return $event->payload === [
@@ -142,7 +142,7 @@ class VoteServiceTest extends TestCase
         });
 
         $this->assertSame([], $this->service->vote($this->user->id, $gameId));
-        $this->assertFalse($this->service->afterVote($gameId, 'vote'));
+        $this->assertFalse($this->service->afterVote($gameId));
 
         Event::assertDispatched(function (GameKill $event) use ($gameId) {
             return $event->payload === [
@@ -170,7 +170,7 @@ class VoteServiceTest extends TestCase
             ],
         ]));
 
-        $this->assertFalse($this->service->afterVote($gameId, 'vote'));
+        $this->assertFalse($this->service->afterVote($gameId));
 
         Event::assertDispatched(function (GameKill $event) use ($gameId) {
             return $event->payload === [
