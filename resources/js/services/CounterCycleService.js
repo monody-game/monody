@@ -1,7 +1,6 @@
 import DayTimeHandler from "./TimeHandlers/DayTimeHandler.js";
 import NightTimeHandler from "./TimeHandlers/NightTimeHandler.js";
 import ChatService from "./ChatService";
-import { useStore as useGameStore } from "../stores/game.js";
 
 export default class CounterCycleService {
 	constructor() {
@@ -27,7 +26,7 @@ export default class CounterCycleService {
 	switchChatState() {
 		this.chatService.lock();
 
-		if (this.state === "day" || (useGameStore().isWerewolf && useGameStore().state === "GAME_WEREWOLF")) {
+		if (this.state === "day") {
 			this.chatService.unlock();
 		}
 	}
