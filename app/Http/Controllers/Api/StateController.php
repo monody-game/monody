@@ -20,4 +20,15 @@ class StateController extends Controller
             'duration' => $stateDetails->duration(),
         ]);
     }
+
+    public function message(int $state): JsonResponse
+    {
+        $message = States::from($state)->message();
+
+        if ($message === null) {
+            return new JsonResponse(['No message registered for this state'], 404);
+        }
+
+        return new JsonResponse(['message' => States::from($state)->message()]);
+    }
 }
