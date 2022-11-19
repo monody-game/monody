@@ -10,5 +10,7 @@ interface ActionInterface
 
     public function call(string $targetId, InteractionActions $action): mixed;
 
-    public function updateClients(InteractionActions $action, string $userId): void;
+    public function updateClients(string $userId): void;
+
+    public function close(string $gameId): void;
 }

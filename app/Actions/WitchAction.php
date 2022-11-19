@@ -98,7 +98,12 @@ class WitchAction implements ActionInterface
         return $this->getRoleByUserId($userId, $this->getCurrentUserGameActivity($userId));
     }
 
-    public function updateClients(InteractionActions $action, string $userId): void
+    public function updateClients(string $userId): void
     {
+    }
+
+    public function close(string $gameId): void
+    {
+        // TODO: Implement close() method.
     }
 }
