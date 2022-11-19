@@ -1,5 +1,7 @@
 import { client } from "../Redis/Connection.js";
 import getRounds from "./RoundService.js";
+import { ChatService } from "./ChatService.js";
+import fetch from "../Helpers/fetch.js";
 
 export class StateManager {
 	constructor(io) {
@@ -18,6 +20,7 @@ export class StateManager {
 
 		console.info(`Setting state of game ${gameId} to ${state.status} in round ${state.round} for a duration of ${state.counterDuration}`);
 		await client.set(`game:${gameId}:state`, JSON.stringify(state));
+		const message = (await fetch(`https://web/api/state/${state.status}/message`)).json;
 
 		this.io.to(channel).emit("game.state", channel, {
 			state: state.status,
@@ -25,6 +28,10 @@ export class StateManager {
 			startTimestamp: state.startTimestamp,
 			round: state.round
 		});
+
+		if (state.status > 1) {
+			ChatService.info(this.io, channel, message.message);
+		}
 
 		return this;
 	}
@@ -58,8 +65,6 @@ export class StateManager {
 		const loopingRoundIndex = rounds.length - 1;
 
 		let currentRound = state["round"] || 0;
-
-		console.log("currentRound", currentRound);
 
 		if (currentRound > loopingRoundIndex) {
 			currentRound = loopingRoundIndex;
@@ -110,7 +115,8 @@ export class StateManager {
 			startTimestamp: Date.now(),
 			counterDuration: duration,
 			counterId: counterId,
-			round: currentRound
+			round: currentRound,
+			name: rounds[currentRound][currentState].name
 		}, channel);
 	}
 
