@@ -11,7 +11,7 @@ class StateControllerTest extends TestCase
     {
         $state = States::from(1);
         $this
-            ->get('/api/states/1')
+            ->get('/api/state/1')
             ->assertOk()
             ->assertExactJson([
                 'state' => $state->value,

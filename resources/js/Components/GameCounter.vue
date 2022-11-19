@@ -51,7 +51,7 @@ const roundText = ref("");
 
 const getState = async function(toRetrieveState = null) {
 	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
-	const state = await window.JSONFetch(`/states/${parameter}`, "GET");
+	const state = await window.JSONFetch(`/state/${parameter}`, "GET");
 	return state.data;
 };
 
