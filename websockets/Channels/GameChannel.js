@@ -4,8 +4,8 @@ import { GameService } from "../Services/GameService.js";
 import { CounterService } from "../Services/CounterService.js";
 import fetch from "../Helpers/fetch.js";
 
-const StartingState = (await fetch("https://web/api/states/0", { "method": "GET" })).json;
-const WaitingState = (await fetch("https://web/api/states/1", { "method": "GET" })).json;
+const StartingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
+const WaitingState = (await fetch("https://web/api/state/1", { "method": "GET" })).json;
 
 export class GameChannel {
 	constructor(io) {

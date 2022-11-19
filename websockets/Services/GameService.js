@@ -6,8 +6,8 @@ import { UserService } from "./UserService.js";
 import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
 
-const WaitingState = (await fetch("https://web/api/states/0", { "method": "GET" })).json;
-const StartingState = (await fetch("https://web/api/states/1", { "method": "GET" })).json;
+const WaitingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
+const StartingState = (await fetch("https://web/api/state/1", { "method": "GET" })).json;
 
 export class GameService {
 	/**
