@@ -58,4 +58,13 @@ enum States: int
             self::Day, self::Vote => 'day',
         };
     }
+
+    public function message(): ?string
+    {
+        return match ($this) {
+            self::Night => 'Début de la ' . mb_strtolower(self::readeableStringify()),
+            self::Werewolf, self::Psychic, self::Witch, self::Vote, self::Day => 'Début du ' . mb_strtolower(self::readeableStringify()),
+            default => null
+        };
+    }
 }
