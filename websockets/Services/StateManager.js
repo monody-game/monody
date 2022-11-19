@@ -115,8 +115,7 @@ export class StateManager {
 			startTimestamp: Date.now(),
 			counterDuration: duration,
 			counterId: counterId,
-			round: currentRound,
-			name: rounds[currentRound][currentState].name
+			round: currentRound
 		}, channel);
 	}
 
