@@ -1,6 +1,5 @@
 import { client } from "../Redis/Connection.js";
 import getRounds from "./RoundService.js";
-import { GameService } from "./GameService.js";
 
 export class StateManager {
 	constructor(io) {
@@ -45,22 +44,29 @@ export class StateManager {
    *
    * @param { object } channel
    * @param { number } counterId
-   * @returns {Promise<{duration: number, state: number}>} context The next round context
    */
 	async nextState(channel, counterId) {
 		const gameId = channel.split(".")[1];
 		const state = await this.getState(gameId);
-		const rounds = await getRounds(gameId);
 
 		if (!state) {
 			clearTimeout(counterId);
 			return;
 		}
 
+		const rounds = await getRounds(gameId);
+		const loopingRoundIndex = rounds.length - 1;
+
 		let currentRound = state["round"] || 0;
+
+		console.log("currentRound", currentRound);
+
+		if (currentRound > loopingRoundIndex) {
+			currentRound = loopingRoundIndex;
+		}
+
 		const currentRoundObject = rounds[currentRound];
 		let stateIndex = currentRoundObject.indexOf(currentRoundObject.find(roundState => roundState.identifier === state["status"])) + 1;
-		const loopingRoundIndex = rounds.length - 1;
 		let currentState = typeof currentRoundObject[stateIndex] === "undefined" ? {} : currentRoundObject[stateIndex].identifier;
 		const isLast = stateIndex === currentRoundObject.length;
 
@@ -78,7 +84,7 @@ export class StateManager {
 		}
 
 		if (
-			currentRound !== loopingRoundIndex &&
+			currentRound < loopingRoundIndex &&
 			typeof currentRoundObject[stateIndex] === "undefined" &&
 			typeof rounds[currentRound + 1] !== "undefined"
 		) {
@@ -86,14 +92,14 @@ export class StateManager {
 			currentRound++;
 			currentState = rounds[currentRound][0].identifier;
 			stateIndex = 0;
-		} else if (currentRound === loopingRoundIndex && stateIndex === currentRoundObject.length - 1) {
+		} else if (currentRound >= loopingRoundIndex && stateIndex === currentRoundObject.length - 1) {
 			// We are at the end of the looping round
-			currentRound = loopingRoundIndex;
+			currentRound++;
 			currentState = rounds[loopingRoundIndex][0].identifier;
 			stateIndex = 0;
 		}
 
-		const duration = currentRoundObject[stateIndex].duration;
+		const duration = rounds[currentRound][stateIndex].duration;
 
 		if (typeof currentRoundObject[stateIndex] !== "undefined" && typeof currentRoundObject[stateIndex].before === "function") {
 			await currentRoundObject[stateIndex].before(this.io, channel);
@@ -106,11 +112,6 @@ export class StateManager {
 			counterId: counterId,
 			round: currentRound
 		}, channel);
-
-		return {
-			duration,
-			state: currentState
-		};
 	}
 
 	async getNextStateDuration(channel) {
@@ -119,22 +120,29 @@ export class StateManager {
 		const rounds = await getRounds(gameId);
 		if (!state) return;
 
-		const currentRound = state["round"] || 0;
-		const currentRoundObject = rounds[currentRound];
-		const stateIndex = currentRoundObject.indexOf(currentRoundObject.find(roundState => roundState.identifier === state["status"])) + 1;
+		let currentRound = state["round"] || 0;
 		const loopingRoundIndex = rounds.length - 1;
 
+		if (currentRound > loopingRoundIndex) {
+			currentRound = loopingRoundIndex;
+		}
+
+		const currentRoundObject = rounds[currentRound];
+		const stateIndex = currentRoundObject.indexOf(currentRoundObject.find(roundState => roundState.identifier === state["status"])) + 1;
+
 		if (
-			(currentRound !== loopingRoundIndex && typeof currentRoundObject[stateIndex] === "undefined" && currentRound + 1 === loopingRoundIndex) ||
-			(currentRound === loopingRoundIndex && stateIndex === currentRoundObject.length - 1)
-		) {
-			// If we are at the end of the looping round
-			return rounds[loopingRoundIndex][0].duration;
-		} else if (
-			currentRound !== loopingRoundIndex && typeof currentRoundObject[stateIndex] === "undefined"
+			currentRound < loopingRoundIndex &&
+			typeof currentRoundObject[stateIndex] === "undefined" &&
+			typeof rounds[currentRound + 1] !== "undefined"
 		) {
 			// If we are at the end of the current round
 			return rounds[currentRound + 1][0].duration;
+		} else if (
+			currentRound >= loopingRoundIndex &&
+			stateIndex === currentRoundObject.length - 1
+		) {
+			// If we are at the end of the looping round
+			return rounds[loopingRoundIndex][0].duration;
 		} else {
 			// Otherwise return the next duration
 			return currentRoundObject[stateIndex].duration;
