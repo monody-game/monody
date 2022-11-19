@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Actions\ActionInterface;
 use App\Actions\PsychicAction;
 use App\Actions\VoteAction;
 use App\Actions\WerewolvesAction;
@@ -66,6 +67,10 @@ class InteractionService
             return self::INTERACTION_DOES_NOT_EXISTS;
         }
 
+        $service = $this->getService($interactions[$interaction]['type']);
+
+        $service->close($gameId);
+
         array_splice($interactions, $interaction, 1);
 
         Redis::set("game:$gameId:interactions", $interactions);
@@ -94,25 +99,30 @@ class InteractionService
     public function call(InteractionActions $action, string $id, string $emitterId, string $targetId): mixed
     {
         $interaction = $this->getInteraction($this->getCurrentUserGameActivity($emitterId), $id);
-        $type = explode(':', $action->value);
+        $type = explode(':', $action->value)[0];
 
-        if ($type[0] !== $interaction['type']) {
+        if ($type !== $interaction['type']) {
             return self::INVALID_ACTION_ON_INTERACTION;
         }
 
-        $service = match (Interactions::from($type[0])) {
-            Interactions::Vote => new VoteAction(),
-            Interactions::Witch => new WitchAction,
-            Interactions::Psychic => new PsychicAction,
-            Interactions::Werewolves => new WerewolvesAction,
-        };
+        $service = $this->getService($type);
 
         if (!$service->canInteract($action, $emitterId, $targetId)) {
             return self::USER_CANNOT_USE_THIS_INTERACTION;
         }
 
-        $service->updateClients($action, $emitterId);
+        $service->updateClients($emitterId);
 
         return $service->call($targetId, $action);
+    }
+
+    private function getService(string $type): ActionInterface
+    {
+        return match (Interactions::from($type)) {
+            Interactions::Vote => new VoteAction(),
+            Interactions::Witch => new WitchAction,
+            Interactions::Psychic => new PsychicAction,
+            Interactions::Werewolves => new WerewolvesAction,
+        };
     }
 }
