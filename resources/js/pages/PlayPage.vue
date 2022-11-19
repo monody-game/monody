@@ -53,7 +53,7 @@
       <GameCreationModal v-if="store.isOpenned" />
     </Transition>
     <footer class="play-page__footer">
-      <p>&copy; Monody 2022 — Tous droits reservés.</p>
+      <p>&copy; Monody 2022 — Tous droits réservés.</p>
     </footer>
   </div>
 </template>

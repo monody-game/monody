@@ -39,7 +39,7 @@
       </router-link>
     </div>
     <footer class="home-page__footer">
-      <p>&copy; Monody 2022 — Tous droits reservés.</p>
+      <p>&copy; Monody 2022 — Tous droits réservés.</p>
     </footer>
   </div>
 </template>
