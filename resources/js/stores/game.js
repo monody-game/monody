@@ -49,12 +49,6 @@ export const useStore = defineStore("game", {
 		getPlayerByID: (state) => (playerID) => {
 			const list = state.playerList;
 			return list.filter((player) => player.id === playerID)[0] ?? {};
-		},
-		isWerewolf() {
-			const id = useUserStore().id;
-			const player = this.getPlayerByID(id);
-
-			return player.role.group === WEREWOLF_GROUP;
 		}
 	},
 });
