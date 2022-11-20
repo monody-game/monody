@@ -20,7 +20,7 @@ export class StateManager {
 
 		console.info(`Setting state of game ${gameId} to ${state.status} in round ${state.round} for a duration of ${state.counterDuration}`);
 		await client.set(`game:${gameId}:state`, JSON.stringify(state));
-		const message = (await fetch(`https://web/api/state/${state.status}/message`)).json;
+		const message = await fetch(`https://web/api/state/${state.status}/message`);
 
 		this.io.to(channel).emit("game.state", channel, {
 			state: state.status,
@@ -29,8 +29,8 @@ export class StateManager {
 			round: state.round
 		});
 
-		if (state.status > 1) {
-			ChatService.info(this.io, channel, message.message);
+		if (state.status > 1 && message.status !== 404) {
+			ChatService.info(this.io, channel, message.json.message);
 		}
 
 		return this;

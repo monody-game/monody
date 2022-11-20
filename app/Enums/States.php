@@ -46,7 +46,7 @@ enum States: int
         return match ($this) {
             self::Waiting => -1,
             self::Starting, self::Night, self::Day, self::Werewolf, self::Witch, self::Psychic => 5,
-            self::Vote => 20,
+            self::Vote => 40,
         };
     }
 
@@ -62,8 +62,7 @@ enum States: int
     public function message(): ?string
     {
         return match ($this) {
-            self::Night => 'Début de la ' . mb_strtolower(self::readeableStringify()),
-            self::Werewolf, self::Psychic, self::Witch, self::Vote, self::Day => 'Début du ' . mb_strtolower(self::readeableStringify()),
+            self::Werewolf, self::Psychic, self::Witch, self::Vote => 'Début du ' . mb_strtolower(self::readeableStringify()),
             default => null
         };
     }
