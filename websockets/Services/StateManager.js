@@ -148,7 +148,7 @@ export class StateManager {
 			return rounds[currentRound + 1][0].duration;
 		} else if (
 			currentRound >= loopingRoundIndex &&
-			stateIndex === currentRoundObject.length - 1
+			typeof currentRoundObject[stateIndex] === "undefined"
 		) {
 			// If we are at the end of the looping round
 			return rounds[loopingRoundIndex][0].duration;
