@@ -111,9 +111,11 @@ class InteractionService
             return self::USER_CANNOT_USE_THIS_INTERACTION;
         }
 
+        $status = $service->call($targetId, $action);
+
         $service->updateClients($emitterId);
 
-        return $service->call($targetId, $action);
+        return $status;
     }
 
     private function getService(string $type): ActionInterface
