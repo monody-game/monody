@@ -55,11 +55,6 @@ const removeUser = function (player) {
 const injectPlayersProperties = function (players) {
 	players.forEach((player) => {
 		player.voted_by = [];
-		player.role = {
-			group: 0,
-			name: "",
-			see_has: "",
-		};
 	});
 	return players;
 };
