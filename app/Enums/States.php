@@ -33,7 +33,7 @@ enum States: int
             self::Waiting => 'Attente',
             self::Starting => 'Démarrage',
             self::Night => 'Nuit',
-            self::Werewolf => 'Tour des loup-garous',
+            self::Werewolf => 'Tour des loups-garous',
             self::Witch => 'Tour de la sorcière',
             self::Psychic => 'Tour de la voyante',
             self::Day => 'Jour',
