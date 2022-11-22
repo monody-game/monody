@@ -66,7 +66,7 @@ export class StateManager {
 
 		let currentRound = state["round"] || 0;
 
-		if (currentRound > loopingRoundIndex) {
+		if (currentRound >= loopingRoundIndex) {
 			currentRound = loopingRoundIndex;
 		}
 
@@ -102,6 +102,10 @@ export class StateManager {
 			currentRound++;
 			currentState = rounds[loopingRoundIndex][0].identifier;
 			stateIndex = 0;
+		}
+
+		if (currentRound >= loopingRoundIndex) {
+			currentRound = loopingRoundIndex;
 		}
 
 		const duration = rounds[currentRound][stateIndex].duration;
