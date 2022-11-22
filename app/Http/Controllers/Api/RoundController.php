@@ -30,6 +30,7 @@ class RoundController extends Controller
     private function getRound(int $round, ?string $gameId = null): array
     {
         $round = Rounds::tryFrom($round);
+        $removedStates = [];
 
         if ($round === null) {
             $round = Rounds::LoopRound;
@@ -57,7 +58,7 @@ class RoundController extends Controller
                 }
 
                 if (!in_array($state->stringify(), $roles, true)) {
-                    array_splice($round, $key, 1);
+                    $removedStates = array_splice($round, ($key - count($removedStates)), 1);
                 }
             }
         }
