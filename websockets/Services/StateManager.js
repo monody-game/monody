@@ -97,7 +97,7 @@ export class StateManager {
 			currentRound++;
 			currentState = rounds[currentRound][0].identifier;
 			stateIndex = 0;
-		} else if (currentRound >= loopingRoundIndex && stateIndex === currentRoundObject.length - 1) {
+		} else if (currentRound >= loopingRoundIndex && typeof currentRoundObject[stateIndex] === "undefined") {
 			// We are at the end of the looping round
 			currentRound++;
 			currentState = rounds[loopingRoundIndex][0].identifier;
