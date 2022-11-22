@@ -11,6 +11,8 @@ class RoundControllerTest extends TestCase
 {
     private array $game;
 
+    private array $secondGame;
+
     private array $firstRound;
 
     private array $secondRound;
@@ -74,6 +76,35 @@ class RoundControllerTest extends TestCase
             ]);
     }
 
+    public function testGettingRoundsForGameWithSimpleRoles()
+    {
+        $rounds = $this
+            ->get("/api/round/2/{$this->secondGame['id']}")
+            ->assertOk()
+            ->assertExactJson([
+                [
+                    'identifier' => States::Night->value,
+                    'raw_name' => States::Night->stringify(),
+                    'duration' => States::Night->duration(),
+                ],
+                [
+                    'identifier' => States::Werewolf->value,
+                    'raw_name' => States::Werewolf->stringify(),
+                    'duration' => States::Werewolf->duration(),
+                ],
+                [
+                    'identifier' => States::Day->value,
+                    'raw_name' => States::Day->stringify(),
+                    'duration' => States::Day->duration(),
+                ],
+                [
+                    'identifier' => States::Vote->value,
+                    'raw_name' => States::Vote->stringify(),
+                    'duration' => States::Vote->duration(),
+                ],
+            ]);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -83,7 +114,14 @@ class RoundControllerTest extends TestCase
         $this->game = $this
             ->actingAs($user, 'api')
             ->post('/api/game/new', [
-                'roles' => [1, 3],
+                'roles' => [1, 1, 3],
+            ])
+            ->json('game');
+
+        $this->secondGame = $this
+            ->actingAs($user, 'api')
+            ->post('/api/game/new', [
+                'roles' => [1, 2],
             ])
             ->json('game');
 
