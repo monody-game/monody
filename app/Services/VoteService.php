@@ -131,12 +131,8 @@ class VoteService
 
     public function getVotes(string $gameId): array
     {
-        /** @var array|null|string $votes */
+        /** @var array|null $votes */
         $votes = Redis::get("game:$gameId:votes");
-
-        if ($votes === '') {
-            return [];
-        }
 
         /** @var array|null $votes */
         return $votes ?? [];
