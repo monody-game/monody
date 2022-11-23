@@ -47,6 +47,31 @@ class VoteServiceTest extends TestCase
         $this->assertSame([], $votes);
     }
 
+    public function testVotingAndUnvotingRepetively()
+    {
+        $gameId = $this->secondGame['id'];
+        $this->service->vote($this->secondUser->id, $gameId, $this->user->id);
+        $votes = $this->service->vote($this->secondUser->id, $gameId, $this->secondUser->id);
+
+        $this->assertSame([
+            $this->secondUser->id => [$this->user->id, $this->secondUser->id],
+        ], $votes);
+
+        $votes = $this->service->vote($this->secondUser->id, $gameId, $this->user->id);
+
+        $this->assertSame([$this->secondUser->id => [$this->secondUser->id]], $votes);
+
+        $votes = $this->service->vote($this->secondUser->id, $gameId, $this->user->id);
+
+        $this->assertSame([
+            $this->secondUser->id => [$this->secondUser->id, $this->user->id],
+        ], $votes);
+
+        $votes = $this->service->vote($this->secondUser->id, $gameId, $this->user->id);
+
+        $this->assertSame([$this->secondUser->id => [$this->secondUser->id]], $votes);
+    }
+
     public function testKillingVotedPlayer()
     {
         Event::fake();
