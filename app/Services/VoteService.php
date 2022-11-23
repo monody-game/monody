@@ -25,14 +25,11 @@ class VoteService
 
         $votes = $this->getVotes($gameId);
         $authUserId = $votingUser ?? Auth::user()?->getAuthIdentifier();
+        $isVoting = $this->isVoting($userId, $votes);
 
         if ($this->isVotingUser($userId, $votes, $authUserId)) {
             return $this->unvote($userId, $gameId);
-        }
-
-        $isVoting = $this->isVoting($userId, $votes);
-
-        if ($isVoting) {
+        } elseif ($isVoting && $isVoting !== $userId) {
             $votes = $this->unvote($isVoting, $gameId);
         }
 
