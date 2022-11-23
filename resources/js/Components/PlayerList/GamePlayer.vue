@@ -8,7 +8,7 @@
     <VotedBy
       v-if="isVoted"
       :player="props.player"
-      :voted-by="props.player.voted_by"
+      :voted-by="votedBy"
     />
     <div class="player__avatar-container">
       <img
@@ -23,10 +23,10 @@
           <use href="/sprite.svg#death" />
         </svg>
       </div>
-      <span
+      <!--      <span
         v-if="props.player.role.group === 'werewolf'"
         class="player__is-wolf"
-      />
+      />-->
     </div>
     <p class="player__username">
       {{ props.player.username }}
@@ -38,7 +38,7 @@
 import VotedBy from "./VotedBy.vue";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
-import { computed, reactive, ref } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps({
 	player: {
@@ -47,9 +47,9 @@ const props = defineProps({
 	}
 });
 
-let isVoted = props.player.voted_by.length > 1;
+const votedBy = ref(props.player.voted_by);
+const isVoted = ref(false);
 const isDead = ref(false);
-const votedBy = reactive(props.player.voted_by);
 const gameStore = useGameStore();
 const userStore = useUserStore();
 const player = ref(null);
@@ -68,28 +68,40 @@ const avatar = computed(() => {
 
 window.Echo
 	.join(`game.${gameId.value}`)
-	.listen(".vote.open", () => {
-		player.value.classList.add("player__votable");
+	.listen(".interaction.open", ({ interaction }) => {
+		if (interaction.type === "vote") {
+			if (isDead.value === false) {
+				player.value.classList.add("player__votable");
+			}
+			gameStore.currentInteractionId = interaction.id;
+		}
 	})
-	.listen(".vote.close", () => {
-		if (player.value && player.value.classList.contains("player__votable")) {
-			player.value.classList.remove("player__votable");
+	.listen(".interaction.close", ({ interaction }) => {
+		if (interaction.type === "vote") {
+			if (player.value && player.value.classList.contains("player__votable")) {
+				player.value.classList.remove("player__votable");
+			}
+
+			votedBy.value = [];
+			isVoted.value = false;
+			gameStore.currentInteractionId = "";
+			gameStore.currentVote = 0;
 		}
-		isVoted = false;
-		gameStore.currentVote = 0;
-	}).listen(".game.vote", ({ data }) => {
-		const payload = data.payload;
-		if (payload.votedUser !== props.player.id) {
-			return;
+	})
+	.listen(".interaction.vote", ({ data }) => {
+		const votes = data.payload.votedPlayers;
+		votedBy.value = [];
+		isVoted.value = false;
+
+		for (const voted in votes) {
+			if (voted === props.player.id) {
+				votedBy.value = votes[voted];
+				isVoted.value = true;
+				break;
+			}
 		}
-		vote(payload.votedBy, payload.votedUser);
-	}).listen(".game.unvote", ({ data }) => {
-		const payload = data.payload;
-		if (payload.votedUser !== props.player.id) {
-			return;
-		}
-		unVote(payload.votedBy, payload.votedUser);
-	}).listen(".game.kill", (e) => {
+	})
+	.listen(".game.kill", (e) => {
 		const killed = e.data.payload.killedUser;
 
 		if (killed === null) {
@@ -105,41 +117,15 @@ window.Echo
 	});
 
 const send = async function(votingUser, votedUser) {
-	const res = await window.JSONFetch("/game/vote", "POST", {
+	const res = await window.JSONFetch("/interactions/use", "POST", {
+		id: gameStore.currentInteractionId,
 		gameId:	gameId.value,
-		userId: votedUser
+		targetId: votedUser,
+		interaction: "vote"
 	});
 
-	if (res.status !== 204) {
-		await unVote(votingUser, votedUser);
+	if (res.status === 204) {
+		isVoted.value = true;
 	}
-};
-
-const vote = async function (votingUser, votedUser) {
-	if (
-		gameStore.currentVote > 0
-	) {
-		await unVote(votingUser, gameStore.currentVote);
-		return;
-	}
-
-	isVoted = true;
-	gameStore.setVote({
-		userID: votedUser,
-		votedBy: votingUser,
-	});
-};
-
-const unVote = async function (votingUser, votedUser) {
-	if (gameStore.getVotes(votedUser).length - 1 < 1) {
-		isVoted = false;
-	}
-
-	gameStore.currentVote = 0;
-	votedBy.splice(votedBy.indexOf(votedBy), 1);
-	gameStore.unVote({
-		userID: votedUser,
-		votedBy: votingUser,
-	});
 };
 </script>
