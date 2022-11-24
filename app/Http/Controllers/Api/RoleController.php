@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Roles;
+use App\Enums\Teams;
 use App\Http\Controllers\Controller;
-use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,17 +12,17 @@ class RoleController extends Controller
 {
     public function all(): JsonResponse
     {
-        $roles = Role::all();
+        $roles = Roles::all();
 
         return new JsonResponse(['roles' => $roles]);
     }
 
     public function get(int $id): JsonResponse
     {
-        $role = Role::find($id);
+        $role = Roles::tryFrom($id);
 
-        if ($role) {
-            return new JsonResponse(['role' => $role]);
+        if ($role !== null) {
+            return new JsonResponse(['role' => $role->full()]);
         }
 
         return new JsonResponse(['error' => 'Role not found'], Response::HTTP_NOT_FOUND);
@@ -29,9 +30,7 @@ class RoleController extends Controller
 
     public function group(int $group): JsonResponse
     {
-        $roles = Role::where('team_id', '=', $group)->get('id')->toArray();
-
-        $roles = array_map(fn ($role) => $role['id'], $roles);
+        $roles = Teams::from($group)->roles();
 
         return new JsonResponse(['roles' => $roles]);
     }

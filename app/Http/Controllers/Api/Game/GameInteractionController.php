@@ -105,9 +105,9 @@ class GameInteractionController extends Controller
         $authorized = '*';
 
         if ($type === Interactions::Witch) {
-            $authorized = $this->getUserIdByRole(Roles::Witch->value, $gameId);
+            $authorized = $this->getUserIdByRole(Roles::Witch, $gameId);
         } elseif ($type === Interactions::Psychic) {
-            $authorized = $this->getUserIdByRole(Roles::Psychic->value, $gameId);
+            $authorized = $this->getUserIdByRole(Roles::Psychic, $gameId);
         } elseif ($type === Interactions::Werewolves) {
             $authorized = $this->getWerewolves($gameId);
         }

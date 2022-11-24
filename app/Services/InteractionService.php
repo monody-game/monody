@@ -15,13 +15,13 @@ use Illuminate\Support\Str;
 
 class InteractionService
 {
-    const INTERACTION_DOES_NOT_EXISTS = 1;
+    const INTERACTION_DOES_NOT_EXISTS = 1000;
 
-    const NOT_ANY_INTERACTION_STARTED = 2;
+    const NOT_ANY_INTERACTION_STARTED = 2000;
 
-    const USER_CANNOT_USE_THIS_INTERACTION = 3;
+    const USER_CANNOT_USE_THIS_INTERACTION = 3000;
 
-    const INVALID_ACTION_ON_INTERACTION = 4;
+    const INVALID_ACTION_ON_INTERACTION = 4000;
 
     use RegisterHelperTrait;
 
