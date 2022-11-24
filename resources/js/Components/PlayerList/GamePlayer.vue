@@ -5,10 +5,10 @@
     class="player__container"
     @click="send(userID, props.player.id)"
   >
-    <VotedBy
+    <PlayerInteractionBubble
       v-if="isVoted"
-      :player="props.player"
-      :voted-by="votedBy"
+      :type="interactionType"
+      :data="votedBy"
     />
     <div class="player__avatar-container">
       <img
@@ -35,10 +35,10 @@
 </template>
 
 <script setup>
-import VotedBy from "./VotedBy.vue";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
 import { computed, ref } from "vue";
+import PlayerInteractionBubble from "./PlayerInteractionBubble.vue";
 
 const props = defineProps({
 	player: {
@@ -50,6 +50,7 @@ const props = defineProps({
 const votedBy = ref(props.player.voted_by);
 const isVoted = ref(false);
 const isDead = ref(false);
+const interactionType = ref("");
 const gameStore = useGameStore();
 const userStore = useUserStore();
 const player = ref(null);
@@ -69,6 +70,7 @@ const avatar = computed(() => {
 window.Echo
 	.join(`game.${gameId.value}`)
 	.listen(".interaction.open", ({ interaction }) => {
+		interactionType.value = interaction.type;
 		if (interaction.type === "vote") {
 			if (isDead.value === false) {
 				player.value.classList.add("player__votable");
