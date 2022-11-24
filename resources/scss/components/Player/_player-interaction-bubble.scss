@@ -1,4 +1,4 @@
-.voted-by__container {
+.player-interaction-bubble__container {
   z-index: 10;
   position: relative;
   width: min-content;
@@ -23,7 +23,7 @@
   }
 }
 
-.voted-by__avatar {
+.player-interaction-bubble__content {
   height: 26px;
   width: 26px;
   border-radius: 100%;
@@ -32,6 +32,14 @@
   &:first-child {
     margin-left: space(0.5);
   }
+}
+
+.player-interaction-bubble__werewolf-color {
+	background-color: var(--werewolf-color);
+}
+
+.player-interaction-bubble__psychic-color {
+	background-color: var(--villager-color);
 }
 
 @keyframes floating {
