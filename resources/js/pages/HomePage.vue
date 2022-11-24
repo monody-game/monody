@@ -37,10 +37,10 @@
         </p>
       </router-link>
     </div>
-    <footer class="home-page__footer">
-      <p>&copy; Monody 2022 — Tous droits réservés.</p>
-    </footer>
+    <Footer />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import Footer from "../Components/FooterComponent.vue";
+</script>
