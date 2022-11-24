@@ -2,7 +2,6 @@
   <div>
     <main>
       <svg
-        class="home-page__logo"
         fill="none"
         viewBox="0 0 213 238"
         xmlns="http://www.w3.org/2000/svg"
@@ -32,6 +31,10 @@ div {
 	height: 100vh;
 	display: grid;
 	place-items: center;
+}
+
+svg {
+	height: 145px;
 }
 
 main {
