@@ -52,14 +52,13 @@
     <Transition name="modal">
       <GameCreationModal v-if="store.isOpenned" />
     </Transition>
-    <footer class="play-page__footer">
-      <p>&copy; Monody 2022 — Tous droits réservés.</p>
-    </footer>
+    <Footer />
   </div>
 </template>
 
 <script setup>
 import AuthService from "../services/AuthService.js";
+import Footer from "../Components/FooterComponent.vue";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
 import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";

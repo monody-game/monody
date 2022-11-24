@@ -1,0 +1,12 @@
+.footer__main {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 32px;
+	margin-bottom: space(1);
+
+	& p {
+		color: rgba(255, 255, 255, 80%);
+	}
+}
