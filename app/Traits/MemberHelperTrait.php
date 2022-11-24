@@ -5,7 +5,6 @@ namespace App\Traits;
 use App\Enums\Roles;
 use App\Enums\Teams;
 use App\Facades\Redis;
-use App\Models\Role;
 use function array_key_exists;
 use function count;
 use Exception;
@@ -80,7 +79,7 @@ trait MemberHelperTrait
     /**
      * @return array<int|string>|false
      */
-    public function getUserIdByRole(string $roleId, string $gameId): array|false
+    public function getUserIdByRole(Roles $role, string $gameId): array|false
     {
         $game = Redis::get("game:$gameId");
 
@@ -88,7 +87,7 @@ trait MemberHelperTrait
             return false;
         }
 
-        return array_keys($game['assigned_roles'], (int) $roleId, true);
+        return array_keys($game['assigned_roles'], $role->value, true);
     }
 
     public function getRoleByUserId(string $userId, string $gameId): Roles|false
@@ -104,11 +103,11 @@ trait MemberHelperTrait
 
     public function getWerewolves(string $gameId): array
     {
-        $werewolvesRoles = Role::where('team_id', '=', Teams::Werewolves->value)->get()->toArray();
+        $werewolvesRoles = Teams::Werewolves->roles();
         $werewolves = [];
 
         foreach ($werewolvesRoles as $role) {
-            $werewolves[] = $this->getUserIdByRole($role['id'], $gameId);
+            $werewolves[] = $this->getUserIdByRole($role, $gameId);
         }
 
         return $werewolves;

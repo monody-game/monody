@@ -19,7 +19,7 @@ class PsychicAction implements ActionInterface
         return $role !== false && $role === Roles::Psychic && $this->alive($targetId, $this->getCurrentUserGameActivity($userId));
     }
 
-    public function call(string $targetId, InteractionActions $action): string
+    public function call(string $targetId, InteractionActions $action): int
     {
         $role = $this->getRole($targetId);
 

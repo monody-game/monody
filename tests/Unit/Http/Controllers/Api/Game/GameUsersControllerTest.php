@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
-use App\Models\Role;
+use App\Enums\Roles;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +46,7 @@ class GameUsersControllerTest extends TestCase
             ->assertOk()
             ->json();
 
-        $this->assertSame(Role::find(1)->getOriginal(), $response);
+        $this->assertSame(Roles::from(1)->full(), $response);
     }
 
     protected function setUp(): void

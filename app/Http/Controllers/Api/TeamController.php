@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Teams;
 use App\Http\Controllers\Controller;
-use App\Models\Team;
 use Illuminate\Http\JsonResponse;
 
 class TeamController extends Controller
 {
     public function all(): JsonResponse
     {
-        $teams = Team::all();
+        $teams = Teams::all();
 
         return new JsonResponse(['teams' => $teams]);
     }
