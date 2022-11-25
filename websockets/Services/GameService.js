@@ -1,5 +1,4 @@
 import { client } from "../Redis/Connection.js";
-import { RoleService } from "./RoleService.js";
 import { StateManager } from "./StateManager.js";
 import { CounterService } from "./CounterService.js";
 import { UserService } from "./UserService.js";
@@ -61,7 +60,7 @@ export class GameService {
 		}
 
 		this.timeouts.push(setTimeout(async () => {
-			await this.roleManagement(game, channel, members, socket);
+			await this.roleManagement(channel, members);
 		}, 6000));
 
 		this.timeouts.push(setTimeout(async () => {
@@ -81,27 +80,23 @@ export class GameService {
 		}, channel);
 	}
 
-	async roleManagement(game, channel, members, socket) {
-		const gameWerewolves = [];
-		const werewolves = await RoleService.getWerewolvesRoles();
-		game.assigned_roles = RoleService.assign(game.roles, members);
+	async roleManagement(channel, members) {
+		const gameId = channel.split(".")[1];
+		const params = new URLSearchParams();
+		params.set("gameId", gameId);
 
-		Object.keys(game.assigned_roles).forEach(member => {
-			if (werewolves.indexOf(game.assigned_roles[member]) >= 0) gameWerewolves.push(parseInt(member));
-		});
-		game.werewolves = gameWerewolves;
+		await fetch("https://web/api/roles/assign", { method: "POST", body: params });
+		const game = await GameService.getGame(gameId);
 
 		for (const member of members) {
 			const user = await UserService.getUserBySocket(member.socketId, members);
 			const roleId = game.assigned_roles[user.user_id];
-			let role = await fetch(`https://web/api/roles/get/${roleId}`, { method: "GET" }, socket);
+			let role = await fetch(`https://web/api/roles/get/${roleId}`, { method: "GET" });
 
 			role = role.json.role;
 			this.io.to(member.socketId).emit("game.role-assign", channel, game.assigned_roles[user.user_id]);
 			ChatService.info(this.io, channel, `Votre role est : ${role.display_name}`, member.socketId);
 		}
-
-		await this.setGame(channel.split(".")[1], game);
 	}
 
 	async getRolesCount(gameId) {
