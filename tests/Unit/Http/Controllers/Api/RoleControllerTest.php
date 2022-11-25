@@ -81,9 +81,10 @@ class RoleControllerTest extends TestCase
             ->post('/api/roles/assign', ['gameId' => $this->game['id']])
             ->assertOk();
 
-        $assigned = Redis::get("game:{$this->game['id']}")['assigned_roles'];
+        $game = Redis::get("game:{$this->game['id']}");
 
-        $this->assertCount(2, $assigned);
+        $this->assertCount(2, $game['assigned_roles']);
+        $this->assertCount(1, $game['werewolves']);
     }
 
     protected function setUp(): void
