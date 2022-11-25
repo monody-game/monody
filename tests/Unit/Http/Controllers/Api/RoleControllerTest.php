@@ -3,6 +3,8 @@
 namespace Tests\Unit\Http\Controllers\Api;
 
 use App\Enums\Teams;
+use App\Facades\Redis;
+use App\Http\Middleware\RestrictToDockerNetwork;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +13,12 @@ use Tests\TestCase;
 class RoleControllerTest extends TestCase
 {
     use RefreshDatabase;
+
+    private User $user;
+
+    private User $secondUser;
+
+    private array $game;
 
     public function testGetAllRoles(): void
     {
@@ -63,9 +71,34 @@ class RoleControllerTest extends TestCase
             ->assertStatus(Response::HTTP_OK);
     }
 
+    public function testAssigningRoles()
+    {
+        $assigned = Redis::get("game:{$this->game['id']}")['assigned_roles'];
+        $this->assertEmpty($assigned);
+
+        $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->post('/api/roles/assign', ['gameId' => $this->game['id']])
+            ->assertOk();
+
+        $assigned = Redis::get("game:{$this->game['id']}")['assigned_roles'];
+
+        $this->assertCount(2, $assigned);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->make();
+        [$this->user, $this->secondUser] = User::factory(2)->make();
+
+        $this->game = $this
+            ->actingAs($this->user, 'api')
+            ->post('/api/game/new', ['roles' => [1, 2]])
+            ->json('game');
+
+        Redis::set("game:{$this->game['id']}:members", [
+            ['user_id' => $this->user['id'], 'user_info' => $this->user],
+            ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
+        ]);
     }
 }
