@@ -28,6 +28,8 @@ Route::get('/state/{state}', 'StateController@get');
 Route::get('/state/{state}/message', 'StateController@message');
 
 Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
+    Route::post('/roles/assign', 'RoleController@assign');
+
     Route::post('/game/join', 'Game\GameController@join');
     Route::post('/game/leave', 'Game\GameController@leave');
 
