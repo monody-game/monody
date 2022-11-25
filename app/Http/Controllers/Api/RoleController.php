@@ -44,25 +44,26 @@ class RoleController extends Controller
     public function assign(AssignRolesRequest $request): JsonResponse
     {
         $assigned = [];
+        $werewolves = [];
+
         $gameId = $request->validated('gameId');
         $game = $this->getGame($gameId);
         $members = $this->getMembers($gameId);
         $roles = $game['roles'];
 
         foreach ($roles as $role => $count) {
-            if ($count > 1) {
-                for ($i = 0; $i < $count; $i++) {
-                    $member = $this->pickMember($members, $assigned);
-                    $assigned[$member] = $role;
+            for ($i = 0; $i < $count; $i++) {
+                $member = $this->pickMember($members, $assigned);
+                $assigned[$member] = $role;
+
+                if (Teams::role(Roles::from($role)) === Teams::Werewolves) {
+                    $werewolves[] = $member;
                 }
-
-                continue;
             }
-
-            $assigned[$this->pickMember($members, $assigned)] = $role;
         }
 
         $game['assigned_roles'] = $assigned;
+        $game['werewolves'] = $werewolves;
 
         Redis::set("game:{$gameId}", $game);
 
