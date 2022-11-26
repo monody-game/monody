@@ -23,10 +23,6 @@
           <use href="/sprite.svg#death" />
         </svg>
       </div>
-      <!--      <span
-        v-if="props.player.role.group === 'werewolf'"
-        class="player__is-wolf"
-      />-->
     </div>
     <p class="player__username">
       {{ props.player.username }}
