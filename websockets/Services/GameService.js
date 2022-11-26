@@ -28,6 +28,10 @@ export class GameService {
 		return await client.exists("game:" + id);
 	}
 
+	static async getMembers(id) {
+		return JSON.parse(await client.get(`game:${id}:members`));
+	}
+
 	async setGame(id, data) {
 		await client.set("game:" + id, JSON.stringify(data));
 	}
