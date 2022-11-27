@@ -65,7 +65,7 @@ class VoteService
     /**
      * @return string|false vote cancelled or not any player to vote
      */
-    public function afterVote(string $gameId): string|false
+    public function afterVote(string $gameId, string $context = 'vote'): string|false
     {
         $votes = $this->getVotes($gameId);
 
@@ -73,7 +73,7 @@ class VoteService
             GameKill::dispatch([
                 'killedUser' => null,
                 'gameId' => $gameId,
-                'context' => 'vote',
+                'context' => $context,
             ]);
 
             return false;
@@ -102,7 +102,7 @@ class VoteService
             GameKill::dispatch([
                 'killedUser' => null,
                 'gameId' => $gameId,
-                'context' => 'vote',
+                'context' => $context,
             ]);
 
             return false;
@@ -113,7 +113,7 @@ class VoteService
         GameKill::dispatch([
             'killedUser' => $majority,
             'gameId' => $gameId,
-            'context' => 'vote',
+            'context' => $context,
         ]);
 
         $this->clearVotes($gameId);
