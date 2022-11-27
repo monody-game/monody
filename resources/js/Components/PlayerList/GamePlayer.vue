@@ -67,38 +67,29 @@ window.Echo
 	.join(`game.${gameId.value}`)
 	.listen(".interaction.open", ({ interaction }) => {
 		interactionType.value = interaction.type;
-		if (interaction.type === "vote") {
+		if (interaction.type === "vote" || interaction.type === "werewolves") {
 			if (isDead.value === false) {
 				player.value.classList.add("player__votable");
 			}
-			gameStore.currentInteractionId = interaction.id;
 		}
+
+		gameStore.currentInteractionId = interaction.id;
 	})
 	.listen(".interaction.close", ({ interaction }) => {
-		if (interaction.type === "vote") {
+		if (interaction.type === "vote" || interaction.type === "werewolves") {
 			if (player.value && player.value.classList.contains("player__votable")) {
 				player.value.classList.remove("player__votable");
 			}
 
 			votedBy.value = [];
 			isVoted.value = false;
-			gameStore.currentInteractionId = "";
 			gameStore.currentVote = 0;
 		}
-	})
-	.listen(".interaction.vote", ({ data }) => {
-		const votes = data.payload.votedPlayers;
-		votedBy.value = [];
-		isVoted.value = false;
 
-		for (const voted in votes) {
-			if (voted === props.player.id) {
-				votedBy.value = votes[voted];
-				isVoted.value = true;
-				break;
-			}
-		}
+		gameStore.currentInteractionId = "";
 	})
+	.listen(".interaction.vote", ({ data }) => addVote(data))
+	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data))
 	.listen(".game.kill", (e) => {
 		const killed = e.data.payload.killedUser;
 
@@ -119,11 +110,25 @@ const send = async function(votingUser, votedUser) {
 		id: gameStore.currentInteractionId,
 		gameId:	gameId.value,
 		targetId: votedUser,
-		interaction: "vote"
+		action: gameStore.availableActions[interactionType.value]
 	});
 
 	if (res.status === 204) {
 		isVoted.value = true;
+	}
+};
+
+const addVote = (data) => {
+	const votes = data.payload.votedPlayers;
+	votedBy.value = [];
+	isVoted.value = false;
+
+	for (const voted in votes) {
+		if (voted === props.player.id) {
+			votedBy.value = votes[voted];
+			isVoted.value = true;
+			break;
+		}
 	}
 };
 </script>
