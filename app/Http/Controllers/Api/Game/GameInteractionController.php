@@ -68,7 +68,7 @@ class GameInteractionController extends Controller
     {
         /** @var string $userId */
         $userId = $request->user()?->id;
-        $interaction = $request->validated('interaction');
+        $action = $request->validated('action');
         $gameId = $request->validated('gameId');
         $id = $request->validated('id');
         $targetId = $request->validated('targetId');
@@ -79,21 +79,24 @@ class GameInteractionController extends Controller
             ], Response::HTTP_FORBIDDEN);
         }
 
-        $action = InteractionActions::from($interaction);
+        $action = InteractionActions::from($action);
         $result = $this->service->call($action, $id, $userId, $targetId);
 
         return match ($result) {
             $this->service::USER_CANNOT_USE_THIS_INTERACTION => new JsonResponse([
-                'message' => "You can't use the interaction {$interaction}",
+                'message' => "You can't use the action {$action->value}",
             ], Response::HTTP_FORBIDDEN),
+
             $this->service::INVALID_ACTION_ON_INTERACTION => new JsonResponse([
-                'message' => "You can't use the action {$interaction} on the interaction {$id}",
+                'message' => "You can't use the action {$action->value} on the interaction {$id}",
             ], Response::HTTP_BAD_REQUEST),
+
             $this->service::INTERACTION_DOES_NOT_EXISTS => new JsonResponse([
                 'message' => "Interaction {$id} does not exists",
             ], Response::HTTP_BAD_REQUEST),
+
             default => new JsonResponse([
-                'interaction' => $action->value,
+                'action' => $action->value,
                 'id' => $id,
                 'response' => $result,
             ], Response::HTTP_OK),

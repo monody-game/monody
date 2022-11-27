@@ -129,12 +129,12 @@ class GameInteractionControllerTest extends TestCase
                 'gameId' => $this->game['id'],
                 'id' => $res['id'],
                 'targetId' => $this->secondUser->id,
-                'interaction' => InteractionActions::Spectate->value,
+                'action' => InteractionActions::Spectate->value,
             ])
             ->assertOk()
             ->assertExactJson([
                 'id' => $res['id'],
-                'interaction' => InteractionActions::Spectate->value,
+                'action' => InteractionActions::Spectate->value,
                 'response' => Roles::Werewolf->value,
             ]);
     }
@@ -162,7 +162,7 @@ class GameInteractionControllerTest extends TestCase
                 'gameId' => $gameId,
                 'id' => $res['id'],
                 'targetId' => $this->secondUser->id,
-                'interaction' => InteractionActions::Spectate->value,
+                'action' => InteractionActions::Spectate->value,
             ])
             ->assertForbidden();
     }
@@ -184,7 +184,7 @@ class GameInteractionControllerTest extends TestCase
                 'gameId' => $this->game['id'],
                 'id' => $res['id'],
                 'targetId' => $this->user->id,
-                'interaction' => InteractionActions::Spectate->value,
+                'action' => InteractionActions::Spectate->value,
             ])
             ->assertForbidden();
     }
