@@ -80,6 +80,7 @@ class InteractionServiceTest extends TestCase
         // Werewolves
         $id = $this->service->create($this->game['id'], Interactions::Werewolves)['id'];
         $this->service->call(InteractionActions::Kill, $id, $this->werewolf->id, $this->psychic->id);
+        $this->service->close($this->game['id'], $id);
         $this->assertFalse($this->alive($this->psychic->id, $this->game['id']));
 
         // Vote
