@@ -4,13 +4,21 @@ namespace App\Actions;
 
 use App\Enums\InteractionActions;
 use App\Enums\States;
-use App\Events\GameKill;
+use App\Events\InteractionUpdate;
+use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 
 class WerewolvesAction implements ActionInterface
 {
     use MemberHelperTrait, RegisterHelperTrait;
+
+    private VoteService $service;
+
+    public function __construct()
+    {
+        $this->service = new VoteService();
+    }
 
     public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
     {
@@ -21,20 +29,7 @@ class WerewolvesAction implements ActionInterface
 
     public function call(string $targetId, InteractionActions $action): mixed
     {
-        $gameId = $this->getGameId($targetId);
-        $success = $this->kill($targetId, $gameId);
-
-        if (!$success) {
-            return null;
-        }
-
-        GameKill::broadcast([
-            'killedUser' => $targetId,
-            'gameId' => $gameId,
-            'context' => States::Werewolf->stringify(),
-        ]);
-
-        return null;
+        return $this->service->vote($targetId, $this->getGameId($targetId));
     }
 
     private function getGameId(string $userId): string
@@ -44,11 +39,16 @@ class WerewolvesAction implements ActionInterface
 
     public function updateClients(string $userId): void
     {
-        // TODO: need to do research on how to emit events server side to only some users
+        $gameId = $this->getGameId($userId);
+        broadcast(new InteractionUpdate([
+            'gameId' => $gameId,
+            'type' => InteractionActions::Kill->value,
+            'votedPlayers' => $this->service->getVotes($gameId),
+        ], true, $this->getWerewolves($gameId)[0]));
     }
 
     public function close(string $gameId): void
     {
-        // TODO: Implement close() method.
+        $this->service->afterVote($gameId, States::Werewolf->stringify());
     }
 }

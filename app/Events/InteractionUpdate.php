@@ -13,7 +13,9 @@ class InteractionUpdate implements ShouldBroadcastNow
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
-        public readonly array $payload
+        public readonly array $payload,
+        public bool $private = false,
+		public array $emitters = []
     ) {
     }
 
@@ -24,6 +26,6 @@ class InteractionUpdate implements ShouldBroadcastNow
 
     public function broadcastAs(): string
     {
-        return "interaction.{$this->payload['type']}";
+		return "interaction.{$this->payload['type']}";
     }
 }
