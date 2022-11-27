@@ -17,7 +17,7 @@ class InteractionRequest extends FormRequest
             'id' => ['uuid', 'required'],
             'targetId' => ['exists:users,id', new InGameRule(null), new PlayerAliveRule(), 'required'],
             'gameId' => ['string', new GameExistsRule(), 'required'],
-            'interaction' => [new Enum(InteractionActions::class), 'required'],
+            'action' => [new Enum(InteractionActions::class), 'required'],
         ];
     }
 }
