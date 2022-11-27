@@ -9,9 +9,6 @@ enum Interactions: string
     case Psychic = 'psychic';
     case Werewolves = 'werewolves';
 
-    /**
-     * @return array<InteractionActions, InteractionActions[]>
-     */
     public static function getActions(): array
     {
         return [
