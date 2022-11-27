@@ -8,12 +8,12 @@ export class RedisSubscriber {
 	}
 
 	async subscribe(callback) {
-		await this.sub.pSubscribe("*", (message, channel) => {
+		await this.sub.pSubscribe("*", async (message, channel) => {
 			if (process.env.APP_DEBUG) {
 				console.info("Channel: " + channel);
 				console.info("Event: " + JSON.parse(message).event);
 			}
-			return callback(channel, JSON.parse(message));
+			return await callback(channel, JSON.parse(message));
 		});
 	}
 
