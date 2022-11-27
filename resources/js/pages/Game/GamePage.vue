@@ -49,6 +49,9 @@ const store = useStore();
 const gameId = route.params.id;
 const loading = ref(false);
 
+const actions = await window.JSONFetch("/interactions/actions", "GET");
+store.availableActions = actions.data;
+
 onBeforeRouteLeave(() => {
 	window.Echo.leave(`game.${gameId}`);
 	store.playerList = [];
