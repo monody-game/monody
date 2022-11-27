@@ -189,6 +189,14 @@ class GameInteractionControllerTest extends TestCase
             ->assertForbidden();
     }
 
+    public function testGettingActions()
+    {
+        $this
+            ->get('/api/interactions/actions')
+            ->assertOk()
+            ->assertExactJson(Interactions::getActions());
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

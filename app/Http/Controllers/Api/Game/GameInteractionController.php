@@ -103,6 +103,11 @@ class GameInteractionController extends Controller
         };
     }
 
+    public function actions(): JsonResponse
+    {
+        return new JsonResponse(Interactions::getActions());
+    }
+
     private function getAuthorizedMembersByType(Interactions $type, string $gameId): string|array
     {
         $authorized = '*';
