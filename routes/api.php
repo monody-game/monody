@@ -27,6 +27,8 @@ Route::get('/round/{round}/{gameId?}', 'RoundController@get');
 Route::get('/state/{state}', 'StateController@get');
 Route::get('/state/{state}/message', 'StateController@message');
 
+Route::get('/interactions/actions', 'Game\GameInteractionController@actions');
+
 Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
     Route::post('/roles/assign', 'RoleController@assign');
 
