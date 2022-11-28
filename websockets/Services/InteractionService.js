@@ -34,8 +34,14 @@ export class InteractionService {
 	static async closeInteraction(io, channel, type) {
 		const gameId = channel.split(".")[1];
 
-		const interactions = JSON.parse(await client.get(`game:${channel.split(".")[1]}:interactions`));
+		const interactions = JSON.parse(await client.get(`game:${gameId}:interactions`));
 		const interaction = interactions.find(interactionListItem => interactionListItem.type === type);
+
+		if (!interaction) {
+			console.log(`Unable to find interaction with type ${type} on game ${gameId}`);
+			return;
+		}
+
 		const interactionId = interaction.id;
 		let callers = interaction.authorizedCallers;
 
