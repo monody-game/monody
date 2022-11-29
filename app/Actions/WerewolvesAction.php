@@ -24,7 +24,7 @@ class WerewolvesAction implements ActionInterface
     {
         $gameId = $this->getGameId($userId);
 
-        return in_array($userId, $this->getWerewolves($gameId)[0], true) && $this->alive($targetId, $gameId);
+        return in_array($userId, $this->getWerewolves($gameId), true) && $this->alive($targetId, $gameId);
     }
 
     public function call(string $targetId, InteractionActions $action): mixed
@@ -44,7 +44,7 @@ class WerewolvesAction implements ActionInterface
             'gameId' => $gameId,
             'type' => InteractionActions::Kill->value,
             'votedPlayers' => $this->service->getVotes($gameId),
-        ], true, $this->getWerewolves($gameId)[0]));
+        ], true, $this->getWerewolves($gameId)));
     }
 
     public function close(string $gameId): void

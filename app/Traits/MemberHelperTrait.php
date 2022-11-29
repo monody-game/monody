@@ -110,7 +110,11 @@ trait MemberHelperTrait
             $werewolves[] = $this->getUserIdByRole($role, $gameId);
         }
 
-        return $werewolves;
+        if ($werewolves[0] === false) {
+            return [];
+        }
+
+        return $werewolves[0];
     }
 
     public function kill(string $userId, string $gameId, string $context): bool
@@ -138,8 +142,8 @@ trait MemberHelperTrait
         return true;
     }
 
-	public function isWerewolf(string $userId, string $gameId): bool
-	{
-		return in_array($userId, $this->getWerewolves($gameId));
-	}
+    public function isWerewolf(string $userId, string $gameId): bool
+    {
+        return in_array($userId, $this->getWerewolves($gameId), true);
+    }
 }
