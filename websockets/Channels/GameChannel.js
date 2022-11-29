@@ -3,6 +3,7 @@ import { client } from "../Redis/Connection.js";
 import { GameService } from "../Services/GameService.js";
 import { CounterService } from "../Services/CounterService.js";
 import fetch from "../Helpers/fetch.js";
+import Body from "../Helpers/Body.js";
 
 const StartingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
 const WaitingState = (await fetch("https://web/api/state/1", { "method": "GET" })).json;
@@ -57,10 +58,10 @@ export class GameChannel {
 			this.onJoin(socket, channel, member);
 		}
 
-		const params = new URLSearchParams();
-
-		params.set("userId", member.user_id);
-		params.set("gameId", gameId);
+		const params = Body.make({
+			gameId,
+			userId: member.user_id
+		});
 
 		await fetch("https://web/api/game/join", {
 			method: "POST",
@@ -107,9 +108,9 @@ export class GameChannel {
 		if (!member) return;
 		members = members.filter(m => m.socketId !== member.socketId);
 
-		const params = new URLSearchParams();
-
-		params.set("userId", member.user_id);
+		const params = Body.make({
+			userId: member.user_id
+		});
 
 		await fetch("https://web/api/game/leave", {
 			method: "POST",
