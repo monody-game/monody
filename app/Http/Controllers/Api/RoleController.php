@@ -6,7 +6,7 @@ use App\Enums\Roles;
 use App\Enums\Teams;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AssignRolesRequest;
+use App\Http\Requests\GameIdRequest;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\JsonResponse;
@@ -41,7 +41,7 @@ class RoleController extends Controller
         return new JsonResponse(['roles' => $roles]);
     }
 
-    public function assign(AssignRolesRequest $request): JsonResponse
+    public function assign(GameIdRequest $request): JsonResponse
     {
         $assigned = [];
         $werewolves = [];

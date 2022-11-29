@@ -4,6 +4,7 @@ namespace Tests\Unit\Services;
 
 use App\Events\GameKill;
 use App\Facades\Redis;
+use App\Http\Middleware\RestrictToDockerNetwork;
 use App\Models\User;
 use App\Services\VoteService;
 use Illuminate\Support\Facades\Event;
@@ -93,6 +94,10 @@ class VoteServiceTest extends TestCase
         $this->service->vote($this->secondUser->id, $this->game['id'], $this->secondUser->id);
         $this->service->afterVote($gameId);
 
+        $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->post('/api/game/message/deaths', ['gameId' => $this->game['id']]);
+
         Event::assertDispatched(function (GameKill $event) use ($gameId) {
             return $event->payload === [
                 'killedUser' => $this->secondUser->id,
@@ -158,6 +163,10 @@ class VoteServiceTest extends TestCase
         $this->service->vote($this->user->id, $gameId);
         $this->assertSame($this->user->id, $this->service->afterVote($gameId));
 
+        $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->post('/api/game/message/deaths', ['gameId' => $gameId]);
+
         Event::assertDispatched(function (GameKill $event) use ($gameId) {
             return $event->payload === [
                 'killedUser' => $this->user->id,
@@ -180,7 +189,7 @@ class VoteServiceTest extends TestCase
 
     public function testKillingInexistantMember()
     {
-        $this->assertFalse($this->service->kill('inexistantUser', $this->secondGame['id']));
+        $this->assertFalse($this->service->kill('inexistantUser', $this->secondGame['id'], 'vote'));
     }
 
     public function testAfterVotingDeadMember()
@@ -188,7 +197,7 @@ class VoteServiceTest extends TestCase
         $gameId = $this->secondGame['id'];
         Event::fake();
 
-        $this->service->kill($this->secondUser->id, $gameId);
+        $this->service->kill($this->secondUser->id, $gameId, 'vote');
         Redis::set("game:$gameId:votes", json_encode([
             $this->secondUser->id => [
                 $this->secondUser->id,

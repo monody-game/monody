@@ -108,14 +108,7 @@ class VoteService
             return false;
         }
 
-        $this->kill($majority, $gameId);
-
-        GameKill::dispatch([
-            'killedUser' => $majority,
-            'gameId' => $gameId,
-            'context' => $context,
-        ]);
-
+        $this->kill($majority, $gameId, $context);
         $this->clearVotes($gameId);
 
         return $majority;

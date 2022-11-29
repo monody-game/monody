@@ -37,6 +37,8 @@ Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
 
     Route::post('/interactions', 'Game\GameInteractionController@create');
     Route::delete('/interactions', 'Game\GameInteractionController@close');
+
+    Route::post('/game/message/deaths', 'Game\GameMessageController@death');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
