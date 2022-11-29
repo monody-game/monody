@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Game extends Entity
+class Game extends ObjectData
 {
     protected array $keys = [
         'id',

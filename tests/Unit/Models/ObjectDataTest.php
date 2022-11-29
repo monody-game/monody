@@ -2,24 +2,24 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Entity;
+use App\Models\ObjectData;
 use Tests\TestCase;
 
-class EntityTest extends TestCase
+class ObjectDataTest extends TestCase
 {
     public function testGettingAllData()
     {
         $data = [
             'key' => 'value',
         ];
-        $entity = new Entity($data);
+        $entity = new ObjectData($data);
 
         $this->assertSame($data, $entity->all());
     }
 
     public function testSettingKey()
     {
-        $entity = new Entity([]);
+        $entity = new ObjectData([]);
         $entity->setKeys(['key']);
         $this->assertSame([], $entity->all());
 
@@ -29,7 +29,7 @@ class EntityTest extends TestCase
 
     public function testSettingInexistantKey()
     {
-        $entity = new Entity([]);
+        $entity = new ObjectData([]);
         $this->assertSame([], $entity->all());
 
         $entity->set('key', 'value');
