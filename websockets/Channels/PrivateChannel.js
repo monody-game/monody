@@ -1,4 +1,5 @@
 import fetch from "../Helpers/fetch.js";
+import Body from "../Helpers/Body.js";
 
 export class PrivateChannel {
 	authenticate(socket, data) {
@@ -18,9 +19,9 @@ export class PrivateChannel {
 		let status = 0;
 
 		try {
-			const params = new URLSearchParams();
-
-			params.set("channel_name", options.form.channel_name);
+			const params = Body.make({
+				channel_name: options.form.channel_name
+			});
 
 			response = await fetch("https://web/broadcasting/auth", {
 				method: "POST",

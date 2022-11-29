@@ -4,6 +4,7 @@ import { CounterService } from "./CounterService.js";
 import { UserService } from "./UserService.js";
 import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
+import Body from "../Helpers/Body.js";
 
 const WaitingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
 const StartingState = (await fetch("https://web/api/state/1", { "method": "GET" })).json;
@@ -86,8 +87,9 @@ export class GameService {
 
 	async roleManagement(channel, members) {
 		const gameId = channel.split(".")[1];
-		const params = new URLSearchParams();
-		params.set("gameId", gameId);
+		const params = Body.make({
+			gameId
+		});
 
 		await fetch("https://web/api/roles/assign", { method: "POST", body: params });
 		const game = await GameService.getGame(gameId);

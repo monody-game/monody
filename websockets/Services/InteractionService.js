@@ -1,13 +1,15 @@
 import fetch from "../Helpers/fetch.js";
 import { GameService } from "./GameService.js";
 import { client } from "../Redis/Connection.js";
+import Body from "../Helpers/Body.js";
 
 export class InteractionService {
 	static async openInteraction(io, channel, type) {
 		const gameId = channel.split(".")[1];
-		const params = new URLSearchParams();
-		params.set("gameId", gameId);
-		params.set("type", type);
+		const params = Body.make({
+			gameId,
+			type
+		});
 
 		let interaction = await fetch("https://web/api/interactions", { method: "POST", body: params });
 		interaction = interaction.json.interaction;
@@ -45,9 +47,10 @@ export class InteractionService {
 		const interactionId = interaction.id;
 		let callers = interaction.authorizedCallers;
 
-		const params = new URLSearchParams();
-		params.set("gameId", gameId);
-		params.set("id", interactionId);
+		const params = Body.make({
+			gameId,
+			id: interactionId
+		});
 
 		await fetch("https://web/api/interactions", { method: "DELETE", body: params });
 
