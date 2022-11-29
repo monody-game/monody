@@ -132,7 +132,7 @@ class GameController extends Controller
     {
         $gameId = $request->validated('game_id');
 
-        Redis::del("game:{$gameId}", "game:{$gameId}:state", "game:{$gameId}:members", "game:{$gameId}:votes");
+        $this->clearRedisKeys($gameId);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

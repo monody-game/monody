@@ -57,8 +57,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::patch('/user', 'UserController@update');
 
     Route::get('/game/list', 'Game\GameController@list');
-    Route::post('/game/new', 'Game\GameController@new');
-    Route::post('/game/delete', 'Game\GameController@delete');
+    Route::put('/game', 'Game\GameController@new');
+    Route::delete('/game', 'Game\GameController@delete');
     Route::post('/game/check', 'Game\GameController@check');
 
     Route::get('/game/users', 'Game\GameUsersController@list');

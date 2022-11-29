@@ -64,7 +64,7 @@ class GameMessageControllerTest extends TestCase
         $this->user = User::factory()->create();
         $this->secondUser = User::factory()->create();
 
-        $this->game = $this->actingAs($this->user, 'api')->post('/api/game/new', [
+        $this->game = $this->actingAs($this->user, 'api')->put('/api/game', [
             'roles' => [1, 2],
             'users' => [],
         ])['game'];

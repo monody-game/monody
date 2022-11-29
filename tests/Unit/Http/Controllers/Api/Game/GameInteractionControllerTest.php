@@ -205,7 +205,7 @@ class GameInteractionControllerTest extends TestCase
         $this->game =
             $this
                 ->actingAs($this->user, 'api')
-                ->post('/api/game/new', [
+                ->put('/api/game', [
                     'roles' => [1, 1, 3, 4],
                 ])
                 ->json('game');
@@ -213,7 +213,7 @@ class GameInteractionControllerTest extends TestCase
         $this->secondGame =
             $this
                 ->actingAs($this->user, 'api')
-                ->post('/api/game/new', [
+                ->put('/api/game', [
                     'roles' => [1, 2],
                 ])
                 ->json('game');
