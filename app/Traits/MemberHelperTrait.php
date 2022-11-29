@@ -137,4 +137,9 @@ trait MemberHelperTrait
 
         return true;
     }
+
+	public function isWerewolf(string $userId, string $gameId): bool
+	{
+		return in_array($userId, $this->getWerewolves($gameId));
+	}
 }
