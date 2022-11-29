@@ -2,30 +2,42 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Enums\States;
 use App\Events\GameKill;
-use App\Events\MessageSended;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\SendMessageRequest;
-use App\Models\Message;
+use App\Models\User;
+use App\Services\ChatService;
+use App\Traits\GameHelperTrait;
+use App\Traits\MemberHelperTrait;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class GameMessageController extends Controller
 {
+    use GameHelperTrait, MemberHelperTrait;
+
+    private ChatService $service;
+
+    public function __construct()
+    {
+        $this->service = new ChatService();
+    }
+
     public function send(SendMessageRequest $request): JsonResponse
     {
-        $data = $request->validated();
+        $gameId = $request->validated('gameId');
+        /** @var User $user */
+        $user = $request->user();
+        $state = $this->getState($gameId)['state'];
 
-        $message = new Message($data);
-        $message->set('author', [
-            'id' => $request->user()?->id,
-            'username' => $request->user()?->username,
-            'avatar' => $request->user()?->avatar,
-        ]);
+        if ($state === States::Werewolf->value && $this->isWerewolf($user['id'], $gameId)) {
+            $this->service->werewolf($request->validated(), $user);
+        }
 
-        MessageSended::dispatch($message);
+        $this->service->send($request->validated(), $user);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
