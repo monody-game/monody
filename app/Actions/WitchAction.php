@@ -5,7 +5,6 @@ namespace App\Actions;
 use App\Enums\InteractionActions;
 use App\Enums\Roles;
 use App\Enums\States;
-use App\Events\GameKill;
 use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
@@ -61,17 +60,7 @@ class WitchAction implements ActionInterface
     private function killPotion(string $targetId): void
     {
         $gameId = $this->getCurrentUserGameActivity($targetId);
-        $success = $this->kill($targetId, $gameId);
-
-        if (!$success) {
-            return;
-        }
-
-        GameKill::broadcast([
-            'killedUser' => $targetId,
-            'gameId' => $gameId,
-            'context' => States::Witch->stringify(),
-        ]);
+        $this->kill($targetId, $gameId, States::Witch->stringify());
     }
 
     private function revivePotion(string $targetId): void

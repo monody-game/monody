@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Events\GameKill;
 use App\Events\MessageSended;
+use App\Facades\Redis;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\SendMessageRequest;
 use App\Models\Message;
 use Illuminate\Http\JsonResponse;
@@ -23,6 +26,24 @@ class GameMessageController extends Controller
         ]);
 
         MessageSended::dispatch($message);
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    public function death(GameIdRequest $request): JsonResponse
+    {
+        $gameId = $request->validated('gameId');
+        $deaths = Redis::get("game:{$gameId}:deaths") ?? [];
+
+        foreach ($deaths as $death) {
+            GameKill::broadcast([
+                'killedUser' => $death['user'],
+                'gameId' => $gameId,
+                'context' => $death['context'],
+            ]);
+        }
+
+        Redis::set("game:{$gameId}:deaths", []);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

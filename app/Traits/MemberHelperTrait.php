@@ -113,12 +113,11 @@ trait MemberHelperTrait
         return $werewolves;
     }
 
-    public function kill(string $userId, string $gameId): bool
+    public function kill(string $userId, string $gameId, string $context): bool
     {
         $member = $this->getMember($userId, $gameId);
         $members = $this->getMembers($gameId);
         $index = array_search($member, $members, true);
-
         if (!$member || false === $index) {
             return false;
         }
@@ -128,7 +127,13 @@ trait MemberHelperTrait
         $member['user_info']['is_dead'] = true;
         $members = [...$members, $member];
 
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
         Redis::set("game:$gameId:members", $members);
+
+        Redis::set("game:$gameId:deaths", [...$deaths, [
+            'user' => $userId,
+            'context' => $context,
+        ]]);
 
         return true;
     }

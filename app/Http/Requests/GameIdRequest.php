@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Rules\GameExistsRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AssignRolesRequest extends FormRequest
+class GameIdRequest extends FormRequest
 {
     public function rules(): array
     {
