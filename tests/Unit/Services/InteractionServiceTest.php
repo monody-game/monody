@@ -109,7 +109,7 @@ class InteractionServiceTest extends TestCase
 
         $this->game = $this
             ->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'roles' => [1, 2, 3, 4],
             ])
             ->json('game');

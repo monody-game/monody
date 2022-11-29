@@ -16,7 +16,7 @@ class RegisterHelperTraitTest extends TestCase
         $game = json_decode(
             $this
             ->actingAs($user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [$user->id],
                 'roles' => [1],
             ]

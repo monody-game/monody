@@ -94,7 +94,7 @@ class RoleControllerTest extends TestCase
 
         $this->game = $this
             ->actingAs($this->user, 'api')
-            ->post('/api/game/new', ['roles' => [1, 2]])
+            ->put('/api/game', ['roles' => [1, 2]])
             ->json('game');
 
         Redis::set("game:{$this->game['id']}:members", [

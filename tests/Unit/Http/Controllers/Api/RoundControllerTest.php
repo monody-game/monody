@@ -113,14 +113,14 @@ class RoundControllerTest extends TestCase
 
         $this->game = $this
             ->actingAs($user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'roles' => [1, 1, 3],
             ])
             ->json('game');
 
         $this->secondGame = $this
             ->actingAs($user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'roles' => [1, 2],
             ])
             ->json('game');

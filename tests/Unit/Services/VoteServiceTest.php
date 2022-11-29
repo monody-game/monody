@@ -237,7 +237,7 @@ class VoteServiceTest extends TestCase
 
         $this->game = json_decode($this
             ->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [$this->user->id, $this->secondUser->id],
                 'roles' => [1, 2],
             ])->getContent(), true)['game'];
@@ -249,7 +249,7 @@ class VoteServiceTest extends TestCase
 
         $this->secondGame = json_decode($this
             ->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [$this->user->id, $this->secondUser->id],
                 'roles' => [1, 2],
             ])->getContent(), true)['game'];

@@ -77,7 +77,7 @@ const nextPage = async function() {
 	}
 
 	if (currentPage.value === totalPage.value - 1) {
-		const res = await window.JSONFetch("/game/new", "POST", {
+		const res = await window.JSONFetch("/game", "PUT", {
 			roles: store.selectedRoles
 		});
 

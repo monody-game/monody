@@ -54,7 +54,7 @@ class GameUsersControllerTest extends TestCase
         parent::setUp();
         [$this->user, $this->secondUser] = User::factory(2)->create();
 
-        $this->game = $this->actingAs($this->user, 'api')->post('/api/game/new', [
+        $this->game = $this->actingAs($this->user, 'api')->put('/api/game', [
             'roles' => [1, 2],
             'users' => [],
         ])['game'];

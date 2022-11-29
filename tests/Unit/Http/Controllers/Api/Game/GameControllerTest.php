@@ -28,14 +28,14 @@ class GameControllerTest extends TestCase
 
     public function testCreatingGameWithWrongRequest()
     {
-        $this->actingAs($this->user, 'api')->post('/api/game/new', [
+        $this->actingAs($this->user, 'api')->put('/api/game', [
             'users' => [],
         ])->assertJsonValidationErrorFor('roles');
     }
 
     public function testCreatingGame()
     {
-        $res = $this->actingAs($this->user, 'api')->post('/api/game/new', [
+        $res = $this->actingAs($this->user, 'api')->put('/api/game', [
             'users' => [],
             'roles' => [
                 1, 1, 2,
@@ -55,7 +55,7 @@ class GameControllerTest extends TestCase
 
         $this
             ->actingAs($this->user, 'api')
-            ->post('/api/game/delete', [
+            ->delete('/api/game', [
                 'game_id' => $res->json('game')['id'],
             ]);
     }
@@ -63,7 +63,7 @@ class GameControllerTest extends TestCase
     public function testListGames()
     {
         $res = $this->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [],
                 'roles' => [
                     1, 1, 2,
@@ -88,7 +88,7 @@ class GameControllerTest extends TestCase
 
         $this
             ->actingAs($this->user, 'api')
-            ->post('/api/game/delete', [
+            ->delete('/api/game', [
                 'game_id' => $res->json('game')['id'],
             ]);
     }
@@ -105,7 +105,7 @@ class GameControllerTest extends TestCase
     public function testIgnoringStartedAndInvalidGames()
     {
         $res = $this->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [],
                 'roles' => [
                     1, 1, 2,
@@ -124,7 +124,7 @@ class GameControllerTest extends TestCase
         Redis::del('game:1234', 'game:5678');
         $this
             ->actingAs($this->user, 'api')
-            ->post('/api/game/delete', [
+            ->delete('/api/game', [
                 'game_id' => $res->json('game')['id'],
             ]);
     }
@@ -132,7 +132,7 @@ class GameControllerTest extends TestCase
     public function testThatOwnerDoesContainsRestrictedInformations()
     {
         $game = $this->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [],
                 'roles' => [
                     1, 1, 2,
@@ -149,7 +149,7 @@ class GameControllerTest extends TestCase
     public function testDeleteGameWithWrongRequest()
     {
         $this->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [],
                 'roles' => [
                     1, 1, 2,
@@ -157,13 +157,13 @@ class GameControllerTest extends TestCase
             ]);
 
         $this->actingAs($this->user, 'api')
-            ->post('/api/game/delete', [])->assertJsonValidationErrorFor('game_id');
+            ->delete('/api/game', [])->assertJsonValidationErrorFor('game_id');
     }
 
     public function testDeleteGame()
     {
         $game = $this->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [],
                 'roles' => [
                     1, 1, 2,
@@ -171,7 +171,7 @@ class GameControllerTest extends TestCase
             ]);
 
         $this->actingAs($this->user, 'api')
-            ->post('/api/game/delete', [
+            ->delete('/api/game', [
                 'game_id' => $game->json('game')['id'],
             ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
@@ -183,7 +183,7 @@ class GameControllerTest extends TestCase
     public function testCheckGameWithWrongRequest()
     {
         $this->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [],
                 'roles' => [
                     1, 1, 2,
@@ -205,7 +205,7 @@ class GameControllerTest extends TestCase
     public function testCheckGame()
     {
         $game = $this->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [],
                 'roles' => [
                     1, 1, 2,
@@ -222,7 +222,7 @@ class GameControllerTest extends TestCase
     {
         $game = $this
             ->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [],
                 'roles' => [1, 3],
             ]);
@@ -236,7 +236,7 @@ class GameControllerTest extends TestCase
     {
         $game = $this
             ->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [],
                 'roles' => [1, 3],
             ]);
@@ -260,7 +260,7 @@ class GameControllerTest extends TestCase
     {
         $game = $this
             ->actingAs($this->user, 'api')
-            ->post('/api/game/new', [
+            ->put('/api/game', [
                 'users' => [],
                 'roles' => [1, 3],
             ]);
