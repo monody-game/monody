@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Message extends Entity
+class Message extends ObjectData
 {
     protected array $keys = ['gameId', 'author', 'content'];
 

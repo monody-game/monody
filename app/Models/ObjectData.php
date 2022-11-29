@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class Entity
+class ObjectData
 {
     protected array $keys = [];
 
