@@ -76,20 +76,25 @@ onBeforeRouteLeave((to, from, next) => {
 	next();
 });
 
-onMounted(async () => {
+const retrievedGames = await window.JSONFetch("/game/list", "GET");
+
+if (retrievedGames.data.length > 0) {
 	const res = await window.JSONFetch("/roles", "GET");
 
 	roles.value = res.data.roles;
-	const retrievedGames = await window.JSONFetch("/game/list", "GET");
-	if (retrievedGames.data) {
-		games.value = retrievedGames.data.games;
+	games.value = retrievedGames.data.games;
+}
+
+window.Echo.channel("home").listen(".game.created", async (e) => {
+	if (roles.value.length === 0) {
+		const res = await window.JSONFetch("/roles", "GET");
+
+		roles.value = res.data.roles;
 	}
 
-	window.Echo.channel("home").listen(".game.created", (e) => {
-		games.value.push(e.data.game);
-	}).listen(".game.delete", (id) => {
-		games.value = games.value.filter(game => game.id !== id);
-	});
+	games.value.push(e.data.game);
+}).listen(".game.delete", (id) => {
+	games.value = games.value.filter(game => game.id !== id);
 });
 
 const logout = function () {
