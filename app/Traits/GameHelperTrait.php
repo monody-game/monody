@@ -15,4 +15,14 @@ trait GameHelperTrait
     {
         return Redis::get("game:$gameId:state");
     }
+
+    public function clearRedisKeys(string $gameId): void
+    {
+        Redis::del("game:$gameId");
+        Redis::del("game:$gameId:members");
+        Redis::del("game:$gameId:state");
+        Redis::del("game:$gameId:votes");
+        Redis::del("game:$gameId:interactions");
+        Redis::del("game:$gameId:deaths");
+    }
 }
