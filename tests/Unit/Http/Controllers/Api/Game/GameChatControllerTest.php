@@ -116,6 +116,31 @@ class GameChatControllerTest extends TestCase
         Event::assertDispatched(ChatLock::class);
     }
 
+    public function testPrivateChatLocking()
+    {
+        Event::fake();
+
+        $user = $this->user;
+        $game = $this->game;
+
+        $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->post('/api/game/chat/lock', [
+                'gameId' => $game['id'],
+                'users' => $this->user->id,
+            ])
+            ->assertNoContent();
+
+        Event::assertDispatched(function (ChatLock $event) use ($game, $user) {
+            return (array) $event === [
+                'gameId' => $game['id'],
+                'private' => true,
+                'emitters' => [$user->id],
+                'socket' => null,
+            ];
+        });
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
