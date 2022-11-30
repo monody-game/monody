@@ -3,13 +3,15 @@
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Enums\States;
+use App\Events\ChatLock;
 use App\Events\MessageSended;
 use App\Facades\Redis;
+use App\Http\Middleware\RestrictToDockerNetwork;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
-class GameMessageControllerTest extends TestCase
+class GameChatControllerTest extends TestCase
 {
     public function testSendingMessage()
     {
@@ -100,6 +102,18 @@ class GameMessageControllerTest extends TestCase
                 'socket' => null,
             ];
         });
+    }
+
+    public function testLockingChat()
+    {
+        Event::fake();
+
+        $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->post('/api/game/chat/lock', ['gameId' => $this->game['id']])
+            ->assertNoContent();
+
+        Event::assertDispatched(ChatLock::class);
     }
 
     protected function setUp(): void

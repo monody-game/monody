@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\States;
+use App\Events\ChatLock;
 use App\Events\GameKill;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
@@ -15,7 +16,7 @@ use App\Traits\MemberHelperTrait;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class GameMessageController extends Controller
+class GameChatController extends Controller
 {
     use GameHelperTrait, MemberHelperTrait;
 
@@ -56,6 +57,13 @@ class GameMessageController extends Controller
         }
 
         Redis::set("game:{$gameId}:deaths", []);
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    public function lock(GameIdRequest $request): JsonResponse
+    {
+        broadcast(new ChatLock($request->validated('gameId')));
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
