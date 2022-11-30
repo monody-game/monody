@@ -38,7 +38,8 @@ Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
     Route::post('/interactions', 'Game\GameInteractionController@create');
     Route::delete('/interactions', 'Game\GameInteractionController@close');
 
-    Route::post('/game/message/deaths', 'Game\GameMessageController@death');
+    Route::post('/game/message/deaths', 'Game\GameChatController@death');
+    Route::post('/game/chat/lock', 'Game\GameChatController@lock');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
@@ -64,7 +65,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/game/users', 'Game\GameUsersController@list');
     Route::get('/game/user/{id}/role', 'Game\GameUsersController@role');
 
-    Route::post('/game/message/send', 'Game\GameMessageController@send');
+    Route::post('/game/message/send', 'Game\GameChatController@send');
 
     Route::get('/teams', 'TeamController@all');
 
