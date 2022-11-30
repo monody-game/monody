@@ -63,7 +63,13 @@ class GameChatController extends Controller
 
     public function lock(GameIdRequest $request): JsonResponse
     {
-        broadcast(new ChatLock($request->validated('gameId')));
+        $gameId = $request->validated('gameId');
+
+        if ($request->has('users')) {
+            broadcast(new ChatLock($gameId, true, (array) $request->get('users')));
+        } else {
+            broadcast(new ChatLock($gameId));
+        }
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
