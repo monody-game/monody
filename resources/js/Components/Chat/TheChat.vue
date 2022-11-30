@@ -69,10 +69,10 @@ window.Echo.join(`game.${route.params.id}`)
 		const context = e.data.payload.context;
 
 		if (killed === null) {
-			if (context === "werewolf") {
-				service.sendMessage("Personne n'a été tué cette nuit !", "death");
-			} else if (context === "vote") {
+			if (context === "vote") {
 				service.sendMessage("Le village a décidé de ne tuer personne aujourd'hui !", "death");
+			} else {
+				service.sendMessage("Personne n'a été tué cette nuit !", "death");
 			}
 			return;
 		}
@@ -80,14 +80,14 @@ window.Echo.join(`game.${route.params.id}`)
 		const user = gameStore.getPlayerByID(killed);
 		const role = await window.JSONFetch(`/game/user/${user.id}/role`, "GET");
 
-		if (context === "werewolf") {
-			service.sendMessage(
-				`${user.username} a été tué cette nuit, il était ${role.data.display_name} !`,
-				"death"
-			);
-		} else if (context === "vote") {
+		if (context === "vote") {
 			service.sendMessage(
 				`Le village a décidé de tuer ${user.username} qui était ${role.data.display_name}`,
+				"death"
+			);
+		} else {
+			service.sendMessage(
+				`${user.username} a été tué cette nuit, il était ${role.data.display_name} !`,
 				"death"
 			);
 		}
