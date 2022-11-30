@@ -68,13 +68,12 @@ class GameControllerTest extends TestCase
                 'roles' => [
                     1, 1, 2,
                 ],
-            ]);
+            ])
+        ->assertOk();
 
         $list = $this->actingAs($this->user, 'api')
             ->get('/api/game/list')
-            ->assertJsonStructure([
-                'games' => [],
-            ]);
+            ->assertOk();
 
         $this->assertCount(1, $list->json('games'));
 
@@ -160,7 +159,7 @@ class GameControllerTest extends TestCase
             ->delete('/api/game', [])->assertJsonValidationErrorFor('game_id');
     }
 
-    public function testDeleteGame()
+    public function testDeletingAGame()
     {
         $game = $this->actingAs($this->user, 'api')
             ->put('/api/game', [
@@ -303,6 +302,8 @@ class GameControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        Redis::flushDb();
 
         $this->controller = new GameController();
         $this->user = User::factory()->create();
