@@ -3,9 +3,8 @@
     <div class="chat__messages" />
     <div class="chat__submit-form">
       <input
+        ref="input"
         v-model="message"
-        :class="isReadonly()"
-        :readonly="isNight()"
         class="chat__send-input"
         placeholder="Envoyer un message"
         type="text"
@@ -34,18 +33,11 @@ import { ref } from "vue";
 import { useRoute } from "vue-router";
 
 const message = ref("");
+const input = ref(null);
 const service = new ChatService();
 const gameStore = useGameStore();
 const userStore = useUserStore();
 const route = useRoute();
-
-const isNight = function () {
-	return document.body.classList.contains("night") === true;
-};
-
-const isReadonly = function () {
-	return isNight() === true ? "chat__submit-readonly" : "";
-};
 
 const send = async function() {
 	await service.send(message.value);
@@ -91,5 +83,8 @@ window.Echo.join(`game.${route.params.id}`)
 				"death"
 			);
 		}
+	})
+	.listen(".chat.lock", () => {
+		input.value.classList.toggle("chat__submit-readonly");
 	});
 </script>
