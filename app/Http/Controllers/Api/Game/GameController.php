@@ -106,7 +106,7 @@ class GameController extends Controller
 
         Redis::set("game:$id", $data);
         Redis::set("game:$id:state", [
-            'state' => States::Waiting,
+            'status' => States::Waiting,
             'duration' => States::Waiting->duration(),
         ]);
         Redis::set("game:$id:votes", []);
