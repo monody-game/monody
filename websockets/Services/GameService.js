@@ -42,7 +42,7 @@ export class GameService {
 		if (!game) return false;
 
 		const members = JSON.parse(await client.get("game:" + gameId + ":members")) ?? [];
-		const user = await UserService.getUserBySocket(socket, members);
+		const user = UserService.getUserBySocket(socket, members);
 
 		if (!user) return false;
 
@@ -95,7 +95,7 @@ export class GameService {
 		const game = await GameService.getGame(gameId);
 
 		for (const member of members) {
-			const user = await UserService.getUserBySocket(member.socketId, members);
+			const user = UserService.getUserBySocket(member.socketId, members);
 			const roleId = game.assigned_roles[user.user_id];
 			let role = await fetch(`https://web/api/roles/get/${roleId}`, { method: "GET" });
 

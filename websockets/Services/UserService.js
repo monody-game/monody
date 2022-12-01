@@ -1,5 +1,5 @@
 export class UserService {
-	static async getUserBySocket(socket, users) {
+	static getUserBySocket(socket, users) {
 		return users.find(user => user.socketId === socket);
 	}
 }
