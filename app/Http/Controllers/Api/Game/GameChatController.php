@@ -32,7 +32,7 @@ class GameChatController extends Controller
         $gameId = $request->validated('gameId');
         /** @var User $user */
         $user = $request->user();
-        $state = $this->getState($gameId)['state'];
+        $state = $this->getState($gameId)['status'];
 
         if ($state === States::Werewolf->value && $this->isWerewolf($user['id'], $gameId)) {
             $this->service->werewolf($request->validated(), $user);

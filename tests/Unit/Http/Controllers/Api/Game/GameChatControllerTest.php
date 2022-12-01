@@ -75,7 +75,7 @@ class GameChatControllerTest extends TestCase
         $gameId = $this->game['id'];
         $user = $this->user;
         $state = Redis::get("game:{$gameId}:state");
-        $state['state'] = States::Werewolf->value;
+        $state['status'] = States::Werewolf->value;
         Redis::set("game:$gameId:state", $state);
 
         $this
