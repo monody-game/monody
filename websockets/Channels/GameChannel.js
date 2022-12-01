@@ -143,7 +143,8 @@ export class GameChannel {
 	}
 
 	async onDelete(gameId) {
-		clearTimeout(this.counterService.counterId);
+		this.gameService.stopTimeouts(gameId);
+
 		await fetch("https://web/api/game", {
 			method: "DELETE",
 			body: Body.make({ gameId })

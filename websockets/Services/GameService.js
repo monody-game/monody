@@ -10,10 +10,7 @@ const WaitingState = (await fetch("https://web/api/state/0", { "method": "GET" }
 const StartingState = (await fetch("https://web/api/state/1", { "method": "GET" })).json;
 
 export class GameService {
-	/**
-   * @type {NodeJS.Timeout[]}
-   */
-	timeouts = [];
+	timeouts = {};
 
 	constructor(io) {
 		this.io = io;
@@ -64,19 +61,18 @@ export class GameService {
 			console.info(`[${new Date().toISOString()}] - Starting game id ${channel.split(".")[1]}\n`);
 		}
 
-		this.timeouts.push(setTimeout(async () => {
+		this.timeouts[gameId].push(setTimeout(async () => {
 			await this.roleManagement(channel, members);
 		}, 6000));
 
-		this.timeouts.push(setTimeout(async () => {
+		this.timeouts[gameId].push(setTimeout(async () => {
 			await this.counterService.cycle(channel, socket);
 		}, 11000));
 	}
 
 	async stopGameLaunch(channel) {
-		if (this.timeouts.length > 0) {
-			this.timeouts.forEach(clearTimeout);
-		}
+		const gameId = channel.split(".")[1];
+		this.stopTimeouts(gameId);
 
 		await this.StateManager.setState({
 			status: WaitingState.state,
@@ -114,5 +110,11 @@ export class GameService {
 			count += game.roles[role];
 		}
 		return count;
+	}
+
+	stopTimeouts(gameId) {
+		if (this.timeouts[gameId].length > 0) {
+			this.timeouts[gameId].forEach(clearTimeout);
+		}
 	}
 }
