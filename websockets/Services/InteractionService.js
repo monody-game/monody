@@ -20,6 +20,7 @@ export class InteractionService {
 
 		if (callers !== "*") {
 			callers = JSON.parse(callers);
+			callers = [...callers];
 			const members = await GameService.getMembers(gameId);
 
 			for (let caller of callers) {
