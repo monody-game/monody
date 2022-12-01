@@ -7,10 +7,16 @@ export default {
 		const body = Body.make({
 			gameId: channel.split(".")[1]
 		});
+		const baseUrl = "https://web/api/game/";
 
-		await fetch("https://web/api/game/message/deaths", {
+		await fetch(`${baseUrl}message/deaths`, {
 			method: "POST",
 			body,
+		});
+
+		await fetch(`${baseUrl}/chat/lock`, {
+			method: "POST",
+			body
 		});
 	}
 };
