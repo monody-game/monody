@@ -69,7 +69,7 @@ class VoteService
     {
         $votes = $this->getVotes($gameId);
 
-        if ([] === $votes) {
+        if ([] === $votes && $context === 'vote') {
             GameKill::dispatch([
                 'killedUser' => null,
                 'gameId' => $gameId,
@@ -79,7 +79,8 @@ class VoteService
             return false;
         }
 
-        $majority = array_key_first($votes);
+        /** @var string $majority */
+		$majority = array_key_first($votes);
 
         foreach ($votes as $voted => $by) {
             if (count($by) > count($votes[$majority])) {
