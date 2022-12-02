@@ -17,7 +17,7 @@
 		"dotenv": "^16.0.3",
 		"laravel-echo": "^1.12.1",
 		"node-fetch": "^3.2.10",
-		"pinia": "2.0.23",
+		"pinia": "^2.0.27",
 		"redis": "^4.2.0",
 		"socket.io": "^4.5.2",
 		"socket.io-client": "^4.5.2",
@@ -25,13 +25,17 @@
 		"vue-router": "^4.1.2"
 	},
 	"devDependencies": {
-		"@vitejs/plugin-vue": "3.1.0",
+		"@vitejs/plugin-vue": "^3.2.0",
 		"eslint": "^8.28.0",
 		"eslint-plugin-vue": "^9.2.0",
-		"laravel-vite-plugin": "^0.6.1",
+		"laravel-vite-plugin": "^0.7.1",
 		"sass": "^1.55.0",
 		"vite": "^3.0.0",
 		"vue-template-compiler": "^2.7.5"
 	},
-	"version": "1.0.0"
+	"version": "1.0.0",
+	"optionalDependencies": {
+		"bufferutil": "^4.0.7",
+		"utf-8-validate": "^5.0.10"
+	}
 }
