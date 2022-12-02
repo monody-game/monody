@@ -37,9 +37,9 @@ class GameChatController extends Controller
 
         if ($state === States::Werewolf->value && $this->isWerewolf($user['id'], $gameId)) {
             $this->service->werewolf($request->validated(), $user);
+        } else {
+            $this->service->send($request->validated(), $user);
         }
-
-        $this->service->send($request->validated(), $user);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
