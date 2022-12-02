@@ -80,7 +80,7 @@ class VoteService
         }
 
         /** @var string $majority */
-		$majority = array_key_first($votes);
+        $majority = array_key_first($votes);
 
         foreach ($votes as $voted => $by) {
             if (count($by) > count($votes[$majority])) {
