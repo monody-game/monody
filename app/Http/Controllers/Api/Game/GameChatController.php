@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\States;
+use App\Enums\Teams;
 use App\Events\ChatLock;
 use App\Events\GameKill;
 use App\Facades\Redis;
@@ -67,6 +68,15 @@ class GameChatController extends Controller
 
         if ($request->has('users')) {
             broadcast(new ChatLock($gameId, true, (array) $request->get('users')));
+        } elseif ($request->has('team')) {
+            $emitters = [];
+
+            foreach (Teams::from($request->get('team'))->roles() as $role) {
+                /** @phpstan-ignore-next-line */
+                $emitters[] = $this->getUserIdByRole($role, $gameId)[0];
+            }
+
+            broadcast(new ChatLock($gameId, true, $emitters));
         } else {
             broadcast(new ChatLock($gameId));
         }

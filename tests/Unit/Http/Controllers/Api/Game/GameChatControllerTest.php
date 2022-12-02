@@ -3,6 +3,7 @@
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Enums\States;
+use App\Enums\Teams;
 use App\Events\ChatLock;
 use App\Events\MessageSended;
 use App\Facades\Redis;
@@ -128,6 +129,31 @@ class GameChatControllerTest extends TestCase
             ->post('/api/game/chat/lock', [
                 'gameId' => $game['id'],
                 'users' => $this->user->id,
+            ])
+            ->assertNoContent();
+
+        Event::assertDispatched(function (ChatLock $event) use ($game, $user) {
+            return (array) $event === [
+                'gameId' => $game['id'],
+                'private' => true,
+                'emitters' => [$user->id],
+                'socket' => null,
+            ];
+        });
+    }
+
+    public function testLockingChatForATeam()
+    {
+        Event::fake();
+
+        $game = $this->game;
+        $user = $this->user;
+
+        $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->post('/api/game/chat/lock', [
+                'gameId' => $game['id'],
+                'team' => Teams::Werewolves->value,
             ])
             ->assertNoContent();
 
