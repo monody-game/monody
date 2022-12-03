@@ -15,14 +15,14 @@ class MessageSended implements ShouldBroadcast
     use InteractsWithSockets;
     use SerializesModels;
 
-    public array $message;
+    public array $payload;
 
     public function __construct(
         Message $message,
         public bool $private = false,
         public array $emitters = []
     ) {
-        $this->message = $message->all();
+        $this->payload = $message->all();
     }
 
     /**
@@ -30,7 +30,7 @@ class MessageSended implements ShouldBroadcast
      */
     public function broadcastOn(): PresenceChannel
     {
-        return new PresenceChannel('game.' . $this->message['gameId']);
+        return new PresenceChannel('game.' . $this->payload['gameId']);
     }
 
     public function broadcastAs(): string

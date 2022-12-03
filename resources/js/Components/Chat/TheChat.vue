@@ -53,7 +53,7 @@ const send = async function() {
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
 		console.log(e);
-		service.sendMessage(e.data.message, e.data.type ?? "message");
+		service.sendMessage(e.data.payload, e.data.type ?? "message");
 	})
 	.listen(".game.role-assign", async (role_id) => {
 		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
