@@ -6,8 +6,10 @@ export class ChatService {
 
 		socket.emit("chat.send", channel, {
 			data: {
-				payload: message,
-				type
+				payload: {
+					content: message,
+					type
+				}
 			}
 		});
 	}

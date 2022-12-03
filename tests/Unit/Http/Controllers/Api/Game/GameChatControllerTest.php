@@ -97,6 +97,7 @@ class GameChatControllerTest extends TestCase
                         'username' => $user->username,
                         'avatar' => $user->avatar,
                     ],
+                    'type' => 'werewolf',
                 ],
                 'private' => true,
                 'emitters' => [$user->id],
