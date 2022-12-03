@@ -11,13 +11,17 @@
         @keyup.enter="send()"
       >
       <button
+        ref="button"
         aria-label="Envoyer"
         class="chat__send-button"
         type="submit"
         @click.prevent="send()"
         @keyup.stop
       >
-        <svg class="chat__submit-icon">
+        <svg
+          ref="icon"
+          class="chat__submit-icon"
+        >
           <use href="/sprite.svg#send" />
         </svg>
       </button>
@@ -34,6 +38,8 @@ import { useRoute } from "vue-router";
 
 const message = ref("");
 const input = ref(null);
+const button = ref(null);
+const icon = ref(null);
 const service = new ChatService();
 const gameStore = useGameStore();
 const userStore = useUserStore();
@@ -46,6 +52,7 @@ const send = async function() {
 
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
+		console.log(e);
 		service.sendMessage(e.data.message, e.data.type ?? "message");
 	})
 	.listen(".game.role-assign", async (role_id) => {
@@ -85,6 +92,18 @@ window.Echo.join(`game.${route.params.id}`)
 		}
 	})
 	.listen(".chat.lock", () => {
-		input.value.classList.toggle("chat__submit-readonly");
+		input.value.disabled = !input.value.disabled;
+		input.value.classList.toggle("locked");
+		button.value.classList.toggle("locked");
+
+		if (input.value.disabled) {
+			console.log("locking");
+			input.value.placeholder = "Chat verrouillé";
+			icon.value.setAttribute("href", "/sprite.svg#lock");
+		} else {
+			console.log("unlocking");
+			input.value.placeholder = "Envoyer un message";
+			icon.value.setAttribute("href", "/sprite.svg#send");
+		}
 	});
 </script>

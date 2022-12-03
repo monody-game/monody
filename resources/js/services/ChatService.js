@@ -54,30 +54,4 @@ export default class ChatService {
 			gameId
 		});
 	}
-
-	lock() {
-		const input = document.querySelector(".chat__send-input");
-		const button = document.querySelector(".chat__send-button");
-		const icon = document.querySelector(".chat__submit-icon use");
-
-		icon.setAttribute("href", "/sprite.svg#lock");
-
-		input.placeholder = "Chat verrouillé";
-		input.disabled = true;
-		input.classList.add("locked");
-		button.classList.add("locked");
-	}
-
-	unlock() {
-		const input = document.querySelector(".chat__send-input");
-		const button = document.querySelector(".chat__send-button");
-		const icon = document.querySelector(".chat__submit-icon use");
-
-		icon.setAttribute("href", "/sprite.svg#send");
-
-		input.placeholder = "Envoyer un message";
-		input.disabled = false;
-		input.classList.remove("locked");
-		button.classList.remove("locked");
-	}
 }

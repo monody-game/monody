@@ -8,11 +8,5 @@ export default {
 			method: "POST",
 			body: Body.make({ gameId: channel.split(".")[1] })
 		});
-	},
-	async after(io, channel) {
-		await fetch("https://web/api/game/chat/lock", {
-			method: "POST",
-			body: Body.make({ gameId: channel.split(".")[1] })
-		});
 	}
 };
