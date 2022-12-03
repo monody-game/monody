@@ -6,9 +6,8 @@ use App\Enums\States;
 use App\Events\GameCreated;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CheckGameRequest;
 use App\Http\Requests\CreateGameRequest;
-use App\Http\Requests\DeleteGameRequest;
+use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\JoinGameRequest;
 use App\Models\Game;
 use App\Models\User;
@@ -24,13 +23,10 @@ class GameController extends Controller
 {
     use RegisterHelperTrait, GameHelperTrait;
 
-    public function check(CheckGameRequest $request): JsonResponse
+    public function check(GameIdRequest $request): JsonResponse
     {
-        /** @var array $data */
-        $data = $request->validated();
-
         /** @var bool $game */
-        $game = Redis::exists("game:{$data['game_id']}");
+        $game = Redis::exists("game:{$request->validated('gameId')}");
 
         if ($game) {
             return new JsonResponse(['message' => 'Game found']);
@@ -128,9 +124,9 @@ class GameController extends Controller
         return Str::random(12);
     }
 
-    public function delete(DeleteGameRequest $request): JsonResponse
+    public function delete(GameIdRequest $request): JsonResponse
     {
-        $gameId = $request->validated('game_id');
+        $gameId = $request->validated('gameId');
 
         $this->clearRedisKeys($gameId);
 

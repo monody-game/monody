@@ -54,9 +54,9 @@ class GameControllerTest extends TestCase
         $this->assertSame(sort($this->game), sort($game));
 
         $this
-            ->actingAs($this->user, 'api')
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->delete('/api/game', [
-                'game_id' => $res->json('game')['id'],
+                'gameId' => $res->json('game')['id'],
             ]);
     }
 
@@ -86,9 +86,9 @@ class GameControllerTest extends TestCase
         $this->assertSame(sort($exceptedGame), sort($game));
 
         $this
-            ->actingAs($this->user, 'api')
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->delete('/api/game', [
-                'game_id' => $res->json('game')['id'],
+                'gameId' => $res->json('game')['id'],
             ]);
     }
 
@@ -122,9 +122,9 @@ class GameControllerTest extends TestCase
 
         Redis::del('game:1234', 'game:5678');
         $this
-            ->actingAs($this->user, 'api')
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->delete('/api/game', [
-                'game_id' => $res->json('game')['id'],
+                'gameId' => $res->json('game')['id'],
             ]);
     }
 
@@ -155,8 +155,10 @@ class GameControllerTest extends TestCase
                 ],
             ]);
 
-        $this->actingAs($this->user, 'api')
-            ->delete('/api/game', [])->assertJsonValidationErrorFor('game_id');
+        $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->delete('/api/game', [])
+            ->assertJsonValidationErrorFor('gameId');
     }
 
     public function testDeletingAGame()
@@ -169,9 +171,10 @@ class GameControllerTest extends TestCase
                 ],
             ]);
 
-        $this->actingAs($this->user, 'api')
+        $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->delete('/api/game', [
-                'game_id' => $game->json('game')['id'],
+                'gameId' => $game->json('game')['id'],
             ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
@@ -190,15 +193,15 @@ class GameControllerTest extends TestCase
             ]);
 
         $this->actingAs($this->user, 'api')
-            ->post('/api/game/check', [])->assertJsonValidationErrorFor('game_id');
+            ->post('/api/game/check', [])->assertJsonValidationErrorFor('gameId');
     }
 
     public function testCheckingUnexistingGame()
     {
         $this->actingAs($this->user, 'api')
             ->post('/api/game/check', [
-                'game_id' => 'unexisting',
-            ])->assertStatus(Response::HTTP_NOT_FOUND);
+                'gameId' => 'unexisting',
+            ])->assertJsonValidationErrorFor('gameId');
     }
 
     public function testCheckGame()
@@ -213,7 +216,7 @@ class GameControllerTest extends TestCase
 
         $this->actingAs($this->user, 'api')
             ->post('/api/game/check', [
-                'game_id' => $game->json('game')['id'],
+                'gameId' => $game->json('game')['id'],
             ])->assertStatus(Response::HTTP_OK);
     }
 
