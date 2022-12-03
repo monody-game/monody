@@ -17,26 +17,32 @@ export default class ChatService {
 		messageContainer.scrollTo(0, messageContainer.scrollHeight);
 	}
 
-	sendMessage(message, type, customClass) {
+	sendMessage(payload, customClass) {
 		const messageContainer = document.querySelector(".chat__messages");
 		const wrapper = document.createElement("div");
+		const type = payload.type;
 
 		if (customClass) {
 			wrapper.classList.add(customClass);
 		}
 
-		if (type !== "message") {
+		if (type !== "message" && type !== "werewolf") {
 			wrapper.classList.add("alert-message__" + type);
 			createApp(ChatAlert, {
 				type: type,
-				message: message
+				message: payload.content
 			})
 				.use(window.pinia)
 				.mount(wrapper);
 		} else {
 			wrapper.classList.add("message__main");
+
+			if (type === "werewolf") {
+				wrapper.classList.add("message__werewolf");
+			}
+
 			createApp(ChatMessage, {
-				message: message,
+				message: payload,
 			}).mount(wrapper);
 		}
 

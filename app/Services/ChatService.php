@@ -15,6 +15,7 @@ class ChatService
     {
         $message = new Message($data);
         $message->set('author', $this->getAuthor($user));
+        $message->set('type', 'message');
 
         MessageSended::dispatch($message);
     }

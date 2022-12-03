@@ -52,16 +52,12 @@ const send = async function() {
 
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
-		console.log(e);
-		service.sendMessage(e.data.payload, e.data.type ?? "message");
+		service.sendMessage(e.data.payload);
 	})
 	.listen(".game.role-assign", async (role_id) => {
 		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
 		const role = res.data.role;
 		gameStore.setRole(userStore.id, role);
-	})
-	.listen(".chat.werewolf", (e) => {
-		service.sendMessage({ content: e.content, author: e.author }, "message", "message__werewolf");
 	})
 	.listen(".game.kill", async (e) => {
 		const killed = e.data.payload.killedUser;
@@ -97,11 +93,9 @@ window.Echo.join(`game.${route.params.id}`)
 		button.value.classList.toggle("locked");
 
 		if (input.value.disabled) {
-			console.log("locking");
 			input.value.placeholder = "Chat verrouillé";
 			icon.value.setAttribute("href", "/sprite.svg#lock");
 		} else {
-			console.log("unlocking");
 			input.value.placeholder = "Envoyer un message";
 			icon.value.setAttribute("href", "/sprite.svg#send");
 		}
