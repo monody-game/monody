@@ -113,6 +113,7 @@ export class GameService {
 	}
 
 	stopTimeouts(gameId) {
+		this.counterService.stop(gameId);
 		if (this.timeouts[gameId] && this.timeouts[gameId].length > 0) {
 			this.timeouts[gameId].forEach(clearTimeout);
 		}
