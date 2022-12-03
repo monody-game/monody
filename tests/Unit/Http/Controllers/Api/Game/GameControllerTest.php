@@ -171,6 +171,9 @@ class GameControllerTest extends TestCase
                 ],
             ]);
 
+        $this->assertTrue(Redis::exists("game:{$game->json('game')['id']}"));
+        $this->assertTrue(Redis::exists("game:{$game->json('game')['id']}:state"));
+
         $this
             ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->delete('/api/game', [
@@ -178,8 +181,11 @@ class GameControllerTest extends TestCase
             ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertNull(Redis::get("game:{$game->json('game')['id']}"));
-        $this->assertNull(Redis::get("game:{$game->json('game')['id']}:state"));
+        $this->assertFalse(Redis::exists("game:{$game->json('game')['id']}"));
+        $this->assertFalse(Redis::exists("game:{$game->json('game')['id']}:state"));
+        $this->assertFalse(Redis::exists("game:{$game->json('game')['id']}:votes"));
+        $this->assertFalse(Redis::exists("game:{$game->json('game')['id']}:interactions"));
+        $this->assertFalse(Redis::exists("game:{$game->json('game')['id']}:deaths"));
     }
 
     public function testCheckGameWithWrongRequest()
