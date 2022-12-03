@@ -78,7 +78,7 @@ onBeforeRouteLeave((to, from, next) => {
 
 const retrievedGames = await window.JSONFetch("/game/list", "GET");
 
-if (retrievedGames.data.length > 0) {
+if (retrievedGames.data.games.length > 0) {
 	const res = await window.JSONFetch("/roles", "GET");
 
 	roles.value = res.data.roles;
