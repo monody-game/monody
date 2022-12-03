@@ -64,7 +64,7 @@ import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";
 import { useStore as useGameCreationModal } from "../stores/GameCreationModal";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 
 const games = ref([]);
 const roles = ref([]);
