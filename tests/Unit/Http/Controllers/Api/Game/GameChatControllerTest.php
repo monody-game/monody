@@ -39,7 +39,7 @@ class GameChatControllerTest extends TestCase
             'gameId' => $this->game['id'],
         ]);
         Event::assertDispatched(function (MessageSended $event) use ($user) {
-            $author = ((array) $event)['message']['author'];
+            $author = ((array) $event)['payload']['author'];
 
             return $author === [
                 'id' => $user->id,
@@ -89,7 +89,7 @@ class GameChatControllerTest extends TestCase
 
         Event::assertDispatched(function (MessageSended $event) use ($user, $gameId) {
             return (array) $event === [
-                'message' => [
+                'payload' => [
                     'gameId' => $gameId,
                     'content' => "I'm a werewolf :)",
                     'author' => [
