@@ -5,10 +5,10 @@ export default async function exists({ router, to }) {
 	}
 
 	const response = await window.JSONFetch("/game/check", "POST", {
-		game_id: to.params.id,
+		gameId: to.params.id,
 	});
 
-	if (response.status === "404") {
+	if (response.status !== 200) {
 		router.push({ name: "play" });
 	}
 }
