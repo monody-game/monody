@@ -46,6 +46,8 @@ export class IoServer {
 					caller = members.find(member => member.user_id === caller);
 					this.server.to(caller.socketId).emit(message.event, channel, { data: { payload: message.data.payload } });
 				}
+
+				return;
 			}
 
 			this.broadcast(channel, message);
