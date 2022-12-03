@@ -52,7 +52,8 @@ const send = async function() {
 
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
-		service.sendMessage(e.data.payload);
+		const payload = e.data.payload;
+		service.sendMessage(payload, payload.type);
 	})
 	.listen(".game.role-assign", async (role_id) => {
 		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
@@ -60,14 +61,18 @@ window.Echo.join(`game.${route.params.id}`)
 		gameStore.setRole(userStore.id, role);
 	})
 	.listen(".game.kill", async (e) => {
-		const killed = e.data.payload.killedUser;
-		const context = e.data.payload.context;
+		const payload = e.data.payload;
+		const killed = payload.killedUser;
+		const context = payload.context;
 
 		if (killed === null) {
 			if (context === "vote") {
-				service.sendMessage("Le village a décidé de ne tuer personne aujourd'hui !", "death");
+				service.sendMessage({
+					content: "Le village a décidé de ne tuer personne aujourd'hui !",
+					type: "death"
+				});
 			} else {
-				service.sendMessage("Personne n'a été tué cette nuit !", "death");
+				service.sendMessage({ content: "Personne n'a été tué cette nuit !", type: "death" });
 			}
 			return;
 		}
@@ -77,13 +82,17 @@ window.Echo.join(`game.${route.params.id}`)
 
 		if (context === "vote") {
 			service.sendMessage(
-				`Le village a décidé de tuer ${user.username} qui était ${role.data.display_name}`,
-				"death"
+				{
+					content: `Le village a décidé de tuer ${user.username} qui était ${role.data.display_name}`,
+					type: "death"
+				}
 			);
 		} else {
 			service.sendMessage(
-				`${user.username} a été tué cette nuit, il était ${role.data.display_name} !`,
-				"death"
+				{
+					content: `${user.username} a été tué cette nuit, il était ${role.data.display_name} !`,
+					type: "death"
+				}
 			);
 		}
 	})
