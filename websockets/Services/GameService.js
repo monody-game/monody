@@ -61,9 +61,9 @@ export class GameService {
 			console.info(`[${new Date().toISOString()}] - Starting game id ${channel.split(".")[1]}\n`);
 		}
 
-		this.timeouts[gameId].push(setTimeout(async () => {
+		this.timeouts[gameId] = [setTimeout(async () => {
 			await this.roleManagement(channel, members);
-		}, 6000));
+		}, 6000)];
 
 		this.timeouts[gameId].push(setTimeout(async () => {
 			await this.counterService.cycle(channel, socket);
@@ -113,7 +113,7 @@ export class GameService {
 	}
 
 	stopTimeouts(gameId) {
-		if (this.timeouts[gameId].length > 0) {
+		if (this.timeouts[gameId] && this.timeouts[gameId].length > 0) {
 			this.timeouts[gameId].forEach(clearTimeout);
 		}
 	}
