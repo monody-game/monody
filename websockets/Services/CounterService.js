@@ -18,7 +18,7 @@ export class CounterService {
 		this.counterId[gameId] = counterId[Symbol.toPrimitive]();
 
 		try {
-			await this.manager.nextState(channel, this.counterId[Symbol.toPrimitive](), socket);
+			await this.manager.nextState(channel, this.counterId[gameId], socket);
 		} catch (e) {
 			clearTimeout(this.counterId[gameId]);
 			console.error(e);
