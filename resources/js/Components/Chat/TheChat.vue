@@ -18,11 +18,11 @@
         @click.prevent="send()"
         @keyup.stop
       >
-        <svg
-          ref="icon"
-          class="chat__submit-icon"
-        >
-          <use href="/sprite.svg#send" />
+        <svg class="chat__submit-icon">
+          <use
+            ref="icon"
+            href="/sprite.svg#send"
+          />
         </svg>
       </button>
     </div>
