@@ -1,5 +1,8 @@
 <template>
-  <div class="player-list__wrapper">
+  <div
+    ref="playerListNode"
+    class="player-list__wrapper"
+  >
     <LogoSpinner v-if="loading.value === true" />
     <GamePlayer
       v-for="player in playerList"
@@ -13,28 +16,27 @@
 import GamePlayer from "./GamePlayer.vue";
 import LogoSpinner from "../Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/game.js";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useRoute } from "vue-router";
 
 const playerList = ref([]);
+const playerListNode = ref(null);
 const loading = ref(false);
 const gameStore = useStore();
 const route = useRoute();
 
-onMounted(() => {
-	window.Echo.join(`game.${route.params.id}`)
-		.here((users) => {
-			users.forEach((user) => {
-				addUser(user);
-			});
-		})
-		.joining((user) => {
+window.Echo.join(`game.${route.params.id}`)
+	.here((users) => {
+		users.forEach((user) => {
 			addUser(user);
-		})
-		.leaving((user) => {
-			removeUser(user);
 		});
-});
+	})
+	.joining((user) => {
+		addUser(user);
+	})
+	.leaving((user) => {
+		removeUser(user);
+	});
 
 const addUser = function (player) {
 	player = injectPlayersProperties([player])[0];
@@ -43,13 +45,14 @@ const addUser = function (player) {
 };
 
 const removeUser = function (player) {
-	const players = document.querySelector(".player-list__wrapper");
-	Array.from(players.children).forEach((playerContainer) => {
-		if (parseInt(playerContainer.children[0].dataset.id) === parseInt(player.id)) {
+	const children = playerListNode.value.children;
+
+	for (let i = 0; i < children.length; i++) {
+		if (parseInt(children[i].dataset.id) === parseInt(player.id)) {
 			gameStore.playerList = gameStore.playerList.filter((p) => p.id !== player.id);
-			playerContainer.remove();
+			children[i].remove();
 		}
-	});
+	}
 };
 
 const injectPlayersProperties = function (players) {
