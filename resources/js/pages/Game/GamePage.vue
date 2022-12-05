@@ -57,6 +57,12 @@ onBeforeRouteLeave(() => {
 	store.playerList = [];
 });
 
+window.addEventListener("unload", () => {
+	window.Echo.leave(`game.${gameId}`);
+	store.playerList = [];
+	return "grrr";
+});
+
 const disconnect = async function () {
 	await router.push("/play");
 };
