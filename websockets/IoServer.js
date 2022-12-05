@@ -93,7 +93,7 @@ export class IoServer {
 
 	onDisconnecting(socket) {
 		socket.on("disconnecting", (reason) => {
-			Object.keys(socket.rooms).forEach(async (room) => {
+			socket.rooms.forEach(async (room) => {
 				if (room !== socket.id) {
 					await this.channel.leave(socket, room, reason);
 				}
