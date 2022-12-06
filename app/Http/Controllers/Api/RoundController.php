@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\Roles;
 use App\Enums\Rounds;
-use App\Enums\States;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -48,11 +47,7 @@ class RoundController extends Controller
 
             foreach ($round as $key => $state) {
                 if (
-                    $state === States::Waiting ||
-                    $state === States::Starting ||
-                    $state === States::Night ||
-                    $state === States::Day ||
-                    $state === States::Vote
+                    $state->isRoleState()
                 ) {
                     continue;
                 }

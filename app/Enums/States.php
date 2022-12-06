@@ -67,4 +67,12 @@ enum States: int
             default => null
         };
     }
+
+    public function isRoleState(): bool
+    {
+        return match ($this) {
+            self::Waiting, self::Starting, self::End, self::Day, self::Night, self::Vote => false,
+            default => true
+        };
+    }
 }
