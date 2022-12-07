@@ -29,8 +29,8 @@ class EndGameController extends Controller
     {
         $gameId = $request->validated('gameId');
 
-        broadcast(new GameWin([], true, $this->getWinningUsers($gameId)));
-        broadcast(new GameLoose([], true, $this->getLoosingUsers($gameId)));
+        broadcast(new GameWin(['gameId' => $gameId], true, $this->getWinningUsers($gameId)));
+        broadcast(new GameLoose(['gameId' => $gameId], true, $this->getLoosingUsers($gameId)));
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
