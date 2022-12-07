@@ -47,7 +47,7 @@ class RoundController extends Controller
 
             foreach ($round as $key => $state) {
                 if (
-                    $state->isRoleState()
+                    !$state->isRoleState()
                 ) {
                     continue;
                 }
