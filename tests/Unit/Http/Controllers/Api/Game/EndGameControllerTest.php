@@ -51,26 +51,31 @@ class EndGameControllerTest extends TestCase
 
         $villager = $this->user;
         $werewolf = $this->secondUser;
+        $gameId = $this->game['id'];
 
         $this
             ->withoutMiddleware(RestrictToDockerNetwork::class)
             ->post('/api/game/end', [
-                'gameId' => $this->game['id'],
+                'gameId' => $gameId,
             ])
             ->assertNoContent();
 
-        Event::assertDispatched(function (GameLoose $event) use ($villager) {
+        Event::assertDispatched(function (GameLoose $event) use ($villager, $gameId) {
             return (array) $event === [
-                'payload' => [],
+                'payload' => [
+                    'gameId' => $gameId,
+                ],
                 'private' => true,
                 'emitters' => [$villager->id],
                 'socket' => null,
             ];
         });
 
-        Event::assertDispatched(function (GameWin $event) use ($werewolf) {
+        Event::assertDispatched(function (GameWin $event) use ($werewolf, $gameId) {
             return (array) $event === [
-                'payload' => [],
+                'payload' => [
+                    'gameId' => $gameId,
+                ],
                 'private' => true,
                 'emitters' => [$werewolf->id],
                 'socket' => null,

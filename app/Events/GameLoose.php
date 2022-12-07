@@ -6,10 +6,11 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 class GameLoose implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets;
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
         public array $payload,
