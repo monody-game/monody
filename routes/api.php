@@ -41,6 +41,9 @@ Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
 
     Route::post('/game/message/deaths', 'Game\GameChatController@death');
     Route::post('/game/chat/lock', 'Game\GameChatController@lock');
+
+    Route::post('/game/end/check', 'Game\EndGameController@check');
+    Route::post('/game/end', 'Game\EndGameController@index');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {

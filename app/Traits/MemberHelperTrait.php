@@ -87,7 +87,16 @@ trait MemberHelperTrait
             return false;
         }
 
-        return array_keys($game['assigned_roles'], $role->value, true);
+        $ids = array_keys($game['assigned_roles'], $role->value, true);
+        $users = [];
+
+        foreach ($ids as $user) {
+            if ($this->alive($user, $gameId)) {
+                $users[] = $user;
+            }
+        }
+
+        return $users;
     }
 
     public function getRoleByUserId(string $userId, string $gameId): Roles|false
@@ -122,6 +131,7 @@ trait MemberHelperTrait
         $member = $this->getMember($userId, $gameId);
         $members = $this->getMembers($gameId);
         $index = array_search($member, $members, true);
+
         if (!$member || false === $index) {
             return false;
         }
