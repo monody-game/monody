@@ -101,20 +101,20 @@ trait MemberHelperTrait
         return Roles::from($game['assigned_roles'][$userId]);
     }
 
-    public function getWerewolves(string $gameId): array
+    public function getUsersByTeam(Teams $team, string $gameId): array
     {
-        $werewolvesRoles = Teams::Werewolves->roles();
-        $werewolves = [];
+        $roles = $team->roles();
+        $members = [];
 
-        foreach ($werewolvesRoles as $role) {
-            $werewolves[] = $this->getUserIdByRole($role, $gameId);
+        foreach ($roles as $role) {
+            $members[] = $this->getUserIdByRole($role, $gameId);
         }
 
-        if ($werewolves[0] === false) {
+        if ($members[0] === false) {
             return [];
         }
 
-        return $werewolves[0];
+        return $members[0];
     }
 
     public function kill(string $userId, string $gameId, string $context): bool
@@ -144,6 +144,6 @@ trait MemberHelperTrait
 
     public function isWerewolf(string $userId, string $gameId): bool
     {
-        return in_array($userId, $this->getWerewolves($gameId), true);
+        return in_array($userId, $this->getUsersByTeam(Teams::Werewolves, $gameId), true);
     }
 }
