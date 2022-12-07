@@ -7,16 +7,32 @@ export default {
 		const body = Body.make({
 			gameId: channel.split(".")[1]
 		});
-		const baseUrl = "https://web/api/game/";
-
-		await fetch(`${baseUrl}message/deaths`, {
-			method: "POST",
-			body,
-		});
+		const baseUrl = "https://web/api/game";
 
 		await fetch(`${baseUrl}/chat/lock`, {
 			method: "POST",
 			body
 		});
+
+		await fetch(`${baseUrl}/message/deaths`, {
+			method: "POST",
+			body,
+		});
+
+		const res = await fetch(`${baseUrl}/end/check`, {
+			method: "POST",
+			body
+		});
+
+		if (res.status === 204) {
+			await fetch(`${baseUrl}/end`, {
+				method: "POST",
+				body
+			});
+
+			return true;
+		}
+
+		return false;
 	}
 };
