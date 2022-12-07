@@ -2,9 +2,12 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
+use App\Events\GameLoose;
+use App\Events\GameWin;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToDockerNetwork;
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class EndGameControllerTest extends TestCase
@@ -37,6 +40,44 @@ class EndGameControllerTest extends TestCase
             ->assertNoContent();
     }
 
+    public function testEndingAGame()
+    {
+        Event::fake();
+
+        Redis::set("game:{$this->game['id']}:members", [
+            ['user_id' => $this->user['id'], 'user_info' => array_merge($this->user->toArray(), ['is_dead' => true])],
+            ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
+        ]);
+
+        $villager = $this->user;
+        $werewolf = $this->secondUser;
+
+        $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->post('/api/game/end', [
+                'gameId' => $this->game['id'],
+            ])
+            ->assertNoContent();
+
+        Event::assertDispatched(function (GameLoose $event) use ($villager) {
+            return (array) $event === [
+                'payload' => [],
+                'private' => true,
+                'emitters' => [$villager->id],
+                'socket' => null,
+            ];
+        });
+
+        Event::assertDispatched(function (GameWin $event) use ($werewolf) {
+            return (array) $event === [
+                'payload' => [],
+                'private' => true,
+                'emitters' => [$werewolf->id],
+                'socket' => null,
+            ];
+        });
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -47,7 +88,7 @@ class EndGameControllerTest extends TestCase
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
                 'roles' => [1, 2],
-                'users' => [$this->user->id, $this->secondUser->id],
+                'users' => [$this->secondUser->id],
             ])
             ->json('game');
 
