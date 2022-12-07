@@ -242,6 +242,8 @@ class GameInteractionControllerTest extends TestCase
         Redis::set("game:{$this->game['id']}:members", [
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
             ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
+            ['user_id' => 'superWerewolf', 'user_info' => []],
+            ['user_id' => 'superWitch', 'user_info' => []],
         ]);
 
         Redis::set("game:{$this->game['id']}", $additionnalKeys);
