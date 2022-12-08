@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\Teams;
+use App\Events\GameEnd;
 use App\Events\GameLoose;
 use App\Events\GameWin;
 use App\Http\Controllers\Controller;
@@ -28,9 +29,16 @@ class EndGameController extends Controller
     public function index(GameIdRequest $request): JsonResponse
     {
         $gameId = $request->validated('gameId');
+        $winners = $this->getWinningUsers($gameId);
+        $payload = [
+            'gameId' => $gameId,
+        ];
 
-        broadcast(new GameWin(['gameId' => $gameId], true, $this->getWinningUsers($gameId)));
-        broadcast(new GameLoose(['gameId' => $gameId], true, $this->getLoosingUsers($gameId)));
+        broadcast(new GameEnd(array_merge($payload, [
+            'winners' => $this->getFormattedWinners($winners, $gameId),
+        ])));
+        broadcast(new GameWin($payload, true, $winners));
+        broadcast(new GameLoose($payload, true, $this->getLoosingUsers($gameId)));
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
@@ -61,5 +69,16 @@ class EndGameController extends Controller
         $winners = $this->getWinningUsers($gameId);
 
         return [...array_filter($users, fn ($user) => !in_array($user, $winners, true))];
+    }
+
+    private function getFormattedWinners(array $winners, string $gameId): array
+    {
+        $result = [];
+
+        foreach ($winners as $winner) {
+            $result[$winner] = $this->getRoleByUserId($winner, $gameId);
+        }
+
+        return $result;
     }
 }

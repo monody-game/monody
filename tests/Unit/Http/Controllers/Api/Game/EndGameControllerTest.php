@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
+use App\Enums\Roles;
+use App\Events\GameEnd;
 use App\Events\GameLoose;
 use App\Events\GameWin;
 use App\Facades\Redis;
@@ -59,6 +61,15 @@ class EndGameControllerTest extends TestCase
                 'gameId' => $gameId,
             ])
             ->assertNoContent();
+
+        Event::assertDispatched(function (GameEnd $event) use ($werewolf, $gameId) {
+            return ((array) $event)['payload'] === [
+                'gameId' => $gameId,
+                'winners' => [
+                    $werewolf->id => Roles::Werewolf,
+                ],
+            ];
+        });
 
         Event::assertDispatched(function (GameLoose $event) use ($villager, $gameId) {
             return (array) $event === [
