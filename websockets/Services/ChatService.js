@@ -18,16 +18,8 @@ export class ChatService {
 		this.send(socket, channel, message, undefined, to);
 	}
 
-	static success(socket, channel, message, to = null) {
-		this.send(socket, channel, message, "success", to);
-	}
-
 	static info(socket, channel, message, to = null) {
 		this.send(socket, channel, message, "info", to);
-	}
-
-	static yellow(socket, channel, message, to = null) {
-		this.send(socket, channel, message, "yellow", to);
 	}
 
 	static error(socket, channel, message, to = null) {
