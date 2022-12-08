@@ -47,6 +47,14 @@ enum States: int
         };
     }
 
+    public function background(): string
+    {
+        return match ($this) {
+            self::Waiting, self::Starting, self::Day, self::Vote, self::End => 'day',
+            self::Night, self::Werewolf, self::Witch, self::Psychic => 'night'
+        };
+    }
+
     public function duration(): int
     {
         return match ($this) {
