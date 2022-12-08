@@ -3,6 +3,7 @@
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Enums\Roles;
+use App\Enums\Teams;
 use App\Events\GameEnd;
 use App\Events\GameLoose;
 use App\Events\GameWin;
@@ -68,6 +69,7 @@ class EndGameControllerTest extends TestCase
                 'winners' => [
                     $werewolf->id => Roles::Werewolf,
                 ],
+                'winningTeam' => Teams::Werewolves,
             ];
         });
 

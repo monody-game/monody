@@ -36,11 +36,21 @@ class EndGameController extends Controller
 
         broadcast(new GameEnd(array_merge($payload, [
             'winners' => $this->getFormattedWinners($winners, $gameId),
+            'winningTeam' => $this->getWinningTeam($gameId),
         ])));
         broadcast(new GameWin($payload, true, $winners));
         broadcast(new GameLoose($payload, true, $this->getLoosingUsers($gameId)));
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    private function getWinningTeam(string $gameId): Teams
+    {
+        if ($this->getUsersByTeam(Teams::Villagers, $gameId) === []) {
+            return Teams::Werewolves;
+        }
+
+        return Teams::Villagers;
     }
 
     private function enoughTeamPlayersToContinue(string $gameId): bool
