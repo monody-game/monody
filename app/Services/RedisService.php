@@ -9,7 +9,9 @@ class RedisService extends Redis
 {
     public function set(string $key, array|string|int $value): void
     {
-        parent::set($key, json_encode($value));
+        /** @var string $value */
+        $value = json_encode($value);
+        parent::set($key, $value);
     }
 
     public function get(string $key): mixed
