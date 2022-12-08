@@ -26,8 +26,8 @@ export class ChatService {
 		this.send(socket, channel, message, "info", to);
 	}
 
-	static warn(socket, channel, message, to = null) {
-		this.send(socket, channel, message, "warn", to);
+	static yellow(socket, channel, message, to = null) {
+		this.send(socket, channel, message, "yellow", to);
 	}
 
 	static error(socket, channel, message, to = null) {

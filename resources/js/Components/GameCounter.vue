@@ -16,7 +16,10 @@
           stroke="white"
         />
       </svg>
-      <svg class="counter__icon">
+      <svg
+        ref="counterIcon"
+        class="counter__icon"
+      >
         <use :href="'/sprite.svg#' + icon" />
       </svg>
     </span>
@@ -30,7 +33,6 @@
 </template>
 
 <script setup>
-import CounterCycleService from "../services/CounterCycleService.js";
 import ChatService from "../services/ChatService";
 import { useStore } from "../stores/game";
 import { onMounted, ref } from "vue";
@@ -43,8 +45,8 @@ const time = ref(0);
 const startingTime = ref(0);
 const totalTime = ref(0);
 const counterId = ref(null);
+const counterIcon = ref(null);
 const status = ref(0);
-const counterService = new CounterCycleService();
 const chatService = new ChatService();
 const sound = new Audio("../sounds/bip.mp3");
 const roundText = ref("");
@@ -65,6 +67,7 @@ icon.value = state.icon;
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".game.state", async (data) => {
 		if (data) {
+			console.log(data);
 			clearInterval(counterId.value);
 			time.value = data.counterDuration === -1 ? 0 : data.counterDuration;
 			startingTime.value = data.startTimestamp;
@@ -78,6 +81,7 @@ window.Echo.join(`game.${route.params.id}`)
 			updateCircle();
 			decount();
 			updateOverlay();
+			updateBackground(state.background);
 		}
 	});
 
@@ -135,25 +139,25 @@ const updateCircle = function () {
 
 const updateOverlay = function () {
 	switch (status.value) {
-	case 0:
-	case 1:
+	default:
 		break;
 	case 2:
-		counterService.onNight();
 		chatService.timeSeparator("Tombée de la nuit");
-		break;
-	case 3:
-	case 4:
-	case 5:
-		counterService.onNight();
+		counterIcon.value.classList.remove("counter__icon-rotate");
 		break;
 	case 6:
-		counterService.onDay();
 		chatService.timeSeparator("Lever du jour");
+		counterIcon.value.classList.add("counter__icon-rotate");
 		break;
-	case 7:
-		counterService.onDay();
+	case 8:
+		counterIcon.value.classList.remove("counter__icon-rotate");
 		break;
 	}
+};
+
+const updateBackground = function (background) {
+	const gamePageWrapper = document.querySelector(".game-page__container");
+	gamePageWrapper.classList.remove("day", "night");
+	gamePageWrapper.classList.add(background);
 };
 </script>
