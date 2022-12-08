@@ -59,9 +59,10 @@ enum States: int
     public function iconify(): string
     {
         return match ($this) {
-            self::Waiting, self::Starting, self::End => 'wait',
+            self::Waiting, self::Starting => 'wait',
             self::Night, self::Witch, self::Werewolf, self::Psychic => 'night',
             self::Day, self::Vote => 'day',
+            self::End => 'trophy'
         };
     }
 
