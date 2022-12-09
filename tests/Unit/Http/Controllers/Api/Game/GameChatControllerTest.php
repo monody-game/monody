@@ -189,5 +189,10 @@ class GameChatControllerTest extends TestCase
         $game['is_started'] = true;
 
         Redis::set("game:{$this->game['id']}", $game);
+
+        Redis::set("game:{$this->game['id']}:members", [
+            ['user_id' => $this->user['id'], 'user_info' => $this->user],
+            ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
+        ]);
     }
 }

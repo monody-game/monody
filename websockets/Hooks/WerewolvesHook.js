@@ -6,7 +6,6 @@ const baseURL = "https://web/api/game";
 export default {
 	identifier: 3,
 	async before(io, channel) {
-		console.log("before werewolves state");
 		await InteractionService.openInteraction(io, channel, "werewolves");
 
 		await fetch(`${baseURL}/chat/lock`, {
@@ -16,9 +15,10 @@ export default {
 				team: "2"
 			})
 		});
+
+		return false;
 	},
 	async after(io, channel) {
-		console.log("after werewolves state");
 		await InteractionService.closeInteraction(io, channel, "werewolves");
 
 		await fetch(`${baseURL}/chat/lock`, {
@@ -28,5 +28,7 @@ export default {
 				team: "2"
 			})
 		});
+
+		return false;
 	},
 };

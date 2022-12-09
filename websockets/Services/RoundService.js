@@ -27,15 +27,19 @@ export default async function getRounds(gameId = 0) {
 		hookedStates.push(file.identifier);
 	}
 
-	for (const round of apiRounds.json) {
-		const roundStates = [];
-		for (let state of round) {
-			if (hookedStates.includes(state.identifier)) {
-				state = { ...state, ...hooks[state.identifier] };
+	try {
+		for (const round of apiRounds.json) {
+			const roundStates = [];
+			for (let state of round) {
+				if (hookedStates.includes(state.identifier)) {
+					state = { ...state, ...hooks[state.identifier] };
+				}
+				roundStates.push(state);
 			}
-			roundStates.push(state);
+			rounds.push(roundStates);
 		}
-		rounds.push(roundStates);
+	} catch (e) {
+		console.error(e, apiRounds);
 	}
 
 	return rounds;
