@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Game;
 use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\Roles;
+use App\Enums\Teams;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CloseInteractionRequest;
 use App\Http\Requests\CreateInteractionRequest;
@@ -117,7 +118,7 @@ class GameInteractionController extends Controller
         } elseif ($type === Interactions::Psychic) {
             $authorized = $this->getUserIdByRole(Roles::Psychic, $gameId);
         } elseif ($type === Interactions::Werewolves) {
-            $authorized = $this->getWerewolves($gameId);
+            $authorized = $this->getUsersByTeam(Teams::Werewolves, $gameId);
         }
 
         /** @var string|array $authorized */

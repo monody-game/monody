@@ -4,6 +4,7 @@ namespace App\Actions;
 
 use App\Enums\InteractionActions;
 use App\Enums\States;
+use App\Enums\Teams;
 use App\Events\InteractionUpdate;
 use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
@@ -24,7 +25,7 @@ class WerewolvesAction implements ActionInterface
     {
         $gameId = $this->getGameId($userId);
 
-        return in_array($userId, $this->getWerewolves($gameId), true) && $this->alive($targetId, $gameId);
+        return in_array($userId, $this->getUsersByTeam(Teams::Werewolves, $gameId), true) && $this->alive($targetId, $gameId);
     }
 
     public function call(string $targetId, InteractionActions $action): mixed
@@ -44,7 +45,7 @@ class WerewolvesAction implements ActionInterface
             'gameId' => $gameId,
             'type' => InteractionActions::Kill->value,
             'votedPlayers' => $this->service->getVotes($gameId),
-        ], true, $this->getWerewolves($gameId)));
+        ], true, $this->getUsersByTeam(Teams::Werewolves, $gameId)));
     }
 
     public function close(string $gameId): void

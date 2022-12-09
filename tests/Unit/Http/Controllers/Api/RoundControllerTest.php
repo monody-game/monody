@@ -73,6 +73,13 @@ class RoundControllerTest extends TestCase
                 $this->firstRound,
                 $this->secondRound,
                 $this->secondRound,
+                [
+                    [
+                        'duration' => States::End->duration(),
+                        'identifier' => States::End->value,
+                        'raw_name' => States::End->stringify(),
+                    ],
+                ],
             ]);
     }
 
