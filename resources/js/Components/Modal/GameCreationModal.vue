@@ -6,7 +6,7 @@
     <div class="modal__page">
       <RolesModalPage v-if="currentPage === 1" />
       <GameStateModalPage v-else-if="currentPage === 2" />
-      <ShareModalPage v-else-if="currentPage === 3" />
+      <!--      <ShareModalPage v-else-if="currentPage === 3" />-->
     </div>
     <div class="modal__buttons">
       <button
@@ -55,7 +55,7 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 
 const currentPage = ref(1);
-const totalPage = ref(3);
+const totalPage = ref(2);
 const store = useStore();
 const router = useRouter();
 const gameId = ref("");
@@ -76,19 +76,17 @@ const nextPage = async function() {
 		return;
 	}
 
-	if (currentPage.value === totalPage.value - 1) {
-		const res = await window.JSONFetch("/game", "PUT", {
-			roles: store.selectedRoles
-		});
-
-		store.gameId = res.data.game.id;
-		gameId.value = res.data.game.id;
-	}
-
 	currentPage.value++;
 };
 
 const finish = async function() {
+	const res = await window.JSONFetch("/game", "PUT", {
+		roles: store.selectedRoles
+	});
+
+	store.gameId = res.data.game.id;
+	gameId.value = res.data.game.id;
+
 	reset();
 
 	if (store.gameId !== 0) {
