@@ -116,11 +116,15 @@ trait MemberHelperTrait
         $members = [];
 
         foreach ($roles as $role) {
-            $members[] = $this->getUserIdByRole($role, $gameId);
+            $member = $this->getUserIdByRole($role, $gameId);
+
+            if ($member) {
+                $members[] = $member;
+            }
         }
 
-        if ($members[0] === false) {
-            return [];
+        if ($members === []) {
+            return $members;
         }
 
         return $members[0];

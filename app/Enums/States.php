@@ -60,7 +60,7 @@ enum States: int
         return match ($this) {
             self::Waiting, self::End => -1,
             self::Starting, self::Night, self::Day, self::Witch, self::Psychic, self::Vote => 5,
-            self::Werewolf => 20,
+            self::Werewolf => 10,
         };
     }
 
