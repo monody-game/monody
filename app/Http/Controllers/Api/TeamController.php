@@ -14,4 +14,15 @@ class TeamController extends Controller
 
         return new JsonResponse(['teams' => $teams]);
     }
+
+    public function get(int $id): JsonResponse
+    {
+        $team = Teams::from($id);
+
+        return new JsonResponse(['team' => [
+            'id' => $id,
+            'name' => $team->name(),
+            'display_name' => $team->stringify(),
+        ]]);
+    }
 }

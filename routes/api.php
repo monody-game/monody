@@ -71,6 +71,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/game/message/send', 'Game\GameChatController@send');
 
     Route::get('/teams', 'TeamController@all');
+    Route::get('/team/{id}', 'TeamController@get');
 
     Route::get('/exp/get', 'ExpController@get');
 });
