@@ -67,7 +67,6 @@ icon.value = state.icon;
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".game.state", async (data) => {
 		if (data) {
-			console.log(data);
 			clearInterval(counterId.value);
 			time.value = data.counterDuration === -1 ? 0 : data.counterDuration;
 			startingTime.value = data.startTimestamp;
