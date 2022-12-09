@@ -19,6 +19,7 @@ class StateControllerTest extends TestCase
                 'raw_name' => $state->stringify(),
                 'name' => $state->readeableStringify(),
                 'duration' => $state->duration(),
+                'background' => $state->background(),
             ]);
     }
 }

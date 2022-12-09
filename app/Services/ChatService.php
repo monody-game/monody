@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Teams;
 use App\Events\MessageSended;
 use App\Models\Message;
 use App\Models\User;
@@ -27,7 +28,7 @@ class ChatService
         $message->set('type', 'werewolf');
 
         broadcast(new MessageSended($message, true, [
-            $this->getWerewolves($data['gameId'])[0],
+            $this->getUsersByTeam(Teams::Werewolves, $data['gameId'])[0],
         ]));
     }
 

@@ -87,7 +87,16 @@ trait MemberHelperTrait
             return false;
         }
 
-        return array_keys($game['assigned_roles'], $role->value, true);
+        $ids = array_keys($game['assigned_roles'], $role->value, true);
+        $users = [];
+
+        foreach ($ids as $user) {
+            if ($this->alive($user, $gameId)) {
+                $users[] = $user;
+            }
+        }
+
+        return $users;
     }
 
     public function getRoleByUserId(string $userId, string $gameId): Roles|false
@@ -101,20 +110,24 @@ trait MemberHelperTrait
         return Roles::from($game['assigned_roles'][$userId]);
     }
 
-    public function getWerewolves(string $gameId): array
+    public function getUsersByTeam(Teams $team, string $gameId): array
     {
-        $werewolvesRoles = Teams::Werewolves->roles();
-        $werewolves = [];
+        $roles = $team->roles();
+        $members = [];
 
-        foreach ($werewolvesRoles as $role) {
-            $werewolves[] = $this->getUserIdByRole($role, $gameId);
+        foreach ($roles as $role) {
+            $member = $this->getUserIdByRole($role, $gameId);
+
+            if ($member) {
+                $members[] = $member;
+            }
         }
 
-        if ($werewolves[0] === false) {
-            return [];
+        if ($members === []) {
+            return $members;
         }
 
-        return $werewolves[0];
+        return $members[0];
     }
 
     public function kill(string $userId, string $gameId, string $context): bool
@@ -122,6 +135,7 @@ trait MemberHelperTrait
         $member = $this->getMember($userId, $gameId);
         $members = $this->getMembers($gameId);
         $index = array_search($member, $members, true);
+
         if (!$member || false === $index) {
             return false;
         }
@@ -144,6 +158,6 @@ trait MemberHelperTrait
 
     public function isWerewolf(string $userId, string $gameId): bool
     {
-        return in_array($userId, $this->getWerewolves($gameId), true);
+        return in_array($userId, $this->getUsersByTeam(Teams::Werewolves, $gameId), true);
     }
 }
