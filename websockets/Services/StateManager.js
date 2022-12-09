@@ -55,6 +55,7 @@ export class StateManager {
 	async nextState(channel, counterId) {
 		const gameId = channel.split(".")[1];
 		const state = await this.getState(gameId);
+		let halt = false;
 
 		if (!state) {
 			clearTimeout(counterId);
@@ -62,7 +63,7 @@ export class StateManager {
 		}
 
 		const rounds = await getRounds(gameId);
-		const loopingRoundIndex = rounds.length - 1;
+		const loopingRoundIndex = rounds.length - 2;
 
 		let currentRound = state["round"] || 0;
 
@@ -80,12 +81,12 @@ export class StateManager {
 			typeof currentRoundObject[stateIndex - 1] !== "undefined" &&
 			typeof currentRoundObject[stateIndex - 1].after === "function"
 		) {
-			await currentRoundObject[stateIndex - 1].after(this.io, channel);
+			halt = await currentRoundObject[stateIndex - 1].after(this.io, channel);
 		} else if (
 			isLast &&
 			typeof currentRoundObject[currentRoundObject.length - 1].after === "function"
 		) {
-			await currentRoundObject[currentRoundObject.length - 1].after(this.io, channel);
+			halt = await currentRoundObject[currentRoundObject.length - 1].after(this.io, channel);
 		}
 
 		if (
@@ -108,10 +109,16 @@ export class StateManager {
 			currentRound = loopingRoundIndex;
 		}
 
-		const duration = rounds[currentRound][stateIndex].duration;
+		let duration = rounds[currentRound][stateIndex].duration;
 
 		if (typeof currentRoundObject[stateIndex] !== "undefined" && typeof currentRoundObject[stateIndex].before === "function") {
-			await currentRoundObject[stateIndex].before(this.io, channel);
+			halt = await currentRoundObject[stateIndex].before(this.io, channel);
+		}
+
+		if (halt) {
+			const endState = rounds[rounds.length - 1][0];
+			currentState = endState.identifier;
+			duration = endState.duration;
 		}
 
 		await this.setState({
@@ -121,6 +128,8 @@ export class StateManager {
 			counterId: counterId,
 			round: currentRound
 		}, channel);
+
+		return halt;
 	}
 
 	async getNextStateDuration(channel) {

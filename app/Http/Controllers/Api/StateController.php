@@ -18,6 +18,7 @@ class StateController extends Controller
             'raw_name' => $stateDetails->stringify(),
             'name' => $stateDetails->readeableStringify(),
             'duration' => $stateDetails->duration(),
+            'background' => $stateDetails->background(),
         ]);
     }
 

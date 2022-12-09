@@ -10,6 +10,7 @@ export class CounterService {
 
 	async cycle(channel, socket) {
 		const gameId = channel.split(".")[1];
+		let halt = false;
 
 		const counterId = setTimeout(async () => {
 			await this.cycle(channel, socket);
@@ -18,10 +19,14 @@ export class CounterService {
 		this.counterId[gameId] = counterId[Symbol.toPrimitive]();
 
 		try {
-			await this.manager.nextState(channel, this.counterId[gameId], socket);
+			halt = await this.manager.nextState(channel, this.counterId[gameId], socket);
 		} catch (e) {
 			clearTimeout(this.counterId[gameId]);
 			console.error(e);
+		}
+
+		if (halt) {
+			this.stop(gameId);
 		}
 	}
 

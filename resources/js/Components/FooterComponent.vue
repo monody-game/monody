@@ -1,6 +1,6 @@
 <template>
   <footer class="footer__main">
-    <p>&copy; Monody {{ (new Date()).getFullYear() }} — Tous droits réservés.</p>
+    <p>&copy; Monody 2022 — Tous droits réservés.</p>
   </footer>
 </template>
 

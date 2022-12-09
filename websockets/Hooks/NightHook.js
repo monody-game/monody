@@ -8,5 +8,6 @@ export default {
 			method: "POST",
 			body: Body.make({ gameId: channel.split(".")[1] })
 		});
+		return false;
 	}
 };

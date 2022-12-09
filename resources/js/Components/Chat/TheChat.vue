@@ -108,5 +108,17 @@ window.Echo.join(`game.${route.params.id}`)
 			input.value.placeholder = "Envoyer un message";
 			icon.value.setAttribute("href", "/sprite.svg#send");
 		}
+	})
+	.listen(".game.end", async (e) => {
+		const data = e.data.payload;
+		const winners = Object.keys(data.winners);
+		console.log(data);
+		const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
+		console.log(team);
+
+		await service.sendMessage({
+			type: "info",
+			content: `La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(" ")} du camp des ${team.data.team.display_name}`
+		});
 	});
 </script>

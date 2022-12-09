@@ -4,6 +4,10 @@ jobs:
   Fixer:
     runs-on: ubuntu-latest
     steps:
+      - name: 🐘 Setup php
+        uses: shivammathur/setup-php@2.22.0
+        with:
+          php-version: "8.2"
       - name: ✨ Infos
         run: |
           echo "💼 Running tests on ${GITHUB_REPOSITORY}"
@@ -17,6 +21,10 @@ jobs:
   Linter:
     runs-on: ubuntu-latest
     steps:
+      - name: 🐘 Setup php
+        uses: shivammathur/setup-php@2.22.0
+        with:
+          php-version: "8.2"
       - name: ✨ Infos
         run: |
           echo "💼 Running tests on ${GITHUB_REPOSITORY}"
@@ -30,6 +38,10 @@ jobs:
   Tests:
     runs-on: ubuntu-latest
     steps:
+      - name: 🐘 Setup php
+        uses: shivammathur/setup-php@2.22.0
+        with:
+          php-version: "8.2"
       - name: ✨ Infos
         run: |
           echo "💼 Running tests on ${GITHUB_REPOSITORY}"
