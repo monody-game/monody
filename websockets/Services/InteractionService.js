@@ -17,7 +17,7 @@ export class InteractionService {
 		const interactionId = interaction.id;
 		let callers = interaction.authorizedCallers;
 
-		console.log(`Created ${type} interaction with id ${interactionId} in game ${id}`);
+		console.info(`Created ${type} interaction with id ${interactionId} in game ${id}`);
 
 		if (callers !== "*") {
 			callers = JSON.parse(callers);
@@ -42,7 +42,7 @@ export class InteractionService {
 		const interaction = interactions.find(interactionListItem => interactionListItem.type === type);
 
 		if (!interaction) {
-			console.log(`Unable to find interaction with type ${type} on game ${id}`);
+			console.warn(`Unable to find interaction with type ${type} on game ${id}`);
 			return;
 		}
 
@@ -56,7 +56,7 @@ export class InteractionService {
 
 		await fetch("https://web/api/interactions", { method: "DELETE", body: params });
 
-		console.log(`Closing ${type} interaction with id ${interactionId} in game ${id}`);
+		console.info(`Closing ${type} interaction with id ${interactionId} in game ${id}`);
 
 		if (callers !== "*") {
 			callers = JSON.parse(callers);
