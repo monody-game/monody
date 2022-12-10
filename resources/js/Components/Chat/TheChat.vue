@@ -112,9 +112,7 @@ window.Echo.join(`game.${route.params.id}`)
 	.listen(".game.end", async (e) => {
 		const data = e.data.payload;
 		const winners = Object.keys(data.winners);
-		console.log(data);
 		const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
-		console.log(team);
 
 		await service.sendMessage({
 			type: "info",

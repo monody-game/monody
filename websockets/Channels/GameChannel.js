@@ -5,6 +5,7 @@ import { CounterService } from "../Services/CounterService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
+import { ChatService } from "../Services/ChatService.js";
 
 const StartingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
 const WaitingState = (await fetch("https://web/api/state/1", { "method": "GET" })).json;
@@ -53,14 +54,14 @@ export class GameChannel {
 
 		await client.set(`game:${id}:members`, JSON.stringify(members));
 
-		this.onSubscribed(socket, channel, members);
+		await this.onSubscribed(socket, channel, members);
 
 		if (!isMember) {
 			this.onJoin(socket, channel, member);
 		}
 
 		const params = Body.make({
-			id,
+			gameId: id,
 			userId: member.user_id
 		});
 
@@ -69,20 +70,13 @@ export class GameChannel {
 			body: params
 		});
 
-		const count = await this.gameService.getRolesCount(gameId);
-		const game = await GameService.getGame(gameId);
+		const count = await this.gameService.getRolesCount(id);
+		const game = await GameService.getGame(id);
 
-		if (
-			await GameService.isAuthor(socket, gameId) &&
-      !await game.is_started &&
-      !members.length > 0
-		) {
-			this.stateManager.setState({
-				status: WaitingState.state,
-				startTimestamp: Date.now(),
-				counterDuration: WaitingState.duration
-			}, channel);
-		}
+		setTimeout(async () => {
+			this.io.to(socket.id).emit("game.data", channel, await this.stateManager.getState(gameId(channel)));
+			ChatService.send(socket, channel, "t'as rej bg", "message", socket.id);
+		}, 100);
 
 		if (members.length === count && game.is_started === false) {
 			await this.gameService.startGame(channel, game, members, socket);
@@ -156,8 +150,7 @@ export class GameChannel {
 		console.info(`[${new Date().toISOString()}] - Deleting game, id: ${id}`);
 	}
 
-	onSubscribed(socket, channel, members) {
+	async onSubscribed(socket, channel, members) {
 		this.io.to(socket.id).emit("presence:subscribed", channel, members);
-		this.io.to(socket.id).emit("game.data", channel, GameService.getData(gameId(channel)));
 	}
 }

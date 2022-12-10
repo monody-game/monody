@@ -42,7 +42,6 @@ const route = useRoute();
 const round = ref(0);
 const icon = ref("");
 const time = ref(0);
-const startingTime = ref(0);
 const totalTime = ref(0);
 const counterId = ref(null);
 const counterIcon = ref(null);
@@ -67,31 +66,48 @@ icon.value = state.icon;
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".game.state", async (data) => {
 		if (data) {
-			clearInterval(counterId.value);
-			time.value = data.counterDuration === -1 ? 0 : data.counterDuration;
-			startingTime.value = data.startTimestamp;
-			totalTime.value = time.value;
-			status.value = data.state;
-			round.value = data.round;
-			state = await getState(data.state.value);
-			roundText.value = state.name;
-			icon.value = state.icon;
-			useStore().state = data.state;
-			updateCircle();
-			decount();
-			updateOverlay();
-			updateBackground(state.background);
+			await setData(data);
 		}
+	})
+	.listen(".game.data", async (data) => {
+		await setData(data);
 	});
 
 onBeforeRouteLeave(() => {
 	clearInterval(counterId.value);
 });
 
+const setData = async function (data) {
+	clearInterval(counterId.value);
+	time.value = data.counterDuration === -1 ? 0 : getDuration(data.counterDuration, data.startTimestamp);
+	totalTime.value = time.value;
+	status.value = data.status;
+	round.value = data.round;
+	state = await getState(data.status.value);
+	roundText.value = state.name;
+	icon.value = state.icon;
+	useStore().state = data.state;
+	updateCircle();
+	decount();
+	updateOverlay();
+	updateBackground(state.background);
+};
+
+const getDuration = function (duration, startTimestamp) {
+	if (typeof startTimestamp === "undefined") {
+		return duration;
+	}
+
+	const difference = (Date.now() - startTimestamp) / 1000;
+	return duration - difference.toFixed();
+};
+
 const decount = function () {
 	if (time.value === 0) {
+		clearInterval(counterId.value);
 		return;
 	}
+
 	counterId.value = window.setInterval(() => {
 		time.value = time.value - 1;
 		soundManagement();
