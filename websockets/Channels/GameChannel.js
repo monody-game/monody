@@ -148,7 +148,7 @@ export class GameChannel {
 
 		await fetch("https://web/api/game", {
 			method: "DELETE",
-			body: Body.make({ id })
+			body: Body.make({ gameId: id })
 		});
 
 		this.io.to("home").emit("game.delete", "home", id);
