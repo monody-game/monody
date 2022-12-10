@@ -1,6 +1,5 @@
 import { Server } from "socket.io";
 import { RedisSubscriber } from "./Redis/RedisSubscriber.js";
-import { ResponderManager } from "./Responders/ResponderManager.js";
 import { Channel } from "./Channels/Channel.js";
 import { createSecureServer } from "node:http2";
 import { readFileSync } from "node:fs";
@@ -8,8 +7,6 @@ import { GameService } from "./Services/GameService.js";
 import { gameId } from "./Helpers/Functions.js";
 
 export class IoServer {
-	responders = [];
-
 	constructor() {
 		this.httpServer = createSecureServer({
 			allowHTTP1: true,
@@ -32,7 +29,6 @@ export class IoServer {
 			console.info("\nIoServer is running in debug mode.\n");
 		}
 
-		await this.initResponders();
 		this.onConnect();
 		await this.listen();
 		this.httpServer.listen(6001);
@@ -72,16 +68,11 @@ export class IoServer {
 			this.onSubscribe(socket);
 			this.onUnsubscribe(socket);
 			this.onDisconnecting(socket);
-			this.onClientEvent(socket);
 		});
 	}
 
 	onSubscribe(socket) {
 		socket.on("subscribe", async (data) => {
-			if (data.channel) {
-				const responder = ResponderManager.findResponder("subscribe", this.responders);
-				await responder.emit(socket, data);
-			}
 			await this.channel.join(socket, data);
 		});
 	}
@@ -100,23 +91,5 @@ export class IoServer {
 				}
 			});
 		});
-	}
-
-	onClientEvent(socket) {
-		socket.on("client event", async (data) => {
-			if (data.event && data.channel) {
-				const responder = ResponderManager.findResponder(data.event, this.responders);
-				if (responder) await responder.emit(socket, data);
-			}
-		});
-	}
-
-	async initResponders() {
-		const responders = ResponderManager.getAll();
-		await Promise.all(responders);
-		for (let responder of responders) {
-			responder = await responder;
-			this.responders.push(new responder.default(this.server));
-		}
 	}
 }
