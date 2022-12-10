@@ -24,7 +24,7 @@ export class StateManager {
 		const message = await fetch(`https://web/api/state/${state.status}/message`);
 
 		this.io.to(channel).emit("game.state", channel, {
-			state: state.status,
+			status: state.status,
 			counterDuration: state.counterDuration,
 			startTimestamp: state.startTimestamp,
 			round: state.round

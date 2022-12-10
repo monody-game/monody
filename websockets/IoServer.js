@@ -36,18 +36,20 @@ export class IoServer {
 
 	async listen() {
 		await this.subscriber.subscribe(async (channel, message) => {
-			if (message.data.private === true) {
-				const members = await GameService.getMembers(gameId(channel));
-
-				for (let caller of message.data.emitters) {
-					caller = members.find(member => member.user_id === caller);
-					this.server.to(caller.socketId).emit(message.event, channel, { data: { payload: message.data.payload } });
-				}
+			if (message.data.private !== true) {
+				this.broadcast(channel, message);
 
 				return;
 			}
 
-			this.broadcast(channel, message);
+			const members = await GameService.getMembers(gameId(channel));
+
+			for (let caller of message.data.emitters) {
+				caller = members.find(member => member.user_id === caller);
+				if (caller) {
+					this.server.to(caller.socketId).emit(message.event, channel, { data: { payload: message.data.payload } });
+				}
+			}
 		});
 	}
 
