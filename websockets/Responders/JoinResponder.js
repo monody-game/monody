@@ -1,5 +1,6 @@
 import { BaseResponder } from "./BaseResponder.js";
 import { StateManager } from "../Services/StateManager.js";
+import { gameId } from "../Helpers/Functions.js";
 
 export default class JoinResponder extends BaseResponder {
 	constructor() {
@@ -10,7 +11,7 @@ export default class JoinResponder extends BaseResponder {
 	}
 
 	async emit(socket, data) {
-		const id = data.channel.split(".")[1];
+		const id = gameId(data.channel);
 		const manager = new StateManager();
 
 		if (!id) return;

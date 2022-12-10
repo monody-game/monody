@@ -5,6 +5,7 @@ import { UserService } from "./UserService.js";
 import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
+import { gameId } from "../Helpers/Functions.js";
 
 const WaitingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
 const StartingState = (await fetch("https://web/api/state/1", { "method": "GET" })).json;
@@ -34,11 +35,11 @@ export class GameService {
 		await client.set("game:" + id, JSON.stringify(data));
 	}
 
-	static async isAuthor(socket, gameId) {
-		const game = await GameService.getGame(gameId);
+	static async isAuthor(socket, id) {
+		const game = await GameService.getGame(id);
 		if (!game) return false;
 
-		const members = JSON.parse(await client.get("game:" + gameId + ":members")) ?? [];
+		const members = JSON.parse(await client.get("game:" + id + ":members")) ?? [];
 		const user = UserService.getUserBySocket(socket, members);
 
 		if (!user) return false;
@@ -48,8 +49,8 @@ export class GameService {
 
 	async startGame(channel, game, members, socket) {
 		game.is_started = true;
-		const gameId = channel.split(".")[1];
-		await this.setGame(gameId, game);
+		const id = gameId(channel);
+		await this.setGame(id, game);
 
 		this.StateManager.setState({
 			status: StartingState.state,
@@ -58,21 +59,21 @@ export class GameService {
 		}, channel);
 
 		if (process.env.APP_DEBUG) {
-			console.info(`[${new Date().toISOString()}] - Starting game id ${channel.split(".")[1]}\n`);
+			console.info(`[${new Date().toISOString()}] - Starting game id ${id}\n`);
 		}
 
-		this.timeouts[gameId] = [setTimeout(async () => {
+		this.timeouts[id] = [setTimeout(async () => {
 			await this.roleManagement(channel, members);
 		}, 6000)];
 
-		this.timeouts[gameId].push(setTimeout(async () => {
+		this.timeouts[id].push(setTimeout(async () => {
 			await this.counterService.cycle(channel, socket);
 		}, 11000));
 	}
 
 	async stopGameLaunch(channel) {
-		const gameId = channel.split(".")[1];
-		this.stopTimeouts(gameId);
+		const id = gameId(channel);
+		this.stopTimeouts(id);
 
 		await this.StateManager.setState({
 			status: WaitingState.state,
@@ -82,13 +83,13 @@ export class GameService {
 	}
 
 	async roleManagement(channel, members) {
-		const gameId = channel.split(".")[1];
+		const id = gameId(channel);
 		const params = Body.make({
-			gameId
+			gameId: id
 		});
 
 		await fetch("https://web/api/roles/assign", { method: "POST", body: params });
-		const game = await GameService.getGame(gameId);
+		const game = await GameService.getGame(id);
 
 		for (const member of members) {
 			const user = UserService.getUserBySocket(member.socketId, members);
@@ -101,8 +102,8 @@ export class GameService {
 		}
 	}
 
-	async getRolesCount(gameId) {
-		const game = await GameService.getGame(gameId);
+	async getRolesCount(id) {
+		const game = await GameService.getGame(id);
 		if (!game) return;
 		let count = 0;
 
@@ -112,10 +113,10 @@ export class GameService {
 		return count;
 	}
 
-	stopTimeouts(gameId) {
-		this.counterService.stop(gameId);
-		if (this.timeouts[gameId] && this.timeouts[gameId].length > 0) {
-			this.timeouts[gameId].forEach(clearTimeout);
+	stopTimeouts(id) {
+		this.counterService.stop(id);
+		if (this.timeouts[id] && this.timeouts[id].length > 0) {
+			this.timeouts[id].forEach(clearTimeout);
 		}
 	}
 }

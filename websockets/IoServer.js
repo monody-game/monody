@@ -5,6 +5,7 @@ import { Channel } from "./Channels/Channel.js";
 import { createSecureServer } from "node:http2";
 import { readFileSync } from "node:fs";
 import { GameService } from "./Services/GameService.js";
+import { gameId } from "./Helpers/Functions.js";
 
 export class IoServer {
 	responders = [];
@@ -40,7 +41,7 @@ export class IoServer {
 	async listen() {
 		await this.subscriber.subscribe(async (channel, message) => {
 			if (message.data.private === true) {
-				const members = await GameService.getMembers(channel.split(".")[1]);
+				const members = await GameService.getMembers(gameId(channel));
 
 				for (let caller of message.data.emitters) {
 					caller = members.find(member => member.user_id === caller);

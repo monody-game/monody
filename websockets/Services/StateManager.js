@@ -2,6 +2,7 @@ import { client } from "../Redis/Connection.js";
 import getRounds from "./RoundService.js";
 import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
+import { gameId } from "../Helpers/Functions.js";
 
 export class StateManager {
 	constructor(io) {
@@ -16,10 +17,10 @@ export class StateManager {
    * @returns self
    */
 	async setState(state, channel) {
-		const gameId = channel.split(".")[1];
+		const id = gameId(channel);
 
-		console.info(`Setting state of game ${gameId} to ${state.status} in round ${state.round} for a duration of ${state.counterDuration}`);
-		await client.set(`game:${gameId}:state`, JSON.stringify(state));
+		console.info(`Setting state of game ${id} to ${state.status} in round ${state.round} for a duration of ${state.counterDuration}`);
+		await client.set(`game:${id}:state`, JSON.stringify(state));
 		const message = await fetch(`https://web/api/state/${state.status}/message`);
 
 		this.io.to(channel).emit("game.state", channel, {
@@ -39,11 +40,11 @@ export class StateManager {
 	/**
    * Get the current state of a game
    *
-   * @param { String } gameId
+   * @param { String } id
    * @returns { Promise<Object> }
    */
-	async getState(gameId) {
-		return JSON.parse(await client.get(`game:${gameId}:state`));
+	async getState(id) {
+		return JSON.parse(await client.get(`game:${id}:state`));
 	}
 
 	/**
@@ -53,8 +54,8 @@ export class StateManager {
    * @param { number } counterId
    */
 	async nextState(channel, counterId) {
-		const gameId = channel.split(".")[1];
-		const state = await this.getState(gameId);
+		const id = gameId(channel);
+		const state = await this.getState(id);
 		let halt = false;
 
 		if (!state) {
@@ -62,7 +63,7 @@ export class StateManager {
 			return;
 		}
 
-		const rounds = await getRounds(gameId);
+		const rounds = await getRounds(id);
 		const loopingRoundIndex = rounds.length - 2;
 
 		let currentRound = state["round"] || 0;
@@ -133,9 +134,9 @@ export class StateManager {
 	}
 
 	async getNextStateDuration(channel) {
-		const gameId = channel.split(".")[1];
-		const state = await this.getState(gameId);
-		const rounds = await getRounds(gameId);
+		const id = gameId(channel);
+		const state = await this.getState(id);
+		const rounds = await getRounds(id);
 		if (!state) return;
 
 		let currentRound = state["round"] || 0;

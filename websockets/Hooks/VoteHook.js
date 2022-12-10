@@ -1,6 +1,7 @@
 import { InteractionService } from "../Services/InteractionService.js";
 import Body from "../Helpers/Body.js";
 import fetch from "../Helpers/fetch.js";
+import { gameId } from "../Helpers/Functions.js";
 
 export default {
 	identifier: 7,
@@ -11,7 +12,7 @@ export default {
 	async after(io, channel) {
 		await InteractionService.closeInteraction(io, channel, "vote");
 		const body = Body.make({
-			gameId: channel.split(".")[1]
+			gameId: gameId(channel)
 		});
 		const baseURL = "https://web/api/game";
 
