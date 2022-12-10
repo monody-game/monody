@@ -4,6 +4,7 @@ import { GameService } from "../Services/GameService.js";
 import { CounterService } from "../Services/CounterService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
+import { gameId } from "../Helpers/Functions.js";
 
 const StartingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
 const WaitingState = (await fetch("https://web/api/state/1", { "method": "GET" })).json;
@@ -17,7 +18,7 @@ export class GameChannel {
 	}
 
 	async getMembers(channel) {
-		const members = JSON.parse(await client.get(`game:${channel.split(".")[1]}:members`));
+		const members = JSON.parse(await client.get(`game:${gameId(channel)}:members`));
 		if (!members) return [];
 		return members;
 	}
@@ -34,7 +35,7 @@ export class GameChannel {
 		members = members.filter(member => {
 			return Array.from(clients).indexOf(member.socketId) >= 0;
 		});
-		await client.set(`game:${channel.split(".")[1]}:members`, JSON.stringify(members));
+		await client.set(`game:${gameId(channel)}:members`, JSON.stringify(members));
 		return members;
 	}
 
@@ -45,12 +46,12 @@ export class GameChannel {
 
 		const isMember = await this.isMember(channel, member);
 		const members = await this.getMembers(channel);
-		const gameId = channel.split(".")[1];
+		const id = gameId(channel);
 
 		member.socketId = socket.id;
 		members.push(member);
 
-		await client.set(`game:${gameId}:members`, JSON.stringify(members));
+		await client.set(`game:${id}:members`, JSON.stringify(members));
 
 		this.onSubscribed(socket, channel, members);
 
@@ -59,7 +60,7 @@ export class GameChannel {
 		}
 
 		const params = Body.make({
-			gameId,
+			id,
 			userId: member.user_id
 		});
 
@@ -89,14 +90,14 @@ export class GameChannel {
 	}
 
 	async leave(socket, channel) {
-		const gameId = channel.split(".")[1];
-		const game = await GameService.getGame(gameId);
+		const id = gameId(channel);
+		const game = await GameService.getGame(id);
 		let members = await this.getMembers(channel);
 		members = members || [];
 
 		if (!game) return;
 
-		const state = await this.stateManager.getState(gameId);
+		const state = await this.stateManager.getState(id);
 		if (!state) return;
 
 		if (state.status === StartingState.state) {
@@ -119,11 +120,11 @@ export class GameChannel {
 
 		if (members.length === 0) {
 			this.onLeave(channel, member);
-			await this.onDelete(gameId);
+			await this.onDelete(id);
 		} else {
-			await client.set(`game:${channel.split(".")[1]}:members`, JSON.stringify(members));
+			await client.set(`game:${id}:members`, JSON.stringify(members));
 			game.users = members;
-			await this.gameService.setGame(gameId, game);
+			await this.gameService.setGame(id, game);
 
 			const isMember = await this.isMember(channel, member);
 
@@ -142,20 +143,21 @@ export class GameChannel {
 		this.io.to(channel).emit("presence:leaving", channel, member);
 	}
 
-	async onDelete(gameId) {
-		this.gameService.stopTimeouts(gameId);
+	async onDelete(id) {
+		this.gameService.stopTimeouts(id);
 
 		await fetch("https://web/api/game", {
 			method: "DELETE",
-			body: Body.make({ gameId })
+			body: Body.make({ id })
 		});
 
-		this.io.to("home").emit("game.delete", "home", gameId);
+		this.io.to("home").emit("game.delete", "home", id);
 
-		console.info(`[${new Date().toISOString()}] - Deleting game, id: ${gameId}`);
+		console.info(`[${new Date().toISOString()}] - Deleting game, id: ${id}`);
 	}
 
 	onSubscribed(socket, channel, members) {
 		this.io.to(socket.id).emit("presence:subscribed", channel, members);
+		this.io.to(socket.id).emit("game.data", channel, GameService.getData(gameId(channel)));
 	}
 }

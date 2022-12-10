@@ -1,6 +1,7 @@
 import { InteractionService } from "../Services/InteractionService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
+import { gameId } from "../Helpers/Functions.js";
 const baseURL = "https://web/api/game";
 
 export default {
@@ -11,7 +12,7 @@ export default {
 		await fetch(`${baseURL}/chat/lock`, {
 			method: "POST",
 			body: Body.make({
-				gameId: channel.split(".")[1],
+				gameId: gameId(channel),
 				team: "2"
 			})
 		});
@@ -24,7 +25,7 @@ export default {
 		await fetch(`${baseURL}/chat/lock`, {
 			method: "POST",
 			body: Body.make({
-				gameId: channel.split(".")[1],
+				gameId: gameId(channel),
 				team: "2"
 			})
 		});

@@ -2,12 +2,13 @@ import fetch from "../Helpers/fetch.js";
 import { GameService } from "./GameService.js";
 import { client } from "../Redis/Connection.js";
 import Body from "../Helpers/Body.js";
+import { gameId } from "../Helpers/Functions.js";
 
 export class InteractionService {
 	static async openInteraction(io, channel, type) {
-		const gameId = channel.split(".")[1];
+		const id = gameId(channel);
 		const params = Body.make({
-			gameId,
+			gameId: id,
 			type
 		});
 
@@ -16,12 +17,12 @@ export class InteractionService {
 		const interactionId = interaction.id;
 		let callers = interaction.authorizedCallers;
 
-		console.log(`Created ${type} interaction with id ${interactionId} in game ${gameId}`);
+		console.log(`Created ${type} interaction with id ${interactionId} in game ${id}`);
 
 		if (callers !== "*") {
 			callers = JSON.parse(callers);
 			callers = [...callers];
-			const members = await GameService.getMembers(gameId);
+			const members = await GameService.getMembers(id);
 
 			for (let caller of callers) {
 				caller = members.find(member => member.user_id === caller);
@@ -35,13 +36,13 @@ export class InteractionService {
 	}
 
 	static async closeInteraction(io, channel, type) {
-		const gameId = channel.split(".")[1];
+		const id = gameId(channel);
 
-		const interactions = JSON.parse(await client.get(`game:${gameId}:interactions`));
+		const interactions = JSON.parse(await client.get(`game:${id}:interactions`));
 		const interaction = interactions.find(interactionListItem => interactionListItem.type === type);
 
 		if (!interaction) {
-			console.log(`Unable to find interaction with type ${type} on game ${gameId}`);
+			console.log(`Unable to find interaction with type ${type} on game ${id}`);
 			return;
 		}
 
@@ -49,17 +50,17 @@ export class InteractionService {
 		let callers = interaction.authorizedCallers;
 
 		const params = Body.make({
-			gameId,
+			gameId: id,
 			id: interactionId
 		});
 
 		await fetch("https://web/api/interactions", { method: "DELETE", body: params });
 
-		console.log(`Closing ${type} interaction with id ${interactionId} in game ${gameId}`);
+		console.log(`Closing ${type} interaction with id ${interactionId} in game ${id}`);
 
 		if (callers !== "*") {
 			callers = JSON.parse(callers);
-			const members = await GameService.getMembers(gameId);
+			const members = await GameService.getMembers(id);
 
 			for (let caller of callers) {
 				caller = members.find(member => member.user_id === caller);

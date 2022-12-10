@@ -1,4 +1,5 @@
 import { StateManager } from "./StateManager.js";
+import { gameId } from "../Helpers/Functions.js";
 
 export class CounterService {
 	counterId = {};
@@ -9,28 +10,28 @@ export class CounterService {
 	}
 
 	async cycle(channel, socket) {
-		const gameId = channel.split(".")[1];
+		const id = gameId(channel);
 		let halt = false;
 
 		const counterId = setTimeout(async () => {
 			await this.cycle(channel, socket);
 		}, ((await this.manager.getNextStateDuration(channel)) + 1) * 1000);
 
-		this.counterId[gameId] = counterId[Symbol.toPrimitive]();
+		this.counterId[id] = counterId[Symbol.toPrimitive]();
 
 		try {
-			halt = await this.manager.nextState(channel, this.counterId[gameId], socket);
+			halt = await this.manager.nextState(channel, this.counterId[id], socket);
 		} catch (e) {
-			clearTimeout(this.counterId[gameId]);
+			clearTimeout(this.counterId[id]);
 			console.error(e);
 		}
 
 		if (halt) {
-			this.stop(gameId);
+			this.stop(id);
 		}
 	}
 
-	stop(gameId) {
-		clearTimeout(this.counterId[gameId]);
+	stop(id) {
+		clearTimeout(this.counterId[id]);
 	}
 }

@@ -1,11 +1,12 @@
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
+import { gameId } from "../Helpers/Functions.js";
 
 export default {
 	identifier: 6,
 	async before(io, channel) {
 		const body = Body.make({
-			gameId: channel.split(".")[1]
+			gameId: gameId(channel)
 		});
 		const baseUrl = "https://web/api/game";
 
