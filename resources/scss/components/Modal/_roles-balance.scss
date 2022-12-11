@@ -21,23 +21,11 @@
 }
 
 .roles-balance__villagers {
-  background: rgb(47, 91, 132);
-  background: linear-gradient(
-                  99deg,
-                  rgba(47, 91, 132, 1) 0%,
-                  rgba(76, 147, 215, 1) 50%,
-                  rgba(47, 91, 132, 1) 100%
-  );
+  background: var(--villager-color);
   width: var(--villager-balance-width);
 }
 
 .roles-balance__werewolf {
-  background: rgb(121, 16, 16);
-  background: linear-gradient(
-                  99deg,
-                  rgba(121, 16, 16, 1) 0%,
-                  rgba(166, 24, 24, 1) 50%,
-                  rgba(121, 16, 16, 1) 100%
-  );
+  background: var(--werewolf-color);
   width: var(--werewolf-balance-width);
 }
