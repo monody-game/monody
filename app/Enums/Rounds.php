@@ -15,9 +15,28 @@ enum Rounds: int
     public function stateify(): array
     {
         return match ($this) {
-            self::FirstRound => [States::Waiting, States::Starting, States::Night, States::Psychic, States::Werewolf, States::Witch, States::Day, States::Vote],
-            self::SecondRound, self::LoopRound => [States::Night, States::Psychic, States::Werewolf, States::Witch, States::Day, States::Vote],
-            self::EndingRound => [States::End],
+            self::FirstRound => [
+                States::Waiting,
+                States::Starting,
+                States::Roles,
+                States::Night,
+                States::Psychic,
+                States::Werewolf,
+                States::Witch,
+                States::Day,
+                States::Vote,
+            ],
+            self::SecondRound, self::LoopRound => [
+                States::Night,
+                States::Psychic,
+                States::Werewolf,
+                States::Witch,
+                States::Day,
+                States::Vote,
+            ],
+            self::EndingRound => [
+                States::End,
+            ],
         };
     }
 }

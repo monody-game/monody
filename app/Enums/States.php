@@ -6,7 +6,7 @@ enum States: int
 {
     case Waiting = 0;
     case Starting = 1;
-	case Roles = 9;
+    case Roles = 9;
 
     case Night = 2;
     case Werewolf = 3;
@@ -23,7 +23,7 @@ enum States: int
         return match ($this) {
             self::Waiting => 'wait',
             self::Starting => 'starting',
-			self::Roles => 'roles',
+            self::Roles => 'roles',
             self::Night => 'night',
             self::Werewolf => 'werewolf',
             self::Witch => 'witch',
@@ -39,7 +39,7 @@ enum States: int
         return match ($this) {
             self::Waiting => 'Attente',
             self::Starting => 'Démarrage',
-			self::Roles => 'Distribution des rôles',
+            self::Roles => 'Distribution des rôles',
             self::Night => 'Nuit',
             self::Werewolf => 'Tour des loups-garous',
             self::Witch => 'Tour de la sorcière',
@@ -55,7 +55,7 @@ enum States: int
         return match ($this) {
             self::Waiting, self::Starting, self::Roles, self::Day, self::Vote, self::End => 'day',
             self::Night, self::Werewolf, self::Witch, self::Psychic => 'night',
-		};
+        };
     }
 
     public function duration(): int
@@ -63,7 +63,7 @@ enum States: int
         return match ($this) {
             self::Waiting, self::End => -1,
             self::Starting, self::Night, self::Day, self::Witch, self::Psychic, self::Vote, self::Werewolf => 5,
-			self::Roles => 20,
+            self::Roles => 20,
         };
     }
 
