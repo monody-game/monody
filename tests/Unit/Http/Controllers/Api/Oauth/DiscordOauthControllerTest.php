@@ -3,14 +3,11 @@
 namespace Tests\Unit\Http\Controllers\Api\Oauth;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class DiscordOauthControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     private User $user;
 
     private string $fakeId = '1298109238';
