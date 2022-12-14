@@ -4,12 +4,10 @@ namespace App\Http\Controllers\Api\Oauth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +18,7 @@ final class DiscordOauthController extends Controller
 
     public function link(): RedirectResponse
     {
-        return $this->generateProvider('discord', ['identify', 'email'])->redirect();
+        return $this->generateProvider('discord', ['identify', 'email', 'role_connections.write'])->redirect();
     }
 
     public function check(Request $request): RedirectResponse|JsonResponse
@@ -33,6 +31,7 @@ final class DiscordOauthController extends Controller
         }
 
         $discordUser = Socialite::driver('discord')->stateless()->user();
+        $discordId = config('services.discord.client_id');
 
         $user = User::updateOrCreate(['email' => $discordUser->email], [
             'discord_id' => $discordUser->getId(),
@@ -42,17 +41,25 @@ final class DiscordOauthController extends Controller
 
         $user->avatar = '/images/avatar/default.png' === $user->avatar ? $discordUser->getAvatar() : $user->avatar;
 
-        try {
-            Http::post('bot/linked', [
-                'discord_user_id' => $discordUser->getId(),
-            ]);
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
+        $res = Http::withToken($discordUser->accessTokenResponseBody['access_token'])
+            ->asJson()
+            ->put(
+                "https://discord.com/api/v10/users/@me/applications/{$discordId}/role-connection",
+                [
+                    'plateform_name' => 'Monody',
+                    'metadata' => [
+                        'account_linked' => 1,
+                    ],
+                ]
+            );
+
+        if ($res->successful()) {
+            Auth::login($user);
+
+            return new RedirectResponse('/play');
         }
 
-        Auth::login($user);
-
-        return new RedirectResponse('/play');
+        return new JsonResponse(['An error occurred'], Response::HTTP_BAD_REQUEST);
     }
 
     public function unlink(Request $request): JsonResponse
