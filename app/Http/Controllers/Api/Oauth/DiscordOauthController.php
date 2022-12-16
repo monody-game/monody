@@ -41,6 +41,7 @@ final class DiscordOauthController extends Controller
 
         $user->avatar = '/images/avatar/default.png' === $user->avatar ? $discordUser->getAvatar() : $user->avatar;
 
+        /** @var \Illuminate\Http\Client\Response $res */
         $res = Http::withToken($discordUser->accessTokenResponseBody['access_token'])
             ->asJson()
             ->put(
