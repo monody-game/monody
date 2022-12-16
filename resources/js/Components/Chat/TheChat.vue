@@ -59,6 +59,10 @@ window.Echo.join(`game.${route.params.id}`)
 		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
 		const role = res.data.role;
 		gameStore.setRole(userStore.id, role);
+		await service.sendMessage({
+			type: "info",
+			content: `Votre rôle est : ${role.display_name}`
+		});
 	})
 	.listen(".game.kill", async (e) => {
 		const payload = e.data.payload;

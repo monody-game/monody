@@ -75,7 +75,6 @@ export class GameService {
 
 			role = role.json.role;
 			io.to(member.socketId).emit("game.role-assign", channel, game.assigned_roles[user.user_id]);
-			ChatService.info(io, channel, `Votre role est : ${role.display_name}`, member.socketId);
 		}
 	}
 
