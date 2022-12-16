@@ -98,12 +98,18 @@ const getDuration = function (duration, startTimestamp) {
 		return duration;
 	}
 
-	const difference = (Date.now() - startTimestamp) / 1000;
-	return duration - difference.toFixed();
+	const timestampDifference = (Date.now() - startTimestamp) / 1000;
+	const difference = duration - timestampDifference.toFixed();
+
+	if (difference <= 0) {
+		return 0;
+	}
+
+	return difference;
 };
 
 const decount = function () {
-	if (time.value === 0) {
+	if (time.value <= 0) {
 		clearInterval(counterId.value);
 		return;
 	}
