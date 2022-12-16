@@ -1,21 +1,17 @@
 import { StateManager } from "../Services/StateManager.js";
 import { client } from "../Redis/Connection.js";
 import { GameService } from "../Services/GameService.js";
-import { CounterService } from "../Services/CounterService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
-import { ChatService } from "../Services/ChatService.js";
 
 const StartingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
-const WaitingState = (await fetch("https://web/api/state/1", { "method": "GET" })).json;
 
 export class GameChannel {
 	constructor(io) {
 		this.io = io;
 		this.gameService = new GameService(io);
 		this.stateManager = new StateManager(io);
-		this.counterService = new CounterService(io);
 	}
 
 	async getMembers(channel) {
@@ -75,7 +71,6 @@ export class GameChannel {
 
 		setTimeout(async () => {
 			this.io.to(socket.id).emit("game.data", channel, await this.stateManager.getState(gameId(channel)));
-			ChatService.send(socket, channel, "t'as rej bg", "message", socket.id);
 		}, 100);
 
 		if (members.length === count && game.is_started === false) {
@@ -138,8 +133,6 @@ export class GameChannel {
 	}
 
 	async onDelete(id) {
-		this.gameService.stopTimeouts(id);
-
 		await fetch("https://web/api/game", {
 			method: "DELETE",
 			body: Body.make({ gameId: id })
