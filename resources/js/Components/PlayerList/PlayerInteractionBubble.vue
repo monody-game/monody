@@ -12,17 +12,10 @@
         class="player-interaction-bubble__content"
       >
     </span>
+    <svg class="player-interaction-bubble__arrow">
+      <use href="/sprite.svg#arrow_down" />
+    </svg>
   </div>
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 12 12"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    class="player-interaction-bubble__arrow"
-  >
-    <path d="M11 0.200822L5.78486 9.16776L0.588703 0.167764L11 0.200822Z" />
-  </svg>
 </template>
 
 <script setup>
