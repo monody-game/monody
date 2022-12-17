@@ -4,6 +4,7 @@ namespace App\Actions;
 
 use App\Enums\InteractionActions;
 use App\Enums\Roles;
+use App\Events\InteractionUpdate;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 use Exception;
@@ -37,10 +38,21 @@ class PsychicAction implements ActionInterface
 
     public function updateClients(string $userId): void
     {
+        $gameId = $this->getGameId($userId);
+
+        broadcast(new InteractionUpdate([
+            'gameId' => $gameId,
+            'type' => InteractionActions::Spectate->value,
+            'target',
+        ], true, [$userId]));
     }
 
     public function close(string $gameId): void
     {
-        // TODO: Implement close() method.
+    }
+
+    private function getGameId(string $userId): string
+    {
+        return $this->getCurrentUserGameActivity($userId);
     }
 }

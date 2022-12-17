@@ -121,7 +121,7 @@ class InteractionService
     private function getService(string $type): ActionInterface
     {
         return match (Interactions::from($type)) {
-            Interactions::Vote => new VoteAction(),
+            Interactions::Vote => new VoteAction,
             Interactions::Witch => new WitchAction,
             Interactions::Psychic => new PsychicAction,
             Interactions::Werewolves => new WerewolvesAction,
