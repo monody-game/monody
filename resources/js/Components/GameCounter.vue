@@ -119,7 +119,7 @@ const decount = function () {
 		soundManagement();
 		updateCircle();
 
-		if (time.value === 0) {
+		if (time.value <= 0) {
 			clearInterval(counterId.value);
 		}
 	}, 1000);
