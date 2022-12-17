@@ -67,26 +67,28 @@ final class DiscordOauthController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
-		$discordId = config('services.discord.client_id');
+        $discordId = config('services.discord.client_id');
 
         if (!$user->discord_id) {
             return new JsonResponse(['error' => 'Your Discord account is not linked'], Response::HTTP_FORBIDDEN);
         }
 
-		Http::withToken($user->discord_token)
-			->asJson()
-			->put(
-				"https://discord.com/api/v10/users/@me/applications/{$discordId}/role-connection",
-				[
-					'plateform_name' => 'Monody',
-					'metadata' => [
-						'account_linked' => 0,
-					],
-				]
-			);
+        /** @var string $token */
+        $token = $user->discord_token;
 
+        Http::withToken($token)
+            ->asJson()
+            ->put(
+                "https://discord.com/api/v10/users/@me/applications/{$discordId}/role-connection",
+                [
+                    'plateform_name' => 'Monody',
+                    'metadata' => [
+                        'account_linked' => 0,
+                    ],
+                ]
+            );
 
-		$user->discord_id = null;
+        $user->discord_id = null;
         $user->discord_token = null;
         $user->discord_refresh_token = null;
         $user->save();
