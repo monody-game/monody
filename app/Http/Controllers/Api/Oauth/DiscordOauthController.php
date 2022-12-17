@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Oauth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,12 +26,17 @@ final class DiscordOauthController extends Controller
     {
         if (!$request->has('code')) {
             return new JsonResponse([
-                'message' => 'An error happened',
+                'message' => 'GET parameter "code" is needed',
                 'data' => $request->all(),
             ]);
         }
 
-        $discordUser = Socialite::driver('discord')->stateless()->user();
+		try {
+			$discordUser = Socialite::driver('discord')->stateless()->user();
+		} catch (Exception) {
+			return new JsonResponse(['An error occurred, try to relog'], Response::HTTP_BAD_REQUEST);
+		}
+
         $discordId = config('services.discord.client_id');
 
         $user = User::updateOrCreate(['email' => $discordUser->email], [
