@@ -47,27 +47,28 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 body {
-    font-family: "Sen", sans-serif;
-    font-size: 1rem;
-    color: #fff;
-    min-height: 100vh;
-    background-color: var(--dark-background);
+	font-family: "Sen", sans-serif;
+	font-size: 1rem;
+	color: #fff;
+	min-height: 100vh;
+	background-color: var(--dark-background);
 }
 
 :root {
-    --space: 8px;
-    --danger: #b40000;
-    --info: #009ec0;
-    --dark-background: #0f1127;
-    --dark-background-lighter: #111433;
-    --light-dark-background: #24295E;
-		--light-dark-background-hover: #1D214C;
-    --light-background: #fffcf1;
-    --villager-color: #4c93d6;
-    --werewolf-color: #a51818;
-		--werewolf-color-darker: #811313;
+	--space: 8px;
+	--danger: #b40000;
+	--info: #009ec0;
+	--dark-background: #0f1127;
+	--dark-background-lighter: #111433;
+	--light-dark-background: #24295E;
+	--light-dark-background-hover: #1D214C;
+	--light-background: #fffcf1;
+	--light-background-hover: #fffcf195;
+	--villager-color: #4c93d6;
+	--werewolf-color: #a51818;
+	--werewolf-color-darker: #811313;
 }
