@@ -79,7 +79,7 @@ class LoginControllerTest extends TestCase
             ->withCookie('monody_access_token', $token)
             ->post('/api/auth/login', [
                 'username' => 'second user',
-                'password' => '123456',
+                'password' => '12345678',
                 'remember_me' => false,
             ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
@@ -101,8 +101,8 @@ class LoginControllerTest extends TestCase
         $this->post('/api/auth/register', [
             'username' => 'second user',
             'email' => 'second.user@gmail.com',
-            'password' => '123456',
-            'password_confirmation' => '123456',
+            'password' => '12345678',
+            'password_confirmation' => '12345678',
         ]);
     }
 }
