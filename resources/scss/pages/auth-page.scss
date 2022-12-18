@@ -1,12 +1,16 @@
-.login-page__container {
+.auth-page__container {
 	height: 100vh;
 	overflow: hidden;
 
 	background-image: url("/images/monody_day.png");
 	background-position-y: -150px;
+
+	a:hover {
+		text-decoration: underline;
+	}
 }
 
-.login-page__wrapper {
+.auth-page__wrapper {
 	display: grid;
 	place-items: center;
 
@@ -74,11 +78,7 @@
 	height: 24px;
 	width: 24px;
 	right: 10px;
-	bottom: 30px;
-}
-
-.auth-page__link {
-	text-decoration: underline;
+	top: 34px;
 }
 
 .auth-page__submit-group {
