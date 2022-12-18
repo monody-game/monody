@@ -6,7 +6,7 @@
       </router-link>
       <router-link
         :to="{ name: 'login' }"
-        class="btn-primary"
+        class="btn large btn-primary"
       >
         Se connecter
       </router-link>
