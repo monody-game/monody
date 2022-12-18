@@ -1,6 +1,6 @@
 <template>
-  <div class="login-page__container">
-    <div class="login-page__wrapper">
+  <div class="auth-page__container">
+    <div class="auth-page__wrapper">
       <div class="auth-page__form-wrapper">
         <h1>Se connecter</h1>
         <form
@@ -56,9 +56,12 @@
             Mot de passe oublié ?
           </a>
           <div class="auth-page__submit-group">
-            <a class="auth-page__link">
+            <router-link
+              class="auth-page__link"
+              to="register"
+            >
               Pas encore de compte ?
-            </a>
+            </router-link>
             <button
               class="btn large"
               type="submit"
@@ -73,7 +76,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { reactive, ref } from "vue";
