@@ -1,116 +1,117 @@
 <template>
-  <div class="login-page">
-    <h1>Se connecter</h1>
-    <form class="login-page__form">
-      <div>
-        <input
-          v-model="username"
-          :class="errors.username.errored ? 'login-page__input-error' : ''"
-          class="login-page__input"
-          placeholder="Nom d'utilisateur"
-          required
-          type="text"
+  <div class="login-page__container">
+    <div class="login-page__wrapper">
+      <div class="auth-page__form-wrapper">
+        <h1>Se connecter</h1>
+        <form
+          action=""
+          method="post"
+          @submit.prevent
         >
-        <span
-          class="login-page__input-focused"
-          :class="errors.username.errored ? 'login-page__input-focus-errored' : ''"
-        />
-        <p
-          v-if="errors.username.errored"
-          class="login-page__error"
-        >
-          {{ errors.username.text }}
-        </p>
+          <div
+            v-if="loading"
+            class="auth-page__loading-group"
+          >
+            <div class="auth-page__loading-group-blur" />
+            <DotsSpinner />
+          </div>
+          <div
+            class="auth-page__form-group"
+            :data-is-invalid="error.errored"
+          >
+            <label for="identifier">Email ou nom d'utilisateur</label>
+            <input
+              id="identifier"
+              v-model="username"
+              type="text"
+              name="identifier"
+            >
+            <svg v-if="error.errored">
+              <use href="/sprite.svg#error" />
+            </svg>
+            <p v-if="error.errored">
+              {{ error.text }}
+            </p>
+          </div>
+          <div
+            class="auth-page__form-group"
+            :data-is-invalid="error.errored"
+          >
+            <label for="password">Mot de passe</label>
+            <input
+              id="password"
+              v-model="password"
+              type="password"
+              name="password"
+              autocomplete="off"
+            >
+            <svg v-if="error.errored">
+              <use href="/sprite.svg#error" />
+            </svg>
+            <p v-if="error.errored">
+              {{ error.text }}
+            </p>
+          </div>
+          <a class="auth-page__link">
+            Mot de passe oublié ?
+          </a>
+          <div class="auth-page__submit-group">
+            <a class="auth-page__link">
+              Pas encore de compte ?
+            </a>
+            <button
+              class="btn large"
+              type="submit"
+              :disabled="username === '' || password === ''"
+              @click="login"
+            >
+              Se connecter
+            </button>
+          </div>
+        </form>
       </div>
-      <div>
-        <input
-          v-model="password"
-          :class="errors.password.errored ? 'login-page__input-error' : ''"
-          class="login-page__input"
-          placeholder="Mot de passe"
-          required
-          type="password"
-        >
-        <span
-          class="login-page__input-focused"
-          :class="errors.password.errored ? 'login-page__input-focus-errored' : ''"
-        />
-        <p
-          v-if="errors.password.errored"
-          class="login-page__error"
-        >
-          {{ errors.password.text }}
-        </p>
-      </div>
-      <div class="login-page__remember-wrapper">
-        <label for="remember_me">Se souvenir de moi</label>
-        <input
-          id="remember_me"
-          v-model="remember_me"
-          class="login-page__remember-me"
-          type="checkbox"
-        >
-      </div>
-      <div>
-        <button
-          class="login-page__button"
-          type="submit"
-          @keyup.enter="login()"
-          @click.prevent="login()"
-        >
-          <DotsSpinner
-            v-if="loading === true"
-          />
-          Se connecter
-        </button>
-        <router-link
-          class="login-page__no-account-link"
-          to="/register"
-        >
-          Pas encore de compte ?
-        </router-link>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script setup>
 import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 const username = ref("");
 const password = ref("");
-const remember_me = ref(false);
 const loading = ref(false);
-const errors = ref({
-	username: {
-		errored: false,
-		text: ""
-	},
-	password: {
-		errored: false,
-		text: ""
-	}
+
+const error = reactive({
+	errored: false,
+	text: ""
 });
 
 const login = async function () {
 	if (username.value === "" || password.value === "") {
-		errors.value.username.errored = true;
-		errors.value.password.errored = true;
-		errors.value.password.text = "Vous devez rentrer vos identifiants";
+		error.errored = true;
+		error.text = "Vous devez rentrer vos identifiants";
 		return;
 	}
+
 	loading.value = true;
-	await window
+
+	const res = await window
 		.JSONFetch("/auth/login", "POST", {
 			username: username.value,
-			password: password.value,
-			remember_me: remember_me.value,
+			password: password.value
 		});
 
+	console.log(res);
 	loading.value = false;
+	if (res.status === 401) {
+		error.errored = true;
+		error.text = "Identifiant ou mot de passe invalide";
+		return;
+	}
+
 	await router.push("play");
 };
 </script>

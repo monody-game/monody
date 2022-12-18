@@ -1,112 +1,128 @@
-.login-page {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.login-page__no-account-link {
-  color: #fff;
-  text-decoration: underline;
-}
-
-.login-page__form {
-  margin-top: space(2);
-  display: flex;
-  flex-direction: column;
-  min-width: 300px;
+.login-page__container {
+	height: 100vh;
 	overflow: hidden;
 
-	& > div:not(.login-page__remember-wrapper) {
-		margin-bottom: space(3);
+	background-image: url("/images/monody_day.png");
+	background-position-y: -150px;
+}
+
+.login-page__wrapper {
+	display: grid;
+	place-items: center;
+
+	height: 100%;
+	width: 100%;
+	backdrop-filter: blur(7.5px);
+
+	padding-inline: space(8);
+
+	@media screen and (max-width: 630px) {
+		padding-inline: 0;
 	}
 }
 
-.login-page__error {
-  color: var(--danger);
-  margin-bottom: space(1);
-}
+.auth-page__form-wrapper {
+	background-color: var(--light-background);
+	color: var(--dark-background);
 
-.login-page__button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	width: 500px;
 
-  width: 100%;
-  height: 32px;
+	position: relative;
+	display: grid;
+	gap: space(3);
 
-  margin-top: space(1);
-  margin-bottom: space(2);
+	padding: space(4);
 
-  border: none;
-  border-radius: 6px;
+	& form {
+		display: flex;
+		flex-direction: column;
+		gap: space(2);
+	}
 
-  background: #ffffff;
-  cursor: pointer;
-  transition: background-color .2s;
-
-  &:hover {
-    background: darken(#fff, 20%);
-  }
-
-  & .loader {
-    height: 16px;
-    width: 16px;
-    margin-right: space(1);
-  }
-}
-
-.login-page__input-focused {
-	display: block;
-	height: 2px;
-	transition: transform .3s;
-	background-color: #fff;
-	transform: translateX(-100%);
-
-	&.login-page__input-focus-errored {
-		background-color: var(--danger);
+	@media screen and (max-width: 630px) {
+		width: auto;
+		max-width: 500px;
 	}
 }
 
-.login-page__input {
-  font-family: inherit;
-  background: var(--dark-background);
-  color: #fff;
-	border: none;
-  border-bottom: rgba(255, 255, 255, 25%) 2px solid;
-  padding: space(1);
-  margin-top: space(1);
-  width: 100%;
-	overflow: hidden;
+.auth-page__form-group {
+	display: flex;
+	flex-direction: column;
+	gap: space(1);
+	position: relative;
 
-  &.login-page__input-error:not(:focus) {
-    outline: none;
-    border-bottom: var(--danger) solid 2px;
-  }
+	& input {
+		background-color: #F6F3E6;
+		height: 40px;
+		border-radius: 4px;
+		border: #0f112725 solid 1px;
+		font-family: inherit;
+		padding-left: space(1);
+	}
+}
 
-	&:focus + .login-page__input-focused {
-		transform: translateX(0);
+.auth-page__form-group[data-is-invalid=true] input {
+	border: #b4000050 solid 2px;
+}
+
+.auth-page__form-group p {
+	color: var(--danger);
+}
+
+.auth-page__form-group svg {
+	position: absolute;
+	height: 24px;
+	width: 24px;
+	right: 10px;
+	bottom: 30px;
+}
+
+.auth-page__link {
+	text-decoration: underline;
+}
+
+.auth-page__submit-group {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: space(2);
+
+	& button {
+		border: #0f112725 solid 1px;
+		padding-block: space(1) !important;
 	}
 
-  &:focus {
-    outline: none;
-
-    &::placeholder {
-      opacity: 1;
-      color: #fff;
-    }
-  }
+	& button:hover, button:disabled, button:disabled:hover {
+		background-color: #F6F3E6 !important;
+	}
 }
 
-.login-page__remember-wrapper {
-  display: flex;
-  margin-left: space(1);
-	margin-bottom: space(1);
+.auth-page__loading-group {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	& .spinner__dots-container, .spinner__dots-container spinning-dots {
+		z-index: 100;
+		margin: 0;
+		height: 48px;
+		width: 48px !important;
+	}
 }
 
-.login-page__remember-me {
-  width: 16px;
-  display: block;
-	margin: 0 0 0 4px;
+.auth-page__loading-group-blur {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 10;
+
+	backdrop-filter: blur(1px);
 }
