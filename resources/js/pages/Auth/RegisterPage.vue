@@ -20,7 +20,7 @@
             class="auth-page__form-group"
             :data-is-invalid="errors.username.errored"
           >
-            <label for="username">Nom d'utilisateur</label>
+            <label for="username">Nom d'utilisateur <span class="auth-page__input-notice">(Entre 3 et 24 caractères)</span></label>
             <input
               id="username"
               v-model="username"
@@ -38,7 +38,12 @@
             class="auth-page__form-group"
             :data-is-invalid="errors.email.errored"
           >
-            <label for="email">Email</label>
+            <label for="email">
+              Email
+              <NoticeComponent title="Pourquoi dois-je donner cette information ?">
+                Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody)
+              </NoticeComponent>
+            </label>
             <input
               id="email"
               v-model="email"
@@ -56,7 +61,7 @@
             class="auth-page__form-group"
             :data-is-invalid="errors.password.errored"
           >
-            <label for="password">Mot de passe</label>
+            <label for="password">Mot de passe <span class="auth-page__input-notice">(plus de 8 caractères)</span></label>
             <input
               id="password"
               v-model="password"
@@ -114,6 +119,7 @@
 import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import NoticeComponent from "../../Components/NoticeComponent.vue";
 
 const router = useRouter();
 const username = ref("");
