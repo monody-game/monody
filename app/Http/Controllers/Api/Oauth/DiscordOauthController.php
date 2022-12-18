@@ -31,11 +31,11 @@ final class DiscordOauthController extends Controller
             ]);
         }
 
-		try {
-			$discordUser = Socialite::driver('discord')->stateless()->user();
-		} catch (Exception) {
-			return new JsonResponse(['An error occurred, try to relog'], Response::HTTP_BAD_REQUEST);
-		}
+        try {
+            $discordUser = Socialite::driver('discord')->stateless()->user();
+        } catch (Exception) {
+            return new JsonResponse(['An error occurred, try to relog'], Response::HTTP_BAD_REQUEST);
+        }
 
         $discordId = config('services.discord.client_id');
 
