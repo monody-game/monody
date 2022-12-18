@@ -63,6 +63,13 @@
 		font-family: inherit;
 		padding-left: space(1);
 	}
+
+	& label {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: space(1);
+	}
 }
 
 .auth-page__form-group[data-is-invalid=true] input {
@@ -73,7 +80,7 @@
 	color: var(--danger);
 }
 
-.auth-page__form-group svg {
+.auth-page__form-group svg:not(.notice__icon) {
 	position: absolute;
 	height: 24px;
 	width: 24px;
