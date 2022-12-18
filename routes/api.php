@@ -23,6 +23,9 @@ Route::get('/round/{round}/{gameId?}', 'RoundController@get');
 Route::get('/state/{state}', 'StateController@get');
 Route::get('/state/{state}/message', 'StateController@message');
 
+Route::get('/teams', 'TeamController@all');
+Route::get('/team/{id}', 'TeamController@get');
+
 Route::get('/interactions/actions', 'Game\GameInteractionController@actions');
 
 Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
@@ -65,9 +68,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/game/user/{id}/role', 'Game\GameUsersController@role');
 
     Route::post('/game/message/send', 'Game\GameChatController@send');
-
-    Route::get('/teams', 'TeamController@all');
-    Route::get('/team/{id}', 'TeamController@get');
 
     Route::get('/exp/get', 'ExpController@get');
 });
