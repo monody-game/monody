@@ -31,7 +31,7 @@
         <header>
           <p>Liste des parties :</p>
           <button
-            class="play-page__button"
+            class="play-page__button btn large"
             @click="openModal()"
           >
             <i />
