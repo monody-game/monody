@@ -35,7 +35,11 @@ class LoginController extends Controller
         $accessToken = $user->createToken('authToken')->accessToken;
         $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Lax');
 
-        return (new JsonResponse([], Response::HTTP_NO_CONTENT))->cookie($cookie);
+        return (new JsonResponse([
+            'alerts' => [
+                'success' => 'Bon jeu !',
+            ],
+        ]))->cookie($cookie);
     }
 
     public function logout(Request $request): JsonResponse
@@ -45,7 +49,9 @@ class LoginController extends Controller
         Cookie::queue(Cookie::forget('monody_access_token'));
 
         return new JsonResponse([
-            'message' => 'You have been successfully logged out!',
+            'alerts' => [
+                'success' => 'À bientôt !',
+            ],
         ]);
     }
 }
