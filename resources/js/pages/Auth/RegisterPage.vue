@@ -77,7 +77,7 @@
           </div>
           <div
             class="auth-page__form-group"
-            :data-is-invalid="errors.password_confirmation.errored"
+            :data-is-invalid="password !== password_confirmation"
           >
             <label for="password_confirmation">Confirmez le mot de passe</label>
             <input
@@ -151,6 +151,9 @@ watch(username, (newUsername) => {
 	if (newUsername.length > 24) {
 		errors.value.username.errored = true;
 		errors.value.username.text = "Votre nom d'utilsateur doit faire moins de 24 caractères";
+	} else if (newUsername.length < 3) {
+		errors.value.username.errored = true;
+		errors.value.username.text = "Votre nom d'utilsateur doit faire plus de 3 caractères";
 	} else if (newUsername.includes(" ")) {
 		errors.value.username.errored = true;
 		errors.value.username.text = "Il ne doit pas y avoir d'espaces dans votre pseudo";
