@@ -23,6 +23,8 @@ class RegisterController extends Controller
         $accessToken = $user->createToken('authToken')->accessToken;
         $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Strict');
 
+        $user->sendEmailVerificationNotification();
+
         return (new JsonResponse([], Response::HTTP_CREATED))->cookie($cookie);
     }
 }
