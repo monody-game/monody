@@ -68,7 +68,14 @@
               type="password"
               name="password"
             >
-            <svg v-if="errors.password.errored">
+            <VisibilityToggle
+              class="auth-page__show-password"
+              field="password"
+            />
+            <svg
+              v-if="errors.password.errored"
+              class="auth-page__error-icon"
+            >
               <use href="/sprite.svg#error" />
             </svg>
             <p v-if="errors.password.errored">
@@ -86,7 +93,14 @@
               type="password"
               name="password_confirmation"
             >
-            <svg v-if="password !== password_confirmation">
+            <VisibilityToggle
+              class="auth-page__show-password"
+              field="password_confirmation"
+            />
+            <svg
+              v-if="password !== password_confirmation"
+              class="auth-page__error-icon"
+            >
               <use href="/sprite.svg#error" />
             </svg>
             <p v-if="password !== password_confirmation">
@@ -120,6 +134,7 @@ import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import NoticeComponent from "../../Components/NoticeComponent.vue";
+import VisibilityToggle from "../../Components/Form/VisibilityToggle.vue";
 
 const router = useRouter();
 const username = ref("");
