@@ -45,7 +45,14 @@
               name="password"
               autocomplete="off"
             >
-            <svg v-if="error.errored">
+            <VisibilityToggle
+              class="auth-page__show-password"
+              field="password"
+            />
+            <svg
+              v-if="error.errored"
+              class="auth-page__error-icon"
+            >
               <use href="/sprite.svg#error" />
             </svg>
             <p v-if="error.errored">
@@ -80,6 +87,7 @@
 import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import VisibilityToggle from "../../Components/Form/VisibilityToggle.vue";
 
 const router = useRouter();
 const username = ref("");

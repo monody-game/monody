@@ -3,7 +3,7 @@
 	overflow: hidden;
 
 	background-image: url("/images/monody_day.png");
-	background-position-y: -150px;
+	background-position-y: -100px;
 
 	a:hover {
 		text-decoration: underline;
@@ -86,6 +86,10 @@
 	width: 24px;
 	right: 10px;
 	top: 34px;
+}
+
+.auth-page__show-password ~ .auth-page__error-icon {
+	right: 44px !important;
 }
 
 .auth-page__submit-group {
