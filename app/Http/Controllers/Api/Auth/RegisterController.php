@@ -25,6 +25,13 @@ class RegisterController extends Controller
 
         $user->sendEmailVerificationNotification();
 
-        return (new JsonResponse([], Response::HTTP_CREATED))->cookie($cookie);
+        return (new JsonResponse([
+            'alerts' => [
+                'success' => 'Votre compte a bien été créé',
+            ],
+            'popups' => [
+                'info' => "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
+            ],
+        ], Response::HTTP_CREATED))->cookie($cookie);
     }
 }

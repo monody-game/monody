@@ -76,7 +76,7 @@ class LoginControllerTest extends TestCase
                 'username' => 'second user',
                 'password' => '12345678',
             ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertOk();
 
         $response->assertCookie('monody_access_token');
     }
