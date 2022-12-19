@@ -33,7 +33,7 @@ class LoginController extends Controller
         }
 
         $accessToken = $user->createToken('authToken')->accessToken;
-        $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', config('app.url'), true, true, false, 'Strict');
+        $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', "", true, true, false, 'Strict');
 
         return (new JsonResponse([], Response::HTTP_NO_CONTENT))->cookie($cookie);
     }
