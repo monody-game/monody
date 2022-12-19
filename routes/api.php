@@ -57,7 +57,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/auth/logout', 'Auth\LoginController@logout');
 
-    Route::get('/user', 'UserController@user');
+    Route::get('/user', 'UserController@user')->name('verification.notice');
     Route::patch('/user', 'UserController@update');
 
     Route::get('/game/list', 'Game\GameController@list');
@@ -70,4 +70,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/game/message/send', 'Game\GameChatController@send');
 
     Route::get('/exp/get', 'ExpController@get');
+
+    Route::get('/email/verify/{id}/{hash}', "Auth\VerifyEmailController@verify")
+        ->middleware(['signed'])
+        ->name('verification.verify');
+
+    Route::get('/email/notify', 'Auth\VerifyEmailController@notice')
+        ->middleware(['throttle:6,1'])
+        ->name('verification.send');
 });
