@@ -15,6 +15,10 @@
     >
       <use href="/sprite.svg#cross" />
     </svg>
+    <span
+      class="alert__progress"
+      :class="'alert__progress-' + props.type"
+    />
   </div>
 </template>
 
