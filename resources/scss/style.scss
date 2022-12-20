@@ -35,6 +35,10 @@
 @import "./components/PlayerPresentation/player-presentation";
 @import "./components/PlayerPresentation/progress-bar";
 
+// - Alerts
+@import "./components/Alert/alert-list";
+@import "./components/Alert/alert";
+
 // - Others
 @import "./components/counter";
 @import "./components/buttons";
@@ -57,6 +61,7 @@ body {
 	color: #fff;
 	min-height: 100vh;
 	background-color: var(--dark-background);
+	overflow: hidden;
 }
 
 :root {
