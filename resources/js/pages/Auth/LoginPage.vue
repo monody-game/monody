@@ -114,8 +114,8 @@ const login = async function () {
 			password: password.value
 		});
 
-	console.log(res);
 	loading.value = false;
+
 	if (res.status === 401) {
 		error.errored = true;
 		error.text = "Identifiant ou mot de passe invalide";
