@@ -3,6 +3,8 @@
  * @param {String} method
  * @param {Object} body
  */
+import { useStore } from "./stores/alerts.js";
+
 window.JSONFetch = async (url, method, body = null) => {
 	const params = {
 		method: method,
@@ -27,6 +29,10 @@ window.JSONFetch = async (url, method, body = null) => {
 
 	if (!res.data) {
 		res.data = {};
+	}
+
+	if (res.data.alerts) {
+		useStore().addAlerts(res.data.alerts);
 	}
 
 	res.status = response.status;
