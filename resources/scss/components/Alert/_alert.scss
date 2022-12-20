@@ -1,4 +1,7 @@
+$alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'error' var(--danger);
+
 .alert__container {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: space(2);
@@ -32,6 +35,29 @@
 
 	&:hover use {
 		color: var(--dark-background);
+	}
+}
+
+@each $alert in $alerts {
+	.alert__progress-#{nth($alert, 1)} {
+		background-color: nth($alert, 2);
+	}
+}
+
+.alert__progress {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	height: 4px;
+
+	animation: alertProgress 4.75s linear both;
+}
+
+@keyframes alertProgress {
+	to {
+		left: 100%;
 	}
 }
 
