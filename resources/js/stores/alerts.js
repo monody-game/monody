@@ -3,12 +3,7 @@ import { defineStore } from "pinia";
 export const useStore = defineStore("alerts", {
 	state: () => {
 		return {
-			alerts: {
-				"1DEda": {
-					content: "Test d'alerte avec la pitite barre en bas :)",
-					type: "error"
-				}
-			},
+			alerts: {},
 			popups: {}
 		};
 	},
