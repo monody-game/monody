@@ -41,7 +41,7 @@
             <label for="email">
               Email
               <NoticeComponent title="Pourquoi dois-je donner cette information ?">
-                Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody)
+                Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody). Veillez à rentrer une adresse mail valide, vous devrez la vérifier.
               </NoticeComponent>
             </label>
             <input
