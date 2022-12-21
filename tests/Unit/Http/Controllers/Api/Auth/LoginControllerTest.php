@@ -3,7 +3,6 @@
 namespace Tests\Unit\Http\Controllers\Api\Auth;
 
 use App\Models\User;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class LoginControllerTest extends TestCase

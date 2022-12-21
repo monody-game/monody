@@ -24,7 +24,7 @@ class RegisterController extends Controller
         $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Strict');
 
         $user->sendEmailVerificationNotification();
-		$url = route('verification.send');
+        $url = route('verification.send');
 
         return (new JsonResponse([
             'alerts' => [
@@ -32,11 +32,11 @@ class RegisterController extends Controller
             ],
             'popups' => [
                 'info' => [
-					'content' => "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
-					'note' => "Cela peut prendre quelques minutes pour recevoir le mail, si vous ne le recevez toujours pas, regardez vos spams. Sinon,",
-					'link' => $url,
-					'link_text' => 'renvoyer le lien.'
-				],
+                    'content' => "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
+                    'note' => 'Cela peut prendre quelques minutes pour recevoir le mail, si vous ne le recevez toujours pas, regardez vos spams. Sinon,',
+                    'link' => $url,
+                    'link_text' => 'renvoyer le lien.',
+                ],
             ],
         ], Response::HTTP_CREATED))->cookie($cookie);
     }
