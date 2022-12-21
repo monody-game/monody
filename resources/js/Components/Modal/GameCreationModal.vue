@@ -1,5 +1,5 @@
 <template>
-  <BaseModal @keyup.esc="closeModal()">
+  <BaseModal>
     <p id="modal__title">
       Création d'une partie ({{ currentPage }}/{{ totalPage }})
     </p>
@@ -95,14 +95,7 @@ const finish = async function() {
 };
 
 const reset = function () {
-	store.$reset();
-
-	document.documentElement.style.removeProperty(
-		"--villager-balance-width"
-	);
-	document.documentElement.style.removeProperty(
-		"--werewolf-balance-width"
-	);
+	store.close();
 };
 
 const previousPage = function () {
