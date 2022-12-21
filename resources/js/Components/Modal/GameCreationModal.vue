@@ -10,7 +10,7 @@
     </div>
     <div class="modal__buttons">
       <button
-        class="btn large secondary"
+        class="btn medium secondary"
         @click="closeModal()"
       >
         Annuler
