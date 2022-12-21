@@ -2,6 +2,8 @@
 	height: 100vh;
 	overflow: hidden;
 
+	padding: space(4);
+
 	background-image: url("/images/monody_day.png");
 	background-position-y: -100px;
 
@@ -23,6 +25,18 @@
 	@media screen and (max-width: 630px) {
 		padding-inline: 0;
 	}
+}
+
+.auth-page__home-link {
+	display: flex;
+	align-items: center;
+	gap: space(1);
+	color: var(--dark-background);
+}
+
+.auth-page__home-link svg {
+	height: 30px;
+	width: 30px;
 }
 
 .auth-page__form-wrapper {
