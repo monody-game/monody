@@ -33,7 +33,9 @@ class RegisterController extends Controller
             'popups' => [
                 'info' => [
 					'content' => "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
-					'note' => "Cela peut prendre quelques minutes pour recevoir le mail, si vous ne le recevez toujours pas, regardez vos spams. Sinon, <a href=\"{$url}\">renvoyer le mail</a>."
+					'note' => "Cela peut prendre quelques minutes pour recevoir le mail, si vous ne le recevez toujours pas, regardez vos spams. Sinon,",
+					'link' => $url,
+					'link_text' => 'renvoyer le lien.'
 				],
             ],
         ], Response::HTTP_CREATED))->cookie($cookie);

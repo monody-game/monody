@@ -26,10 +26,10 @@ $alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 .alert__close {
 	height: 16px;
 	width: 16px;
-	transition: all .2s;
 	cursor: pointer;
 
 	& use {
+		transition: all .2s;
 		color: #0f112740;
 	}
 
