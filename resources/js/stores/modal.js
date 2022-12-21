@@ -6,7 +6,7 @@ import { useStore as usePopupStore } from "./popup.js";
 export const useStore = defineStore("modal", {
 	state: () => {
 		return {
-			opennedModal: null,
+			opennedModal: "popup",
 		};
 	},
 	getters: {
@@ -22,8 +22,13 @@ export const useStore = defineStore("modal", {
 		}
 	},
 	actions: {
-		close(state) {
-			this.getModalStore(state.opennedModal).close();
+		close() {
+			this.getModalStore(this.opennedModal).close();
+			this.opennedModal = null;
+		},
+		open(type) {
+			this.getModalStore(type).isOpenned = true;
+			this.opennedModal = type;
 		}
 	}
 });

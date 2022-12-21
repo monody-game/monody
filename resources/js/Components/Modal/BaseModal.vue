@@ -8,7 +8,7 @@
       ref="modal"
       aria-modal="true"
       role="dialog"
-      class="modal__main"
+      :class="props.wrapper"
       tabindex="-1"
       aria-labelledby="modal__title"
       @click.stop=""
@@ -23,6 +23,13 @@
 import { ref, onMounted } from "vue";
 import { useStore } from "../../stores/modal.js";
 
+const props = defineProps({
+	wrapper: {
+		type: String,
+		default: "modal__main"
+	}
+});
+
 const store = useStore();
 const modal = ref(null);
 
@@ -31,6 +38,6 @@ onMounted(() => {
 });
 
 const closeModal = function () {
-	store.close()
+	store.close();
 };
 </script>

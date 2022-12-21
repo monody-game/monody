@@ -1,4 +1,7 @@
 <template>
+  <Transition name="modal">
+    <PopupComponent v-if="popupStore.isOpenned" />
+  </Transition>
   <Suspense>
     <router-view />
   </Suspense>
@@ -7,4 +10,8 @@
 
 <script setup>
 import AlertList from "./Components/Alerts/AlertList.vue";
+import PopupComponent from "./Components/Alerts/PopupComponent.vue";
+import { useStore } from "./stores/popup.js";
+
+const popupStore = useStore();
 </script>

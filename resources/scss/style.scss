@@ -26,6 +26,7 @@
 @import "./components/Modal/profile-modal";
 @import "./components/Modal/game-creation-modal";
 @import "./components/Modal/share-page";
+@import "./components/Modal/popup";
 
 // - Game player
 @import "./components/Player/player";
@@ -66,15 +67,18 @@ body {
 
 :root {
 	--space: 8px;
+
 	--success: #46B800;
 	--info: #009ec0;
 	--warn: #F6970A;
 	--danger: #b40000;
+
 	--dark-background: #0f1127;
 	--dark-background-lighter: #111433;
 	--light-dark-background: #24295E;
 	--light-dark-background-hover: #1D214C;
 	--light-background: #fffcf1;
+
 	--villager-color: #4c93d6;
 	--werewolf-color: #a51818;
 	--werewolf-color-darker: #811313;
