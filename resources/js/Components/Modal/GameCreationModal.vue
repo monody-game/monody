@@ -19,7 +19,7 @@
         <button
           :class="currentPage === 1 ? 'disable-hover' : ''"
           :disabled="currentPage === 1"
-          class="btn large"
+          class="btn medium"
           @click="previousPage()"
         >
           Précédent
@@ -28,14 +28,14 @@
           v-if="currentPage !== totalPage"
           :class="notEnoughSelectedRoles() === true ? 'disable-hover' : ''"
           :disabled="notEnoughSelectedRoles()"
-          class="btn large"
+          class="btn medium"
           @click="nextPage()"
         >
           Suivant
         </button>
         <button
           v-if="currentPage === totalPage"
-          class="btn large"
+          class="btn medium"
           @click="finish()"
         >
           Terminer

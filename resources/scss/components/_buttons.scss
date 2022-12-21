@@ -23,9 +23,13 @@
     width: 20px;
   }
 
-  &.large {
+  &.medium {
     padding: space(.75) space(2);
   }
+
+	&.large {
+		padding: space(1.5) space(3);
+	}
 }
 
 .btn.secondary {
