@@ -1,17 +1,17 @@
 <template>
   <div class="auth-page__container">
-    <router-link
-      :to="{ name: 'home_page' }"
-      class="auth-page__home-link"
-    >
-      <svg>
-        <use href="/sprite.svg#back_chevron" />
-      </svg>
-      <p>
-        Retour
-      </p>
-    </router-link>
     <div class="auth-page__wrapper">
+      <router-link
+        :to="{ name: 'home_page' }"
+        class="auth-page__home-link"
+      >
+        <svg>
+          <use href="/sprite.svg#back_chevron" />
+        </svg>
+        <p>
+          Retour
+        </p>
+      </router-link>
       <div class="auth-page__form-wrapper">
         <h1>S'inscrire</h1>
         <form
