@@ -1,7 +1,7 @@
 <template>
   <div class="player-presentation__container">
     <div class="player-presentation__main">
-      <div class="pill pill-small primary-pill player-presentation__exp">
+      <div class="pill pill-light player-presentation__exp">
         {{ store.exp }}/100
       </div>
       <ProgressBar />
@@ -10,7 +10,7 @@
         alt=""
         class="player-presentation__avatar"
       >
-      <span class="pill white-pill player-presentation__level">Lvl {{ store.level }}</span>
+      <span class="pill pill-light player-presentation__level">Lvl {{ store.level }}</span>
       <p class="player-presentation__name">
         {{ store.username }}
       </p>

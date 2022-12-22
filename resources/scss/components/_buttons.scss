@@ -11,11 +11,11 @@
 
   &:disabled {
     cursor: not-allowed;
-		background-color: darken(#fff, $amount: 20%);
+		background-color: darken(#fffcf1, $amount: 20%);
   }
 
   &:not(.disable-hover):hover {
-		background-color: darken(#fff, $amount: 10%);
+		background-color: var(--light-background-hover);
   }
 
   &.small {
@@ -28,7 +28,7 @@
   }
 
 	&.large {
-		padding: space(1.5) space(3);
+		padding: space(1) space(3);
 	}
 }
 
