@@ -18,25 +18,19 @@
 	padding-bottom: space(1);
 }
 
-.play-page__button {
-	background: var(--light-dark-background);
+.play-page__button.btn {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	border: none;
-	color: #fff;
-	cursor: pointer;
-	padding: space(1) space(2);
 	font-size: 18px;
-	transition: background-color .2s;
+	border: #0f112725 solid 1px;
+	gap: space(2);
 
 	& i {
 		content: url("data:image/svg+xml,%3Csvg width='25' height='25' viewBox='0 0 35 35' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M17.5 17.5H5.83337M17.5 29.1666V17.5V29.1666ZM17.5 17.5V5.83331V17.5ZM17.5 17.5H29.1667H17.5Z' stroke='%230f1127' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E%0A");
-		margin-right: space(2);
 	}
 
 	&:hover {
-		background-color: var(--light-dark-background-hover);
+		background-color: var(--light-background-hover);
 	}
 }
 
@@ -72,10 +66,12 @@
 }
 
 .play-page__games {
-	background-color: var(--dark-background-lighter);
+	background-color: var(--light-background);
 	width: calc(50% - space(12));
 	padding: space(4);
 	overflow-y: auto;
+	color: var(--dark-background);
+	border-radius: 6px;
 
 	& header {
 		display: flex;
