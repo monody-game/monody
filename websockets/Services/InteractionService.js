@@ -11,34 +11,45 @@ export class InteractionService {
 			gameId: id,
 			type
 		});
+		const res = await fetch("https://web/api/interactions", { method: "POST", body: params });
 
-		let interaction = await fetch("https://web/api/interactions", { method: "POST", body: params });
-		interaction = interaction.json.interaction;
-		const interactionId = interaction.id;
-		let callers = interaction.authorizedCallers;
+		try {
+			const interaction = res.json.interaction;
 
-		console.info(`Created ${type} interaction with id ${interactionId} in game ${id}`);
+			const interactionId = interaction.id;
+			let callers = interaction.authorizedCallers;
 
-		if (callers !== "*") {
-			callers = JSON.parse(callers);
-			callers = [...callers];
-			const members = await GameService.getMembers(id);
+			console.info(`Created ${type} interaction with id ${interactionId} in game ${id}`);
 
-			for (let caller of callers) {
-				caller = members.find(member => member.user_id === caller);
-				io.to(caller.socketId).emit("interaction.open", channel, { interaction: { id: interactionId, type } });
+			if (callers !== "*") {
+				callers = JSON.parse(callers);
+				callers = [...callers];
+				const members = await GameService.getMembers(id);
+
+				for (let caller of callers) {
+					caller = members.find(member => member.user_id === caller);
+					io.to(caller.socketId).emit("interaction.open", channel, { interaction: { id: interactionId, type } });
+				}
+
+				return;
 			}
 
-			return;
+			io.to(channel).emit("interaction.open", channel, { interaction: { id: interactionId, type } });
+		} catch (e) {
+			console.error(e);
+			console.error("API response :", res);
 		}
-
-		io.to(channel).emit("interaction.open", channel, { interaction: { id: interactionId, type } });
 	}
 
 	static async closeInteraction(io, channel, type) {
 		const id = gameId(channel);
 
 		const interactions = JSON.parse(await client.get(`game:${id}:interactions`));
+
+		if (interactions === []) {
+			return;
+		}
+
 		const interaction = interactions.find(interactionListItem => interactionListItem.type === type);
 
 		if (!interaction) {
