@@ -11,7 +11,7 @@
 
   &:disabled {
     cursor: not-allowed;
-		background-color: darken(#fffcf1, $amount: 20%);
+		background-color: var(--light-background-hover);
   }
 
   &:not(.disable-hover):hover {
