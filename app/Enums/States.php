@@ -64,8 +64,8 @@ enum States: int
             self::Waiting, self::End => -1,
             self::Starting, self::Night, self::Day, self::Witch, self::Vote => 5,
             self::Roles, self::Werewolf => 10,
-			self::Psychic => 20,
-		};
+            self::Psychic => 20,
+        };
     }
 
     public function iconify(): string
