@@ -62,10 +62,10 @@ enum States: int
     {
         return match ($this) {
             self::Waiting, self::End => -1,
-            self::Starting, self::Night, self::Day, self::Witch, self::Psychic, self::Vote => 5,
-            self::Roles => 10,
-            self::Werewolf => 50
-        };
+            self::Starting, self::Night, self::Day, self::Witch, self::Vote => 5,
+            self::Roles, self::Werewolf => 10,
+			self::Psychic => 20,
+		};
     }
 
     public function iconify(): string
