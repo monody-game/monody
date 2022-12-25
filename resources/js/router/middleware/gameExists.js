@@ -8,7 +8,7 @@ export default async function exists({ router, to }) {
 		gameId: to.params.id,
 	});
 
-	if (response.status !== 200) {
+	if (response.status !== 204) {
 		router.push({ name: "play" });
 	}
 }
