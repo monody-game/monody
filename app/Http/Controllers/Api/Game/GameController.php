@@ -23,16 +23,25 @@ class GameController extends Controller
 {
     use RegisterHelperTrait, GameHelperTrait;
 
-    public function check(GameIdRequest $request): JsonResponse
+    public function check(Request $request): JsonResponse
     {
-        /** @var bool $game */
-        $game = Redis::exists("game:{$request->validated('gameId')}");
-
-        if ($game) {
-            return new JsonResponse(['message' => 'Game found']);
+        if (!$request->has('gameId')) {
+            return new JsonResponse(['message' => 'Please specify a game id to check'], Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse(['error' => 'Game not found'], Response::HTTP_NOT_FOUND);
+        /** @var bool $game */
+        $game = Redis::exists("game:{$request->get('gameId')}");
+
+        if ($game) {
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        }
+
+        return new JsonResponse([
+            'message' => 'Game not found',
+            'alerts' => [
+                'error' => "La partie demandée n'existe pas (ou plus) ...",
+            ],
+        ], Response::HTTP_NOT_FOUND);
     }
 
     public function list(): JsonResponse
