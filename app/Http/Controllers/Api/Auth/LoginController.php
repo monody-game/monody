@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Enums\AlertType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
@@ -18,7 +19,8 @@ class LoginController extends Controller
     {
         $credentials = $request->validated();
         if (!Auth::attempt($credentials)) {
-            return new JsonResponse(['message' => 'Invalid Credentials'], Response::HTTP_UNAUTHORIZED);
+            return (new JsonResponse(null, Response::HTTP_UNAUTHORIZED))
+                ->withMessage('Invalid credentials.');
         }
 
         /** @var User $user */
@@ -35,11 +37,9 @@ class LoginController extends Controller
         $accessToken = $user->createToken('authToken')->accessToken;
         $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Lax');
 
-        return (new JsonResponse([
-            'alerts' => [
-                'success' => 'Bon jeu !',
-            ],
-        ]))->cookie($cookie);
+        return (new JsonResponse([]))
+            ->withAlert(AlertType::Success, 'Bon jeu !')
+            ->cookie($cookie);
     }
 
     public function logout(Request $request): JsonResponse
@@ -48,10 +48,7 @@ class LoginController extends Controller
 
         Cookie::queue(Cookie::forget('monody_access_token'));
 
-        return new JsonResponse([
-            'alerts' => [
-                'success' => 'À bientôt !',
-            ],
-        ]);
+        return (new JsonResponse([]))
+            ->withAlert(AlertType::Success, 'À bientôt !');
     }
 }

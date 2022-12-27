@@ -5,16 +5,10 @@ namespace Tests\Unit\Http\Controllers\Api\Game;
 use App\Enums\Roles;
 use App\Models\User;
 use Illuminate\Support\Facades\Redis;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class GameUsersControllerTest extends TestCase
 {
-    public function testListUsersWithoutGameId()
-    {
-        $this->actingAs($this->user, 'api')->get('/api/game/users')->assertStatus(400);
-    }
-
     public function testListUsers()
     {
         $this->actingAs($this->user, 'api')
@@ -24,13 +18,6 @@ class GameUsersControllerTest extends TestCase
                     $this->user['id'],
                 ],
             ]);
-    }
-
-    public function testListingUnexistingGameUsers()
-    {
-        $this->actingAs($this->user, 'api')
-            ->call('GET', '/api/game/users', ['gameId' => 'unexisting id, obviously'])
-            ->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
     public function testGettingUserRole()

@@ -25,16 +25,16 @@ final class DiscordOauthController extends Controller
     public function check(Request $request): RedirectResponse|JsonResponse
     {
         if (!$request->has('code')) {
-            return new JsonResponse([
-                'message' => 'GET parameter "code" is needed',
-                'data' => $request->all(),
-            ]);
+            return (new JsonResponse([]))
+                ->withMessage('GET parameter "code" is mandatory.')
+                ->withContent($request->all());
         }
 
         try {
             $discordUser = Socialite::driver('discord')->stateless()->user();
         } catch (Exception) {
-            return new JsonResponse(['An error occurred, try to relog'], Response::HTTP_BAD_REQUEST);
+            return (new JsonResponse([], Response::HTTP_BAD_REQUEST))
+                ->withMessage('An error occurred, try to relog.');
         }
 
         $discordId = config('services.discord.client_id');
@@ -66,7 +66,8 @@ final class DiscordOauthController extends Controller
             return new RedirectResponse('/play');
         }
 
-        return new JsonResponse(['An error occurred'], Response::HTTP_BAD_REQUEST);
+        return (new JsonResponse([], Response::HTTP_BAD_REQUEST))
+            ->withMessage('An error occurred, please retry.');
     }
 
     public function unlink(Request $request): JsonResponse
@@ -76,7 +77,8 @@ final class DiscordOauthController extends Controller
         $discordId = config('services.discord.client_id');
 
         if (!$user->discord_id) {
-            return new JsonResponse(['error' => 'Your Discord account is not linked'], Response::HTTP_FORBIDDEN);
+            return (new JsonResponse([], Response::HTTP_FORBIDDEN))
+                ->withMessage('Your Discord account is not linked.');
         }
 
         /** @var string $token */

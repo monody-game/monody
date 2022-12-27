@@ -27,9 +27,9 @@ class ExpController extends Controller
             $exp->save();
         }
 
-        return new JsonResponse(['experience' => [
+        return new JsonResponse([
             'user_id' => $exp->user_id,
             'exp' => $exp->exp,
-        ]]);
+        ]);
     }
 }

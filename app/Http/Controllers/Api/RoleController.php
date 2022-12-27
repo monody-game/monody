@@ -31,7 +31,8 @@ class RoleController extends Controller
             return new JsonResponse(['role' => $role->full()]);
         }
 
-        return new JsonResponse(['error' => 'Role not found'], Response::HTTP_NOT_FOUND);
+        return (new JsonResponse([], Response::HTTP_NOT_FOUND))
+            ->withMessage("Role with id $id not found.");
     }
 
     public function group(int $group): JsonResponse

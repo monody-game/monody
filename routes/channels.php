@@ -9,7 +9,7 @@ Broadcast::channel('home', function () {
 });
 
 Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
-    $game = Redis::get("game:{$gameId}");
+    $game = Redis::get("game:$gameId");
 
     if (isset($game['users']) && !in_array($user->id, $game['users'], true)) {
         $game['users'][] = $user->id;
