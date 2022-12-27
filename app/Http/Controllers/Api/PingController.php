@@ -9,6 +9,7 @@ class PingController extends Controller
 {
     public function ping(): JsonResponse
     {
-        return new JsonResponse(['message' => 'Alive 🌙']);
+        return (new JsonResponse())
+            ->withMessage('Alive 🌙');
     }
 }

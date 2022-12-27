@@ -9,12 +9,12 @@ class LoginControllerTest extends TestCase
 {
     public function testWrongLoginRequest()
     {
-        $response = $this->post('/api/auth/login', [
-            'username' => 'carlos',
-            'password' => 'carl',
-        ]);
-
-        $response->assertJsonValidationErrors(['password']);
+        $this
+            ->post('/api/auth/login', [
+                'username' => 'carlos',
+                'password' => 'carl',
+            ])
+            ->assertJsonValidationErrors(['password']);
     }
 
     public function testLoginWithWrongPassword()
@@ -25,7 +25,7 @@ class LoginControllerTest extends TestCase
         ]);
 
         $response->assertUnauthorized();
-        $response->assertJson(['message' => 'Invalid Credentials']);
+        $response->assertJson(['message' => 'Invalid credentials.']);
         $response->assertCookieMissing('monody_access_token');
     }
 
