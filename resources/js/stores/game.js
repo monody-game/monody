@@ -11,7 +11,7 @@ export const useStore = defineStore("game", {
 	},
 	actions: {
 		setRole(userId, role) {
-			const player = this.playerList.find(listItem => listItem.id === parseInt(userId));
+			const player = this.playerList.find(listItem => listItem.id === userId);
 			if (player) {
 				const index = this.playerList.indexOf(player);
 				player.role = {
