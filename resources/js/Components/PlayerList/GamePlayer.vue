@@ -6,7 +6,7 @@
     @click="send(userID, props.player.id)"
   >
     <PlayerInteractionBubble
-      v-if="isVoted"
+      v-if="shouldShowBubble"
       :type="interactionType"
       :data="votedBy"
     />
@@ -33,8 +33,9 @@
 <script setup>
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import PlayerInteractionBubble from "./PlayerInteractionBubble.vue";
+import ChatService from "../../services/ChatService.js";
 
 const props = defineProps({
 	player: {
@@ -50,6 +51,7 @@ const interactionType = ref("");
 const gameStore = useGameStore();
 const userStore = useUserStore();
 const player = ref(null);
+const shouldShowBubble = ref(false);
 
 const gameId = computed(() => {
 	return document.URL.split("/")[document.URL.split("/").length - 1];
@@ -67,16 +69,34 @@ window.Echo
 	.join(`game.${gameId.value}`)
 	.listen(".interaction.open", ({ interaction }) => {
 		interactionType.value = interaction.type;
-		if (interaction.type === "vote" || interaction.type === "werewolves") {
+
+		switch (interaction.type) {
+		case "vote":
+		case "werewolves":
 			if (isDead.value === false) {
 				player.value.classList.add("player__votable");
+			}
+			break;
+		case "psychic":
+			const gamePlayer = gameStore.getPlayerByID(props.player.id);
+
+			if (gamePlayer.role && gamePlayer.role.name === "psychic") {
+				ChatService.sendMessage({
+					"content": "Cliquez sur un joueur pour en connaitre le rôle !",
+					"type": "info"
+				});
+				player.value.classList.add('player__hover-disabled')
+			} else {
+				player.value.classList.add("player__psychic-hover");
 			}
 		}
 
 		gameStore.currentInteractionId = interaction.id;
 	})
 	.listen(".interaction.close", ({ interaction }) => {
-		if (interaction.type === "vote" || interaction.type === "werewolves") {
+		switch (interaction.type) {
+		case "vote":
+		case "werewolves":
 			if (player.value && player.value.classList.contains("player__votable")) {
 				player.value.classList.remove("player__votable");
 			}
@@ -84,6 +104,9 @@ window.Echo
 			votedBy.value = [];
 			isVoted.value = false;
 			gameStore.currentVote = 0;
+			break;
+		case "psychic":
+			player.value.classList.remove("player__psychic-hover");
 		}
 
 		gameStore.currentInteractionId = "";
@@ -116,6 +139,14 @@ const send = async function(votingUser, votedUser) {
 	if (res.status === 204) {
 		isVoted.value = true;
 	}
+
+	if (interactionType.value === "psychic") {
+		const role = await window.JSONFetch(`/roles/get/${res.data.response}`, "GET");
+		ChatService.sendMessage({
+			"content": `Vous avez choisi d'espionner le rôle de ${props.player.username} qui est ${role.data.role.display_name}`,
+			"type": "success"
+		});
+	}
 };
 
 const addVote = (data) => {
@@ -131,4 +162,8 @@ const addVote = (data) => {
 		}
 	}
 };
+
+onMounted(() => {
+	shouldShowBubble.value = isVoted.value;
+});
 </script>
