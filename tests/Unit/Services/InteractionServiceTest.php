@@ -100,6 +100,14 @@ class InteractionServiceTest extends TestCase
         );
     }
 
+	public function testUsingAOneUseInteraction() {
+		$id = $this->service->create($this->game['id'], Interactions::Psychic)['id'];
+		$res = $this->service->call(InteractionActions::Spectate, $id, $this->psychic->id, $this->werewolf->id);
+		$this->assertSame(Roles::Werewolf->value, $res);
+		$res = $this->service->call(InteractionActions::Spectate, $id, $this->psychic->id, $this->witch->id);
+		$this->assertSame($this->service::USER_CANNOT_USE_THIS_INTERACTION, $res);
+	}
+
     protected function setUp(): void
     {
         parent::setUp();
