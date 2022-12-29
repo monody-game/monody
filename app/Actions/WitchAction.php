@@ -96,8 +96,8 @@ class WitchAction implements ActionInterface
         // TODO: Implement close() method.
     }
 
-	public function isSingleUse(): bool
-	{
-		return true;
-	}
+    public function isSingleUse(): bool
+    {
+        return true;
+    }
 }

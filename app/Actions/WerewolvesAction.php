@@ -53,8 +53,8 @@ class WerewolvesAction implements ActionInterface
         $this->service->afterVote($gameId, States::Werewolf->stringify());
     }
 
-	public function isSingleUse(): bool
-	{
-		return false;
-	}
+    public function isSingleUse(): bool
+    {
+        return false;
+    }
 }
