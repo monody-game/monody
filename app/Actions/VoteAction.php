@@ -49,8 +49,8 @@ class VoteAction implements ActionInterface
         $this->service->afterVote($gameId);
     }
 
-	public function isSingleUse(): bool
-	{
-		return false;
-	}
+    public function isSingleUse(): bool
+    {
+        return false;
+    }
 }

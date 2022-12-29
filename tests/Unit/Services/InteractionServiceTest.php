@@ -70,10 +70,14 @@ class InteractionServiceTest extends TestCase
 
         // Witch
         $id = $this->service->create($this->game['id'], Interactions::Witch)['id'];
-        $witchNone = $this->service->call(InteractionActions::WitchSkip, $id, $this->witch->id, $this->witch->id);
+        $witchNone = $this->service->call(InteractionActions::WitchSkip, $id, $this->witch->id, '');
         $this->assertNull($witchNone);
+
+        $id = $this->service->create($this->game['id'], Interactions::Witch)['id'];
         $this->service->call(InteractionActions::KillPotion, $id, $this->witch->id, $this->user->id);
         $this->assertFalse($this->alive($this->user->id, $this->game['id']));
+
+        $id = $this->service->create($this->game['id'], Interactions::Witch)['id'];
         $this->service->call(InteractionActions::RevivePotion, $id, $this->witch->id, $this->user->id);
         $this->assertTrue($this->alive($this->user->id, $this->game['id']));
 
@@ -100,13 +104,14 @@ class InteractionServiceTest extends TestCase
         );
     }
 
-	public function testUsingAOneUseInteraction() {
-		$id = $this->service->create($this->game['id'], Interactions::Psychic)['id'];
-		$res = $this->service->call(InteractionActions::Spectate, $id, $this->psychic->id, $this->werewolf->id);
-		$this->assertSame(Roles::Werewolf->value, $res);
-		$res = $this->service->call(InteractionActions::Spectate, $id, $this->psychic->id, $this->witch->id);
-		$this->assertSame($this->service::USER_CANNOT_USE_THIS_INTERACTION, $res);
-	}
+    public function testUsingAOneUseInteraction()
+    {
+        $id = $this->service->create($this->game['id'], Interactions::Psychic)['id'];
+        $res = $this->service->call(InteractionActions::Spectate, $id, $this->psychic->id, $this->werewolf->id);
+        $this->assertSame(Roles::Werewolf->value, $res);
+        $res = $this->service->call(InteractionActions::Spectate, $id, $this->psychic->id, $this->witch->id);
+        $this->assertSame($this->service::USER_CANNOT_USE_THIS_INTERACTION, $res);
+    }
 
     protected function setUp(): void
     {
