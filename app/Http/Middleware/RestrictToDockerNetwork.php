@@ -9,15 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RestrictToDockerNetwork
 {
-    /**
-     * @return mixed
-     */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): JsonResponse|bool
     {
         if ($request->getHost() && 'web' === $request->getHost()) {
             return $next($request);
         }
 
-        return new JsonResponse('Unauthorized', Response::HTTP_FORBIDDEN);
+        return new JsonResponse('Unauthorized.', Response::HTTP_FORBIDDEN);
     }
 }

@@ -34,5 +34,16 @@ export const useStore = defineStore("GameCreationModal", {
 			const index = selectedRoles.indexOf(roleId);
 			selectedRoles.splice(index, 1);
 		},
+		close () {
+			this.isOpenned = false;
+			this.selectedRoles = [];
+			this.gameId = null;
+			document.documentElement.style.removeProperty(
+				"--villager-balance-width"
+			);
+			document.documentElement.style.removeProperty(
+				"--werewolf-balance-width"
+			);
+		}
 	}
 });

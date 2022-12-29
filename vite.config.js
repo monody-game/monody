@@ -7,8 +7,7 @@ import fs from "node:fs";
 export default defineConfig({
 	plugins: [
 		laravel.default({
-			input: "resources/js/app.js",
-			refresh: ["resources/**"]
+			input: "resources/js/app.js"
 		}),
 		vue({
 			template: {
@@ -27,7 +26,7 @@ export default defineConfig({
 			key: fs.readFileSync(path.join(__dirname, "cert.key")),
 			cert: fs.readFileSync(path.join(__dirname, "cert.pem")),
 		},
-		host: "0.0.0.0",
+		host: "localhost",
 		hmr: {
 			host: "localhost"
 		},

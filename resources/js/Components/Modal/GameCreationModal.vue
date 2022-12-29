@@ -1,5 +1,5 @@
 <template>
-  <BaseModal @keyup.esc="closeModal()">
+  <BaseModal>
     <p id="modal__title">
       Création d'une partie ({{ currentPage }}/{{ totalPage }})
     </p>
@@ -10,7 +10,7 @@
     </div>
     <div class="modal__buttons">
       <button
-        class="btn large"
+        class="btn medium secondary"
         @click="closeModal()"
       >
         Annuler
@@ -19,7 +19,7 @@
         <button
           :class="currentPage === 1 ? 'disable-hover' : ''"
           :disabled="currentPage === 1"
-          class="btn large"
+          class="btn medium"
           @click="previousPage()"
         >
           Précédent
@@ -28,14 +28,14 @@
           v-if="currentPage !== totalPage"
           :class="notEnoughSelectedRoles() === true ? 'disable-hover' : ''"
           :disabled="notEnoughSelectedRoles()"
-          class="btn large"
+          class="btn medium"
           @click="nextPage()"
         >
           Suivant
         </button>
         <button
           v-if="currentPage === totalPage"
-          class="btn large"
+          class="btn medium"
           @click="finish()"
         >
           Terminer
@@ -95,14 +95,7 @@ const finish = async function() {
 };
 
 const reset = function () {
-	store.$reset();
-
-	document.documentElement.style.removeProperty(
-		"--villager-balance-width"
-	);
-	document.documentElement.style.removeProperty(
-		"--werewolf-balance-width"
-	);
+	store.close();
 };
 
 const previousPage = function () {

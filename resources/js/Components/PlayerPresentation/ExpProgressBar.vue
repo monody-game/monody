@@ -34,5 +34,5 @@ import { useStore } from "../../stores/user";
 
 const exp = useStore()["exp"];
 const progress = (53 * exp) / 100;
-const progressStyle = `background-image: conic-gradient(from -97deg at 49% 91%, #fff 0 ${progress}%, #111433 0);`;
+const progressStyle = `background-image: conic-gradient(from -97deg at 49% 91%, #FFF5CF 0 ${progress}%, #FFFCF1 0);`;
 </script>

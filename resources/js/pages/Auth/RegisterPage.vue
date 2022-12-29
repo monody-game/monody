@@ -1,105 +1,142 @@
 <template>
-  <div class="register-page">
-    <h1>S'inscrire</h1>
-    <form class="register-page__form">
-      <div>
-        <input
-          v-model="username"
-          :class="errors.username.errored ? 'login-page__input-error' : ''"
-          class="register-page__input"
-          name="username"
-          placeholder="Nom d'utilisateur"
-          required
-          type="text"
-        >
-        <span
-          class="login-page__input-focused"
-          :class="errors.username.errored ? 'login-page__input-focus-errored' : ''"
-        />
-        <p
-          v-if="errors.username.errored"
-          class="login-page__error"
-        >
-          {{ errors.username.text }}
+  <div class="auth-page__container">
+    <div class="auth-page__wrapper">
+      <router-link
+        :to="{ name: 'home_page' }"
+        class="auth-page__home-link"
+      >
+        <svg>
+          <use href="/sprite.svg#back_chevron" />
+        </svg>
+        <p>
+          Retour
         </p>
+      </router-link>
+      <div class="auth-page__form-wrapper">
+        <h1>S'inscrire</h1>
+        <form
+          class="register-page__form"
+          method="post"
+          action=""
+          @submit.prevent
+        >
+          <div
+            v-if="loading"
+            class="auth-page__loading-group"
+          >
+            <div class="auth-page__loading-group-blur" />
+            <DotsSpinner />
+          </div>
+          <div
+            class="auth-page__form-group"
+            :data-is-invalid="errors.username.errored"
+          >
+            <label for="username">Nom d'utilisateur <span class="auth-page__input-notice">(Entre 3 et 24 caractères)</span></label>
+            <input
+              id="username"
+              v-model="username"
+              type="text"
+              name="username"
+            >
+            <svg v-if="errors.username.errored">
+              <use href="/sprite.svg#error" />
+            </svg>
+            <p v-if="errors.username.errored">
+              {{ errors.username.text }}
+            </p>
+          </div>
+          <div
+            class="auth-page__form-group"
+            :data-is-invalid="errors.email.errored"
+          >
+            <label for="email">
+              Email
+              <NoticeComponent title="Pourquoi dois-je donner cette information ?">
+                Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody). Veillez à rentrer une adresse mail valide, vous devrez la vérifier.
+              </NoticeComponent>
+            </label>
+            <input
+              id="email"
+              v-model="email"
+              type="email"
+              name="email"
+            >
+            <svg v-if="errors.email.errored">
+              <use href="/sprite.svg#error" />
+            </svg>
+            <p v-if="errors.email.errored">
+              {{ errors.email.text }}
+            </p>
+          </div>
+          <div
+            class="auth-page__form-group"
+            :data-is-invalid="errors.password.errored"
+          >
+            <label for="password">Mot de passe <span class="auth-page__input-notice">(plus de 8 caractères)</span></label>
+            <input
+              id="password"
+              v-model="password"
+              type="password"
+              name="password"
+            >
+            <VisibilityToggle
+              class="auth-page__show-password"
+              field="password"
+            />
+            <svg
+              v-if="errors.password.errored"
+              class="auth-page__error-icon"
+            >
+              <use href="/sprite.svg#error" />
+            </svg>
+            <p v-if="errors.password.errored">
+              {{ errors.password.text }}
+            </p>
+          </div>
+          <div
+            class="auth-page__form-group"
+            :data-is-invalid="password !== password_confirmation"
+          >
+            <label for="password_confirmation">Confirmez le mot de passe</label>
+            <input
+              id="password_confirmation"
+              v-model="password_confirmation"
+              type="password"
+              name="password_confirmation"
+            >
+            <VisibilityToggle
+              class="auth-page__show-password"
+              field="password_confirmation"
+            />
+            <svg
+              v-if="password !== password_confirmation"
+              class="auth-page__error-icon"
+            >
+              <use href="/sprite.svg#error" />
+            </svg>
+            <p v-if="password !== password_confirmation">
+              La confirmation du mot de passe doit être identique au mot de passe
+            </p>
+          </div>
+          <div class="auth-page__submit-group">
+            <router-link
+              class="auth-page__link"
+              to="login"
+            >
+              Vous possédez déjà un compte ?
+            </router-link>
+            <button
+              class="btn large"
+              type="submit"
+              :disabled="username === '' || email === '' || password === '' || password_confirmation === ''"
+              @click="register"
+            >
+              S'inscrire
+            </button>
+          </div>
+        </form>
       </div>
-      <div>
-        <input
-          v-model="email"
-          :class="errors.email.errored ? 'login-page__input-error' : ''"
-          class="register-page__input"
-          name="email"
-          placeholder="Email"
-          required
-          type="email"
-        >
-        <span
-          class="login-page__input-focused"
-          :class="errors.email.errored ? 'login-page__input-focus-errored' : ''"
-        />
-        <p
-          v-if="errors.email.errored"
-          class="login-page__error"
-        >
-          {{ errors.email.text }}
-        </p>
-      </div>
-      <div>
-        <input
-          v-model="password"
-          :class="errors.password.errored ? 'login-page__input-error' : ''"
-          class="register-page__input"
-          name="password"
-          placeholder="Mot de passe"
-          required
-          type="password"
-        >
-        <span
-          class="login-page__input-focused"
-          :class="errors.password.errored ? 'login-page__input-focus-errored' : ''"
-        />
-        <p
-          v-if="errors.password.errored"
-          class="login-page__error"
-        >
-          {{ errors.password.text }}
-        </p>
-      </div>
-      <div>
-        <input
-          v-model="password_confirmation"
-          :class="errors.password_confirmation.errored ? 'login-page__input-error' : ''"
-          class="register-page__input"
-          name="password_confirmation"
-          placeholder="Confirmez le mot de passe"
-          required
-          type="password"
-        >
-        <span
-          class="login-page__input-focused"
-          :class="errors.password_confirmation.errored ? 'login-page__input-focus-errored' : ''"
-        />
-        <p
-          v-if="errors.password_confirmation.errored"
-          class="login-page__error"
-        >
-          {{ errors.password_confirmation.text }}
-        </p>
-      </div>
-      <div>
-        <button
-          class="register-page__button"
-          type="submit"
-          @keyup.enter="register()"
-          @click.prevent="register()"
-        >
-          <DotsSpinner
-            v-if="loading === true"
-          />
-          S'inscrire
-        </button>
-      </div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -107,6 +144,8 @@
 import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import NoticeComponent from "../../Components/NoticeComponent.vue";
+import VisibilityToggle from "../../Components/Form/VisibilityToggle.vue";
 
 const router = useRouter();
 const username = ref("");
@@ -114,8 +153,8 @@ const email = ref("");
 const password = ref("");
 const password_confirmation = ref("");
 const loading = ref(false);
+
 const errors = ref({
-	text: "",
 	username: {
 		errored: false,
 		text: ""
@@ -134,14 +173,46 @@ const errors = ref({
 	}
 });
 
-watch(username, () => validate(username.value, "username"));
-watch(email, () => validate(email.value, "email"));
-watch(password, () => validate(password.value, "password"));
+watch(username, (newUsername) => {
+	if (newUsername.length > 24) {
+		errors.value.username.errored = true;
+		errors.value.username.text = "Votre nom d'utilsateur doit faire moins de 24 caractères";
+	} else if (newUsername.length < 3) {
+		errors.value.username.errored = true;
+		errors.value.username.text = "Votre nom d'utilsateur doit faire plus de 3 caractères";
+	} else if (newUsername.includes(" ")) {
+		errors.value.username.errored = true;
+		errors.value.username.text = "Il ne doit pas y avoir d'espaces dans votre pseudo";
+	} else {
+		errors.value.username.errored = false;
+		errors.value.username.text = "";
+	}
+});
+
+watch(password, (newPassword) => {
+	if (newPassword.length < 8) {
+		errors.value.password.errored = true;
+		errors.value.password.text = "Votre mot-de-passe doit faire plus de 8 caractères";
+	} else {
+		errors.value.password.errored = false;
+		errors.value.password.text = "";
+	}
+});
+
+watch(email, (newEmail) => {
+	if (newEmail.match(/^([a-z.0-9]+)@([a-z]+)\.([a-z]+)$/gm) === null) {
+		errors.value.email.errored = true;
+		errors.value.email.text = "Veuillez rentrer un email valide";
+	} else {
+		errors.value.email.errored = false;
+		errors.value.email.text = "";
+	}
+});
 
 const register = async function() {
 	if (checkInput()) {
 		loading.value = true;
-		await window
+		const res = await window
 			.JSONFetch("/auth/register", "POST", {
 				username: username.value,
 				email: email.value,
@@ -149,15 +220,27 @@ const register = async function() {
 				password_confirmation: password_confirmation.value,
 			});
 		loading.value = false;
+
+		if (res.status === 422) {
+			const validationErrors = res.data.errors;
+			for (const field in validationErrors) {
+				if (validationErrors[field].includes("validation.unique")) {
+					errors.value[field].text = "Un compte utilisant cette valeur existe déjà";
+					errors.value[field].errored = true;
+				}
+			}
+			return;
+		}
+
 		await router.push("play");
 	}
 };
 
 const checkInput = function () {
-	errors.value.username.errored = username.value === "";
-	errors.value.email.errored = email.value === "";
-	errors.value.password.errored = password.value === "";
-	errors.value.password_confirmation.errored = password_confirmation.value === "";
+	errors.value.username.errored = errors.value.username.errored || username.value === "";
+	errors.value.email.errored = errors.value.email.errored || email.value === "";
+	errors.value.password.errored = errors.value.password.errored || password.value === "";
+	errors.value.password_confirmation.errored = errors.value.password_confirmation.errored || password_confirmation.value === "";
 
 	if (username.value === "" || email.value === "" || password.value === "" || password_confirmation.value === "") {
 		errors.value.text = "Merci de remplir tous les champs";
@@ -165,44 +248,6 @@ const checkInput = function () {
 		return false;
 	}
 
-	if (password.value !== password_confirmation.value) {
-		errors.value.password.errored = true;
-		errors.value.password_confirmation.errored = true;
-		errors.value.text = "Les mots-de-passe doivent être identiques";
-		loading.value = false;
-		return false;
-	}
 	return true;
-};
-
-const validate = function (data, type) {
-	if (type === "email") {
-		if (data.match(/^([a-z.]+)@([a-z]+)\.([a-z]+)$/gm) === null) {
-			errors.value.email.errored = true;
-			errors.value.text = "Veuillez rentrer un email valide";
-		} else {
-			errors.value.email.errored = false;
-			errors.value.text = "";
-		}
-	}
-	if (type === "username") {
-		if (data.length > 24) {
-			errors.value.username.errored = true;
-			errors.value.text = "Votre pseudo doit faire moins de 24 caractères";
-		} else {
-			errors.value.username.errored = false;
-			errors.value.text = "";
-		}
-	}
-
-	if (type === "password") {
-		if (data.length < 6) {
-			errors.value.password.errored = true;
-			errors.value.text = "Votre mot-de-passe doit faire plus de 6 caractères";
-		} else {
-			errors.value.password.errored = false;
-			errors.value.text = "";
-		}
-	}
 };
 </script>

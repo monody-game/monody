@@ -1,0 +1,159 @@
+.auth-page__container {
+	height: 100vh;
+	overflow: hidden;
+
+	background-image: url("/images/monody_day.png");
+	background-position-y: -100px;
+
+	a:hover {
+		text-decoration: underline;
+	}
+}
+
+.auth-page__wrapper {
+	display: grid;
+	place-items: center;
+
+	height: 100%;
+	width: 100%;
+	backdrop-filter: blur(7.5px);
+
+	padding-inline: space(8);
+
+	@media screen and (max-width: 630px) {
+		padding-inline: 0;
+	}
+}
+
+.auth-page__home-link {
+	display: flex;
+	align-items: center;
+	gap: space(1);
+	color: var(--dark-background);
+
+	position: absolute;
+	top: space(3);
+	left: space(3);
+}
+
+.auth-page__home-link svg {
+	height: 30px;
+	width: 30px;
+}
+
+.auth-page__form-wrapper {
+	background-color: var(--light-background);
+	color: var(--dark-background);
+
+	width: 500px;
+
+	position: relative;
+	display: grid;
+	gap: space(3);
+
+	padding: space(4);
+
+	& form {
+		display: flex;
+		flex-direction: column;
+		gap: space(2);
+	}
+
+	@media screen and (max-width: 630px) {
+		width: auto;
+		max-width: 500px;
+	}
+}
+
+.auth-page__form-group {
+	display: flex;
+	flex-direction: column;
+	gap: space(1);
+	position: relative;
+
+	& input {
+		background-color: #F6F3E6;
+		height: 40px;
+		border-radius: 4px;
+		border: #0f112725 solid 1px;
+		font-family: inherit;
+		padding-left: space(1);
+	}
+
+	& label {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: space(1);
+	}
+}
+
+.auth-page__form-group[data-is-invalid=true] input {
+	border: #b4000050 solid 2px;
+}
+
+.auth-page__form-group p {
+	color: var(--danger);
+}
+
+.auth-page__form-group svg:not(.notice__icon) {
+	position: absolute;
+	height: 24px;
+	width: 24px;
+	right: 10px;
+	top: 34px;
+}
+
+.auth-page__show-password ~ .auth-page__error-icon {
+	right: 44px !important;
+}
+
+.auth-page__input-notice {
+	font-size: 16px;
+}
+
+.auth-page__submit-group {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: space(2);
+
+	& button {
+		border: #0f112725 solid 1px;
+		padding-block: space(1) !important;
+	}
+
+	& button:hover, button:disabled, button:disabled:hover {
+		background-color: #F6F3E6 !important;
+	}
+}
+
+.auth-page__loading-group {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	& .spinner__dots-container, .spinner__dots-container spinning-dots {
+		z-index: 100;
+		margin: 0;
+		height: 48px;
+		width: 48px !important;
+	}
+}
+
+.auth-page__loading-group-blur {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 10;
+
+	backdrop-filter: blur(1px);
+}

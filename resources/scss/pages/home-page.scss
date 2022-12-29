@@ -16,9 +16,12 @@
 }
 
 .home-page__title {
-  font-size: 160px;
 	display: flex;
 	align-items: center;
+
+	& p {
+		font-size: 160px;
+	}
 
 	& p:first-of-type {
 		margin-left: space(-1);
@@ -36,12 +39,17 @@
   flex-direction: column;
   align-items: center;
   color: #fff;
-  font-size: 48px;
 	transition: color .4s;
+
+	& > * {
+		font-size: 48px;
+	}
 
   &:hover {
     color: #c7ceff;
+		text-decoration: none;
   }
+
   &:hover .home-page__logo path {
     fill: #c7ceff;
   }

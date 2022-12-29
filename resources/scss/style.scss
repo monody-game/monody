@@ -2,13 +2,13 @@
 @import "tools/reset";
 @import "tools/functions";
 @import "fonts/fonts";
+@import "typo";
 
 // Pages
 @import "./pages/game-page";
 @import "./pages/home-page";
 @import "./pages/play-page";
-@import "./pages/login-page";
-@import "./pages/register-page";
+@import "./pages/auth-page";
 
 // Components
 // - Chat
@@ -26,6 +26,7 @@
 @import "./components/Modal/profile-modal";
 @import "./components/Modal/game-creation-modal";
 @import "./components/Modal/share-page";
+@import "./components/Modal/popup";
 
 // - Game player
 @import "./components/Player/player";
@@ -35,6 +36,10 @@
 @import "./components/PlayerPresentation/player-presentation";
 @import "./components/PlayerPresentation/progress-bar";
 
+// - Alerts
+@import "./components/Alert/alert-list";
+@import "./components/Alert/alert";
+
 // - Others
 @import "./components/counter";
 @import "./components/buttons";
@@ -43,32 +48,42 @@
 @import "./components/pills";
 @import "./components/spinner";
 @import "./components/footer";
+@import "./components/notice-component";
 
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 body {
-    font-family: "Sen", sans-serif;
-    font-size: 1rem;
-    color: #fff;
-    min-height: 100vh;
-    background-color: var(--dark-background);
+	font-family: "Sen", sans-serif;
+	font-size: 1rem;
+	color: #fff;
+	min-height: 100vh;
+	background-color: var(--dark-background);
+	overflow: hidden;
 }
 
 :root {
-    --space: 8px;
-    --danger: #b40000;
-    --info: #009ec0;
-    --dark-background: #0f1127;
-    --dark-background-lighter: #111433;
-    --light-dark-background: #24295E;
-		--light-dark-background-hover: #1D214C;
-    --light-background: #fffcf1;
-    --light-scrollbar-background: var(--light-background);
-    --light-scrollbar-color: darken(var(--light-background));
-    --villager-color: #4c93d6;
-    --werewolf-color: #a51818;
+	--space: 8px;
+
+	--success: #46B800;
+	--info: #009ec0;
+	--warn: #F6970A;
+	--danger: #b40000;
+
+	--dark-background: #0f1127;
+	--dark-background-lighter: #111433;
+	--light-dark-background: #24295E;
+	--light-dark-background-hover: #1D214C;
+	--light-background: #fffcf1;
+	--light-background-hover: #F6F3E6;
+
+	--border-dark: #0f112725;
+	--border-light: #fffcf125;
+
+	--villager-color: #4c93d6;
+	--werewolf-color: #a51818;
+	--werewolf-color-darker: #811313;
 }

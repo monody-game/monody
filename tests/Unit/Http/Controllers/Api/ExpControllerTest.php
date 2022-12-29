@@ -10,10 +10,13 @@ class ExpControllerTest extends TestCase
 {
     public function testGetExp(): void
     {
-        $response = $this->actingAs($this->user, 'api')->getJson('/api/exp/get');
-        $response
-            ->assertJsonPath('experience.user_id', $this->user->id)
-            ->assertJsonPath('experience.exp', 15);
+        $this
+            ->actingAs($this->user, 'api')
+            ->get('/api/exp/get')
+            ->assertJson([
+                'user_id' => $this->user->id,
+                'exp' => 15,
+            ]);
     }
 
     public function testGettingExpWithoutHavingSome()
@@ -22,8 +25,10 @@ class ExpControllerTest extends TestCase
 
         $response = $this->actingAs($this->secondUser, 'api')->getJson('/api/exp/get');
         $response
-            ->assertJsonPath('experience.user_id', $this->secondUser->id)
-            ->assertJsonPath('experience.exp', 0);
+            ->assertJson([
+                'user_id' => $this->secondUser->id,
+                'exp' => 0,
+            ]);
 
         $created = Exp::select('*')->where('user_id', $this->secondUser->id)->get()->first();
         $this->assertSame(0, $created->exp);
@@ -32,8 +37,7 @@ class ExpControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
-        $this->secondUser = User::factory()->create();
+        [$this->user, $this->secondUser] = User::factory(2)->create();
         Exp::factory()->create([
             'user_id' => $this->user->id,
             'exp' => 15,

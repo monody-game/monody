@@ -46,7 +46,6 @@ const totalTime = ref(0);
 const counterId = ref(null);
 const counterIcon = ref(null);
 const status = ref(0);
-const chatService = new ChatService();
 const sound = new Audio("../sounds/bip.mp3");
 const roundText = ref("");
 
@@ -119,7 +118,7 @@ const decount = function () {
 		soundManagement();
 		updateCircle();
 
-		if (time.value === 0) {
+		if (time.value <= 0) {
 			clearInterval(counterId.value);
 		}
 	}, 1000);
@@ -163,11 +162,11 @@ const updateOverlay = function () {
 	default:
 		break;
 	case 2:
-		chatService.timeSeparator("Tombée de la nuit");
+		ChatService.timeSeparator("Tombée de la nuit");
 		counterIcon.value.classList.remove("counter__icon-rotate");
 		break;
 	case 6:
-		chatService.timeSeparator("Lever du jour");
+		ChatService.timeSeparator("Lever du jour");
 		counterIcon.value.classList.add("counter__icon-rotate");
 		break;
 	case 8:

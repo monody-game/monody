@@ -4,7 +4,7 @@ import TimeSeparator from "../Components/Chat/TimeSeparator.vue";
 import { createApp } from "vue";
 
 export default class ChatService {
-	timeSeparator(message) {
+	static timeSeparator(message) {
 		const messageContainer = document.querySelector(".chat__messages");
 		const wrapper = document.createElement("div");
 		wrapper.classList.add("time-separator__main");
@@ -17,7 +17,7 @@ export default class ChatService {
 		messageContainer.scrollTo(0, messageContainer.scrollHeight);
 	}
 
-	sendMessage(payload, customClass) {
+	static sendMessage(payload, customClass) {
 		const messageContainer = document.querySelector(".chat__messages");
 		const wrapper = document.createElement("div");
 		const type = payload.type;
@@ -50,7 +50,7 @@ export default class ChatService {
 		messageContainer.scrollTo(0, messageContainer.scrollHeight);
 	}
 
-	async send(message) {
+	static async send(message) {
 		if (message === "") return;
 
 		const gameId = window.location.pathname.split("/")[2];

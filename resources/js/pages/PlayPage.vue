@@ -31,7 +31,7 @@
         <header>
           <p>Liste des parties :</p>
           <button
-            class="play-page__button"
+            class="play-page__button btn large"
             @click="openModal()"
           >
             <i />
@@ -62,13 +62,14 @@ import Footer from "../Components/FooterComponent.vue";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
 import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";
-import { useStore as useGameCreationModal } from "../stores/GameCreationModal";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { ref } from "vue";
+import { useStore } from "../stores/GameCreationModal.js";
+import { useStore as useModalStore } from "../stores/modal.js";
 
 const games = ref([]);
 const roles = ref([]);
-const store = useGameCreationModal();
+const store = useStore();
 const router = useRouter();
 
 onBeforeRouteLeave((to, from, next) => {
@@ -105,6 +106,6 @@ const logout = function () {
 };
 
 const openModal = function () {
-	store.isOpenned = true;
+	useModalStore().open("GameCreationModal");
 };
 </script>

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Vite;
+
 return [
     'name' => env('APP_NAME', 'Laravel'),
 
@@ -52,6 +54,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\ResponseMacroProvider::class,
 
         Intervention\Image\ImageServiceProvider::class,
     ],
@@ -94,6 +97,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Vite' => \Illuminate\Support\Facades\Vite::class,
+        'Vite' => Vite::class,
     ],
 ];

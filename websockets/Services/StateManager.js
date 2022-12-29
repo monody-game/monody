@@ -67,12 +67,13 @@ export class StateManager {
 		const loopingRoundIndex = rounds.length - 2;
 
 		let currentRound = state["round"] || 0;
+		let toUseRound = currentRound;
 
-		if (currentRound >= loopingRoundIndex) {
-			currentRound = loopingRoundIndex;
+		if (toUseRound >= loopingRoundIndex) {
+			toUseRound = loopingRoundIndex;
 		}
 
-		const currentRoundObject = rounds[currentRound];
+		const currentRoundObject = rounds[toUseRound];
 		let stateIndex = currentRoundObject.indexOf(currentRoundObject.find(roundState => roundState.identifier === state["status"])) + 1;
 		let currentState = typeof currentRoundObject[stateIndex] === "undefined" ? {} : currentRoundObject[stateIndex].identifier;
 		const isLast = stateIndex === currentRoundObject.length;
@@ -97,20 +98,22 @@ export class StateManager {
 		) {
 			// We are at the end of the current round
 			currentRound++;
+			toUseRound++;
 			currentState = rounds[currentRound][0].identifier;
 			stateIndex = 0;
 		} else if (currentRound >= loopingRoundIndex && typeof currentRoundObject[stateIndex] === "undefined") {
 			// We are at the end of the looping round
 			currentRound++;
+			toUseRound++;
 			currentState = rounds[loopingRoundIndex][0].identifier;
 			stateIndex = 0;
 		}
 
 		if (currentRound >= loopingRoundIndex) {
-			currentRound = loopingRoundIndex;
+			toUseRound = loopingRoundIndex;
 		}
 
-		let duration = rounds[currentRound][stateIndex].duration;
+		let duration = rounds[toUseRound][stateIndex].duration;
 
 		if (typeof currentRoundObject[stateIndex] !== "undefined" && typeof currentRoundObject[stateIndex].before === "function") {
 			halt = await currentRoundObject[stateIndex].before(this.io, channel);
@@ -132,7 +135,6 @@ export class StateManager {
 
 		return halt;
 	}
-
 	async getNextStateDuration(channel) {
 		const id = gameId(channel);
 		const state = await this.getState(id);
@@ -140,9 +142,9 @@ export class StateManager {
 		if (!state) return;
 
 		let currentRound = state["round"] || 0;
-		const loopingRoundIndex = rounds.length - 1;
+		const loopingRoundIndex = rounds.length - 2;
 
-		if (currentRound > loopingRoundIndex) {
+		if (currentRound >= loopingRoundIndex) {
 			currentRound = loopingRoundIndex;
 		}
 
