@@ -58,16 +58,6 @@
 	}
 }
 
-.player-interaction-bubble__psychic-color {
-	& > span {
-		background: var(--villager-color);
-	}
-
-	& > svg > use {
-		color: var(--villager-color);
-	}
-}
-
 @keyframes floating {
   0% {
     transform: translateY(0px);
