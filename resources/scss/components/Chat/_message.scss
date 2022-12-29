@@ -27,6 +27,12 @@
 	background: var(--info);
 }
 
+.alert-message__success {
+	@extend .alert__main;
+	color: #fff;
+	background-color: var(--success);
+}
+
 .alert-message__death {
 	@extend .alert__main;
 	color: #fff;
