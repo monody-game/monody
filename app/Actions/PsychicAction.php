@@ -55,4 +55,9 @@ class PsychicAction implements ActionInterface
     {
         return $this->getCurrentUserGameActivity($userId);
     }
+
+	public function isSingleUse(): bool
+	{
+		return true;
+	}
 }
