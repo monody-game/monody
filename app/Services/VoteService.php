@@ -69,12 +69,14 @@ class VoteService
     {
         $votes = $this->getVotes($gameId);
 
-        if ([] === $votes && $context === 'vote') {
-            GameKill::dispatch([
-                'killedUser' => null,
-                'gameId' => $gameId,
-                'context' => $context,
-            ]);
+        if ([] === $votes) {
+            if ($context === 'vote') {
+                GameKill::dispatch([
+                    'killedUser' => null,
+                    'gameId' => $gameId,
+                    'context' => $context,
+                ]);
+            }
 
             return false;
         }

@@ -40,26 +40,25 @@ const message = ref("");
 const input = ref(null);
 const button = ref(null);
 const icon = ref(null);
-const service = new ChatService();
 const gameStore = useGameStore();
 const userStore = useUserStore();
 const route = useRoute();
 
 const send = async function() {
-	await service.send(message.value);
+	await ChatService.send(message.value);
 	message.value = "";
 };
 
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
 		const payload = e.data.payload;
-		service.sendMessage(payload, payload.type);
+		ChatService.sendMessage(payload, payload.type);
 	})
 	.listen(".game.role-assign", async (role_id) => {
 		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
 		const role = res.data.role;
 		gameStore.setRole(userStore.id, role);
-		await service.sendMessage({
+		await ChatService.sendMessage({
 			type: "info",
 			content: `Votre rôle est : ${role.display_name}`
 		});
@@ -71,12 +70,12 @@ window.Echo.join(`game.${route.params.id}`)
 
 		if (killed === null) {
 			if (context === "vote") {
-				service.sendMessage({
+				ChatService.sendMessage({
 					content: "Le village a décidé de ne tuer personne aujourd'hui !",
 					type: "death"
 				});
 			} else {
-				service.sendMessage({ content: "Personne n'a été tué cette nuit !", type: "death" });
+				ChatService.sendMessage({ content: "Personne n'a été tué cette nuit !", type: "death" });
 			}
 			return;
 		}
@@ -85,14 +84,14 @@ window.Echo.join(`game.${route.params.id}`)
 		const role = await window.JSONFetch(`/game/user/${user.id}/role`, "GET");
 
 		if (context === "vote") {
-			service.sendMessage(
+			ChatService.sendMessage(
 				{
 					content: `Le village a décidé de tuer ${user.username} qui était ${role.data.display_name}`,
 					type: "death"
 				}
 			);
 		} else {
-			service.sendMessage(
+			ChatService.sendMessage(
 				{
 					content: `${user.username} a été tué cette nuit, il était ${role.data.display_name} !`,
 					type: "death"
@@ -118,7 +117,7 @@ window.Echo.join(`game.${route.params.id}`)
 		const winners = Object.keys(data.winners);
 		const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
 
-		await service.sendMessage({
+		await ChatService.sendMessage({
 			type: "info",
 			content: `La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(" ")} du camp des ${team.data.team.display_name}`
 		});

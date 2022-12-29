@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Oauth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,13 +25,18 @@ final class DiscordOauthController extends Controller
     public function check(Request $request): RedirectResponse|JsonResponse
     {
         if (!$request->has('code')) {
-            return new JsonResponse([
-                'message' => 'An error happened',
-                'data' => $request->all(),
-            ]);
+            return (new JsonResponse([]))
+                ->withMessage('GET parameter "code" is mandatory.')
+                ->withContent($request->all());
         }
 
-        $discordUser = Socialite::driver('discord')->stateless()->user();
+        try {
+            $discordUser = Socialite::driver('discord')->stateless()->user();
+        } catch (Exception) {
+            return (new JsonResponse([], Response::HTTP_BAD_REQUEST))
+                ->withMessage('An error occurred, try to relog.');
+        }
+
         $discordId = config('services.discord.client_id');
 
         $user = User::updateOrCreate(['email' => $discordUser->email], [
@@ -60,7 +66,8 @@ final class DiscordOauthController extends Controller
             return new RedirectResponse('/play');
         }
 
-        return new JsonResponse(['An error occurred'], Response::HTTP_BAD_REQUEST);
+        return (new JsonResponse([], Response::HTTP_BAD_REQUEST))
+            ->withMessage('An error occurred, please retry.');
     }
 
     public function unlink(Request $request): JsonResponse
@@ -70,7 +77,8 @@ final class DiscordOauthController extends Controller
         $discordId = config('services.discord.client_id');
 
         if (!$user->discord_id) {
-            return new JsonResponse(['error' => 'Your Discord account is not linked'], Response::HTTP_FORBIDDEN);
+            return (new JsonResponse([], Response::HTTP_FORBIDDEN))
+                ->withMessage('Your Discord account is not linked.');
         }
 
         /** @var string $token */

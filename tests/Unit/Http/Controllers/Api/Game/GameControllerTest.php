@@ -199,7 +199,8 @@ class GameControllerTest extends TestCase
             ]);
 
         $this->actingAs($this->user, 'api')
-            ->post('/api/game/check', [])->assertJsonValidationErrorFor('gameId');
+            ->post('/api/game/check')
+            ->assertStatus(Response::HTTP_BAD_REQUEST);
     }
 
     public function testCheckingUnexistingGame()
@@ -207,7 +208,8 @@ class GameControllerTest extends TestCase
         $this->actingAs($this->user, 'api')
             ->post('/api/game/check', [
                 'gameId' => 'unexisting',
-            ])->assertJsonValidationErrorFor('gameId');
+            ])
+            ->assertNotFound();
     }
 
     public function testCheckGame()
@@ -223,7 +225,7 @@ class GameControllerTest extends TestCase
         $this->actingAs($this->user, 'api')
             ->post('/api/game/check', [
                 'gameId' => $game->json('game')['id'],
-            ])->assertStatus(Response::HTTP_OK);
+            ])->assertNoContent();
     }
 
     public function testSettingUserGameActivityWhenCreatingGame()

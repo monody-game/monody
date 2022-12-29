@@ -5,11 +5,10 @@
     @click="closeModal()"
   >
     <div
-      v-if="gameCreationModal.isOpenned || profileModal.isOpenned"
       ref="modal"
       aria-modal="true"
       role="dialog"
-      class="modal__main"
+      :class="props.wrapper"
       tabindex="-1"
       aria-labelledby="modal__title"
       @click.stop=""
@@ -21,12 +20,17 @@
 </template>
 
 <script setup>
-import { useStore as useGameCreationModal } from "../../stores/GameCreationModal";
-import { useStore as useProfileModal } from "../../stores/ProfileModal";
 import { ref, onMounted } from "vue";
+import { useStore } from "../../stores/modal.js";
 
-const gameCreationModal = useGameCreationModal();
-const profileModal = useProfileModal();
+const props = defineProps({
+	wrapper: {
+		type: String,
+		default: "modal__main"
+	}
+});
+
+const store = useStore();
 const modal = ref(null);
 
 onMounted(() => {
@@ -34,16 +38,6 @@ onMounted(() => {
 });
 
 const closeModal = function () {
-	if (gameCreationModal.isOpenned) {
-		gameCreationModal.isOpenned = false;
-		document.documentElement.style.removeProperty(
-			"--villager-balance-width"
-		);
-		document.documentElement.style.removeProperty(
-			"--werewolf-balance-width"
-		);
-	} else if (profileModal.isOpenned) {
-		profileModal.isOpenned = false;
-	}
+	store.close();
 };
 </script>

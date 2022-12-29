@@ -1,0 +1,9 @@
+.alert-list__wrapper {
+	position: absolute;
+	bottom: space(3);
+	right: space(3);
+
+	display: flex;
+	flex-direction: column-reverse;
+	gap: space(2);
+}

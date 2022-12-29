@@ -1,3 +1,6 @@
+import { useStore as useAlertStore } from "./stores/alerts.js";
+import { useStore as usePopupStore } from "./stores/popup.js";
+
 /**
  * @param {String} url
  * @param {String} method
@@ -27,6 +30,14 @@ window.JSONFetch = async (url, method, body = null) => {
 
 	if (!res.data) {
 		res.data = {};
+	}
+
+	if (res.data.alerts) {
+		useAlertStore().addAlerts(res.data.alerts);
+	}
+
+	if (res.data.popups) {
+		usePopupStore().setPopup(res.data.popups);
 	}
 
 	res.status = response.status;

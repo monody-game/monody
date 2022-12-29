@@ -3,20 +3,18 @@
 namespace Tests\Unit\Http\Controllers\Api\Auth;
 
 use App\Models\User;
-use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
 {
     public function testWrongLoginRequest()
     {
-        $response = $this->post('/api/auth/login', [
-            'username' => 'carlos',
-            'password' => 'carl',
-            'remember_me' => false,
-        ]);
-
-        $response->assertJsonValidationErrors(['password']);
+        $this
+            ->post('/api/auth/login', [
+                'username' => 'carlos',
+                'password' => 'carl',
+            ])
+            ->assertJsonValidationErrors(['password']);
     }
 
     public function testLoginWithWrongPassword()
@@ -24,11 +22,10 @@ class LoginControllerTest extends TestCase
         $response = $this->post('/api/auth/login', [
             'username' => 'carlos',
             'password' => 'carlos',
-            'remember_me' => false,
         ]);
 
-        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
-        $response->assertJson(['message' => 'Invalid Credentials']);
+        $response->assertUnauthorized();
+        $response->assertJson(['message' => 'Invalid credentials.']);
         $response->assertCookieMissing('monody_access_token');
     }
 
@@ -37,8 +34,7 @@ class LoginControllerTest extends TestCase
         $response = $this->post('/api/auth/login', [
             'username' => 'JohnTest',
             'password' => 'johntest',
-            'remember_me' => false,
-        ])->assertStatus(Response::HTTP_NO_CONTENT);
+        ])->assertOk();
 
         $response->assertCookie('monody_access_token');
         $this->assertAuthenticated();
@@ -49,7 +45,6 @@ class LoginControllerTest extends TestCase
         $response = $this->post('/api/auth/login', [
             'username' => 'JohnTest',
             'password' => 'johntest',
-            'remember_me' => false,
         ]);
 
         $response->assertCookie('monody_access_token');
@@ -59,7 +54,7 @@ class LoginControllerTest extends TestCase
         $response = $this
             ->actingAs($user, 'api')
             ->post('/api/auth/logout')
-            ->assertStatus(200);
+            ->assertOk();
 
         $response->assertCookieMissing('monody_access_token');
     }
@@ -69,8 +64,7 @@ class LoginControllerTest extends TestCase
         $response = $this->post('/api/auth/login', [
             'username' => 'JohnTest',
             'password' => 'johntest',
-            'remember_me' => false,
-        ])->assertStatus(Response::HTTP_NO_CONTENT);
+        ])->assertOk();
 
         $response->assertCookie('monody_access_token');
         $token = $response->getCookie('monody_access_token', false)->getValue();
@@ -79,10 +73,9 @@ class LoginControllerTest extends TestCase
             ->withCookie('monody_access_token', $token)
             ->post('/api/auth/login', [
                 'username' => 'second user',
-                'password' => '123456',
-                'remember_me' => false,
+                'password' => '12345678',
             ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertOk();
 
         $response->assertCookie('monody_access_token');
     }
@@ -101,8 +94,8 @@ class LoginControllerTest extends TestCase
         $this->post('/api/auth/register', [
             'username' => 'second user',
             'email' => 'second.user@gmail.com',
-            'password' => '123456',
-            'password_confirmation' => '123456',
+            'password' => '12345678',
+            'password_confirmation' => '12345678',
         ]);
     }
 }

@@ -1,13 +1,9 @@
 <?php
 
 use App\Http\Middleware\RestrictToDockerNetwork;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpFoundation\Response;
 
-Route::get('/ping', function () {
-    return new JsonResponse(['message' => 'Alive 🌙'], Response::HTTP_OK);
-});
+Route::get('/ping', 'PingController@ping');
 
 Route::post('/auth/login', 'Auth\LoginController@login');
 Route::post('/auth/register', 'Auth\RegisterController@register');
@@ -26,6 +22,9 @@ Route::get('/round/{round}/{gameId?}', 'RoundController@get');
 
 Route::get('/state/{state}', 'StateController@get');
 Route::get('/state/{state}/message', 'StateController@message');
+
+Route::get('/teams', 'TeamController@all');
+Route::get('/team/{id}', 'TeamController@get');
 
 Route::get('/interactions/actions', 'Game\GameInteractionController@actions');
 
@@ -58,7 +57,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/auth/logout', 'Auth\LoginController@logout');
 
-    Route::get('/user', 'UserController@user');
+    Route::get('/user', 'UserController@user')->name('verification.notice');
     Route::patch('/user', 'UserController@update');
 
     Route::get('/game/list', 'Game\GameController@list');
@@ -70,8 +69,13 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/game/message/send', 'Game\GameChatController@send');
 
-    Route::get('/teams', 'TeamController@all');
-    Route::get('/team/{id}', 'TeamController@get');
-
     Route::get('/exp/get', 'ExpController@get');
+
+    Route::get('/email/verify/{id}/{hash}', "Auth\VerifyEmailController@verify")
+        ->middleware(['signed'])
+        ->name('verification.verify');
+
+    Route::get('/email/notify', 'Auth\VerifyEmailController@notice')
+        ->middleware(['throttle:6,1'])
+        ->name('verification.send');
 });

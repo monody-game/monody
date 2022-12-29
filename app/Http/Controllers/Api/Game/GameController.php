@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Enums\AlertType;
 use App\Enums\States;
 use App\Events\GameCreated;
 use App\Facades\Redis;
@@ -23,16 +24,23 @@ class GameController extends Controller
 {
     use RegisterHelperTrait, GameHelperTrait;
 
-    public function check(GameIdRequest $request): JsonResponse
+    public function check(Request $request): JsonResponse
     {
-        /** @var bool $game */
-        $game = Redis::exists("game:{$request->validated('gameId')}");
-
-        if ($game) {
-            return new JsonResponse(['message' => 'Game found']);
+        if (!$request->has('gameId')) {
+            return (new JsonResponse(null, Response::HTTP_BAD_REQUEST))
+                ->withMessage('Please specify a game id to check');
         }
 
-        return new JsonResponse(['error' => 'Game not found'], Response::HTTP_NOT_FOUND);
+        /** @var bool $game */
+        $game = Redis::exists("game:{$request->get('gameId')}");
+
+        if ($game) {
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        }
+
+        return (new JsonResponse(null, Response::HTTP_NOT_FOUND))
+            ->withMessage('Game not found')
+            ->withAlert(AlertType::Error, "La partie demandée n'existe pas (ou plus) ...");
     }
 
     public function list(): JsonResponse

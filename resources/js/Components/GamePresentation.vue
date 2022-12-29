@@ -20,7 +20,7 @@
         >
       </div>
     </div>
-    <p>{{ props.game.users.length }}/{{ getUserCount() }}</p>
+    <p>{{ props.game.users.length }} / {{ getUserCount() }}</p>
   </router-link>
 </template>
 

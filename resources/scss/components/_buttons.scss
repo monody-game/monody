@@ -4,18 +4,18 @@
   padding: 0;
   border: none;
   border-radius: 6px;
-	color: #fff;
+	color: var(--dark-background);
   cursor: pointer;
-	background: var(--light-dark-background) none;
+	background: var(--light-background) none;
 	transition: background-color 0.4s;
 
   &:disabled {
     cursor: not-allowed;
-    background-color: var(--light-dark-background-hover);
+		background-color: var(--light-background-hover);
   }
 
   &:not(.disable-hover):hover {
-    background-color: var(--light-dark-background-hover);
+		background-color: var(--light-background-hover);
   }
 
   &.small {
@@ -23,20 +23,25 @@
     width: 20px;
   }
 
-  &.large {
-    padding: space(0.5) space(1);
+  &.medium {
+    padding: space(.75) space(2);
   }
+
+	&.large {
+		padding: space(1) space(3);
+	}
 }
 
-.btn-primary {
-	background: #fff;
-	color: #0f1127;
-	padding: space(1) space(3);
-	border-radius: 5px;
-	transition: background-color .2s;
+.btn.secondary {
+	background: var(--light-dark-background);
+	color: #ffffff;
 
-	&:hover {
-		color: #0f1127;
-		background-color: darken(#fff, $amount: 15%);
+	&:disabled {
+		cursor: not-allowed;
+		background-color: var(--light-dark-background-hover);
+	}
+
+	&:not(.disable-hover):hover {
+		background-color: var(--light-dark-background-hover);
 	}
 }
