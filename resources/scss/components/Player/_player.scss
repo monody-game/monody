@@ -56,12 +56,6 @@
   box-shadow: 0 0 32px 6px #e50000;
 }
 
-.player__voters {
-  position: absolute;
-  right: auto;
-  left: auto;
-}
-
 .player__is-wolf {
   position: absolute;
   background-color: #e50000;
@@ -75,4 +69,16 @@
 .player__username {
   z-index: 2;
   border-radius: 24px;
+}
+
+.player__psychic-hover:hover {
+	cursor: pointer;
+
+	& > .player__avatar-container img {
+		box-shadow: 0 0 32px 6px var(--villager-color);
+	}
+}
+
+.player__hover-disabled {
+	cursor: not-allowed;
 }
