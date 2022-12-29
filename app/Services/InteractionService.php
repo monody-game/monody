@@ -52,7 +52,7 @@ class InteractionService
     }
 
     /**
-     * @param  string  $id Interaction id
+     * @param string $id Interaction id
      */
     public function close(string $gameId, string $id): int|null
     {
@@ -79,9 +79,9 @@ class InteractionService
     }
 
     /**
-     * @param  string  $id Interaction id
+     * @param string $id Interaction id
      */
-    public function getInteraction(string $gameId, string $id): array
+    private function getInteraction(string $gameId, string $id): array
     {
         $interactions = Redis::get("game:$gameId:interactions") ?? [];
         $interaction = array_search($id, array_column($interactions, 'id'), true);
@@ -93,12 +93,24 @@ class InteractionService
         return $interactions[$interaction];
     }
 
+	private function updateInteraction(array $interaction, string $gameId): void
+	{
+		$interactions = Redis::get("game:$gameId:interactions") ?? [];
+
+		$index = array_search($interaction['id'], array_column($interactions, 'id'), true);
+		array_splice($interactions, $index, 1);
+		$interactions[] = $interaction;
+
+		Redis::set("game:$gameId:interactions", $interactions);
+	}
+
     /**
      * @param  string  $id Interaction id
      */
     public function call(InteractionActions $action, string $id, string $emitterId, string $targetId): mixed
     {
-        $interaction = $this->getInteraction($this->getCurrentUserGameActivity($emitterId), $id);
+		$gameId = $this->getCurrentUserGameActivity($emitterId);
+        $interaction = $this->getInteraction($gameId, $id);
         $type = explode(':', $action->value)[0];
 
         if ($type !== $interaction['type']) {
@@ -107,12 +119,20 @@ class InteractionService
 
         $service = $this->getService($type);
 
-        if (!$service->canInteract($action, $emitterId, $targetId)) {
+        if (
+			!$service->canInteract($action, $emitterId, $targetId) ||
+			($service->isSingleUse() && array_key_exists('used', $interaction) && $interaction['used'])
+		) {
             return self::USER_CANNOT_USE_THIS_INTERACTION;
         }
 
         $status = $service->call($targetId, $action);
 
+		if($service->isSingleUse()) {
+			$interaction['used'] = true;
+			$this->updateInteraction($interaction, $gameId);
+		}
+		
         $service->updateClients($emitterId);
 
         return $status;
