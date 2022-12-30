@@ -28,9 +28,10 @@ interface ActionInterface
      *
      * @param  string  $targetId The target to call the action on
      * @param  InteractionActions  $action The action to call
+     * @param  string|null  $emitterId The user that used the action
      * @return mixed Result of the action, or void
      */
-    public function call(string $targetId, InteractionActions $action): mixed;
+    public function call(string $targetId, InteractionActions $action, ?string $emitterId = null): mixed;
 
     /**
      * Update clients with data edited after the action (voted players for example)

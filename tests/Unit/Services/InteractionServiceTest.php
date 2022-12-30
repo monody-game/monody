@@ -113,6 +113,24 @@ class InteractionServiceTest extends TestCase
         $this->assertSame($this->service::USER_CANNOT_USE_THIS_INTERACTION, $res);
     }
 
+    public function testShouldSkipTimer()
+    {
+        $id = $this->service->create($this->game['id'], Interactions::Psychic)['id'];
+        $this->service->call(InteractionActions::Spectate, $id, $this->psychic->id, $this->werewolf->id);
+
+        $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
+
+        $id = $this->service->create($this->game['id'], Interactions::Vote)['id'];
+        $this->service->call(InteractionActions::Vote, $id, $this->psychic->id, $this->werewolf->id);
+        $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
+
+        $this->service->call(InteractionActions::Vote, $id, $this->user->id, $this->werewolf->id);
+        $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
+
+        $this->service->call(InteractionActions::Vote, $id, $this->witch->id, $this->werewolf->id);
+        $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -134,6 +152,7 @@ class InteractionServiceTest extends TestCase
                 $this->psychic->id => 3,
                 $this->witch->id => 4,
             ],
+            'users' => array_map(fn ($user) => $user->id, $users),
             'is_started' => true,
         ]);
 

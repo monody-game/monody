@@ -131,7 +131,7 @@ class InteractionService
             return self::USER_CANNOT_USE_THIS_INTERACTION;
         }
 
-        $status = $service->call($targetId, $action);
+        $status = $service->call($targetId, $action, $emitterId);
 
         if ($service->isSingleUse()) {
             $interaction['used'] = true;
@@ -141,6 +141,30 @@ class InteractionService
         $service->updateClients($emitterId);
 
         return $status;
+    }
+
+    /**
+     * Dictate if state's duration should be skip, depending on interaction status
+     *
+     * @param  string  $id Interaction id
+     * @param  string  $gameId
+     * @return bool
+     */
+    public function shouldSkipTime(string $id, string $gameId): bool
+    {
+        $interaction = $this->getInteraction($gameId, $id);
+        $service = $this->getService($interaction['type']);
+        $game = Redis::get("game:$gameId");
+
+        if ($service->isSingleUse() && array_key_exists('used', $interaction) && $interaction['used']) {
+            return true;
+        }
+
+        if (in_array($interaction['type'], [Interactions::Vote->value, Interactions::Werewolves->value], true)) {
+            return VoteService::hasMajorityVoted($game);
+        }
+
+        return false;
     }
 
     private function getService(string $type): ActionInterface

@@ -28,7 +28,7 @@ class WerewolvesAction implements ActionInterface
         return in_array($userId, $this->getUsersByTeam(Teams::Werewolves, $gameId), true) && $this->alive($targetId, $gameId);
     }
 
-    public function call(string $targetId, InteractionActions $action): mixed
+    public function call(string $targetId, InteractionActions $action, ?string $emitterId = null): mixed
     {
         return $this->service->vote($targetId, $this->getGameId($targetId));
     }
@@ -44,7 +44,7 @@ class WerewolvesAction implements ActionInterface
         broadcast(new InteractionUpdate([
             'gameId' => $gameId,
             'type' => InteractionActions::Kill->value,
-            'votedPlayers' => $this->service->getVotes($gameId),
+            'votedPlayers' => $this->service::getVotes($gameId),
         ], true, $this->getUsersByTeam(Teams::Werewolves, $gameId)));
     }
 

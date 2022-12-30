@@ -24,9 +24,9 @@ class VoteAction implements ActionInterface
         return $this->alive($targetId, $this->getGameId($targetId));
     }
 
-    public function call(string $targetId, InteractionActions $action): mixed
+    public function call(string $targetId, InteractionActions $action, ?string $emitterId = null): mixed
     {
-        return $this->service->vote($targetId, $this->getGameId($targetId));
+        return $this->service->vote($targetId, $this->getGameId($targetId), $emitterId);
     }
 
     private function getGameId(string $userId): string
@@ -40,7 +40,7 @@ class VoteAction implements ActionInterface
         broadcast(new InteractionUpdate([
             'gameId' => $gameId,
             'type' => InteractionActions::Vote->value,
-            'votedPlayers' => $this->service->getVotes($gameId),
+            'votedPlayers' => $this->service::getVotes($gameId),
         ]));
     }
 

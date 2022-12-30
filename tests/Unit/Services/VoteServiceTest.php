@@ -18,11 +18,15 @@ class VoteServiceTest extends TestCase
 
     private array $secondGame;
 
+    private array $thirdGame;
+
     private User $user;
 
     private User $secondUser;
 
     private User $thirdUser;
+
+    private User $fourthUser;
 
     public function testVoting()
     {
@@ -226,14 +230,25 @@ class VoteServiceTest extends TestCase
         ], $votes);
     }
 
+    public function testCheckingIfMajorityHasVoted()
+    {
+        $gameId = $this->thirdGame['id'];
+        $this->service->vote($this->user->id, $gameId, $this->user->id);
+        $this->assertFalse(VoteService::hasMajorityVoted($this->thirdGame));
+        $this->service->vote($this->user->id, $gameId, $this->secondUser->id);
+        $this->assertFalse(VoteService::hasMajorityVoted($this->thirdGame));
+        $this->service->vote($this->fourthUser->id, $gameId, $this->thirdUser->id);
+        $this->assertTrue(VoteService::hasMajorityVoted($this->thirdGame));
+        $this->service->vote($this->thirdUser->id, $gameId, $this->fourthUser->id);
+        $this->assertTrue(VoteService::hasMajorityVoted($this->thirdGame));
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->service = new VoteService();
 
-        $this->user = User::factory()->create();
-        $this->secondUser = User::factory()->create();
-        $this->thirdUser = User::factory()->create();
+        [$this->user, $this->secondUser, $this->thirdUser, $this->fourthUser] = User::factory(4)->create();
 
         $this->game = json_decode($this
             ->actingAs($this->user, 'api')
@@ -257,6 +272,20 @@ class VoteServiceTest extends TestCase
         Redis::set("game:{$this->secondGame['id']}:members", [
             ['user_id' => $this->user->id, 'user_info' => $this->user],
             ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
+        ]);
+
+        $this->thirdGame = $this
+            ->actingAs($this->user, 'api')
+            ->put('/api/game', [
+                'users' => [$this->secondUser->id, $this->thirdUser->id, $this->fourthUser->id],
+                'roles' => [1, 2],
+            ])->json('game');
+
+        Redis::set("game:{$this->thirdGame['id']}:members", [
+            ['user_id' => $this->user->id, 'user_info' => $this->user],
+            ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
+            ['user_id' => $this->thirdUser->id, 'user_info' => $this->thirdUser],
+            ['user_id' => $this->fourthUser->id, 'user_info' => $this->fourthUser],
         ]);
     }
 }

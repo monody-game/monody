@@ -23,9 +23,9 @@ class VoteService
             return [];
         }
 
-        $votes = $this->getVotes($gameId);
+        $votes = self::getVotes($gameId);
         $authUserId = $votingUser ?? Auth::user()?->getAuthIdentifier();
-        $isVoting = $this->isVoting($userId, $votes);
+        $isVoting = self::isVoting($userId, $votes);
 
         if ($this->isVotingUser($userId, $votes, $authUserId)) {
             return $this->unvote($userId, $gameId);
@@ -45,7 +45,7 @@ class VoteService
      */
     public function unvote(string $userId, string $gameId, ?string $votingUser = null): array
     {
-        $votes = $this->getVotes($gameId);
+        $votes = self::getVotes($gameId);
         $authUserId = $votingUser ?? Auth::user()?->getAuthIdentifier();
 
         /** @var int $userIndex */
@@ -67,7 +67,7 @@ class VoteService
      */
     public function afterVote(string $gameId, string $context = 'vote'): string|false
     {
-        $votes = $this->getVotes($gameId);
+        $votes = self::getVotes($gameId);
 
         if ([] === $votes) {
             if ($context === 'vote') {
@@ -81,25 +81,7 @@ class VoteService
             return false;
         }
 
-        /** @var string $majority */
-        $majority = array_key_first($votes);
-
-        foreach ($votes as $voted => $by) {
-            if (count($by) > count($votes[$majority])) {
-                $majority = $voted;
-
-                continue;
-            }
-
-            if (count($by) === count($votes[$majority])) {
-                $toRandomPick = [
-                    $majority,
-                    $voted,
-                ];
-
-                $majority = $toRandomPick[random_int(0, 1)];
-            }
-        }
+        $majority = self::getMajority($votes);
 
         if (!$this->alive($majority, $gameId)) {
             GameKill::dispatch([
@@ -122,7 +104,7 @@ class VoteService
         Redis::set("game:$gameId:votes", []);
     }
 
-    public function getVotes(string $gameId): array
+    public static function getVotes(string $gameId): array
     {
         /** @var array|null $votes */
         $votes = Redis::get("game:$gameId:votes");
@@ -131,12 +113,62 @@ class VoteService
         return $votes ?? [];
     }
 
+    public static function hasMajorityVoted(array $game): bool
+    {
+        $votes = self::getVotes($game['id']);
+        $majority = $votes[self::getMajority($votes)];
+        $voters = count(self::getVotingUsers($game['users'], $votes)) / 2;
+
+        return round($voters) >= (count($game['users']) / 2) && count($majority) > $voters;
+    }
+
+    /**
+     * Return the most voted user
+     */
+    public static function getMajority(array $votes): string
+    {
+        /** @var string $majority */
+        $majority = array_key_first($votes);
+
+        foreach ($votes as $voted => $by) {
+            if (count($by) > count($votes[$majority])) {
+                $majority = $voted;
+
+                continue;
+            }
+
+            if (count($by) === count($votes[$majority])) {
+                $toRandomPick = [
+                    $majority,
+                    $voted,
+                ];
+
+                $majority = $toRandomPick[random_int(0, 1)];
+            }
+        }
+
+        return $majority;
+    }
+
     private function isVotingUser(string $userId, array $votes, string $votingUser): bool
     {
         return array_key_exists($userId, $votes) && in_array($votingUser, $votes[$userId], true);
     }
 
-    private function isVoting(string $userId, array $votes): string|false
+    private static function getVotingUsers(array $users, array $votes): array
+    {
+        $voters = [];
+
+        foreach ($users as $user) {
+            if (self::isVoting($user, $votes)) {
+                $voters[] = $user;
+            }
+        }
+
+        return $voters;
+    }
+
+    private static function isVoting(string $userId, array $votes): string|false
     {
         foreach ($votes as $voted => $vote) {
             if (in_array($userId, $vote, true)) {
