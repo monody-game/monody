@@ -41,7 +41,7 @@ class WitchAction implements ActionInterface
         return $role !== false && $role === Roles::Witch && $actionCondition;
     }
 
-    public function call(string $targetId, InteractionActions $action): mixed
+    public function call(string $targetId, InteractionActions $action, ?string $emitterId = null): null
     {
         switch ($action) {
             case InteractionActions::WitchSkip:
