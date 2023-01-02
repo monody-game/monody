@@ -18,11 +18,11 @@ enum States: int
 
     case End = 8;
 
-	/**
-	 * Returns the technical name of a state (usually single worded)
-	 *
-	 * @return string
-	 */
+    /**
+     * Returns the technical name of a state (usually single worded)
+     *
+     * @return string
+     */
     public function stringify(): string
     {
         return match ($this) {
@@ -39,11 +39,11 @@ enum States: int
         };
     }
 
-	/**
-	 * Returns the name of a state, readeably
-	 *
-	 * @return string
-	 */
+    /**
+     * Returns the name of a state, readeably
+     *
+     * @return string
+     */
     public function readeableStringify(): string
     {
         return match ($this) {
@@ -60,11 +60,11 @@ enum States: int
         };
     }
 
-	/**
-	 * Return the background that should be used on theses states
-	 *
-	 * @return string
-	 */
+    /**
+     * Return the background that should be used on theses states
+     *
+     * @return string
+     */
     public function background(): string
     {
         return match ($this) {
@@ -83,11 +83,11 @@ enum States: int
         };
     }
 
-	/**
-	 * Return the icon representing the state (it will be shown on the counter)
-	 *
-	 * @return string
-	 */
+    /**
+     * Return the icon representing the state (it will be shown on the counter)
+     *
+     * @return string
+     */
     public function iconify(): string
     {
         return match ($this) {
@@ -98,11 +98,11 @@ enum States: int
         };
     }
 
-	/**
-	 * Return the message that should be sent just before the state begins
-	 *
-	 * @return string|null
-	 */
+    /**
+     * Return the message that should be sent just before the state begins
+     *
+     * @return string|null
+     */
     public function message(): ?string
     {
         return match ($this) {
@@ -112,11 +112,11 @@ enum States: int
         };
     }
 
-	/**
-	 * Dictate if a state is a role one (psychic, witch, ...)
-	 *
-	 * @return bool
-	 */
+    /**
+     * Dictate if a state is a role one (psychic, witch, ...)
+     *
+     * @return bool
+     */
     public function isRoleState(): bool
     {
         return match ($this) {
@@ -125,17 +125,17 @@ enum States: int
         };
     }
 
-	/**
-	 * Return the new time of the counter after a time skip within a state
-	 *
-	 * @return int
-	 */
-	public function getTimeSkip(): int
-	{
-		return match ($this) {
-			self::Waiting, self::Starting, self::Roles, self::Night, self::Day, self::End => null, // Cannot be skipped
-			self::Vote, self::Werewolf => 30,
-			self::Witch, self::Psychic => 0, // Skip the state to the next
-		};
-	}
+    /**
+     * Return the new time of the counter after a time skip within a state
+     *
+     * @return int|null
+     */
+    public function getTimeSkip(): ?int
+    {
+        return match ($this) {
+            self::Waiting, self::Starting, self::Roles, self::Night, self::Day, self::End => null, // Cannot be skipped
+            self::Vote, self::Werewolf => 30,
+            self::Witch, self::Psychic => 0, // Skip the state to the next
+        };
+    }
 }
