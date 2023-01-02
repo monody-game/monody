@@ -8,9 +8,9 @@ import { gameId } from "../Helpers/Functions.js";
 const StartingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
 
 export class GameChannel {
-	constructor(io) {
+	constructor(io, emitter) {
 		this.io = io;
-		this.gameService = new GameService(io);
+		this.gameService = new GameService(io, emitter);
 		this.stateManager = new StateManager(io);
 	}
 

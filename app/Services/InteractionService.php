@@ -9,6 +9,8 @@ use App\Actions\WerewolvesAction;
 use App\Actions\WitchAction;
 use App\Enums\InteractionActions;
 use App\Enums\Interactions;
+use App\Enums\States;
+use App\Events\TimeSkip;
 use App\Facades\Redis;
 use App\Traits\RegisterHelperTrait;
 use Illuminate\Support\Str;
@@ -139,6 +141,16 @@ class InteractionService
         }
 
         $service->updateClients($emitterId);
+
+		if (!$this->shouldSkipTime($id, $gameId)) {
+			return $status;
+		}
+
+		$state = Redis::get("game:$gameId:state");
+		$state = States::from($state['status']);
+		$skipDuration = $state->getTimeSkip();
+
+		broadcast(new TimeSkip($gameId, $skipDuration));
 
         return $status;
     }
