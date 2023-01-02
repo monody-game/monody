@@ -142,15 +142,23 @@ class InteractionService
 
         $service->updateClients($emitterId);
 
-		if (!$this->shouldSkipTime($id, $gameId)) {
-			return $status;
-		}
+        if (!$this->shouldSkipTime($id, $gameId)) {
+            return $status;
+        }
 
-		$state = Redis::get("game:$gameId:state");
-		$state = States::from($state['status']);
-		$skipDuration = $state->getTimeSkip();
+        $state = Redis::get("game:$gameId:state");
+        $state = States::from($state['status']);
 
-		broadcast(new TimeSkip($gameId, $skipDuration));
+        $skipDuration = $state->getTimeSkip();
+
+        /**
+         * Should not append in production. Used to patch test cases
+         */
+        if ($skipDuration === null) {
+            return $status;
+        }
+
+        broadcast(new TimeSkip($gameId, $skipDuration));
 
         return $status;
     }

@@ -116,7 +116,11 @@ class VoteService
     public static function hasMajorityVoted(array $game): bool
     {
         $votes = self::getVotes($game['id']);
-        $majority = $votes[self::getMajority($votes)];
+        $majority = self::getMajority($votes);
+        if (!$majority) {
+            return false;
+        }
+        $majority = $votes[$majority];
         $voters = count(self::getVotingUsers($game['users'], $votes)) / 2;
 
         return round($voters) >= (count($game['users']) / 2) && count($majority) > $voters;
@@ -127,8 +131,7 @@ class VoteService
      */
     public static function getMajority(array $votes): string
     {
-        /** @var string $majority */
-        $majority = array_key_first($votes);
+        $majority = array_key_first($votes) ?? '';
 
         foreach ($votes as $voted => $by) {
             if (count($by) > count($votes[$majority])) {
