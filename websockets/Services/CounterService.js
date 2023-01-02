@@ -4,18 +4,37 @@ import { gameId } from "../Helpers/Functions.js";
 export class CounterService {
 	counterId = {};
 
-	constructor(io) {
+	constructor(io, emitter) {
 		this.io = io;
+		this.emitter = emitter;
 		this.manager = new StateManager(this.io);
 	}
 
-	async cycle(channel, socket) {
+	async cycle(channel, socket, duration = null) {
+		this.clearListeners();
+
 		const id = gameId(channel);
 		let halt = false;
 
 		const counterId = setTimeout(async () => {
 			await this.cycle(channel, socket);
-		}, ((await this.manager.getNextStateDuration(channel)) + 1) * 1000);
+		}, duration ?? ((await this.manager.getNextStateDuration(channel)) + 2) * 1000);
+
+		this.emitter.on("time.skip", async (data) => {
+			clearTimeout(this.counterId[data.gameId]);
+
+			const state = await this.manager.getState(data.gameId);
+
+			this.manager.setState({
+				status: state.status,
+				startTimestamp: Date.now(),
+				counterDuration: data.to,
+				counterId: counterId,
+				round: state.round
+			}, `game.${data.gameId}`);
+
+			this.cycle(channel, socket);
+		});
 
 		this.counterId[id] = counterId[Symbol.toPrimitive]();
 
@@ -33,5 +52,13 @@ export class CounterService {
 
 	stop(id) {
 		clearTimeout(this.counterId[id]);
+	}
+
+	clearListeners() {
+		const listeners = this.emitter.listeners("time.skip");
+
+		for (const listener of listeners) {
+			this.emitter.off("time.skip", listener);
+		}
 	}
 }

@@ -5,6 +5,8 @@ import { createSecureServer } from "node:http2";
 import { readFileSync } from "node:fs";
 import { GameService } from "./Services/GameService.js";
 import { gameId } from "./Helpers/Functions.js";
+import { handle } from "./PrivateEventHandler.js";
+import { EventEmitter } from "node:events";
 
 export class IoServer {
 	constructor() {
@@ -19,7 +21,8 @@ export class IoServer {
 			}
 		});
 		this.subscriber = new RedisSubscriber();
-		this.channel = new Channel(this.server);
+		this.emitter = new EventEmitter();
+		this.channel = new Channel(this.server, this.emitter);
 	}
 
 	async start() {
@@ -36,6 +39,11 @@ export class IoServer {
 
 	async listen() {
 		await this.subscriber.subscribe(async (channel, message) => {
+			if (channel === "ws.private") {
+				await handle(this.emitter, message);
+				return;
+			}
+
 			if (message.data.private !== true) {
 				this.broadcast(channel, message);
 

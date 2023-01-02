@@ -135,6 +135,7 @@ export class StateManager {
 
 		return halt;
 	}
+
 	async getNextStateDuration(channel) {
 		const id = gameId(channel);
 		const state = await this.getState(id);

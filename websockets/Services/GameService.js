@@ -10,10 +10,11 @@ import { gameId } from "../Helpers/Functions.js";
 const WaitingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
 
 export class GameService {
-	constructor(io) {
+	constructor(io, emitter) {
 		this.io = io;
+		this.emitter = emitter;
 		this.StateManager = new StateManager(io);
-		this.counterService = new CounterService(io);
+		this.counterService = new CounterService(io, emitter);
 	}
 
 	static async getGame(id) {
@@ -38,12 +39,6 @@ export class GameService {
 		await this.setGame(id, game);
 
 		await this.counterService.cycle(channel, socket);
-
-		/* this.StateManager.setState({
-			status: StartingState.state,
-			startTimestamp: Date.now(),
-			counterDuration: StartingState.duration
-		}, channel); */
 
 		if (process.env.APP_DEBUG) {
 			console.info(`[${new Date().toISOString()}] - Starting game id ${id}\n`);

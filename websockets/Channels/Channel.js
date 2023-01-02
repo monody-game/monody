@@ -6,9 +6,9 @@ export class Channel {
 
 	clientEvents = ["client-*"];
 
-	constructor(io) {
+	constructor(io, emitter) {
 		this.private = new PrivateChannel();
-		this.presence = new GameChannel(io);
+		this.presence = new GameChannel(io, emitter);
 		this.io = io;
 	}
 
