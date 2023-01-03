@@ -28,7 +28,7 @@ const dataLog = (data, level) => {
 	for (const fragment of data) {
 		const message = chalk.gray(`${date()} | ${getLeveLColor(level).replace("%s", level)} -`);
 		console.log(message + " " + chalk.white(fragment));
-		fileLog(`${date} | ${level} - ` + fragment);
+		fileLog(`${date()} | ${level} - ` + fragment);
 	}
 };
 
