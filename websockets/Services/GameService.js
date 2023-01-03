@@ -42,7 +42,7 @@ export class GameService {
 		await this.counterService.cycle(channel, socket);
 
 		if (process.env.APP_DEBUG) {
-			success(`Starting game id ${id}\n`);
+			success(`Starting game with id ${id}`);
 		}
 	}
 
