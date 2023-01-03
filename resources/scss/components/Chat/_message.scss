@@ -12,6 +12,7 @@
 
 .alert__main {
 	@extend .message__main;
+	color: #fff;
 	padding: space(2);
 	gap: space(2);
 }
@@ -22,22 +23,31 @@
 
 .alert-message__info {
 	@extend .alert__main;
-	color: #fff;
 	align-items: center;
 	background: var(--info);
+
+	& .alert-message__icon use {
+		color: #fff;
+	}
 }
 
 .alert-message__success {
 	@extend .alert__main;
-	color: #fff;
 	background-color: var(--success);
+
+	& .alert-message__icon use {
+		color: #fff;
+	}
 }
 
 .alert-message__death {
 	@extend .alert__main;
-	color: #fff;
 	align-items: center;
 	background: var(--danger);
+
+	& .alert-message__icon use {
+		color: #fff;
+	}
 }
 
 .alert-message__icon {

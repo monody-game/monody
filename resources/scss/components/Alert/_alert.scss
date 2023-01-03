@@ -29,18 +29,22 @@ $alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 	cursor: pointer;
 
 	& use {
-		transition: all .2s;
+		transition: color .2s;
 		color: #0f112740;
 	}
 
 	&:hover use {
-		color: var(--dark-background);
+		color: #0f112780;
 	}
 }
 
 @each $alert in $alerts {
 	.alert__progress-#{nth($alert, 1)} {
 		background-color: nth($alert, 2);
+	}
+
+	.alert__container[data-alert-type=#{nth($alert, 1)}] .alert__icon {
+		color: nth($alert, 2);
 	}
 }
 
