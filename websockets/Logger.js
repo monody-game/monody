@@ -24,6 +24,13 @@ const error = (...data) => {
 	dataLog(data, "ERROR");
 };
 
+const blank = (n = 1) => {
+	for (let i = 0; i < n; i++) {
+		console.log("⠀");
+		fileLog("⠀");
+	}
+};
+
 const dataLog = (data, level) => {
 	for (const fragment of data) {
 		const message = chalk.gray(`${date()} | ${getLeveLColor(level).replace("%s", level)} -`);
@@ -57,4 +64,4 @@ const getLeveLColor = (level) => {
 	}
 };
 
-export { log, success, info, warn, error };
+export { log, success, info, warn, error, blank };
