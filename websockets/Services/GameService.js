@@ -6,6 +6,7 @@ import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
+import { success } from "../Logger.js";
 
 const WaitingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
 
@@ -41,7 +42,7 @@ export class GameService {
 		await this.counterService.cycle(channel, socket);
 
 		if (process.env.APP_DEBUG) {
-			console.info(`[${new Date().toISOString()}] - Starting game id ${id}\n`);
+			success(`Starting game id ${id}\n`);
 		}
 	}
 

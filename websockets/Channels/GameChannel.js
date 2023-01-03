@@ -4,6 +4,7 @@ import { GameService } from "../Services/GameService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
+import { info } from "../Logger.js";
 
 const StartingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
 
@@ -140,7 +141,7 @@ export class GameChannel {
 
 		this.io.to("home").emit("game.delete", "home", id);
 
-		console.info(`[${new Date().toISOString()}] - Deleting game, id: ${id}`);
+		info(`Deleting game with id: ${id}`);
 	}
 
 	async onSubscribed(socket, channel, members) {

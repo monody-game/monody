@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
 import { readdirSync } from "node:fs";
 import { GameService } from "./GameService.js";
+import { error, log } from "../Logger.js";
 
 export default async function getRounds(gameId = 0) {
 	if (!await GameService.exists(gameId)) {
@@ -39,7 +40,8 @@ export default async function getRounds(gameId = 0) {
 			rounds.push(roundStates);
 		}
 	} catch (e) {
-		console.error(e, apiRounds);
+		error("Error retrieving rounds", e);
+		log("Current rounds " + JSON.stringify(apiRounds));
 	}
 
 	return rounds;
