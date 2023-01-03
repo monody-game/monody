@@ -1,5 +1,6 @@
 import { GameChannel } from "./GameChannel.js";
 import { PrivateChannel } from "./PrivateChannel.js";
+import { error, info } from "../Logger.js";
 
 export class Channel {
 	privateChannels = ["private-*", "presence-*"];
@@ -33,7 +34,7 @@ export class Channel {
 			socket.leave(channel);
 
 			if (process.env.APP_DEBUG) {
-				console.info(`[${new Date().toISOString()}] - ${socket.id} left channel: ${channel} (${reason})`);
+				info(`${socket.id} left channel: ${channel} (${reason})`);
 			}
 		}
 	}
@@ -61,7 +62,7 @@ export class Channel {
 					try {
 						member = JSON.parse(res.channel_data);
 					} catch (e) {
-						console.error(e);
+						error(e);
 					}
 				}
 
@@ -71,7 +72,8 @@ export class Channel {
 			this.onJoin(socket, data.channel);
 		} catch (e) {
 			if (process.env.APP_DEBUG) {
-				console.error(e);
+				error(`Error during user joining channel ${data.channel}`);
+				error(e);
 			}
 			this.io.sockets.to(socket.id).emit("subscription_error", data.channel, e.status);
 		}
@@ -83,7 +85,7 @@ export class Channel {
 
 	onJoin(socket, channel) {
 		if (process.env.APP_DEBUG) {
-			console.info(`[${new Date().toISOString()}] - ${socket.id} joined channel: ${channel}`);
+			info(`${socket.id} joined channel: ${channel}`);
 		}
 	}
 

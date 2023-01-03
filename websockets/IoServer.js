@@ -7,6 +7,7 @@ import { GameService } from "./Services/GameService.js";
 import { gameId } from "./Helpers/Functions.js";
 import { handle } from "./PrivateEventHandler.js";
 import { EventEmitter } from "node:events";
+import { info, success, warn, blank } from "./Logger.js";
 
 export class IoServer {
 	constructor() {
@@ -26,18 +27,23 @@ export class IoServer {
 	}
 
 	async start() {
-		console.info("\nStarting IoServer...");
+		const startTime = Date.now();
+		blank();
+		info("Starting IoServer...");
 
 		if (process.env.APP_DEBUG) {
-			console.info("\nIoServer is running in debug mode.\n");
+			warn("IoServer is running in debug mode.");
 		}
 
 		this.onConnect();
 		await this.listen();
 		this.httpServer.listen(6001);
+		const endTime = Date.now();
+		success(`Successfully started websockets server in ${endTime - startTime}ms!`);
 	}
 
 	async listen() {
+		info("Waiting for events to broadcast ...");
 		await this.subscriber.subscribe(async (channel, message) => {
 			if (channel === "ws.private") {
 				await handle(this.emitter, message);
@@ -74,6 +80,7 @@ export class IoServer {
 	}
 
 	onConnect() {
+		info("Setting up join / leave hooks");
 		this.server.on("connection", (socket) => {
 			this.onSubscribe(socket);
 			this.onUnsubscribe(socket);

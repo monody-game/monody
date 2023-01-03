@@ -1,5 +1,6 @@
 import { StateManager } from "./StateManager.js";
 import { gameId } from "../Helpers/Functions.js";
+import { error } from "../Logger.js";
 
 export class CounterService {
 	counterId = {};
@@ -42,7 +43,8 @@ export class CounterService {
 			halt = await this.manager.nextState(channel, this.counterId[id], socket);
 		} catch (e) {
 			clearTimeout(this.counterId[id]);
-			console.error(e);
+			error(`Error happenned during counter cycle in game ${id}:`);
+			error(e);
 		}
 
 		if (halt) {
