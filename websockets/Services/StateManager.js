@@ -3,6 +3,7 @@ import getRounds from "./RoundService.js";
 import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
+import { info } from "../Logger.js";
 
 export class StateManager {
 	constructor(io) {
@@ -19,7 +20,7 @@ export class StateManager {
 	async setState(state, channel) {
 		const id = gameId(channel);
 
-		console.info(`Setting state of game ${id} to ${state.status} in round ${state.round} for a duration of ${state.counterDuration}`);
+		info(`Setting state of game ${id} to ${state.status} in round ${state.round} for a duration of ${state.counterDuration}`);
 		await client.set(`game:${id}:state`, JSON.stringify(state));
 		const message = await fetch(`https://web/api/state/${state.status}/message`);
 

@@ -3,6 +3,7 @@ import { GameService } from "./GameService.js";
 import { client } from "../Redis/Connection.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
+import { error, info, success, warn } from "../Logger.js";
 
 export class InteractionService {
 	static async openInteraction(io, channel, type) {
@@ -19,7 +20,7 @@ export class InteractionService {
 			const interactionId = interaction.id;
 			let callers = interaction.authorizedCallers;
 
-			console.info(`Created ${type} interaction with id ${interactionId} in game ${id}`);
+			success(`Created ${type} interaction with id ${interactionId} in game ${id}.`);
 
 			if (callers !== "*") {
 				callers = JSON.parse(callers);
@@ -36,8 +37,8 @@ export class InteractionService {
 
 			io.to(channel).emit("interaction.open", channel, { interaction: { id: interactionId, type } });
 		} catch (e) {
-			console.error(e);
-			console.error("API response :", res);
+			error(e);
+			error("Error openning interaction, API response : ", res);
 		}
 	}
 
@@ -53,7 +54,7 @@ export class InteractionService {
 		const interaction = interactions.find(interactionListItem => interactionListItem.type === type);
 
 		if (!interaction) {
-			console.warn(`Unable to find interaction with type ${type} on game ${id}`);
+			warn(`Unable to find interaction with type ${type} on game ${id}, aborting.`);
 			return;
 		}
 
@@ -67,7 +68,7 @@ export class InteractionService {
 
 		await fetch("https://web/api/interactions", { method: "DELETE", body: params });
 
-		console.info(`Closing ${type} interaction with id ${interactionId} in game ${id}`);
+		info(`Closing ${type} interaction with id ${interactionId} in game ${id}.`);
 
 		if (callers !== "*") {
 			callers = JSON.parse(callers);

@@ -1,5 +1,7 @@
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
+import { error, info } from "../Logger.js";
+import { warn } from "vue";
 
 export class PrivateChannel {
 	authenticate(socket, data) {
@@ -8,7 +10,7 @@ export class PrivateChannel {
 		};
 
 		if (process.env.APP_DEBUG) {
-			console.info(`[${new Date().toISOString()}] - Sending auth request to: "https://web"\n`);
+			info("Sending auth request to: \"https://web\"");
 		}
 
 		return this.serverRequest(socket, options);
@@ -33,24 +35,25 @@ export class PrivateChannel {
 			response = response.text;
 
 			if (process.env.APP_DEBUG) {
-				console.info(`[${new Date().toISOString()}] - ${socket.id} authenticated for: ${options.form.channel_name}`);
+				info(`${socket.id} authenticated for: ${options.form.channel_name}`);
 			}
 
 			return response;
-		} catch (error) {
-			if (error) {
+		} catch (e) {
+			if (e) {
 				if (process.env.APP_DEBUG) {
-					console.error(`[${new Date().toISOString()}] - Error authenticating ${socket.id} for ${options.form.channel_name}`);
-					console.error(error);
-				}
-				throw ({ reason: "Error sending authentication request.", status });
-			} else if (status !== 200) {
-				if (process.env.APP_DEBUG) {
-					console.warn(`[${new Date().toISOString()}] - ${socket.id} could not be authenticated to ${options.form.channel_name}`);
-					console.error(response);
+					error(`Error authenticating ${socket.id} for ${options.form.channel_name}`);
+					error(e);
 				}
 
-				throw ({ reason: "Client can not be authenticated, got HTTP status " + status, status });
+				error("Error sending authentication request. Got HTTP status " + status);
+			} else if (status !== 200) {
+				if (process.env.APP_DEBUG) {
+					warn(`${socket.id} could not be authenticated to ${options.form.channel_name}`);
+					warn(response);
+				}
+
+				error("Client cannot be authenticated, got HTTP status " + status);
 			}
 		}
 	}
