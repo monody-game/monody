@@ -1,5 +1,8 @@
 <template>
-  <BaseModal wrapper="popup__wrapper">
+  <BaseModal
+    wrapper="popup__wrapper"
+    :data-popup-type="store.type"
+  >
     <header class="popup__header">
       <div class="popup__header-left">
         <svg class="popup__icon">

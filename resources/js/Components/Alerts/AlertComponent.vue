@@ -2,6 +2,7 @@
   <div
     ref="alert"
     class="alert__container"
+    :data-alert-type="props.type"
   >
     <svg class="alert__icon">
       <use :href="'/sprite.svg#' + props.type" />
@@ -33,7 +34,6 @@ const props = defineProps({
 });
 
 const store = useStore();
-
 const alert = ref(null);
 
 const close = () => {
