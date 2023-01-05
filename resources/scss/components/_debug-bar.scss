@@ -1,0 +1,30 @@
+.debug-bar__wrapper {
+	position: absolute;
+	bottom: space(2);
+	right: space(2);
+
+	display: grid;
+	place-items: center;
+
+	height: 40px;
+	width: 40px;
+
+	border-radius: 50%;
+	background-color: var(--light-background);
+	color: var(--dark-background);
+	border-color: var(--border-dark);
+
+	z-index: 99999;
+	
+	&:hover {
+		cursor: pointer;
+		border: var(--border-dark) solid 2px;
+	}
+
+	& svg {
+		height: 35px;
+		width: 35px;
+
+		margin-top: -2px;
+	}
+}

@@ -42,13 +42,14 @@
 @import "./components/Alerts/alert";
 
 // - Others
-@import "./components/counter";
 @import "./components/buttons";
-@import "./components/game-presentation";
 @import "./components/pills";
+@import "./components/counter";
+@import "./components/game-presentation";
 @import "./components/spinner";
 @import "./components/footer";
 @import "./components/notice-component";
+@import "./components/debug-bar";
 
 *,
 *::before,
