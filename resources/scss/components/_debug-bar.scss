@@ -1,6 +1,6 @@
 .debug-bar__wrapper {
 	position: absolute;
-	bottom: space(2);
+	bottom: space(1);
 	right: space(2);
 
 	display: grid;
@@ -15,7 +15,7 @@
 	border-color: var(--border-dark);
 
 	z-index: 99999;
-	
+
 	&:hover {
 		cursor: pointer;
 		border: var(--border-dark) solid 2px;
