@@ -28,22 +28,22 @@
 @import "./components/Modal/share-page";
 @import "./components/Modal/popup";
 
-// - Game player
-@import "./components/Player/player";
-@import "./components/Player/player-interaction-bubble";
+// - Game player list
+@import "./components/PlayerList/player";
+@import "./components/PlayerList/player-interaction-bubble";
+@import "./components/PlayerList/player-list";
 
 // - Player Presentation
 @import "./components/PlayerPresentation/player-presentation";
 @import "./components/PlayerPresentation/progress-bar";
 
 // - Alerts
-@import "./components/Alert/alert-list";
-@import "./components/Alert/alert";
+@import "./components/Alerts/alert-list";
+@import "./components/Alerts/alert";
 
 // - Others
 @import "./components/counter";
 @import "./components/buttons";
-@import "./components/player-list";
 @import "./components/game-presentation";
 @import "./components/pills";
 @import "./components/spinner";
