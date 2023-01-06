@@ -12,13 +12,15 @@
 	border-radius: 50%;
 	background-color: var(--light-background);
 	color: var(--dark-background);
-	border-color: var(--border-dark);
+	outline-color: var(--border-dark);
 
+	transition: outline-color .2s;
 	z-index: 99999;
 
 	&:hover {
 		cursor: pointer;
-		border: var(--border-dark) solid 2px;
+		outline: var(--border-dark) solid 2px;
+		outline-offset: -2px;
 	}
 
 	& svg {
@@ -27,4 +29,11 @@
 
 		margin-top: -2px;
 	}
+}
+
+.debug-bar__wrapper[data-openned="true"] {
+	border-radius: 8px;
+	width: auto;
+	left: space(2);
+	grid-template-columns: 1fr 48px;
 }
