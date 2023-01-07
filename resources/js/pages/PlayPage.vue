@@ -1,30 +1,20 @@
 <template>
   <div class="play-page">
     <header class="play-page__header">
-      <router-link :to="{ name: 'home_page' }">
-        Comment jouer
-      </router-link>
-      <div class="links">
-        <router-link
-          to="profile"
-          aria-label="Profil"
-        >
-          <svg
-            class="icon"
-            tabindex="0"
-          >
-            <use href="/sprite.svg#wheel" />
-          </svg>
-        </router-link>
-        <button
-          title="Se déconnecter"
-          @click="logout()"
-        >
-          <svg class="icon">
-            <use href="/sprite.svg#logout" />
-          </svg>
-        </button>
+      <div class="play-page__header-title">
+        <svg>
+          <use href="/sprite.svg#monody" />
+        </svg>
+        <h2>Monody</h2>
       </div>
+      <button
+        @click="logout()"
+      >
+        Se déconnecter
+        <svg class="icon">
+          <use href="/sprite.svg#logout" />
+        </svg>
+      </button>
     </header>
     <div class="play-page__container">
       <div class="play-page__games">

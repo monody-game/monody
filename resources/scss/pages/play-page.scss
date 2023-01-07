@@ -35,33 +35,41 @@
 }
 
 .play-page__header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	width: 100%;
-	padding: space(2) space(4);
+	display: grid;
+	grid-template-columns: 1fr .75fr;
+	place-items: center flex-end;
+	padding: space(4) space(4);
+	color: var(--dark-background);
 
-	& a {
-		color: rgba(255, 255, 255, 80%);
-	}
-
-	& .links {
-		display: flex;
-		gap: space(4);
-	}
-
-	& .links .icon {
-		height: 35px;
-		width: 35px;
+	& button {
 		cursor: pointer;
-	}
+		display: flex;
+		align-items: center;
+		gap: space(1);
 
-	& .links button {
 		background: none;
 		border: none;
 		padding: 0;
+	}
+
+	& button:hover {
+		text-decoration: underline;
+	}
+
+	& button svg {
 		height: 35px;
 		width: 35px;
+	}
+}
+
+.play-page__header-title {
+	display: flex;
+	align-items: center;
+	gap: space(2);
+
+	& svg {
+		height: 50px;
+		width: 45px;
 	}
 }
 
