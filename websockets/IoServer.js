@@ -72,8 +72,17 @@ export class IoServer {
 	}
 
 	broadcast(channel, message) {
+		if (message.data.volatile) {
+			if (message.socket && this.find(message.socket)) {
+				this.find(message.socket).to(channel).broadcast.volatile.emit(message.event, channel, message.data);
+			} else {
+				this.server.to(channel).volatile.emit(message.event, channel, message);
+			}
+			return;
+		}
+
 		if (message.socket && this.find(message.socket)) {
-			this.find(message.socket).broadcast.to(channel).emit(message.event, channel, message.data);
+			this.find(message.socket).to(channel).broadcast.emit(message.event, channel, message.data);
 		} else {
 			this.server.to(channel).emit(message.event, channel, message);
 		}
@@ -81,12 +90,12 @@ export class IoServer {
 
 	onConnect() {
 		info("Setting up join / leave hooks");
+		info("Listening to ping event ...");
 		this.server.on("connection", (socket) => {
 			this.onSubscribe(socket);
 			this.onUnsubscribe(socket);
 			this.onDisconnecting(socket);
 
-			info("Listening to ping event ...");
 			socket.on("ping", (callback) => {
 				if (typeof callback === "function") callback();
 			});
