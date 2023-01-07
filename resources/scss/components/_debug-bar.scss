@@ -1,6 +1,6 @@
 .debug-bar__wrapper {
 	position: absolute;
-	bottom: space(1);
+	bottom: space(2);
 	right: space(2);
 
 	display: grid;
@@ -18,30 +18,41 @@
 	z-index: 99999;
 
 	&:hover {
-		cursor: pointer;
-		outline: var(--border-dark) solid 2px;
-		outline-offset: -2px;
+		outline: var(--border-dark) solid 1px;
+		outline-offset: -1px;
 	}
+}
 
-	& > svg {
-		height: 35px;
-		width: 35px;
+.debug-bar__beta-icon {
+	height: 35px;
+	width: 35px;
+	margin-top: -2px;
+	cursor: pointer;
+}
 
-		margin-top: -2px;
-	}
+.debug-bar__close-icon {
+	cursor: pointer;
+	height: 24px;
+	width: 24px;
 }
 
 .debug-bar__wrapper[data-openned="true"] {
 	border-radius: 8px;
 	width: auto;
-	left: space(2);
-	grid-template-columns: 1fr 48px;
+	left: auto;
+
+	grid-template-columns: auto 48px;
+	gap: space(4);
+
+	outline: var(--border-dark) solid 1px;
+	outline-offset: -1px;
 }
 
 .debug-bar__content {
 	display: flex;
 	align-items: center;
 	gap: space(4);
+	margin-left: space(2);
 
 	& > div {
 		display: flex;
@@ -52,5 +63,17 @@
 	& svg {
 		height: 32px;
 		width: 32px;
+	}
+}
+
+.debug-bar__report {
+	cursor: pointer;
+	padding-inline: space(1);
+	transition: all .2s;
+	outline: var(--border-dark) solid 1px;
+	border-radius: 4px;
+
+	&:hover {
+		background-color: var(--light-background-hover);
 	}
 }

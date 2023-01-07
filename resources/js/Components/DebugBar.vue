@@ -3,7 +3,6 @@
     class="debug-bar__wrapper"
     :data-openned="barOpenned"
     :title="barOpenned ? 'Fermer la barre de débogage' : 'Ouvrir la barre de débogage'"
-    @click.prevent="switchState"
   >
     <div
       v-if="barOpenned"
@@ -39,9 +38,21 @@
         </svg>
         {{ warnCount }}
       </div>
+      <div
+        class="debug-bar__report"
+        title="Copier le rapport de débogage"
+      >
+        <svg>
+          <use href="/sprite.svg#copy" />
+        </svg>
+        Copier le rapport
+      </div>
     </div>
-    <svg>
-      <use href="/sprite.svg#beta" />
+    <svg
+      :class="barOpenned ? 'debug-bar__close-icon' : 'debug-bar__beta-icon'"
+      @click.prevent="switchState"
+    >
+      <use :href="barOpenned ? '/sprite.svg#cross' : '/sprite.svg#beta'" />
     </svg>
   </div>
 </template>
@@ -66,6 +77,10 @@ const warnCount = computed(() => store.warns.length);
 await window.JSONFetch("/ping", "GET");
 const apiProfiling = performance.getEntriesByType("resource").pop();
 apiLatency.value = apiProfiling.responseEnd - apiProfiling.requestStart;
+
+const copyReport = () => {
+
+};
 
 setTimeout(() => {
 	const start = Date.now();
