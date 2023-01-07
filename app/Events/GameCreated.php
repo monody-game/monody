@@ -17,6 +17,8 @@ class GameCreated implements ShouldBroadcastNow
 
     public array $game;
 
+    public bool $volatile = true;
+
     /**
      * Create a new event instance.
      *
