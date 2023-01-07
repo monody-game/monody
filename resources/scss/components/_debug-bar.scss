@@ -1,0 +1,79 @@
+.debug-bar__wrapper {
+	position: absolute;
+	bottom: space(2);
+	right: space(2);
+
+	display: grid;
+	place-items: center;
+
+	height: 40px;
+	width: 40px;
+
+	border-radius: 50%;
+	background-color: var(--light-background);
+	color: var(--dark-background);
+	outline-color: var(--border-dark);
+
+	transition: outline-color .2s;
+	z-index: 999;
+
+	&:hover {
+		outline: var(--border-dark) solid 1px;
+		outline-offset: -1px;
+	}
+}
+
+.debug-bar__beta-icon {
+	height: 35px;
+	width: 35px;
+	margin-top: -2px;
+	cursor: pointer;
+}
+
+.debug-bar__close-icon {
+	cursor: pointer;
+	height: 24px;
+	width: 24px;
+}
+
+.debug-bar__wrapper[data-openned="true"] {
+	border-radius: 8px;
+	width: auto;
+	left: auto;
+
+	grid-template-columns: auto 48px;
+	gap: space(4);
+
+	outline: var(--border-dark) solid 1px;
+	outline-offset: -1px;
+}
+
+.debug-bar__content {
+	display: flex;
+	align-items: center;
+	gap: space(4);
+	margin-left: space(2);
+
+	& > div {
+		display: flex;
+		align-items: center;
+		gap: space(1);
+	}
+
+	& svg {
+		height: 32px;
+		width: 32px;
+	}
+}
+
+.debug-bar__report {
+	cursor: pointer;
+	padding-inline: space(1);
+	transition: all .2s;
+	outline: var(--border-dark) solid 1px;
+	border-radius: 4px;
+
+	&:hover {
+		background-color: var(--light-background-hover);
+	}
+}
