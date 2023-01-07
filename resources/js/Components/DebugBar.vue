@@ -72,11 +72,14 @@
 import { computed, onUpdated, ref } from "vue";
 import { useStore } from "../stores/debug-bar.js";
 import { useStore as useAlertStore } from "../stores/alerts.js";
+import { useStore as useUserStore } from "../stores/user.js";
 
 const barOpenned = ref(false);
 
 const store = useStore();
 const alertStore = useAlertStore();
+const userStore = useUserStore();
+
 const switchState = function () {
 	barOpenned.value = !barOpenned.value;
 };
@@ -99,13 +102,27 @@ while (apiProfiling.initiatorType !== "fetch") {
 apiLatency.value = apiProfiling.responseEnd - apiProfiling.requestStart;
 
 const copyReport = () => {
+	let user = "Anonymous (unauthenticated)";
+	if (userStore.id !== 0) {
+		user = {
+			id: userStore.id,
+			username: userStore.username
+		};
+	}
+
 	const report = {
-		errors: store.errors.map(err => err.toString()),
-		warns: store.warns.map(warn => warn.toString()),
+		env: {
+			name: "Monody",
+			maintainer: "moon250",
+			url: document.URL
+		},
+		user,
 		apiLatency: apiLatency.value,
 		wsLatency: wsLatency.value,
 		loadTime: loadTime.value,
-		requestCount: requestCount.value
+		requestCount: requestCount.value,
+		errors: store.errors.map(err => err.toString()),
+		warns: store.warns.map(warn => warn.toString()),
 	};
 
 	navigator.clipboard.writeText(JSON.stringify(report, null, "\t"));
