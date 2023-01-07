@@ -20,6 +20,12 @@
         </svg>
         {{ wsLatency }}ms
       </div>
+      <div title="Temps de chargement de la page">
+        <svg>
+          <use href="/sprite.svg#loading" />
+        </svg>
+        {{ loadTime }}ms
+      </div>
       <div title="Requêtes effectuées">
         <svg>
           <use href="/sprite.svg#requests" />
@@ -41,6 +47,7 @@
       <div
         class="debug-bar__report"
         title="Copier le rapport de débogage"
+        @click="copyReport"
       >
         <svg>
           <use href="/sprite.svg#copy" />
@@ -60,14 +67,17 @@
 <script setup>
 import { computed, onUpdated, ref } from "vue";
 import { useStore } from "../stores/debug-bar.js";
+import { useStore as useAlertStore } from "../stores/alerts.js";
 
 const barOpenned = ref(false);
 
 const store = useStore();
+const alertStore = useAlertStore();
 const switchState = function () {
 	barOpenned.value = !barOpenned.value;
 };
 
+const loadTime = ref(0);
 const apiLatency = ref(0);
 const wsLatency = ref(0);
 const requestCount = ref(0);
@@ -79,7 +89,17 @@ const apiProfiling = performance.getEntriesByType("resource").pop();
 apiLatency.value = apiProfiling.responseEnd - apiProfiling.requestStart;
 
 const copyReport = () => {
+	const report = {
+		errors: store.errors.map(err => err.toString()),
+		warns: store.warns.map(warn => warn.toString()),
+		apiLatency: apiLatency.value,
+		wsLatency: wsLatency.value,
+		loadTime: loadTime.value,
+		requestCount: requestCount.value
+	};
 
+	navigator.clipboard.writeText(JSON.stringify(report, null, "\t"));
+	alertStore.addAlerts({ "info": "Le rapport a été copié dans le presse-papiers" });
 };
 
 setTimeout(() => {
@@ -87,6 +107,8 @@ setTimeout(() => {
 	window.Echo.connector.socket.emit("ping", () => {
 		wsLatency.value = Date.now() - start;
 	});
+
+	loadTime.value = performance.getEntriesByType("navigation")[0].duration;
 });
 
 onUpdated(() => {

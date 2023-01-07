@@ -15,7 +15,7 @@
 	outline-color: var(--border-dark);
 
 	transition: outline-color .2s;
-	z-index: 99999;
+	z-index: 999;
 
 	&:hover {
 		outline: var(--border-dark) solid 1px;
