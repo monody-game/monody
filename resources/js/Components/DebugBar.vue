@@ -2,7 +2,6 @@
   <div
     class="debug-bar__wrapper"
     :data-openned="barOpenned"
-    :title="barOpenned ? 'Fermer la barre de débogage' : 'Ouvrir la barre de débogage'"
   >
     <div
       v-if="barOpenned"
@@ -55,12 +54,17 @@
         Copier le rapport
       </div>
     </div>
-    <svg
-      :class="barOpenned ? 'debug-bar__close-icon' : 'debug-bar__beta-icon'"
-      @click.prevent="switchState"
+    <div
+      :class="barOpenned ? 'debug-bar__close-icon' : ''"
+      :title="barOpenned ? 'Fermer la barre de débogage' : 'Ouvrir la barre de débogage'"
     >
-      <use :href="barOpenned ? '/sprite.svg#cross' : '/sprite.svg#beta'" />
-    </svg>
+      <svg
+        :class="barOpenned ? 'debug-bar__close-icon' : 'debug-bar__beta-icon'"
+        @click.prevent="switchState"
+      >
+        <use :href="barOpenned ? '/sprite.svg#cross' : '/sprite.svg#beta'" />
+      </svg>
+    </div>
   </div>
 </template>
 
