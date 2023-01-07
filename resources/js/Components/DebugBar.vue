@@ -99,7 +99,7 @@ while (apiProfiling.initiatorType !== "fetch") {
 	apiProfiling = resources.pop();
 }
 
-apiLatency.value = apiProfiling.responseEnd - apiProfiling.requestStart;
+apiLatency.value = Math.floor(apiProfiling.responseEnd - apiProfiling.requestStart);
 
 const copyReport = () => {
 	let user = "Anonymous (unauthenticated)";
@@ -135,7 +135,7 @@ setTimeout(() => {
 		wsLatency.value = Date.now() - start;
 	});
 
-	loadTime.value = performance.getEntriesByType("navigation")[0].duration;
+	loadTime.value = Math.floor(performance.getEntriesByType("navigation")[0].duration);
 });
 
 onUpdated(() => {
