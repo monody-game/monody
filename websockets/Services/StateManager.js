@@ -20,7 +20,7 @@ export class StateManager {
 	async setState(state, channel) {
 		const id = gameId(channel);
 
-		info(`Setting state of game ${id} to ${state.status} in round ${state.round} for a duration of ${state.counterDuration}`);
+		info(`Setting state of game ${id} to ${state.status} in round ${state.round || 0} for a duration of ${state.counterDuration}`);
 		await client.set(`game:${id}:state`, JSON.stringify(state));
 		const message = await fetch(`https://web/api/state/${state.status}/message`);
 
@@ -28,7 +28,7 @@ export class StateManager {
 			status: state.status,
 			counterDuration: state.counterDuration,
 			startTimestamp: state.startTimestamp,
-			round: state.round
+			round: state.round || 0
 		});
 
 		if (state.status > 1 && message.status !== 404) {
