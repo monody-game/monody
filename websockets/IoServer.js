@@ -85,6 +85,11 @@ export class IoServer {
 			this.onSubscribe(socket);
 			this.onUnsubscribe(socket);
 			this.onDisconnecting(socket);
+
+			info("Listening to ping event ...");
+			socket.on("ping", (callback) => {
+				if (typeof callback === "function") callback();
+			});
 		});
 	}
 
