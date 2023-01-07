@@ -1,5 +1,7 @@
 <template>
-  <DebugBar />
+  <Suspense>
+    <DebugBar />
+  </Suspense>
   <Transition name="modal">
     <PopupComponent v-if="popupStore.isOpenned" />
   </Transition>

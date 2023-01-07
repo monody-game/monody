@@ -23,7 +23,7 @@
 		outline-offset: -2px;
 	}
 
-	& svg {
+	& > svg {
 		height: 35px;
 		width: 35px;
 
@@ -36,4 +36,21 @@
 	width: auto;
 	left: space(2);
 	grid-template-columns: 1fr 48px;
+}
+
+.debug-bar__content {
+	display: flex;
+	align-items: center;
+	gap: space(4);
+
+	& > div {
+		display: flex;
+		align-items: center;
+		gap: space(1);
+	}
+
+	& svg {
+		height: 32px;
+		width: 32px;
+	}
 }
