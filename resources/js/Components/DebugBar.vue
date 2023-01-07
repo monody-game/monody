@@ -89,7 +89,13 @@ const errorCount = computed(() => store.errors.length);
 const warnCount = computed(() => store.warns.length);
 
 await window.JSONFetch("/ping", "GET");
-const apiProfiling = performance.getEntriesByType("resource").pop();
+const resources = performance.getEntriesByType("resource");
+let apiProfiling = resources.pop();
+
+while (apiProfiling.initiatorType !== "fetch") {
+	apiProfiling = resources.pop();
+}
+
 apiLatency.value = apiProfiling.responseEnd - apiProfiling.requestStart;
 
 const copyReport = () => {
