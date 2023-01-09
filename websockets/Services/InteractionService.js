@@ -19,6 +19,11 @@ export class InteractionService {
 
 			const interactionId = interaction.id;
 			let callers = interaction.authorizedCallers;
+			let data = null;
+
+			if (interaction.data) {
+				data = interaction.data;
+			}
 
 			success(`Created ${type} interaction with id ${interactionId} in game ${id}.`);
 
@@ -29,13 +34,13 @@ export class InteractionService {
 
 				for (let caller of callers) {
 					caller = members.find(member => member.user_id === caller);
-					io.to(caller.socketId).emit("interaction.open", channel, { interaction: { id: interactionId, type } });
+					io.to(caller.socketId).emit("interaction.open", channel, { interaction: { id: interactionId, type, data } });
 				}
 
 				return;
 			}
 
-			io.to(channel).emit("interaction.open", channel, { interaction: { id: interactionId, type } });
+			io.to(channel).emit("interaction.open", channel, { interaction: { id: interactionId, type, data } });
 		} catch (e) {
 			error(e);
 			error("Error openning interaction, API response : ", res);
