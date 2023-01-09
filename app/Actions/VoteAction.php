@@ -53,4 +53,9 @@ class VoteAction implements ActionInterface
     {
         return false;
     }
+
+    public function additionnalData(string $gameId): null
+    {
+        return null;
+    }
 }

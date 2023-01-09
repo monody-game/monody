@@ -60,4 +60,9 @@ class PsychicAction implements ActionInterface
     {
         return true;
     }
+
+    public function additionnalData(string $gameId): null
+    {
+        return null;
+    }
 }

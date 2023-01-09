@@ -17,24 +17,11 @@ class WitchAction implements ActionInterface
     {
         $gameId = $this->getCurrentUserGameActivity($userId);
 
-        switch ($action) {
-            case InteractionActions::KillPotion:
-                if ($this->alive($targetId, $gameId)) {
-                    $actionCondition = true;
-                    break;
-                }
-                $actionCondition = false;
-                break;
-            case InteractionActions::RevivePotion:
-                if ($this->alive($targetId, $gameId)) {
-                    $actionCondition = false;
-                    break;
-                }
-                $actionCondition = true;
-                break;
-            default:
-                $actionCondition = true;
-        }
+        $actionCondition = match ($action) {
+            InteractionActions::KillPotion => $this->alive($targetId, $gameId),
+            InteractionActions::RevivePotion => !$this->alive($targetId, $gameId),
+            default => true,
+        };
 
         $role = $this->getRole($userId);
 
@@ -93,11 +80,17 @@ class WitchAction implements ActionInterface
 
     public function close(string $gameId): void
     {
-        // TODO: Implement close() method.
     }
 
     public function isSingleUse(): bool
     {
         return true;
+    }
+
+    public function additionnalData(string $gameId): array
+    {
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+
+        return array_map(fn ($death) => $death['user'], $deaths);
     }
 }
