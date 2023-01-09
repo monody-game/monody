@@ -42,6 +42,14 @@ interface ActionInterface
     public function updateClients(string $userId): void;
 
     /**
+     * Return additional data that should be added to interaction payload
+     *
+     * @param  string  $gameId
+     * @return mixed Could be array, string, null, bool, ...
+     */
+    public function additionnalData(string $gameId): mixed;
+
+    /**
      * Actions when closing the interaction
      *
      * @param  string  $gameId
