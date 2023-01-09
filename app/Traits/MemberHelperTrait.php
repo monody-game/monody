@@ -87,11 +87,12 @@ trait MemberHelperTrait
             return false;
         }
 
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
         $ids = array_keys($game['assigned_roles'], $role->value, true);
         $users = [];
 
         foreach ($ids as $user) {
-            if ($this->alive($user, $gameId)) {
+            if ($this->alive($user, $gameId) || array_filter($deaths, fn ($death) => $death['user'] === $user) !== []) {
                 $users[] = $user;
             }
         }

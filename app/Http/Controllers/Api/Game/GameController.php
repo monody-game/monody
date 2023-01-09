@@ -101,6 +101,7 @@ class GameController extends Controller
         $data['owner'] = $user->id;
         $data['is_started'] = array_key_exists('is_started', $data) ? $data['is_started'] : false;
         $id = $this->generateGameId();
+        $data['id'] = $id;
 
         if (!array_search($data['owner'], $data['users'], true)) {
             $user->current_game = $id;
@@ -115,7 +116,6 @@ class GameController extends Controller
         ]);
         Redis::set("game:$id:votes", []);
 
-        $data['id'] = $id;
         $data['owner'] = [
             'id' => $user->id,
             'username' => $user->username,
