@@ -51,7 +51,7 @@ class InteractionService
         $action = $this->getService($type->value);
         $data = $action->additionnalData($gameId);
 
-        if ($data) {
+        if ($data !== null) {
             $interaction['data'] = $data;
         }
 
