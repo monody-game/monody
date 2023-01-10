@@ -3,6 +3,7 @@ import vue from "@vitejs/plugin-vue";
 import laravel from "laravel-vite-plugin";
 import path from "node:path";
 import fs from "node:fs";
+import autoprefixer from "autoprefixer";
 
 export default defineConfig({
 	plugins: [
@@ -22,6 +23,13 @@ export default defineConfig({
 			},
 		}),
 	],
+	css: {
+		postcss: {
+			plugins: [
+				autoprefixer({})
+			]
+		}
+	},
 	server: {
 		https: {
 			key: fs.readFileSync(path.join(__dirname, "cert.key")),
