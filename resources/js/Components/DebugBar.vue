@@ -121,9 +121,11 @@ const copyReport = () => {
 		wsLatency: wsLatency.value,
 		loadTime: loadTime.value,
 		requestCount: requestCount.value,
-		errors: store.errors.map(err => err.toString()),
-		warns: store.warns.map(warn => warn.toString()),
+		errors: store.errors,
+		warns: store.warns
 	};
+
+	console.log(report);
 
 	navigator.clipboard.writeText(JSON.stringify(report, null, "\t"));
 	alertStore.addAlerts({ "info": "Le rapport a été copié dans le presse-papiers" });
