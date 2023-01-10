@@ -7,7 +7,8 @@ import fs from "node:fs";
 export default defineConfig({
 	plugins: [
 		laravel.default({
-			input: "resources/js/app.js"
+			input: "resources/js/app.js",
+			refresh: ["public/**"]
 		}),
 		vue({
 			template: {
