@@ -28,10 +28,16 @@ export default class ChatService {
 
 		if (type !== "message" && type !== "werewolf") {
 			wrapper.classList.add("alert-message__" + type);
-			createApp(ChatAlert, {
+			const rootProps = {
 				type: type,
 				message: payload.content
-			})
+			};
+
+			if (typeof payload.actionList !== "undefined") {
+				rootProps.actions = payload.actionList;
+			}
+
+			createApp(ChatAlert, rootProps)
 				.use(window.pinia)
 				.mount(wrapper);
 		} else {
