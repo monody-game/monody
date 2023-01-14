@@ -24,7 +24,7 @@ class VoteAction implements ActionInterface
         return $this->alive($targetId, $this->getGameId($targetId));
     }
 
-    public function call(string $targetId, InteractionActions $action, ?string $emitterId = null): mixed
+    public function call(string $targetId, InteractionActions $action, string $emitterId): mixed
     {
         return $this->service->vote($targetId, $this->getGameId($targetId), $emitterId);
     }
