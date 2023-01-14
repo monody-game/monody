@@ -6,6 +6,7 @@ use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\Roles;
 use App\Enums\Teams;
+use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CloseInteractionRequest;
 use App\Http\Requests\CreateInteractionRequest;
@@ -66,9 +67,10 @@ class GameInteractionController extends Controller
         $action = $request->validated('action');
         $gameId = $request->validated('gameId');
         $id = $request->validated('id');
-        $targetId = $request->validated('targetId');
+        $targetId = $request->validated('targetId', '');
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
-        if (!$this->alive($userId, $gameId)) {
+        if (!$this->alive($userId, $gameId) && array_filter($deaths, fn ($death) => $death['user'] === $userId) === []) {
             return (new JsonResponse([], Response::HTTP_FORBIDDEN))
                 ->withMessage('You are not alive.');
         }
@@ -92,11 +94,6 @@ class GameInteractionController extends Controller
                 'response' => $result,
             ], Response::HTTP_OK),
         };
-    }
-
-    public function actions(): JsonResponse
-    {
-        return new JsonResponse(Interactions::getActions());
     }
 
     private function getAuthorizedMembersByType(Interactions $type, string $gameId): string|array

@@ -68,6 +68,7 @@ class VoteService
     public function afterVote(string $gameId, string $context = 'vote'): string|false
     {
         $votes = self::getVotes($gameId);
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
         if ([] === $votes) {
             if ($context === 'vote') {
@@ -83,7 +84,7 @@ class VoteService
 
         $majority = self::getMajority($votes);
 
-        if (!$this->alive($majority, $gameId)) {
+        if (!$this->alive($majority, $gameId) && array_filter($deaths, fn ($death) => $death['user'] === $majority) !== []) {
             GameKill::dispatch([
                 'killedUser' => null,
                 'gameId' => $gameId,

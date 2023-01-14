@@ -33,7 +33,7 @@ class InteractionService
      * @param  string  $gameId The id of the game
      * @param  Interactions  $type The type of the interaction (vote, ...)
      * @param  array|string  $authorizedCallers The authorized users to use the interaction (by default it is everyone)
-     * @return string[]
+     * @return array
      */
     public function create(string $gameId, Interactions $type, array|string $authorizedCallers = '*'): array
     {
@@ -47,6 +47,13 @@ class InteractionService
             'authorizedCallers' => $callers,
             'type' => $type->value,
         ];
+
+        $action = $this->getService($type->value);
+        $data = $action->additionnalData($gameId);
+
+        if ($data !== null) {
+            $interaction['data'] = $data;
+        }
 
         Redis::set($key, [$interaction, ...(Redis::get($key) ?? [])]);
 
@@ -152,7 +159,7 @@ class InteractionService
         $skipDuration = $state->getTimeSkip();
 
         /**
-         * Should not append in production. Used to patch test cases
+         * Should not happen in production. Used to patch test cases
          */
         if ($skipDuration === null) {
             return $status;

@@ -34,8 +34,15 @@ const blank = (n = 1) => {
 const dataLog = (data, level) => {
 	for (const fragment of data) {
 		const message = chalk.gray(`${date()} | ${getLeveLColor(level).replace("%s", level)} -`);
-		console.log(message + " " + chalk.white(fragment));
-		fileLog(`${date()} | ${level} - ` + fragment);
+
+		if (typeof fragment === "string") {
+			console.log(message + " " + chalk.white(fragment));
+			fileLog(`${date()} | ${level} - ` + fragment);
+			return;
+		}
+
+		console.log(message + " ", fragment);
+		fileLog(`${date()} | ${level} - % NON STRING DATA FRAGMENT % ` + fragment);
 	}
 };
 

@@ -20,7 +20,7 @@ class PsychicAction implements ActionInterface
         return $role !== false && $role === Roles::Psychic && $this->alive($targetId, $this->getCurrentUserGameActivity($userId));
     }
 
-    public function call(string $targetId, InteractionActions $action, ?string $emitterId = null): int
+    public function call(string $targetId, InteractionActions $action, string $emitterId): int
     {
         $role = $this->getRole($targetId);
 
@@ -59,5 +59,10 @@ class PsychicAction implements ActionInterface
     public function isSingleUse(): bool
     {
         return true;
+    }
+
+    public function additionnalData(string $gameId): null
+    {
+        return null;
     }
 }

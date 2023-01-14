@@ -28,7 +28,7 @@ class WerewolvesAction implements ActionInterface
         return in_array($userId, $this->getUsersByTeam(Teams::Werewolves, $gameId), true) && $this->alive($targetId, $gameId);
     }
 
-    public function call(string $targetId, InteractionActions $action, ?string $emitterId = null): mixed
+    public function call(string $targetId, InteractionActions $action, string $emitterId): mixed
     {
         return $this->service->vote($targetId, $this->getGameId($targetId));
     }
@@ -56,5 +56,10 @@ class WerewolvesAction implements ActionInterface
     public function isSingleUse(): bool
     {
         return false;
+    }
+
+    public function additionnalData(string $gameId): null
+    {
+        return null;
     }
 }
