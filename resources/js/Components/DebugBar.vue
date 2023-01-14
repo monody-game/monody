@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-import { computed, onUpdated, ref } from "vue";
+import { computed, nextTick, onUpdated, ref } from "vue";
 import { useStore } from "../stores/debug-bar.js";
 import { useStore as useAlertStore } from "../stores/alerts.js";
 import { useStore as useUserStore } from "../stores/user.js";
@@ -80,8 +80,9 @@ const store = useStore();
 const alertStore = useAlertStore();
 const userStore = useUserStore();
 
-const switchState = function () {
+const switchState = async function () {
 	barOpenned.value = !barOpenned.value;
+	await profile();
 };
 
 const loadTime = ref(0);
@@ -91,15 +92,9 @@ const requestCount = ref(0);
 const errorCount = computed(() => store.errors.length);
 const warnCount = computed(() => store.warns.length);
 
-await window.JSONFetch("/ping", "GET");
-const resources = performance.getEntriesByType("resource");
-let apiProfiling = resources.pop();
-
-while (apiProfiling.initiatorType !== "fetch") {
-	apiProfiling = resources.pop();
-}
-
-apiLatency.value = Math.floor(apiProfiling.responseEnd - apiProfiling.requestStart);
+nextTick(async () => {
+	setInterval(await profile, 5000);
+});
 
 const copyReport = () => {
 	let user = "Anonymous (unauthenticated)";
@@ -125,22 +120,34 @@ const copyReport = () => {
 		warns: store.warns
 	};
 
-	console.log(report);
-
 	navigator.clipboard.writeText(JSON.stringify(report, null, "\t"));
 	alertStore.addAlerts({ "info": "Le rapport a été copié dans le presse-papiers" });
 };
 
-setTimeout(() => {
+async function profile() {
+	if (!barOpenned.value) {
+		return;
+	}
+
 	const start = Date.now();
 	window.Echo.connector.socket.emit("ping", () => {
 		wsLatency.value = Date.now() - start;
 	});
 
 	loadTime.value = Math.floor(performance.getEntriesByType("navigation")[0].duration);
-});
 
-onUpdated(() => {
+	await window.JSONFetch("/ping", "GET");
+	const resources = performance.getEntriesByType("resource");
+	let apiProfiling = resources.pop();
+
+	while (apiProfiling.initiatorType !== "fetch") {
+		apiProfiling = resources.pop();
+	}
+
+	apiLatency.value = Math.floor(apiProfiling.responseEnd - apiProfiling.requestStart);
+}
+
+onUpdated(async () => {
 	requestCount.value = performance.getEntriesByType("resource").length;
 });
 </script>
