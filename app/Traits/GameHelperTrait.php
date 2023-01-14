@@ -23,6 +23,7 @@ trait GameHelperTrait
         Redis::del("game:$gameId:state");
         Redis::del("game:$gameId:votes");
         Redis::del("game:$gameId:interactions");
+        Redis::del("game:$gameId:interactions:usedActions");
         Redis::del("game:$gameId:deaths");
     }
 }
