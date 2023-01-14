@@ -16,11 +16,9 @@ class WitchAction implements ActionInterface
     public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
     {
         $gameId = $this->getGameId($userId);
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
         $actionCondition = match ($action) {
             InteractionActions::KillPotion => $this->alive($targetId, $gameId),
-            InteractionActions::RevivePotion => !$this->alive($targetId, $gameId) && array_filter($deaths, fn ($death) => $death['user'] === $userId) !== [],
             default => true,
         };
 

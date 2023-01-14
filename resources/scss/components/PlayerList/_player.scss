@@ -9,7 +9,7 @@
 	width: min-content;
 	user-select: none;
 
-	&.player__votable {
+	&.player__votable{
 		cursor: pointer;
 	}
 
@@ -52,8 +52,14 @@
 	margin-bottom: space(1);
 }
 
-.player__is-voted, .player__votable:hover .player__avatar-container img {
+.player__is-voted,
+.player__votable:hover .player__avatar-container img,
+.player__witch-kill:hover .player__avatar-container img {
   box-shadow: 0 0 32px 6px #e50000;
+}
+
+.player__votable:hover, .player__witch-kill:hover {
+	cursor: pointer;
 }
 
 .player__is-wolf {
