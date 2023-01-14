@@ -18,8 +18,10 @@ class LoginController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->validated();
-        if (!Auth::attempt($credentials)) {
-            return (new JsonResponse(null, Response::HTTP_UNAUTHORIZED))
+        $fieldType = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (!Auth::attempt([$fieldType => $credentials['username'], 'password' => $credentials['password']])) {
+            return (new JsonResponse(null, Response::HTTP_BAD_REQUEST))
                 ->withMessage('Invalid credentials.');
         }
 

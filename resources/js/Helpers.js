@@ -1,5 +1,6 @@
 import { useStore as useAlertStore } from "./stores/alerts.js";
 import { useStore as usePopupStore } from "./stores/popup.js";
+import { useStore as useDebugStore } from "./stores/debug-bar.js";
 
 /**
  * @param {String} url
@@ -20,12 +21,25 @@ window.JSONFetch = async (url, method, body = null) => {
 		params.body = JSON.stringify(body);
 	}
 
-	const response = await fetch("/api" + url, params).catch((err) =>
-		res.error = err
-	);
+	const response = await fetch("/api" + url, params);
+	const content = await response.json();
+
+	if (response.status.toString().startsWith("5")) {
+		console.log(response);
+		useDebugStore().errors.push({
+			status: response.statusText,
+			target: response.url,
+			content: {
+				message: content.message,
+				exception: content.exception,
+				file: content.file,
+				line: content.line
+			}
+		});
+	}
 
 	if (response.status !== 204) {
-		res.data = await response.json();
+		res.data = content;
 	}
 
 	if (!res.data) {

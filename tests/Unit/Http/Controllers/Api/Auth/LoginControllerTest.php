@@ -3,6 +3,7 @@
 namespace Tests\Unit\Http\Controllers\Api\Auth;
 
 use App\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
@@ -24,7 +25,7 @@ class LoginControllerTest extends TestCase
             'password' => 'carlos',
         ]);
 
-        $response->assertUnauthorized();
+        $response->assertStatus(Response::HTTP_BAD_REQUEST);
         $response->assertJson(['message' => 'Invalid credentials.']);
         $response->assertCookieMissing('monody_access_token');
     }
@@ -37,6 +38,18 @@ class LoginControllerTest extends TestCase
         ])->assertOk();
 
         $response->assertCookie('monody_access_token');
+        $this->assertAuthenticated();
+    }
+
+    public function testLoginWithEmail()
+    {
+        $this
+            ->post('/api/auth/login', [
+                'username' => 'john.test@gmail.com',
+                'password' => 'johntest',
+            ])
+            ->assertOk()
+            ->assertCookie('monody_access_token');
         $this->assertAuthenticated();
     }
 
