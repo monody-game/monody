@@ -54,13 +54,12 @@ store.availableActions = actions.data;
 
 onBeforeRouteLeave(() => {
 	window.Echo.leave(`game.${gameId}`);
-	store.playerList = [];
+	store.$reset();
 });
 
 window.addEventListener("unload", () => {
 	window.Echo.leave(`game.${gameId}`);
-	store.playerList = [];
-	return "grrr";
+	store.$reset();
 });
 
 const disconnect = async function () {
