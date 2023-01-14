@@ -16,10 +16,11 @@ class WitchAction implements ActionInterface
     public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
     {
         $gameId = $this->getGameId($userId);
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
         $actionCondition = match ($action) {
             InteractionActions::KillPotion => $this->alive($targetId, $gameId),
-            InteractionActions::RevivePotion => !$this->alive($targetId, $gameId),
+            InteractionActions::RevivePotion => !$this->alive($targetId, $gameId) && array_filter($deaths, fn ($death) => $death['user'] === $userId) !== [],
             default => true,
         };
 
@@ -76,17 +77,20 @@ class WitchAction implements ActionInterface
         $member = $this->getMember($targetId, $gameId);
         $members = $this->getMembers($gameId);
         $index = array_search($member, $members, true);
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
         if (!$member || false === $index) {
             return;
         }
 
         $member = array_splice($members, (int) $index, 1)[0];
+        $deaths = array_filter($deaths, fn ($death) => $death['user'] !== $targetId);
 
         $member['user_info']['is_dead'] = false;
         $members = [...$members, $member];
 
         Redis::set("game:$gameId:members", $members);
+        Redis::set("game:$gameId:deaths", $deaths);
     }
 
     private function getRole(string $userId): Roles|false
