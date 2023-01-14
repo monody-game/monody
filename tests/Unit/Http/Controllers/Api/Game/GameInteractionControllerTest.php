@@ -197,6 +197,36 @@ class GameInteractionControllerTest extends TestCase
             ->assertExactJson(Interactions::getActions());
     }
 
+    public function testGettingActionsForOneInteraction()
+    {
+        $interaction = $this
+            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->post('/api/interactions', [
+                'gameId' => $this->game['id'],
+                'type' => Interactions::Witch->value,
+            ])
+            ->assertJson([
+                'interaction' => [
+                    'gameId' => $this->game['id'],
+                    'authorizedCallers' => json_encode(['superWitch']),
+                    'type' => Interactions::Witch->value,
+                ],
+            ])
+            ->assertOk()
+            ->json('interaction');
+
+        $this
+            ->get("/api/interactions/actions/{$interaction['gameId']}/{$interaction['id']}")
+            ->assertOk()
+            ->assertExactJson([
+                'actions' => [
+                    InteractionActions::KillPotion,
+                    InteractionActions::RevivePotion,
+                    InteractionActions::WitchSkip,
+                ],
+            ]);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
