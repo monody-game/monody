@@ -47,7 +47,6 @@
 
 .alert-message__info {
 	@extend .alert__main;
-	align-items: center;
 	background: var(--info);
 
 	& .alert-message__icon use {
@@ -66,12 +65,15 @@
 
 .alert-message__death {
 	@extend .alert__main;
-	align-items: center;
 	background: var(--danger);
 
 	& .alert-message__icon use {
 		color: #fff;
 	}
+}
+
+.alert-message__text {
+	max-width: calc(100% - 38px - 16px);
 }
 
 .alert-message__icon {
