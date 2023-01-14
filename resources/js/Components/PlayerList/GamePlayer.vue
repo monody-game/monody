@@ -6,7 +6,7 @@
     @click="send(userID, props.player.id)"
   >
     <PlayerInteractionBubble
-      v-if="shouldShowBubble"
+      v-if="isVoted"
       :type="interactionType"
       :data="votedBy"
     />
@@ -51,7 +51,11 @@ const interactionType = ref("");
 const gameStore = useGameStore();
 const userStore = useUserStore();
 const player = ref(null);
-const shouldShowBubble = ref(false);
+const gamePlayer = gameStore.getPlayerByID(props.player.id);
+
+onMounted(() => {
+	gameStore.playerRefs.push(player);
+});
 
 const gameId = computed(() => {
 	return document.URL.split("/")[document.URL.split("/").length - 1];
@@ -69,6 +73,7 @@ window.Echo
 	.join(`game.${gameId.value}`)
 	.listen(".interaction.open", ({ interaction }) => {
 		interactionType.value = interaction.type;
+		gameStore.currentInteractionId = interaction.id;
 
 		switch (interaction.type) {
 		case "vote":
@@ -78,20 +83,19 @@ window.Echo
 			}
 			break;
 		case "psychic":
-			const gamePlayer = gameStore.getPlayerByID(props.player.id);
-
 			if (gamePlayer.role && gamePlayer.role.name === "psychic") {
 				ChatService.sendMessage({
 					"content": "Cliquez sur un joueur pour en connaitre le rôle !",
 					"type": "info"
 				});
-				player.value.classList.add('player__hover-disabled')
+				player.value.classList.add("player__hover-disabled");
 			} else {
 				player.value.classList.add("player__psychic-hover");
 			}
+			break;
+		case "witch":
+			setupWitchActions(interaction);
 		}
-
-		gameStore.currentInteractionId = interaction.id;
 	})
 	.listen(".interaction.close", ({ interaction }) => {
 		switch (interaction.type) {
@@ -128,12 +132,12 @@ window.Echo
 		}
 	});
 
-const send = async function(votingUser, votedUser) {
+const send = async function(votingUser, votedUser, action = null) {
 	const res = await window.JSONFetch("/interactions/use", "POST", {
 		id: gameStore.currentInteractionId,
 		gameId:	gameId.value,
 		targetId: votedUser,
-		action: gameStore.availableActions[interactionType.value]
+		action: action ?? gameStore.availableActions[interactionType.value]
 	});
 
 	if (res.status === 204) {
@@ -163,7 +167,50 @@ const addVote = (data) => {
 	}
 };
 
-onMounted(() => {
-	shouldShowBubble.value = isVoted.value;
-});
+const setupWitchActions = async (interaction) => {
+	const actions = (await window.JSONFetch(`/interactions/actions/${gameId.value}/${gameStore.currentInteractionId}`, "GET")).data.actions;
+	console.log(interaction);
+
+	let actionList = [
+		{
+			title: "Soigner",
+			callback() {
+				for (const playerRef of gameStore.playerRefs) {
+					playerRef.value.classList.add("player__witch-heal");
+				}
+			},
+			id: "witch:revive"
+		},
+		{
+			title: "Éliminer",
+			callback() {
+				for (const playerRef of gameStore.playerRefs) {
+					playerRef.value.classList.add("player__votable");
+				}
+			},
+			id: "witch:kill"
+		},
+		{
+			title: "Ne rien faire",
+			async callback() {
+				await window.JSONFetch("/interactions/use", "POST", {
+					id: gameStore.currentInteractionId,
+					gameId:	gameId.value,
+					action: "witch:skip"
+				});
+			},
+			id: "witch:skip"
+		}
+	];
+
+	actionList = actionList.filter((action) => actions.includes(action.id));
+
+	if (gamePlayer.role && gamePlayer.role.name === "witch") {
+		ChatService.sendMessage({
+			content: "Choisissez l'action à effectuer cette nuit",
+			type: "info",
+			actionList
+		});
+	}
+};
 </script>

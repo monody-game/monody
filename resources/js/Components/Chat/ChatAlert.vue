@@ -8,7 +8,7 @@
     </p>
   </div>
   <div
-    v-if="props.actions !== []"
+    v-if="props.actions.length >= 1"
     class="alert-message__actions"
   >
     <div

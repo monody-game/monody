@@ -66,7 +66,7 @@ class GameInteractionController extends Controller
         $action = $request->validated('action');
         $gameId = $request->validated('gameId');
         $id = $request->validated('id');
-        $targetId = $request->validated('targetId');
+        $targetId = $request->validated('targetId', "");
 
         if (!$this->alive($userId, $gameId)) {
             return (new JsonResponse([], Response::HTTP_FORBIDDEN))

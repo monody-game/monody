@@ -7,7 +7,7 @@ import { useStore as useDebugStore } from "./stores/debug-bar.js";
  * @param {String} method
  * @param {Object} body
  */
-window.JSONFetch = async (url, method, body = null) => {
+window.JSONFetch = async (url, method = "GET", body = null) => {
 	const params = {
 		method: method,
 		headers: {
