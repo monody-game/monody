@@ -7,7 +7,7 @@ import { useStore as useDebugStore } from "./stores/debug-bar.js";
  * @param {String} method
  * @param {Object} body
  */
-window.JSONFetch = async (url, method, body = null) => {
+window.JSONFetch = async (url, method = "GET", body = null) => {
 	const params = {
 		method: method,
 		headers: {
@@ -22,10 +22,17 @@ window.JSONFetch = async (url, method, body = null) => {
 	}
 
 	const response = await fetch("/api" + url, params);
+
+	if (response.status === 204) {
+		res.data = {};
+		res.status = response.status;
+
+		return res;
+	}
+
 	const content = await response.json();
 
 	if (response.status.toString().startsWith("5")) {
-		console.log(response);
 		useDebugStore().errors.push({
 			status: response.statusText,
 			target: response.url,
@@ -38,9 +45,7 @@ window.JSONFetch = async (url, method, body = null) => {
 		});
 	}
 
-	if (response.status !== 204) {
-		res.data = content;
-	}
+	res.data = content;
 
 	if (!res.data) {
 		res.data = {};

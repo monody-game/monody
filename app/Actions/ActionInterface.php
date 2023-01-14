@@ -28,10 +28,10 @@ interface ActionInterface
      *
      * @param  string  $targetId The target to call the action on
      * @param  InteractionActions  $action The action to call
-     * @param  string|null  $emitterId The user that used the action
+     * @param  string  $emitterId The user that used the action
      * @return mixed Result of the action, or void
      */
-    public function call(string $targetId, InteractionActions $action, ?string $emitterId = null): mixed;
+    public function call(string $targetId, InteractionActions $action, string $emitterId): mixed;
 
     /**
      * Update clients with data edited after the action (voted players for example)
@@ -40,6 +40,14 @@ interface ActionInterface
      * @return void
      */
     public function updateClients(string $userId): void;
+
+    /**
+     * Return additional data that should be added to interaction payload
+     *
+     * @param  string  $gameId
+     * @return mixed Could be array, string, null, bool, ...
+     */
+    public function additionnalData(string $gameId): mixed;
 
     /**
      * Actions when closing the interaction

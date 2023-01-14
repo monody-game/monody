@@ -77,7 +77,18 @@ class InteractionServiceTest extends TestCase
         $this->service->call(InteractionActions::KillPotion, $id, $this->witch->id, $this->user->id);
         $this->assertFalse($this->alive($this->user->id, $this->game['id']));
 
-        $id = $this->service->create($this->game['id'], Interactions::Witch)['id'];
+        $interaction = $this->service->create($this->game['id'], Interactions::Witch, $this->witch->id, [$this->user->id]);
+        $id = $interaction['id'];
+
+        $this->assertSame([
+            'gameId' => $this->game['id'],
+            'id' => $id,
+            'authorizedCallers' => $this->witch->id,
+            'type' => 'witch',
+            'data' => [
+                $this->user->id,
+            ],
+        ], $interaction);
         $this->service->call(InteractionActions::RevivePotion, $id, $this->witch->id, $this->user->id);
         $this->assertTrue($this->alive($this->user->id, $this->game['id']));
 
