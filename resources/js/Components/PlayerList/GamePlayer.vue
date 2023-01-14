@@ -33,7 +33,7 @@
 <script setup>
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import PlayerInteractionBubble from "./PlayerInteractionBubble.vue";
 import ChatService from "../../services/ChatService.js";
 
@@ -54,7 +54,9 @@ const player = ref(null);
 const gamePlayer = gameStore.getPlayerByID(props.player.id);
 
 onMounted(() => {
-	gameStore.playerRefs.push(player);
+	if (player.value !== null) {
+		gameStore.playerRefs.push(player);
+	}
 });
 
 const gameId = computed(() => {
@@ -111,6 +113,10 @@ window.Echo
 			break;
 		case "psychic":
 			player.value.classList.remove("player__psychic-hover");
+			break;
+		case "witch":
+			player.value.classList.remove("player__witch-heal");
+			player.value.classList.remove("player__witch-kill");
 		}
 
 		gameStore.currentInteractionId = "";
@@ -132,7 +138,18 @@ window.Echo
 		}
 	});
 
-const send = async function(votingUser, votedUser, action = null) {
+const send = async function(votingUser, votedUser) {
+	let action = null;
+	const classList = player.value.classList;
+
+	if (classList.contains("player__witch-heal")) {
+		action = "witch:revive";
+	}
+
+	if (classList.contains("player__witch-kill")) {
+		action = "witch:kill";
+	}
+
 	const res = await window.JSONFetch("/interactions/use", "POST", {
 		id: gameStore.currentInteractionId,
 		gameId:	gameId.value,
@@ -169,24 +186,33 @@ const addVote = (data) => {
 
 const setupWitchActions = async (interaction) => {
 	const actions = (await window.JSONFetch(`/interactions/actions/${gameId.value}/${gameStore.currentInteractionId}`, "GET")).data.actions;
-	console.log(interaction);
 
 	let actionList = [
 		{
-			title: "Soigner",
+			title: "Soigner un joueur",
 			callback() {
-				for (const playerRef of gameStore.playerRefs) {
+				const list = gameStore.playerRefs.filter(playerRef => interaction.data.includes(playerRef.value.dataset.id));
+				for (const playerRef of list) {
 					playerRef.value.classList.add("player__witch-heal");
 				}
+
+				ChatService.sendMessage({
+					content: "Cliquez sur un joueur pour le réssuciter",
+					type: "info"
+				});
 			},
 			id: "witch:revive"
 		},
 		{
-			title: "Éliminer",
+			title: "Éliminer un joueur",
 			callback() {
 				for (const playerRef of gameStore.playerRefs) {
-					playerRef.value.classList.add("player__votable");
+					playerRef.value.classList.add("player__witch-kill");
 				}
+				ChatService.sendMessage({
+					content: "Cliquez sur un joueur pour l'éliminer",
+					type: "info"
+				});
 			},
 			id: "witch:kill"
 		},
@@ -202,6 +228,10 @@ const setupWitchActions = async (interaction) => {
 			id: "witch:skip"
 		}
 	];
+
+	if (interaction.data.length === 0) {
+		actionList = actionList.filter(action => action.id !== "witch:revive");
+	}
 
 	actionList = actionList.filter((action) => actions.includes(action.id));
 
