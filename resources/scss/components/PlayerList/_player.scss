@@ -52,7 +52,7 @@
 	margin-bottom: space(1);
 }
 
-.player__is-voted {
+.player__is-voted, .player__votable:hover .player__avatar-container img {
   box-shadow: 0 0 32px 6px #e50000;
 }
 
@@ -76,6 +76,18 @@
 
 	& > .player__avatar-container img {
 		box-shadow: 0 0 32px 6px var(--villager-color);
+	}
+}
+
+.player__avatar-container img {
+	transition: box-shadow .2s;
+}
+
+.player__witch-heal:hover {
+	cursor: pointer;
+
+	& > .player__avatar-container img {
+		box-shadow: 0 0 32px 6px var(--success);
 	}
 }
 
