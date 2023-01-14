@@ -34,6 +34,8 @@
 	flex-wrap: wrap;
 
 	& > * {
+		display: grid;
+		place-items: center;
 		white-space: nowrap;
 		flex: 1;
 	}
