@@ -57,7 +57,7 @@ const getState = async function(toRetrieveState = null) {
 
 onMounted(() =>	updateCircle());
 
-let state = {};
+let state = await getState();
 sound.load();
 roundText.value = state.name;
 icon.value = state.icon;

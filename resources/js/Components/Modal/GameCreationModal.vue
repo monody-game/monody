@@ -51,6 +51,7 @@ import GameStateModalPage from "./Pages/GameState/GameStateModalPage.vue";
 import ShareModalPage from "./Pages/ShareModalPage.vue";
 import BaseModal from "./BaseModal.vue";
 import { useStore } from "../../stores/GameCreationModal.js";
+import { useStore as useGameStore } from "../../stores/game.js";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
@@ -59,6 +60,7 @@ const totalPage = ref(2);
 const store = useStore();
 const router = useRouter();
 const gameId = ref("");
+const gameStore = useGameStore();
 
 const closeModal = function () {
 	reset();
@@ -87,11 +89,13 @@ const finish = async function() {
 	store.gameId = res.data.game.id;
 	gameId.value = res.data.game.id;
 
-	reset();
-
 	if (store.gameId !== 0) {
+		gameStore.roles = store.roles.filter(role => store.selectedRoles.includes(role.id));
+		console.log(store.roles.filter(role => store.selectedRoles.includes(role.id)), store.roles, store.selectedRoles);
 		await router.push("/game/" + gameId.value);
 	}
+
+	reset();
 };
 
 const reset = function () {
