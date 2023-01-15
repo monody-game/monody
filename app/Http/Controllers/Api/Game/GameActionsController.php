@@ -18,10 +18,11 @@ class GameActionsController extends GameController
     {
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
         $interactions = Redis::get("game:$gameId:interactions") ?? [];
+
         $interaction = array_filter($interactions, fn ($interaction) => $interaction['id'] === $interactionId)[0];
 
         $actions = InteractionActions::cases();
-        $actions = array_filter($actions, fn ($action) => str_starts_with($action->value, $interaction['type']) && !in_array($action, $usedActions, true));
+        $actions = array_filter($actions, fn ($action) => str_starts_with($action->value, $interaction['type']) && !in_array($action->value, $usedActions, true));
 
         return new JsonResponse(['actions' => array_values($actions)]);
     }
