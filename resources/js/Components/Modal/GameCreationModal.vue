@@ -91,7 +91,8 @@ const finish = async function() {
 
 	if (store.gameId !== 0) {
 		gameStore.roles = store.roles.filter(role => store.selectedRoles.includes(role.id));
-		console.log(store.roles.filter(role => store.selectedRoles.includes(role.id)), store.roles, store.selectedRoles);
+		reset();
+
 		await router.push("/game/" + gameId.value);
 	}
 
