@@ -26,6 +26,10 @@
       <Suspense><GameCounter /></Suspense>
     </div>
     <div class="game-page__main">
+      <RoleAssignationPopup
+        :roles="roles"
+        assigned-role="1"
+      />
       <Chat />
       <LogoSpinner v-if="loading" />
       <PlayerList />
@@ -41,6 +45,7 @@ import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/game.js";
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
+import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -48,6 +53,7 @@ const store = useStore();
 
 const gameId = route.params.id;
 const loading = ref(false);
+const roles = store.roles;
 
 const actions = await window.JSONFetch("/interactions/actions", "GET");
 store.availableActions = actions.data;

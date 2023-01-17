@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { useStore as useGameCreationStore } from "./GameCreationModal.js";
 import { useStore as useProfileStore } from "./ProfileModal.js";
 import { useStore as usePopupStore } from "./popup.js";
+import { useStore as useRoleAssignationStore } from "./role-assignation.js";
 
 export const useStore = defineStore("modal", {
 	state: () => {
@@ -18,6 +19,8 @@ export const useStore = defineStore("modal", {
 				return useProfileStore();
 			case "popup":
 				return usePopupStore();
+			case "role-assignation":
+				return useRoleAssignationStore();
 			}
 		}
 	},
