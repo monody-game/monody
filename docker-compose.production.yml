@@ -1,0 +1,67 @@
+services:
+  web:
+    image: macbre/nginx-http3:latest
+    restart: unless-stopped
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - .:/var/www:delegated
+      - ./site.conf:/etc/nginx/conf.d/default.conf
+      - ./cert.pem:/etc/nginx/cert.pem
+      - ./cert.key:/etc/nginx/cert.key
+    links:
+      - php
+    networks:
+      - monody
+
+  php:
+    restart: unless-stopped
+    build:
+      context: ./docker/php
+    volumes:
+      - .:/var/www:delegated
+    depends_on:
+      - db
+    networks:
+      - monody
+
+  websockets:
+    restart: unless-stopped
+    build:
+      context: ./docker/websockets
+    volumes:
+      - .:/var/www:delegated
+    command: yarn run serve
+    ports:
+      - "6001:6001"
+    networks:
+      - monody
+
+  db:
+    restart: unless-stopped
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: monody
+      TZ: Europe/Paris
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - monody
+
+  redis:
+    restart: unless-stopped
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - monody
+
+networks:
+  monody:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
