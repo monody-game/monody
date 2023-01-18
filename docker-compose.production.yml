@@ -18,7 +18,7 @@ services:
   php:
     restart: unless-stopped
     build:
-      context: ./docker/php
+      context: docker/prod/php
     volumes:
       - .:/var/www:delegated
     depends_on:
@@ -29,10 +29,9 @@ services:
   websockets:
     restart: unless-stopped
     build:
-      context: ./docker/websockets
+      context: docker/prod/websockets
     volumes:
       - .:/var/www:delegated
-    command: yarn run serve
     ports:
       - "6001:6001"
     networks:
@@ -53,8 +52,6 @@ services:
   redis:
     restart: unless-stopped
     image: redis:alpine
-    ports:
-      - "6379:6379"
     networks:
       - monody
 
