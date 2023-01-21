@@ -8,7 +8,7 @@ use App\Events\GameEnd;
 use App\Events\GameLoose;
 use App\Events\GameWin;
 use App\Facades\Redis;
-use App\Http\Middleware\RestrictToDockerNetwork;
+use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
@@ -24,7 +24,7 @@ class EndGameControllerTest extends TestCase
     public function testCheckingIfAGameCanEnd()
     {
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/end/check', [
                 'gameId' => $this->game['id'],
             ])
@@ -36,7 +36,7 @@ class EndGameControllerTest extends TestCase
         ]);
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/end/check', [
                 'gameId' => $this->game['id'],
             ])
@@ -57,7 +57,7 @@ class EndGameControllerTest extends TestCase
         $gameId = $this->game['id'];
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/end', [
                 'gameId' => $gameId,
             ])

@@ -4,7 +4,7 @@ namespace Tests\Unit\Http\Controllers\Api;
 
 use App\Enums\Teams;
 use App\Facades\Redis;
-use App\Http\Middleware\RestrictToDockerNetwork;
+use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,7 +77,7 @@ class RoleControllerTest extends TestCase
         $this->assertEmpty($assigned);
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/roles/assign', ['gameId' => $this->game['id']])
             ->assertOk();
 

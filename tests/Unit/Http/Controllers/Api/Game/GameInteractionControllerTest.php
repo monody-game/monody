@@ -6,7 +6,7 @@ use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\Roles;
 use App\Facades\Redis;
-use App\Http\Middleware\RestrictToDockerNetwork;
+use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -23,7 +23,7 @@ class GameInteractionControllerTest extends TestCase
     public function testCreatingInteraction()
     {
         $res = $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
                 'type' => Interactions::Vote->value,
@@ -51,7 +51,7 @@ class GameInteractionControllerTest extends TestCase
     public function testRemovingInteraction()
     {
         $res = $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
                 'type' => Interactions::Vote->value,
@@ -62,7 +62,7 @@ class GameInteractionControllerTest extends TestCase
         $this->assertNotEmpty(Redis::get("game:{$this->game['id']}:interactions"));
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/interactions', [
                 'gameId' => $this->game['id'],
                 'id' => $interactionId,
@@ -72,7 +72,7 @@ class GameInteractionControllerTest extends TestCase
         $this->assertEmpty(Redis::get("game:{$this->game['id']}:interactions"));
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/interactions', [
                 'gameId' => $this->game['id'],
                 'id' => $interactionId,
@@ -80,7 +80,7 @@ class GameInteractionControllerTest extends TestCase
             ->assertNotFound();
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/interactions', [
                 'gameId' => $this->secondGame['id'],
                 'id' => $interactionId,
@@ -99,7 +99,7 @@ class GameInteractionControllerTest extends TestCase
 
         foreach (Interactions::cases() as $interaction) {
             $this
-                ->withoutMiddleware(RestrictToDockerNetwork::class)
+                ->withoutMiddleware(RestrictToLocalNetwork::class)
                 ->post('/api/interactions', [
                     'gameId' => $this->game['id'],
                     'type' => $interaction->value,
@@ -115,7 +115,7 @@ class GameInteractionControllerTest extends TestCase
     public function testInteracting()
     {
         $res = $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
                 'type' => Interactions::Psychic->value,
@@ -148,7 +148,7 @@ class GameInteractionControllerTest extends TestCase
         ]);
 
         $res = $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $gameId,
                 'type' => Interactions::Psychic->value,
@@ -170,7 +170,7 @@ class GameInteractionControllerTest extends TestCase
     public function testInteractingWithoutHavingThePermission()
     {
         $res = $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
                 'type' => Interactions::Psychic->value,
@@ -200,7 +200,7 @@ class GameInteractionControllerTest extends TestCase
     public function testGettingActionsForOneInteraction()
     {
         $interaction = $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
                 'type' => Interactions::Witch->value,
