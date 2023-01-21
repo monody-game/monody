@@ -37,7 +37,7 @@ export class IoServer {
 
 		this.onConnect();
 		await this.listen();
-		this.httpServer.listen(6001);
+		this.httpServer.listen(3000);
 		const endTime = Date.now();
 		success(`Successfully started websockets server in ${endTime - startTime}ms!`);
 	}
