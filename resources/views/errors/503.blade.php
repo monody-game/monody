@@ -30,7 +30,7 @@
 
 		@font-face {
 			font-family: 'Sen';
-			src: url('../../public/fonts/Sen-Bold.woff2') format('woff2');
+			src: url('/fonts/Sen-Bold.woff2') format('woff2');
 			font-weight: bold;
 			font-style: normal;
 			font-display: swap;
@@ -38,7 +38,7 @@
 
 		@font-face {
 			font-family: 'Sen';
-			src: url('../../public/fonts/Sen-Regular.woff2') format('woff2');
+			src: url('/fonts/Sen-Regular.woff2') format('woff2');
 			font-weight: normal;
 			font-style: normal;
 			font-display: swap;
