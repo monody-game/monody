@@ -7,7 +7,7 @@ import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
 import { success } from "../Logger.js";
 
-const WaitingState = (await fetch(`https://${process.env.APP_URL}/api/state/0`, { "method": "GET" })).json;
+const WaitingState = (await fetch(`${process.env.APP_URL}/api/state/0`, { "method": "GET" })).json;
 
 export class GameService {
 	constructor(io, emitter) {
@@ -60,13 +60,13 @@ export class GameService {
 		});
 		const members = await GameService.getMembers(id);
 
-		await fetch(`https://${process.env.APP_URL}/api/roles/assign`, { method: "POST", body: params });
+		await fetch(`${process.env.APP_URL}/api/roles/assign`, { method: "POST", body: params });
 		const game = await GameService.getGame(id);
 
 		for (const member of members) {
 			const user = UserService.getUserBySocket(member.socketId, members);
 			const roleId = game.assigned_roles[user.user_id];
-			let role = await fetch(`https://${process.env.APP_URL}/api/roles/get/${roleId}`, { method: "GET" });
+			let role = await fetch(`${process.env.APP_URL}/api/roles/get/${roleId}`, { method: "GET" });
 
 			role = role.json.role;
 			io.to(member.socketId).emit("game.role-assign", channel, game.assigned_roles[user.user_id]);
