@@ -47,7 +47,7 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			gap: 32px;
+			gap: 16px;
 		}
 
 		svg {
@@ -79,6 +79,10 @@
 			div p {
 				font-size: 1.25rem;
 				margin-left: 6px;
+			}
+
+			main {
+				gap: 32px;
 			}
 		}
 	</style>
