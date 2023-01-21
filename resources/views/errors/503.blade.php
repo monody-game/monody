@@ -28,18 +28,18 @@
 			box-sizing: border-box;
 		}
 
-		@media screen and (max-width: 500px) {
+		@media screen and (min-width: 500px) {
 			svg {
-				height: 90px;
+				height: 120px;
 			}
 
 			h1 {
-				font-size: 4rem;
+				font-size: 5rem;
 			}
 
 			div p {
-				font-size: 1rem;
-				margin-left: 5px;
+				font-size: 1.25rem;
+				margin-left: 6px;
 			}
 		}
 
@@ -66,11 +66,11 @@
 		}
 
 		svg {
-			height: 120px;
+			height: 90px;
 		}
 
 		h1 {
-			font-size: 5rem;
+			font-size: 4rem;
 		}
 
 		div > * {
@@ -78,8 +78,8 @@
 		}
 
 		div p {
-			font-size: 1.25rem;
-			margin-left: 6px;
+			font-size: 1rem;
+			margin-left: 5px;
 		}
 	</style>
 </head>
