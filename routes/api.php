@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\RestrictToDockerNetwork;
+use App\Http\Middleware\RestrictToLocalNetwork;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/ping', 'PingController@ping');
@@ -29,7 +29,7 @@ Route::get('/team/{id}', 'TeamController@get');
 Route::get('/interactions/actions', 'Game\GameActionsController@all');
 Route::get('/interactions/actions/{gameId}/{interactionId}', 'Game\GameActionsController@get');
 
-Route::group(['middleware' => RestrictToDockerNetwork::class], function () {
+Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/roles/assign', 'RoleController@assign');
 
     Route::delete('/game', 'Game\GameController@delete');
