@@ -5,7 +5,7 @@ window.io = io;
 
 window.Echo = new Echo({
 	broadcaster: "socket.io",
-	host: "/ws/",
+	host: "ws.monody.fr/",
 	transports: ["websocket"],
 	secure: true,
 	forceTLS: true
