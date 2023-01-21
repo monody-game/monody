@@ -28,6 +28,22 @@
 			box-sizing: border-box;
 		}
 
+		@font-face {
+			font-family: 'Sen';
+			src: url('../../public/fonts/Sen-Bold.woff2') format('woff2');
+			font-weight: bold;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: 'Sen';
+			src: url('../../public/fonts/Sen-Regular.woff2') format('woff2');
+			font-weight: normal;
+			font-style: normal;
+			font-display: swap;
+		}
+
 		body {
 			margin: 0;
 			padding: 0;
