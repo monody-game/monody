@@ -51,11 +51,11 @@
 		}
 
 		svg {
-			height: 90px;
+			height: 70px;
 		}
 
 		h1 {
-			font-size: 4rem;
+			font-size: 3rem;
 		}
 
 		div > * {
@@ -63,8 +63,8 @@
 		}
 
 		div p {
-			font-size: 1rem;
-			margin-left: 5px;
+			font-size: .75rem;
+			margin-left: 3px;
 		}
 
 		@media screen and (min-width: 500px) {
