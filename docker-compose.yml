@@ -18,7 +18,7 @@ services:
   php:
     restart: unless-stopped
     build:
-      context: docker/dev/php
+      context: docker/php
     volumes:
       - .:/var/www:delegated
     depends_on:
@@ -29,7 +29,7 @@ services:
   websockets:
     restart: unless-stopped
     build:
-      context: docker/dev/websockets
+      context: docker/websockets
     volumes:
       - .:/var/www:delegated
     command: yarn run serve
@@ -73,7 +73,7 @@ services:
   vite:
     restart: unless-stopped
     build:
-      context: ./docker/dev/vite
+      context: ./docker/vite
     ports:
       - "5173:5173"
     volumes:
