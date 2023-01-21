@@ -28,7 +28,7 @@ const twitterLink = computed(() => {
 const getLink = computed(() => {
 	const id = store.gameId;
 	if (id) {
-		return "https://localhost/game/" + id;
+		return window.location.origin + "/game/" + id;
 	}
 	return null;
 });

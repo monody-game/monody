@@ -1,6 +1,6 @@
 <template>
   <img
-    :src="'https://localhost' + props.message.author.avatar"
+    :src="window.location.origin + props.message.author.avatar"
     alt=""
     class="message__avatar"
   >
