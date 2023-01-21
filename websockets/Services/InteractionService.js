@@ -12,7 +12,7 @@ export class InteractionService {
 			gameId: id,
 			type
 		});
-		const res = await fetch("https://web/api/interactions", { method: "POST", body: params });
+		const res = await fetch(`https://${process.env.APP_URL}/api/interactions`, { method: "POST", body: params });
 
 		try {
 			const interaction = res.json.interaction;
@@ -71,7 +71,7 @@ export class InteractionService {
 			id: interactionId
 		});
 
-		await fetch("https://web/api/interactions", { method: "DELETE", body: params });
+		await fetch(`https://${process.env.APP_URL}/api/interactions`, { method: "DELETE", body: params });
 
 		info(`Closing ${type} interaction with id ${interactionId} in game ${id}.`);
 

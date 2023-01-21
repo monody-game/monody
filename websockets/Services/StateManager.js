@@ -22,7 +22,7 @@ export class StateManager {
 
 		info(`Setting state of game ${id} to ${state.status} in round ${state.round || 0} for a duration of ${state.counterDuration}`);
 		await client.set(`game:${id}:state`, JSON.stringify(state));
-		const message = await fetch(`https://web/api/state/${state.status}/message`);
+		const message = await fetch(`https://${process.env.APP_URL}/api/state/${state.status}/message`);
 
 		this.io.to(channel).emit("game.state", channel, {
 			status: state.status,
