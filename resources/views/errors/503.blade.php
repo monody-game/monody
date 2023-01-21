@@ -28,21 +28,6 @@
 			box-sizing: border-box;
 		}
 
-		@media screen and (min-width: 500px) {
-			svg {
-				height: 120px;
-			}
-
-			h1 {
-				font-size: 5rem;
-			}
-
-			div p {
-				font-size: 1.25rem;
-				margin-left: 6px;
-			}
-		}
-
 		body {
 			margin: 0;
 			padding: 0;
@@ -80,6 +65,21 @@
 		div p {
 			font-size: 1rem;
 			margin-left: 5px;
+		}
+
+		@media screen and (min-width: 500px) {
+			svg {
+				height: 120px;
+			}
+
+			h1 {
+				font-size: 5rem;
+			}
+
+			div p {
+				font-size: 1.25rem;
+				margin-left: 6px;
+			}
 		}
 	</style>
 </head>
