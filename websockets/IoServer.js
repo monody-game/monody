@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import { RedisSubscriber } from "./Redis/RedisSubscriber.js";
 import { Channel } from "./Channels/Channel.js";
 import { createSecureServer } from "node:http2";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { GameService } from "./Services/GameService.js";
 import { gameId } from "./Helpers/Functions.js";
 import { handle } from "./PrivateEventHandler.js";
@@ -13,8 +13,8 @@ export class IoServer {
 	constructor() {
 		this.httpServer = createSecureServer({
 			allowHTTP1: true,
-			key: readFileSync("/var/www/cert.key"),
-			cert: readFileSync("/var/www/cert.pem")
+			cert: readFileSync(existsSync("/etc/letsencrypt/live/monody.fr/fullchain.pem") ? "/etc/letsencrypt/live/monody.fr/fullchain.pem" : "/var/www/cert.pem"),
+			key: readFileSync(existsSync("/etc/letsencrypt/live/monody.fr/privkey.pem") ? "/etc/letsencrypt/live/monody.fr/privkey.pem" : "/var/www/cert.key"),
 		});
 		this.server = new Server(this.httpServer, {
 			cors: {

@@ -10,7 +10,7 @@ export default async function getRounds(gameId = 0) {
 		return;
 	}
 
-	const apiRounds = await fetch(`https://web/api/rounds/${gameId}`, {
+	const apiRounds = await fetch(`https://${process.env.APP_URL}/api/rounds/${gameId}`, {
 		"method": "GET"
 	});
 
