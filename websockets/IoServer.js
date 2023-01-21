@@ -13,8 +13,8 @@ export class IoServer {
 	constructor() {
 		this.httpServer = createSecureServer({
 			allowHTTP1: true,
-			cert: readFileSync("/etc/letsencrypt/live/monody.fr/fullchain.pem"),
-			key: readFileSync("/etc/letsencrypt/live/monody.fr/privkey.pem"),
+			cert: readFileSync(process.env.CERT_PATH),
+			key: readFileSync(process.env.CERT_PRIVATE_KEY_PATH),
 		});
 		this.server = new Server(this.httpServer, {
 			cors: {
