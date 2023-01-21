@@ -28,6 +28,21 @@
 			box-sizing: border-box;
 		}
 
+		@media screen and (max-width: 500px) {
+			svg {
+				height: 90px;
+			}
+
+			h1 {
+				font-size: 4rem;
+			}
+
+			div p {
+				font-size: 1rem;
+				margin-left: 5px;
+			}
+		}
+
 		body {
 			margin: 0;
 			padding: 0;
