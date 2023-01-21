@@ -103,7 +103,7 @@ export class GameChannel {
 			userId: member.user_id
 		});
 
-		await fetch("https://web/api/game/leave", {
+		await fetch(`${process.env.APP_URL}/api/game/leave`, {
 			method: "POST",
 			body: params
 		});
@@ -134,7 +134,7 @@ export class GameChannel {
 	}
 
 	async onDelete(id) {
-		await fetch("https://web/api/game", {
+		await fetch(`${process.env.APP_URL}/api/game`, {
 			method: "DELETE",
 			body: Body.make({ gameId: id })
 		});

@@ -10,7 +10,7 @@ export class PrivateChannel {
 		};
 
 		if (process.env.APP_DEBUG) {
-			info("Sending auth request to: \"https://web\"");
+			info(`Sending auth request to: "${process.env.APP_URL}"`);
 		}
 
 		return this.serverRequest(socket, options);
@@ -25,7 +25,7 @@ export class PrivateChannel {
 				channel_name: options.form.channel_name
 			});
 
-			response = await fetch("https://web/broadcasting/auth", {
+			response = await fetch(`${process.env.APP_URL}/broadcasting/auth`, {
 				method: "POST",
 				body: params,
 				headers: options
