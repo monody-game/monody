@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Auth;
 
+use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -9,24 +10,28 @@ class RegisterControllerTest extends TestCase
 {
     public function testWrongRegisterRequest()
     {
-        $response = $this->post('/api/auth/register', [
-            'username' => 'carlos',
-            'email' => 'carlos',
-            'password' => 'carlos',
-            'password_confirmation' => 'carlos',
-        ]);
+        $response = $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/auth/register', [
+                'username' => 'carlos',
+                'email' => 'carlos',
+                'password' => 'carlos',
+                'password_confirmation' => 'carlos',
+            ]);
 
         $response->assertJsonValidationErrors(['email']);
     }
 
     public function testRegisteringUser()
     {
-        $response = $this->post('/api/auth/register', [
-            'username' => 'carlos',
-            'email' => 'carlos@gmail.com',
-            'password' => 'carlos100',
-            'password_confirmation' => 'carlos100',
-        ]);
+        $response = $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/auth/register', [
+                'username' => 'carlos',
+                'email' => 'carlos@gmail.com',
+                'password' => 'carlos100',
+                'password_confirmation' => 'carlos100',
+            ]);
         $response->assertCookie('monody_access_token');
         $response->assertCreated();
 
@@ -35,12 +40,14 @@ class RegisterControllerTest extends TestCase
 
     public function testRegisteringExistantUser()
     {
-        $response = $this->post('/api/auth/register', [
-            'username' => 'JohnTest',
-            'email' => 'john.test10@gmail.com',
-            'password' => 'azertyuiop',
-            'password_confirmation' => 'azertyuiop',
-        ]);
+        $response = $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/auth/register', [
+                'username' => 'JohnTest',
+                'email' => 'john.test10@gmail.com',
+                'password' => 'azertyuiop',
+                'password_confirmation' => 'azertyuiop',
+            ]);
 
         $response->assertJsonValidationErrors(['username']);
     }
@@ -49,11 +56,13 @@ class RegisterControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->post('/api/auth/register', [
-            'username' => 'JohnTest',
-            'email' => 'john.test@gmail.com',
-            'password' => 'johntest',
-            'password_confirmation' => 'johntest',
-        ]);
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/auth/register', [
+                'username' => 'JohnTest',
+                'email' => 'john.test@gmail.com',
+                'password' => 'johntest',
+                'password_confirmation' => 'johntest',
+            ]);
     }
 }
