@@ -1,6 +1,8 @@
 <template>
   <div class="auth-page__container">
-    <div class="auth-page__wrapper">
+    <div
+      class="auth-page__wrapper"
+    >
       <router-link
         :to="{ name: 'home_page' }"
         class="auth-page__home-link"
@@ -135,6 +137,38 @@
             </button>
           </div>
         </form>
+        <div class="auth-page__lock">
+          <div class="auth-page__locked-popup">
+            <div
+              class="popup__wrapper"
+              data-popup-type="warn"
+            >
+              <header class="popup__header">
+                <div class="popup__header-left">
+                  <svg class="popup__icon">
+                    <use href="/sprite.svg#warn" />
+                  </svg>
+                  <p
+                    id="modal__title"
+                    class="popup__title"
+                  >
+                    Attention
+                  </p>
+                </div>
+              </header>
+              <p class="popup__content">
+                Vous ne pouvez pas créer de compte Monody pendant la phase de beta.
+              </p>
+              <p
+                class="popup__note"
+              >
+                <router-link to="login">
+                  Se connecter
+                </router-link>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

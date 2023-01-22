@@ -15,6 +15,8 @@ class RegisterController extends Controller
 {
     public function register(RegisterRequest $request): JsonResponse
     {
+		return new JsonResponse(null, Response::HTTP_UNAUTHORIZED);
+
         $data = $request->validated();
 
         $data['password'] = Hash::make($request->password);
