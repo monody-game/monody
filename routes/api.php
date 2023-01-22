@@ -29,7 +29,7 @@ Route::get('/interactions/actions', 'Game\GameActionsController@all');
 Route::get('/interactions/actions/{gameId}/{interactionId}', 'Game\GameActionsController@get');
 
 Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
-	Route::post('/auth/register', 'Auth\RegisterController@register');
+    Route::post('/auth/register', 'Auth\RegisterController@register');
     Route::post('/roles/assign', 'RoleController@assign');
 
     Route::delete('/game', 'Game\GameController@delete');
