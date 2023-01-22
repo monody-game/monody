@@ -6,7 +6,7 @@ use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\Roles;
 use App\Facades\Redis;
-use App\Http\Middleware\RestrictToDockerNetwork;
+use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -25,7 +25,7 @@ class GameActionsControllerTest extends TestCase
     public function testGettingActionsForPsychicInteraction()
     {
         $interaction = $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
                 'type' => Interactions::Psychic->value,
@@ -44,7 +44,7 @@ class GameActionsControllerTest extends TestCase
     public function testRetrievingWitchActionWhileOneBeingAlreadyUsed()
     {
         $interaction = $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
                 'type' => Interactions::Witch->value,

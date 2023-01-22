@@ -7,11 +7,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RestrictToDockerNetwork
+class RestrictToLocalNetwork
 {
     public function handle(Request $request, Closure $next): JsonResponse|bool
     {
-        if ($request->getHost() && 'web' === $request->getHost()) {
+        if (
+            $request->hasHeader('X-Network-Key') &&
+            $request->header('X-Network-Key') === config('app.network_key')
+        ) {
             return $next($request);
         }
 

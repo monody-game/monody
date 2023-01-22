@@ -2,7 +2,8 @@ import { InteractionService } from "../Services/InteractionService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
-const baseURL = `${process.env.APP_URL}/api/game`;
+
+const baseURL = `${process.env.API_URL}/game`;
 
 export default {
 	identifier: 3,

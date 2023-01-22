@@ -14,7 +14,7 @@ export default {
 		const body = Body.make({
 			gameId: gameId(channel)
 		});
-		const baseURL = `${process.env.APP_URL}/api/game`;
+		const baseURL = `${process.env.API_URL}/game`;
 
 		await fetch(`${baseURL}/message/deaths`, {
 			method: "POST",
