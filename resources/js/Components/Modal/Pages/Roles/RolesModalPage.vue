@@ -1,6 +1,6 @@
 <template>
   <div class="roles__page">
-    Choisissez les roles parmis les suivants :
+    Selection des rôles :
     <div
       v-if="loading === true"
       class="roles__loader"

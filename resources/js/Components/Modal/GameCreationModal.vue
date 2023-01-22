@@ -1,8 +1,11 @@
 <template>
   <BaseModal>
-    <p id="modal__title">
-      Création d'une partie ({{ currentPage }}/{{ totalPage }})
-    </p>
+    <header>
+      <h3>Création d'une partie</h3>
+      <p class="modal__page-status">
+        ({{ currentPage }}/{{ totalPage }})
+      </p>
+    </header>
     <div class="modal__page">
       <RolesModalPage v-if="currentPage === 1" />
       <GameStateModalPage v-else-if="currentPage === 2" />
@@ -26,7 +29,7 @@
         </button>
         <button
           v-if="currentPage !== totalPage"
-          :class="notEnoughSelectedRoles() === true ? 'disable-hover' : ''"
+          :class="notEnoughSelectedRoles() === true ? 'disabled' : ''"
           :disabled="notEnoughSelectedRoles()"
           class="btn medium"
           @click="nextPage()"
