@@ -106,6 +106,7 @@
 
 .auth-page__show-password ~ .auth-page__error-icon {
 	right: 44px !important;
+	color: var(--danger);
 }
 
 .auth-page__input-notice {
