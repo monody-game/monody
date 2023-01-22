@@ -5,7 +5,7 @@ window.io = io;
 
 window.Echo = new Echo({
 	broadcaster: "socket.io",
-	host: window.location.hostname,
+	host: import.meta.env.VITE_WS_URL,
 	transports: ["websocket"],
 	secure: true,
 	forceTLS: true
