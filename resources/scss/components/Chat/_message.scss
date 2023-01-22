@@ -4,7 +4,6 @@
 	color: #000;
 
 	display: flex;
-	flex-direction: column;
 	gap: space(1);
 
 	width: 100%;
@@ -48,6 +47,7 @@
 .alert-message__info {
 	@extend .alert__main;
 	background: var(--info);
+	flex-direction: column;
 
 	& .alert-message__icon use {
 		color: #fff;
