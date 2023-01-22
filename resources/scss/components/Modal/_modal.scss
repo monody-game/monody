@@ -12,19 +12,38 @@
 }
 
 .modal__main {
+	color: var(--dark-background);
+
+	height: 55vh;
+	max-height: 532px;
+	width: 63vw;
+	max-width: 540px;
+
+	background-color: var(--light-background);
+
   overflow-x: hidden;
   overflow-y: auto;
+
   position: absolute;
-  background-color: var(--dark-background);
-  min-height: 45vh;
-  min-width: 30vw;
-  display: flex;
+  z-index: 5000;
+
+	display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: space(4);
+
+	padding: space(4);
   margin: space(2);
-  z-index: 5000;
+
+	& header {
+		font-weight: normal;
+		text-align: center;
+	}
+}
+
+.modal__page-status {
+	font-size: 1.1rem;
+	line-height: 1.5rem;
 }
 
 .modal-enter-active,
