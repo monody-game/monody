@@ -8,5 +8,6 @@ window.Echo = new Echo({
 	host: import.meta.env.VITE_WS_URL,
 	transports: ["websocket"],
 	secure: true,
-	forceTLS: true
+	forceTLS: true,
+	withCredentials: true
 });
