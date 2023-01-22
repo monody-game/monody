@@ -44,7 +44,7 @@ const getPlayerByID = (id) => {
 };
 
 const getAvatar = (id) => {
-	return "https://localhost" + getPlayerByID(id).avatar;
+	return window.location.origin + getPlayerByID(id).avatar;
 };
 </script>
 

@@ -13,8 +13,8 @@ export class IoServer {
 	constructor() {
 		this.httpServer = createSecureServer({
 			allowHTTP1: true,
+			cert: readFileSync(process.env.CERT_PATH),
 			key: readFileSync(process.env.CERT_PRIVATE_KEY_PATH),
-			cert: readFileSync(process.env.CERT_PATH)
 		});
 		this.server = new Server(this.httpServer, {
 			cors: {
@@ -37,7 +37,7 @@ export class IoServer {
 
 		this.onConnect();
 		await this.listen();
-		this.httpServer.listen(6001);
+		this.httpServer.listen(3000);
 		const endTime = Date.now();
 		success(`Successfully started websockets server in ${endTime - startTime}ms!`);
 	}
