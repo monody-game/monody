@@ -5,7 +5,7 @@ namespace Tests\Unit\Http\Controllers\Api\Game;
 use App\Enums\States;
 use App\Facades\Redis;
 use App\Http\Controllers\Api\Game\GameController;
-use App\Http\Middleware\RestrictToDockerNetwork;
+use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -54,7 +54,7 @@ class GameControllerTest extends TestCase
         $this->assertSame(sort($this->game), sort($game));
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
                 'gameId' => $res->json('game')['id'],
             ]);
@@ -86,7 +86,7 @@ class GameControllerTest extends TestCase
         $this->assertSame(sort($exceptedGame), sort($game));
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
                 'gameId' => $res->json('game')['id'],
             ]);
@@ -122,7 +122,7 @@ class GameControllerTest extends TestCase
 
         Redis::del('game:1234', 'game:5678');
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
                 'gameId' => $res->json('game')['id'],
             ]);
@@ -156,7 +156,7 @@ class GameControllerTest extends TestCase
             ]);
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [])
             ->assertJsonValidationErrorFor('gameId');
     }
@@ -175,7 +175,7 @@ class GameControllerTest extends TestCase
         $this->assertTrue(Redis::exists("game:{$game->json('game')['id']}:state"));
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
                 'gameId' => $game->json('game')['id'],
             ])
@@ -254,7 +254,7 @@ class GameControllerTest extends TestCase
         $gameId = $game->json('game')['id'];
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/join', [
                 'userId' => $this->secondUser->id,
                 'gameId' => $gameId,
@@ -278,7 +278,7 @@ class GameControllerTest extends TestCase
         $gameId = $game->json('game')['id'];
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/join', [
                 'userId' => $this->secondUser->id,
                 'gameId' => $gameId,
@@ -290,7 +290,7 @@ class GameControllerTest extends TestCase
         $this->assertSame($gameId, $this->secondUser->current_game);
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/leave', [
                 'userId' => $this->secondUser->id,
                 'gameId' => $gameId,
@@ -305,7 +305,7 @@ class GameControllerTest extends TestCase
     public function testLeavingGameWithoutGivingUserId()
     {
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/leave')
             ->assertUnprocessable();
     }

@@ -2,19 +2,21 @@
 
 namespace Tests\Unit\Http\Middleware;
 
-use App\Http\Middleware\RestrictToDockerNetwork;
+use App\Http\Middleware\RestrictToLocalNetwork;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Mockery;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class RestrictToDockerNetworkTest extends TestCase
+class RestrictToLocalNetworkTest extends TestCase
 {
-    public function testGettingAccessWhileRequestingWebHost()
+    public function testGettingAccess()
     {
-        $request = Mockery::mock(Request::class, ['getHost' => 'web']);
-        $middleware = new RestrictToDockerNetwork();
+        $middleware = new RestrictToLocalNetwork();
+        $request = new Request();
+        $request->headers->add([
+            'X-Network-Key' => config('app.network_key'),
+        ]);
 
         $res = $middleware->handle($request, function () {
             return true;
@@ -23,9 +25,9 @@ class RestrictToDockerNetworkTest extends TestCase
         $this->assertTrue($res);
     }
 
-    public function testGettingRejectedWhileNotRequestingWebHost()
+    public function testGettingRejected()
     {
-        $middleware = new RestrictToDockerNetwork();
+        $middleware = new RestrictToLocalNetwork();
         $res = $middleware->handle(new Request(), function () {
         });
 
