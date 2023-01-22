@@ -28,6 +28,22 @@
 			box-sizing: border-box;
 		}
 
+		@font-face {
+			font-family: 'Sen';
+			src: url('/fonts/Sen-Bold.woff2') format('woff2');
+			font-weight: bold;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: 'Sen';
+			src: url('/fonts/Sen-Regular.woff2') format('woff2');
+			font-weight: normal;
+			font-style: normal;
+			font-display: swap;
+		}
+
 		body {
 			margin: 0;
 			padding: 0;
@@ -47,15 +63,15 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			gap: 32px;
+			gap: 16px;
 		}
 
 		svg {
-			height: 120px;
+			height: 70px;
 		}
 
 		h1 {
-			font-size: 5rem;
+			font-size: 3rem;
 		}
 
 		div > * {
@@ -63,8 +79,27 @@
 		}
 
 		div p {
-			font-size: 1.25rem;
-			margin-left: 6px;
+			font-size: .75rem;
+			margin-left: 3px;
+		}
+
+		@media screen and (min-width: 500px) {
+			svg {
+				height: 120px;
+			}
+
+			h1 {
+				font-size: 5rem;
+			}
+
+			div p {
+				font-size: 1.25rem;
+				margin-left: 6px;
+			}
+
+			main {
+				gap: 32px;
+			}
 		}
 	</style>
 </head>

@@ -29,15 +29,5 @@ export default defineConfig({
 				autoprefixer({})
 			]
 		}
-	},
-	server: {
-		https: {
-			key: fs.readFileSync(path.join(__dirname, "cert.key")),
-			cert: fs.readFileSync(path.join(__dirname, "cert.pem")),
-		},
-		host: "localhost",
-		hmr: {
-			host: "localhost"
-		},
-	},
+	}
 });
