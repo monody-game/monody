@@ -32,7 +32,7 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 
 	const content = await response.json();
 
-	if (response.status.toString().startsWith("5")) {
+	if (!response.ok) {
 		useDebugStore().errors.push({
 			status: response.statusText,
 			target: response.url,
