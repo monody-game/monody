@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/ping', 'PingController@ping');
 
 Route::post('/auth/login', 'Auth\LoginController@login');
-Route::post('/auth/register', 'Auth\RegisterController@register');
 
 Route::get('/oauth/link/discord', 'Oauth\DiscordOauthController@link');
 Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
@@ -30,6 +29,7 @@ Route::get('/interactions/actions', 'Game\GameActionsController@all');
 Route::get('/interactions/actions/{gameId}/{interactionId}', 'Game\GameActionsController@get');
 
 Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
+	Route::post('/auth/register', 'Auth\RegisterController@register');
     Route::post('/roles/assign', 'RoleController@assign');
 
     Route::delete('/game', 'Game\GameController@delete');
