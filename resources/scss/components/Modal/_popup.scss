@@ -8,6 +8,8 @@ $popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 	min-width: 300px;
 
 	padding: space(3);
+
+	box-shadow: 0 0 10px 2px rgba(0, 0, 0, .25);
 }
 
 @each $popup in $popups {

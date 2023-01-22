@@ -13,6 +13,7 @@
 .auth-page__wrapper {
 	display: grid;
 	place-items: center;
+	position: relative;
 
 	height: 100%;
 	width: 100%;
@@ -157,4 +158,18 @@
 	z-index: 10;
 
 	backdrop-filter: blur(1px);
+}
+
+.auth-page__locked-popup {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateY(-50%) translateX(-50%);
+	cursor: auto;
+}
+.auth-page__lock {
+	position: absolute;
+	inset: 0;
+	backdrop-filter: blur(2px);
+	cursor: not-allowed;
 }
