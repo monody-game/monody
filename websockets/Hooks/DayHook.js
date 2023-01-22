@@ -8,7 +8,7 @@ export default {
 		const body = Body.make({
 			gameId: gameId(channel)
 		});
-		const baseUrl = "https://web/api/game";
+		const baseUrl = `${process.env.API_URL}/game`;
 
 		await fetch(`${baseUrl}/chat/lock`, {
 			method: "POST",
