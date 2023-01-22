@@ -18,6 +18,7 @@ export class IoServer {
 		});
 		this.server = new Server(this.httpServer, {
 			cors: {
+				origin: process.env.APP_URL,
 				credentials: true
 			}
 		});
