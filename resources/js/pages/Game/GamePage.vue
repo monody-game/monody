@@ -39,24 +39,15 @@ import Chat from "../../Components/Chat/TheChat.vue";
 import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/game.js";
-import { useStore as useAlertStore } from "../../stores/alerts.js";
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
 const store = useStore();
-const alerts = useAlertStore();
 
 const gameId = route.params.id;
 const loading = ref(false);
-
-window.Echo.private(`game.${gameId}`).error(() => {
-	alerts.addAlerts({
-		"error":	"Vous ne pouvez rejoindre cette partie."
-	});
-	router.push("/play");
-});
 
 const actions = await window.JSONFetch("/interactions/actions", "GET");
 store.availableActions = actions.data;

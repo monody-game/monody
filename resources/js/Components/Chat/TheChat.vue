@@ -55,6 +55,7 @@ const send = async function() {
 	message.value = "";
 };
 
+
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
 		const payload = e.data.payload;

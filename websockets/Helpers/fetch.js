@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import https from "node:https";
+import { error } from "../Logger.js";
 
 const agent = new https.Agent({
 	rejectUnauthorized: false,
@@ -34,7 +35,13 @@ export default async function(url, opts, socket = null) {
 	});
 
 	const body = await response.text();
-	const json = JSON.parse(body);
+	let json = {};
+
+	try {
+		json = JSON.parse(body);
+	} catch (e) {
+		//
+	}
 
 	return {
 		json,
