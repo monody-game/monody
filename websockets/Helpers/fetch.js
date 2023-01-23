@@ -34,13 +34,7 @@ export default async function(url, opts, socket = null) {
 	});
 
 	const body = await response.text();
-	let json = {};
-
-	try {
-		json = JSON.parse(body);
-	} catch (e) {
-		//
-	}
+	const json = JSON.parse(body);
 
 	return {
 		json,

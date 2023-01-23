@@ -33,12 +33,6 @@ export class PrivateChannel {
 
 			status = response.status;
 			response = response.text;
-
-			if (process.env.APP_DEBUG) {
-				info(`${socket.id} authenticated for: ${options.form.channel_name}`);
-			}
-
-			return response;
 		} catch (e) {
 			if (e) {
 				if (process.env.APP_DEBUG) {
@@ -47,14 +41,24 @@ export class PrivateChannel {
 				}
 
 				error("Error sending authentication request. Got HTTP status " + status);
-			} else if (status !== 200) {
-				if (process.env.APP_DEBUG) {
-					warn(`${socket.id} could not be authenticated to ${options.form.channel_name}`);
-					warn(response);
-				}
-
-				error("Client cannot be authenticated, got HTTP status " + status);
 			}
 		}
+
+		if (status !== 200) {
+			if (process.env.APP_DEBUG) {
+				warn(`${socket.id} could not be authenticated to ${options.form.channel_name}`);
+				warn(response);
+			}
+
+			error("Client cannot be authenticated, got HTTP status " + status);
+
+			throw new Error();
+		}
+
+		if (process.env.APP_DEBUG) {
+			info(`${socket.id} authenticated for: ${options.form.channel_name}`);
+		}
+
+		return response;
 	}
 }
