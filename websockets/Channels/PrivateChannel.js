@@ -18,31 +18,19 @@ export class PrivateChannel {
 
 	async serverRequest(socket, options) {
 		let response;
-		let status = 0;
 
-		try {
-			const params = Body.make({
-				channel_name: options.form.channel_name
-			});
+		const params = Body.make({
+			channel_name: options.form.channel_name
+		});
 
-			response = await fetch(`${process.env.APP_URL}/broadcasting/auth`, {
-				method: "POST",
-				body: params,
-				headers: options
-			}, socket);
+		response = await fetch(`${process.env.APP_URL}/broadcasting/auth`, {
+			method: "POST",
+			body: params,
+			headers: options
+		}, socket);
 
-			status = response.status;
-			response = response.text;
-		} catch (e) {
-			if (e) {
-				if (process.env.APP_DEBUG) {
-					error(`Error authenticating ${socket.id} for ${options.form.channel_name}`);
-					error(e);
-				}
-
-				error("Error sending authentication request. Got HTTP status " + status);
-			}
-		}
+		const status = response.status;
+		response = response.text;
 
 		if (status !== 200) {
 			if (process.env.APP_DEBUG) {
