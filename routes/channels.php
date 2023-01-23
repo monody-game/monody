@@ -13,7 +13,7 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
     $members = Redis::get("game:$gameId:members") ?? [];
     $members = array_filter($members, fn ($member) => $member['user_id'] === $user->id);
 
-    if (count($members) > 0 || in_array($user->id, $game['users'], true)) {
+    if (count($members) > 0 || $user->current_game !== null) {
         return false;
     }
 
