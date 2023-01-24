@@ -68,9 +68,9 @@ const disconnect = async function () {
 	popupStore.setPopup({
 		warn: {
 			content: "Voulez-vous vraiment quitter la partie ?",
-			note: "Si oui, cliquez ",
-			link: router.resolve("play"),
-			link_text: "ici"
+			note: "Si oui, ",
+			link: router.resolve("play").href,
+			link_text: "cliquez ici."
 		}
 	});
 };
