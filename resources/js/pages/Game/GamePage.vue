@@ -39,12 +39,14 @@ import Chat from "../../Components/Chat/TheChat.vue";
 import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/game.js";
+import { useStore as usePopupStore } from "../../stores/popup.js";
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
 const store = useStore();
+const popupStore = usePopupStore();
 
 const gameId = route.params.id;
 const loading = ref(false);
@@ -63,6 +65,13 @@ window.addEventListener("unload", () => {
 });
 
 const disconnect = async function () {
-	await router.push("/play");
+	popupStore.setPopup({
+		warn: {
+			content: "Voulez-vous vraiment quitter la partie ?",
+			note: "Si oui, cliquez ",
+			link: router.resolve("play"),
+			link_text: "ici"
+		}
+	});
 };
 </script>
