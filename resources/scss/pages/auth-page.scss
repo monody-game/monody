@@ -93,7 +93,8 @@
 	border: #b4000050 solid 2px;
 }
 
-.auth-page__form-group p {
+.auth-page__form-group p,
+.auth-page__error-icon {
 	color: var(--danger);
 }
 
@@ -107,7 +108,6 @@
 
 .auth-page__show-password ~ .auth-page__error-icon {
 	right: 44px !important;
-	color: var(--danger);
 }
 
 .auth-page__input-notice {
