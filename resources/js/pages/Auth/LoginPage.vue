@@ -37,7 +37,10 @@
               type="text"
               name="identifier"
             >
-            <svg v-if="error.errored">
+            <svg
+              v-if="error.errored"
+              class="auth-page__error-icon"
+            >
               <use href="/sprite.svg#error" />
             </svg>
             <p v-if="error.errored">
@@ -127,7 +130,7 @@ const login = async function () {
 
 	loading.value = false;
 
-	if (res.status === 401) {
+	if (!res.ok) {
 		error.errored = true;
 		error.text = "Identifiant ou mot de passe invalide";
 		return;

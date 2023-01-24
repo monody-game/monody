@@ -180,6 +180,7 @@ import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import NoticeComponent from "../../Components/NoticeComponent.vue";
 import VisibilityToggle from "../../Components/Form/VisibilityToggle.vue";
+import { useStore } from "../../stores/alerts.js";
 
 const router = useRouter();
 const username = ref("");
@@ -187,6 +188,7 @@ const email = ref("");
 const password = ref("");
 const password_confirmation = ref("");
 const loading = ref(false);
+const alertStore = useStore();
 
 const errors = ref({
 	username: {
@@ -263,6 +265,14 @@ const register = async function() {
 					errors.value[field].errored = true;
 				}
 			}
+			return;
+		}
+
+		if (!res.ok) {
+			alertStore.addAlerts({
+				error: "Une erreur inattendue est survenue durant la création de votre compte. Veuillez réessayer"
+			});
+
 			return;
 		}
 
