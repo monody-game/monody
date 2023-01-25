@@ -43,6 +43,8 @@
   height: 125px;
   width: 125px;
   border-radius: 20px;
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
 }
 
 .player__avatar-container {
