@@ -109,7 +109,8 @@ const copyReport = () => {
 		env: {
 			name: "Monody",
 			maintainer: "moon250",
-			url: document.URL
+			url: document.URL,
+			version: import.meta.env.VITE_VERSION
 		},
 		user,
 		apiLatency: apiLatency.value,
