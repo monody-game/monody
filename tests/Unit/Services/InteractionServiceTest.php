@@ -128,7 +128,6 @@ class InteractionServiceTest extends TestCase
     {
         $id = $this->service->create($this->game['id'], Interactions::Psychic)['id'];
         $this->service->call(InteractionActions::Spectate, $id, $this->psychic->id, $this->werewolf->id);
-
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
 
         $id = $this->service->create($this->game['id'], Interactions::Vote)['id'];
