@@ -1,10 +1,10 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import laravel from "laravel-vite-plugin";
-import path from "node:path";
 import fs from "node:fs";
 import autoprefixer from "autoprefixer";
 import "dotenv/config";
+import "dotenv-expand/config";
 
 export default defineConfig({
 	plugins: [

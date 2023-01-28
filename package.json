@@ -16,6 +16,7 @@
 		"@grafikart/spinning-dots-element": "latest",
 		"chalk": "^5.2.0",
 		"dotenv": "^16.0.3",
+		"dotenv-expand": "^10.0.0",
 		"laravel-echo": "^1.15.0",
 		"node-fetch": "^3.2.10",
 		"pinia": "^2.0.29",
