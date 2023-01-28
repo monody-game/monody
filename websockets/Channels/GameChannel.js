@@ -113,7 +113,7 @@ export class GameChannel {
 			await this.onDelete(id);
 		} else {
 			await client.set(`game:${id}:members`, JSON.stringify(members));
-			game.users = members;
+			game.users = game.users.filter(userId => userId !== member.user_id);
 			await this.gameService.setGame(id, game);
 
 			const isMember = await this.isMember(channel, member);

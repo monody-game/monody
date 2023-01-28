@@ -23,11 +23,19 @@ export class PrivateChannel {
 			channel_name: options.form.channel_name
 		});
 
-		response = await fetch(`${process.env.APP_URL}/broadcasting/auth`, {
-			method: "POST",
-			body: params,
-			headers: options
-		}, socket);
+		if (process.env.APP_ENV === "local") {
+			response = await fetch("https://web/broadcasting/auth", {
+				method: "POST",
+				body: params,
+				headers: options
+			}, socket);
+		} else {
+			response = await fetch(`${process.env.APP_URL}/broadcasting/auth`, {
+				method: "POST",
+				body: params,
+				headers: options
+			}, socket);
+		}
 
 		const status = response.status;
 		response = response.text;
