@@ -19,7 +19,7 @@
 		"laravel-echo": "^1.15.0",
 		"node-fetch": "^3.2.10",
 		"pinia": "^2.0.29",
-		"redis": "^4.2.0",
+		"redis": "^4.6.2",
 		"socket.io": "^4.5.2",
 		"socket.io-client": "^4.5.2",
 		"vue": "^3.2.38",
@@ -39,6 +39,6 @@
 	"version": "1.0.0",
 	"optionalDependencies": {
 		"bufferutil": "^4.0.7",
-		"utf-8-validate": "^6.0.0"
+		"utf-8-validate": "^6.0.2"
 	}
 }
