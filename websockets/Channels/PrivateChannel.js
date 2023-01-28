@@ -23,8 +23,7 @@ export class PrivateChannel {
 			channel_name: options.form.channel_name
 		});
 
-		/* response = await fetch(`${process.env.APP_URL}/broadcasting/auth`, { */
-		response = await fetch("https://web/broadcasting/auth", {
+		response = await fetch(`${process.env.APP_URL}/broadcasting/auth`, {
 			method: "POST",
 			body: params,
 			headers: options
