@@ -69,7 +69,7 @@ const disconnect = async function () {
 		warn: {
 			content: "Voulez-vous vraiment quitter la partie ?",
 			note: "Si oui, ",
-			link: router.resolve("play").href,
+			link: "/play",
 			link_text: "cliquez ici."
 		}
 	});
