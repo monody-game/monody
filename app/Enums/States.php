@@ -134,7 +134,8 @@ enum States: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles, self::Night, self::Day, self::End => null, // Cannot be skipped
-            self::Vote, self::Werewolf => 30,
+            self::Vote => 30,
+            self::Werewolf => 10,
             self::Witch, self::Psychic => 0, // Skip the state to the next
         };
     }
