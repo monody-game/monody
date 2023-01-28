@@ -1,6 +1,6 @@
 import { StateManager } from "./StateManager.js";
 import { gameId } from "../Helpers/Functions.js";
-import { error } from "../Logger.js";
+import { error, info } from "../Logger.js";
 
 export class CounterService {
 	counterId = {};
@@ -25,6 +25,7 @@ export class CounterService {
 			clearTimeout(this.counterId[data.gameId]);
 
 			const state = await this.manager.getState(data.gameId);
+			info(`Skipping time in game ${data.gameId}, in state ${state.status} to time ${data.to}`);
 
 			this.manager.setState({
 				status: state.status,
@@ -32,9 +33,11 @@ export class CounterService {
 				counterDuration: data.to,
 				counterId: counterId,
 				round: state.round
-			}, `game.${data.gameId}`);
+			}, `presence-game.${data.gameId}`, true);
 
-			this.cycle(channel, socket);
+			setTimeout(async () => {
+				await this.cycle(channel, socket);
+			}, (data.to + 2) * 1000);
 		});
 
 		this.counterId[id] = counterId[Symbol.toPrimitive]();
