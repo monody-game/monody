@@ -23,12 +23,7 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
     }
 
     if (isset($game['users']) && !in_array($user->id, $game['users'], true)) {
-        $game['users'][] = [
-			'id' => $user->id,
-			'username' => $user->username,
-			'avatar' => $user->avatar,
-			'level' => $user->level,
-		];
+        $game['users'][] = $user->id;
 
         Redis::set('game:' . $gameId, $game);
     }
