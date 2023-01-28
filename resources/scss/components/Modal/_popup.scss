@@ -13,7 +13,8 @@ $popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 }
 
 @each $popup in $popups {
-	.modal__background[data-popup-type=#{nth($popup, 1)}] .popup__icon {
+	.modal__background[data-popup-type=#{nth($popup, 1)}] .popup__icon,
+	.popup__wrapper[data-popup-type=#{nth($popup, 1)}] .popup__icon {
 		color: nth($popup, 2);
 	}
 }
