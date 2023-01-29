@@ -9,4 +9,6 @@ class GameOutcome extends Model
     protected $table = 'game_outcome';
 
     public $timestamps = false;
+
+    protected $fillable = ['user_id', 'role_id', 'win'];
 }
