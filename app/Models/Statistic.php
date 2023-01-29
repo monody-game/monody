@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Statistic extends Model
 {
-    protected $table = 'game_outcome';
+    protected $table = 'statistics';
 
     protected $primaryKey = 'user_id';
 
