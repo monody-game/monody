@@ -1,12 +1,17 @@
 .player-presentation__container {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	display: grid;
+	place-items: center;
 	width: calc(50% - space(12));
 }
 
 .player-presentation__main {
+	width: 400px;
+	height: calc(100% - space(8));
+
+	padding: space(3) space(2) space(2);
+
+	background-color: var(--light-background);
+
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -14,7 +19,7 @@
 
 	& .player-presentation__avatar {
 		border-radius: 50%;
-		height: 260px;
+		height: 200px;
 		z-index: 10;
 
 		aspect-ratio: 1 / 1;
@@ -27,8 +32,9 @@
 	}
 
 	& .player-presentation__exp {
-		transform: translateY(-24px);
-		z-index: 100;
+		transform: translateY(-20px);
+		position: absolute;
+		z-index: 10;
 	}
 
 	& .player-presentation__name {
@@ -36,5 +42,3 @@
 		z-index: 10;
 	}
 }
-
-

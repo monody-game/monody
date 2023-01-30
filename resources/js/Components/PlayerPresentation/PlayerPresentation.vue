@@ -4,16 +4,15 @@
       <div class="pill pill-light player-presentation__exp">
         {{ store.exp }}/100
       </div>
-      <ProgressBar />
-      <img
-        :src="store.avatar"
-        alt=""
-        class="player-presentation__avatar"
-      >
-      <span class="pill pill-light player-presentation__level">Lvl {{ store.level }}</span>
-      <p class="player-presentation__name">
-        {{ store.username }}
-      </p>
+      <ProgressBar style="position: relative;">
+        <img
+          :src="store.avatar"
+          alt=""
+          class="player-presentation__avatar"
+        >
+      </ProgressBar>
+      <span class="pill pill-light player-presentation__level">{{ store.username }}</span>
+      <div />
     </div>
   </div>
 </template>
