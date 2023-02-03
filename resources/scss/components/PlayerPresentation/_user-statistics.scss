@@ -1,0 +1,10 @@
+.stats__container {
+	display: grid;
+	grid-template-columns: repeat(3, auto);
+	gap: space(2);
+}
+
+.stats__statistic > svg {
+	height: 32px;
+	width: 32px;
+}
