@@ -21,7 +21,7 @@ class StatisticsControllerTest extends TestCase
                 'win_streak' => 0,
                 'longest_streak' => 0,
                 'wins' => 0,
-                'looses' => 0,
+                'losses' => 0,
                 'highest_win_role' => null,
                 'most_possessed_role' => null,
             ]);
@@ -49,7 +49,7 @@ class StatisticsControllerTest extends TestCase
                 'win_streak' => 0,
                 'longest_streak' => 0,
                 'wins' => 1,
-                'looses' => 0,
+                'losses' => 0,
                 'highest_win_role' => [
                     'role' => Roles::Psychic,
                     'occurences' => 1,
@@ -83,7 +83,7 @@ class StatisticsControllerTest extends TestCase
                 'win_streak' => 0,
                 'longest_streak' => 0,
                 'wins' => 3,
-                'looses' => 2,
+                'losses' => 2,
                 'highest_win_role' => [
                     'role' => Roles::SimpleVillager,
                     'occurences' => 2,
