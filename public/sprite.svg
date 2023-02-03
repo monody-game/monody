@@ -94,7 +94,7 @@
 		<path d="M22 1.77002H12V29.4623H22V1.77002Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
 		<path d="M32 17.155H22V29.4627H32V17.155Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
 	</symbol>
-	<symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="loose">
+	<symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="losses">
 		<path d="M21.2 23.6L24.177 20.623L17.833 14.279L12.633 19.479L3 9.833L4.833 8L12.633 15.8L17.833 10.6L26.023 18.777L29 15.8V23.6H21.2Z" fill="#0F1127"/>
 	</symbol>
 	<symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="win_streak">
