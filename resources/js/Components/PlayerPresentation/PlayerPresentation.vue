@@ -12,7 +12,7 @@
         >
       </ProgressBar>
       <span class="pill pill-light player-presentation__level">{{ store.username }}</span>
-      <div />
+      <UserStatistics />
     </div>
   </div>
 </template>
@@ -20,6 +20,7 @@
 <script setup>
 import { useStore } from "../../stores/user";
 import ProgressBar from "./ExpProgressBar.vue";
+import UserStatistics from "./UserStatistics.vue";
 
 const store = useStore();
 </script>

@@ -9,11 +9,12 @@
 
 .player-presentation__main {
 	width: 100%;
-	height: calc(100% - space(8));
+	height: calc(100% - space(6));
 
 	padding: space(3) space(2) space(2);
 
 	background-color: var(--light-background);
+	color: var(--dark-background);
 	position: relative;
 
 	border-radius: 6px;
@@ -38,7 +39,7 @@
 	}
 
 	& .player-presentation__exp {
-		transform: translateY(-20px);
+		transform: translateY(-10px);
 		position: absolute;
 		z-index: 10;
 
