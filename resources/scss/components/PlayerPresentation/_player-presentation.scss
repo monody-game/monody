@@ -56,6 +56,38 @@
 	}
 }
 
+.player-presentation__levels {
+	position: absolute;
+	bottom: 0;
+
+	display: flex;
+	justify-content: space-between;
+	z-index: 10000;
+
+	width: 115%;
+}
+
+.player-presentation__levels div {
+	display: flex;
+	align-items: center;
+
+	&:first-of-type {
+		gap: 4px;
+
+		& svg {
+			height: 32px;
+		}
+	}
+
+	& > p {
+		font-size: 18px;
+	}
+
+	& > svg {
+		height: 28px;
+		width: 28px;
+	}
+}
 
 .player-presentation__footer {
 	display: flex;

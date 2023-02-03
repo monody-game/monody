@@ -10,6 +10,20 @@
           alt=""
           class="player-presentation__avatar"
         >
+        <div class="player-presentation__levels">
+          <div>
+            <svg>
+              <use href="/sprite.svg#level" />
+            </svg>
+            <p>{{ store.level }}</p>
+          </div>
+          <div>
+            <svg>
+              <use href="/sprite.svg#elo" />
+            </svg>
+            <p>N/A</p>
+          </div>
+        </div>
       </ProgressBar>
       <span class="pill pill-light player-presentation__level">{{ store.username }}</span>
       <UserStatistics />
