@@ -24,7 +24,7 @@ class StatisticsController extends Controller
             'win_streak' => 0,
             'longest_streak' => 0,
             'wins' => 0,
-            'looses' => 0,
+            'losses' => 0,
             'highest_win_role' => null,
             'most_possessed_role' => null,
         ];
@@ -36,7 +36,7 @@ class StatisticsController extends Controller
         $outcomes = GameOutcome::select('role_id', 'win')->where('user_id', $userId)->get();
 
         $stats['wins'] = $outcomes->where('win', true)->count();
-        $stats['looses'] = $outcomes->where('win', false)->count();
+        $stats['losses'] = $outcomes->where('win', false)->count();
 
         $highestPossession = $outcomes->countBy('role_id')->sortDesc();
         $highestPossessionOccurences = $highestPossession->first();
