@@ -4,26 +4,31 @@
       <svg>
         <use href="/sprite.svg#trophy" />
       </svg>
+      <p>{{ stats.wins }}</p>
     </div>
     <div class="stats__statistic">
       <svg>
         <use href="/sprite.svg#win_rate" />
       </svg>
+      <p>{{ winRate }}</p>
     </div>
     <div class="stats__statistic">
       <svg>
-        <use href="/sprite.svg#loose" />
+        <use href="/sprite.svg#losses" />
       </svg>
+      <p>{{ stats.losses }}</p>
     </div>
     <div class="stats__statistic">
       <svg>
         <use href="/sprite.svg#ranking" />
       </svg>
+      <p>{{ stats.rank }}</p>
     </div>
     <div class="stats__statistic">
       <svg>
         <use href="/sprite.svg#win_streak" />
       </svg>
+      <p>{{ stats.win_streak }}</p>
     </div>
     <div class="stats__statistic">
       <svg
@@ -50,10 +55,28 @@
           fill="currentColor"
         />
       </svg>
+      <p>{{ stats.longest_streak }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
+const apiStats = (await window.JSONFetch("/stats")).data;
 
+const stats = {
+	wins: "N/A",
+	losses: "N/A",
+	rank: "N/A",
+	win_streak: "N/A",
+	longest_streak: "N/A"
+};
+let winRate = "N/A";
+
+for (const stat in apiStats) {
+	stats[stat] = apiStats[stat];
+}
+
+if (stats.wins !== "N/A" && stats.wins !== 0 && stats.losses !== "N/A" && stats.losses !== 0) {
+	winRate = stats.wins / stats.losses * 100;
+}
 </script>

@@ -4,7 +4,17 @@
 	gap: space(2);
 }
 
-.stats__statistic > svg {
-	height: 32px;
-	width: 32px;
+.stats__statistic {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	& > p {
+		font-size: 18px;
+	}
+
+	& > svg {
+		height: 32px;
+		width: 32px;
+	}
 }
