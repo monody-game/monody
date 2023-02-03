@@ -2,7 +2,7 @@
 	display: grid;
 	place-items: center;
 
-	max-width: 400px;
+	max-width: 360px;
 	min-width: 300px;
 	width: calc(100% - space(12));
 }
@@ -22,6 +22,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	justify-content: space-between;
 
 	& .player-presentation__avatar {
 		border-radius: 50%;
@@ -34,8 +35,9 @@
 
 	& .player-presentation__level {
 		height: 48px;
-		transform: translateY(-48px);
+		transform: translateY(230px);
 		z-index: 100;
+		position: absolute;
 	}
 
 	& .player-presentation__exp {
@@ -51,5 +53,20 @@
 	& .player-presentation__name {
 		font-size: 24px;
 		z-index: 10;
+	}
+}
+
+
+.player-presentation__footer {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	padding-inline: space(1);
+	padding-bottom: space(1);
+
+	& > svg {
+		cursor: pointer;
+		height: 32px;
+		width: 32px;
 	}
 }

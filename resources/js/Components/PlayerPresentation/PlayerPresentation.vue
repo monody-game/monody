@@ -13,14 +13,28 @@
       </ProgressBar>
       <span class="pill pill-light player-presentation__level">{{ store.username }}</span>
       <UserStatistics />
+      <div class="player-presentation__footer">
+        <svg @click="soon()">
+          <use href="/sprite.svg#wheel" />
+        </svg>
+        <svg @click="soon()">
+          <use href="/sprite.svg#share" />
+        </svg>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useStore } from "../../stores/user";
+import { useStore as useAlertStore } from "../../stores/alerts";
 import ProgressBar from "./ExpProgressBar.vue";
 import UserStatistics from "./UserStatistics.vue";
 
 const store = useStore();
+const soon = () => {
+	useAlertStore().addAlerts({
+		"info": "Un jour, peut-être ..."
+	});
+};
 </script>
