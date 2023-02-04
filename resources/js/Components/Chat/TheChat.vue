@@ -36,7 +36,6 @@
 <script setup>
 import ChatService from "../../services/ChatService.js";
 import { useStore as useGameStore } from "../../stores/game.js";
-import { useStore as useUserStore } from "../../stores/user.js";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 
@@ -45,7 +44,6 @@ const input = ref(null);
 const button = ref(null);
 const icon = ref(null);
 const gameStore = useGameStore();
-const userStore = useUserStore();
 const route = useRoute();
 
 const send = async function() {
@@ -55,20 +53,10 @@ const send = async function() {
 	message.value = "";
 };
 
-
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
 		const payload = e.data.payload;
 		ChatService.sendMessage(payload, payload.type);
-	})
-	.listen(".game.role-assign", async (role_id) => {
-		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
-		const role = res.data.role;
-		gameStore.setRole(userStore.id, role);
-		await ChatService.sendMessage({
-			type: "info",
-			content: `Votre rôle est : ${role.display_name}`
-		});
 	})
 	.listen(".game.kill", async (e) => {
 		const payload = e.data.payload;

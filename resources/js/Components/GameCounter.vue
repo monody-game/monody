@@ -57,7 +57,7 @@ const getState = async function(toRetrieveState = null) {
 
 onMounted(() =>	updateCircle());
 
-let state = {};
+let state = await getState();
 sound.load();
 roundText.value = state.name;
 icon.value = state.icon;
@@ -69,7 +69,9 @@ window.Echo.join(`game.${route.params.id}`)
 		}
 	})
 	.listen(".game.data", async (data) => {
-		await setData(data);
+		if (data && data.status !== status.value) {
+			await setData(data);
+		}
 	});
 
 onBeforeRouteLeave(() => {
