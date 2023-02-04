@@ -47,10 +47,10 @@ const addUser = function (player) {
 const removeUser = function (player) {
 	const children = playerListNode.value.children;
 
-	for (let i = 0; i < children.length; i++) {
-		if (parseInt(children[i].dataset.id) === parseInt(player.id)) {
+	for (const playerNode of children) {
+		if (playerNode.dataset.id === player.id) {
 			gameStore.playerList = gameStore.playerList.filter((p) => p.id !== player.id);
-			children[i].remove();
+			playerNode.remove();
 		}
 	}
 };

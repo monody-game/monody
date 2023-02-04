@@ -69,7 +69,9 @@ window.Echo.join(`game.${route.params.id}`)
 		}
 	})
 	.listen(".game.data", async (data) => {
-		await setData(data);
+		if (data && data.status !== status.value) {
+			await setData(data);
+		}
 	});
 
 onBeforeRouteLeave(() => {
