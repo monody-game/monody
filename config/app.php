@@ -9,6 +9,8 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'network_key' => env('APP_PRIVATE_NETWORK_KEY', ''),
+
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL', null),

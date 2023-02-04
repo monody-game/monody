@@ -2,13 +2,12 @@ import { client } from "../Redis/Connection.js";
 import { StateManager } from "./StateManager.js";
 import { CounterService } from "./CounterService.js";
 import { UserService } from "./UserService.js";
-import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
 import { success } from "../Logger.js";
 
-const WaitingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
+const WaitingState = (await fetch(`${process.env.API_URL}/state/0`, { "method": "GET" })).json;
 
 export class GameService {
 	constructor(io, emitter) {
@@ -61,14 +60,14 @@ export class GameService {
 		});
 		const members = await GameService.getMembers(id);
 
-		await fetch("https://web/api/roles/assign", { method: "POST", body: params });
+		await fetch(`${process.env.API_URL}/roles/assign`, { method: "POST", body: params });
 		const game = await GameService.getGame(id);
 
 		for (const member of members) {
 			const user = UserService.getUserBySocket(member.socketId, members);
 			const roleId = game.assigned_roles[user.user_id];
-			let role = await fetch(`https://web/api/roles/get/${roleId}`, { method: "GET" });
-
+			let role = await fetch(`${process.env.API_URL}/roles/get/${roleId}`, { method: "GET" });
+      
 			role = role.json.role;
 			io.to(member.socketId).emit("game.role-assign", channel, game.assigned_roles[user.user_id]);
 		}

@@ -18,7 +18,7 @@ services:
   php:
     restart: unless-stopped
     build:
-      context: ./docker/php
+      context: docker/php
     volumes:
       - .:/var/www:delegated
     depends_on:
@@ -29,7 +29,7 @@ services:
   websockets:
     restart: unless-stopped
     build:
-      context: ./docker/websockets
+      context: docker/websockets
     volumes:
       - .:/var/www:delegated
     command: yarn run serve

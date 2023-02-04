@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Auth;
 
+use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -97,18 +98,22 @@ class LoginControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->post('/api/auth/register', [
-            'username' => 'JohnTest',
-            'email' => 'john.test@gmail.com',
-            'password' => 'johntest',
-            'password_confirmation' => 'johntest',
-        ]);
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/auth/register', [
+                'username' => 'JohnTest',
+                'email' => 'john.test@gmail.com',
+                'password' => 'johntest',
+                'password_confirmation' => 'johntest',
+            ]);
 
-        $this->post('/api/auth/register', [
-            'username' => 'second user',
-            'email' => 'second.user@gmail.com',
-            'password' => '12345678',
-            'password_confirmation' => '12345678',
-        ]);
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/auth/register', [
+                'username' => 'second user',
+                'email' => 'second.user@gmail.com',
+                'password' => '12345678',
+                'password_confirmation' => '12345678',
+            ]);
     }
 }

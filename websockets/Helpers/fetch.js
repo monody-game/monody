@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import https from "node:https";
+import { error } from "../Logger.js";
 
 const agent = new https.Agent({
 	rejectUnauthorized: false,
@@ -17,7 +18,8 @@ export default async function(url, opts, socket = null) {
 	opts = {
 		...opts,
 		headers: {
-			"X-Requested-With": "XMLHttpRequest"
+			"X-Requested-With": "XMLHttpRequest",
+			"X-Network-Key": process.env.APP_PRIVATE_NETWORK_KEY
 		}
 	};
 

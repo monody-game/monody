@@ -15,14 +15,14 @@ export class StateManager {
    *
    * @param { Object } state
    * @param { Object } channel
+   * @param { Boolean } isSkip
    * @returns self
    */
-	async setState(state, channel) {
+	async setState(state, channel, isSkip = false) {
 		const id = gameId(channel);
 
 		info(`Setting state of game ${id} to ${state.status} in round ${state.round || 0} for a duration of ${state.counterDuration}`);
 		await client.set(`game:${id}:state`, JSON.stringify(state));
-		const message = await fetch(`https://web/api/state/${state.status}/message`);
 
 		this.io.to(channel).emit("game.state", channel, {
 			status: state.status,
@@ -31,8 +31,12 @@ export class StateManager {
 			round: state.round || 0
 		});
 
-		if (state.status > 1 && message.status !== 404) {
-			ChatService.info(this.io, channel, message.json.message);
+		if (!isSkip) {
+			const message = await fetch(`${process.env.API_URL}/state/${state.status}/message`);
+
+			if (state.status > 1 && message.status !== 404) {
+				ChatService.info(this.io, channel, message.json.message);
+			}
 		}
 
 		return this;

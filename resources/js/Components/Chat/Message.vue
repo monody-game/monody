@@ -1,6 +1,6 @@
 <template>
   <img
-    :src="'https://localhost' + props.message.author.avatar"
+    :src="avatar"
     alt=""
     class="message__avatar"
   >
@@ -21,4 +21,5 @@ const props = defineProps({
 		required: true
 	}
 });
+const avatar = window.location.origin + props.message.author.avatar;
 </script>

@@ -4,12 +4,11 @@
 	color: #000;
 
 	display: flex;
-	flex-direction: column;
 	gap: space(1);
 
 	width: 100%;
 
-	margin-bottom: space(2);
+	margin-bottom: space(1);
 	padding: space(1);
 
 	border-radius: 2px;
@@ -48,6 +47,7 @@
 .alert-message__info {
 	@extend .alert__main;
 	background: var(--info);
+	flex-direction: column;
 
 	& .alert-message__icon use {
 		color: #fff;
@@ -95,4 +95,5 @@
 	padding-top: space(1);
 	padding-left: space(.5);
 	overflow-wrap: anywhere;
+	line-height: 1.2rem;
 }

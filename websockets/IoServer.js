@@ -13,8 +13,8 @@ export class IoServer {
 	constructor() {
 		this.httpServer = createSecureServer({
 			allowHTTP1: true,
-			key: readFileSync("/var/www/cert.key"),
-			cert: readFileSync("/var/www/cert.pem")
+			cert: readFileSync(process.env.CERT_PATH),
+			key: readFileSync(process.env.CERT_PRIVATE_KEY_PATH),
 		});
 		this.server = new Server(this.httpServer, {
 			cors: {

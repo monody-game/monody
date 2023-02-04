@@ -68,7 +68,7 @@ const userID = computed(() => {
 });
 
 const avatar = computed(() => {
-	return "https://localhost" + props.player.avatar;
+	return window.location.origin + props.player.avatar;
 });
 
 window.Echo

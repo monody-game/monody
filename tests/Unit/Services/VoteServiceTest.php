@@ -4,7 +4,7 @@ namespace Tests\Unit\Services;
 
 use App\Events\GameKill;
 use App\Facades\Redis;
-use App\Http\Middleware\RestrictToDockerNetwork;
+use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use App\Services\VoteService;
 use Illuminate\Support\Facades\Event;
@@ -99,7 +99,7 @@ class VoteServiceTest extends TestCase
         $this->service->afterVote($gameId);
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/message/deaths', ['gameId' => $this->game['id']]);
 
         Event::assertDispatched(function (GameKill $event) use ($gameId) {
@@ -168,7 +168,7 @@ class VoteServiceTest extends TestCase
         $this->assertSame($this->user->id, $this->service->afterVote($gameId));
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/message/deaths', ['gameId' => $gameId]);
 
         Event::assertDispatched(function (GameKill $event) use ($gameId) {
