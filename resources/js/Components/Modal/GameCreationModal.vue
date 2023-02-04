@@ -67,10 +67,23 @@ const closeModal = function () {
 };
 
 const notEnoughSelectedRoles = function () {
-	const selectedRoles = store.selectedRoles;
-	// return selectedRoles.length < 5;
+	const selectedIds = store.selectedRoles;
+	const selectedRoles = [];
+
+	for (const role of store.roles) {
+		if (selectedIds.indexOf(role.id) !== -1) {
+			role.count = store.getRoleCountById(role.id);
+			selectedRoles.push(role);
+		}
+	}
+
+	// return selectedIds.length < 5;
 	// TODO: replace line below with line above
-	return selectedRoles.length < 2;
+	return selectedIds.length < 2 ||
+		!(
+			selectedRoles.filter(role => role.team_id === 1).length >= 1 &&
+			selectedRoles.filter(role => role.team_id === 2).length >= 1
+		);
 };
 
 const nextPage = async function() {
