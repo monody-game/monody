@@ -1,9 +1,10 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import laravel from "laravel-vite-plugin";
-import path from "node:path";
 import fs from "node:fs";
 import autoprefixer from "autoprefixer";
+import "dotenv/config";
+import "dotenv-expand/config";
 
 export default defineConfig({
 	plugins: [
@@ -32,8 +33,8 @@ export default defineConfig({
 	},
 	server: {
 		https: {
-			key: fs.readFileSync(path.join(__dirname, "cert.key")),
-			cert: fs.readFileSync(path.join(__dirname, "cert.pem")),
+			key: fs.readFileSync(process.env.CERT_PRIVATE_KEY_PATH),
+			cert: fs.readFileSync(process.env.CERT_PATH),
 		},
 		host: "localhost",
 		hmr: {

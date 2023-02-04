@@ -10,7 +10,7 @@ export class PrivateChannel {
 		};
 
 		if (process.env.APP_DEBUG) {
-			info("Sending auth request to: \"https://web\"");
+			info(`Sending auth request to: "${process.env.APP_URL}"`);
 		}
 
 		return this.serverRequest(socket, options);
@@ -18,43 +18,43 @@ export class PrivateChannel {
 
 	async serverRequest(socket, options) {
 		let response;
-		let status = 0;
 
-		try {
-			const params = Body.make({
-				channel_name: options.form.channel_name
-			});
+		const params = Body.make({
+			channel_name: options.form.channel_name
+		});
 
+		if (process.env.APP_ENV === "local") {
 			response = await fetch("https://web/broadcasting/auth", {
 				method: "POST",
 				body: params,
 				headers: options
 			}, socket);
-
-			status = response.status;
-			response = response.text;
-
-			if (process.env.APP_DEBUG) {
-				info(`${socket.id} authenticated for: ${options.form.channel_name}`);
-			}
-
-			return response;
-		} catch (e) {
-			if (e) {
-				if (process.env.APP_DEBUG) {
-					error(`Error authenticating ${socket.id} for ${options.form.channel_name}`);
-					error(e);
-				}
-
-				error("Error sending authentication request. Got HTTP status " + status);
-			} else if (status !== 200) {
-				if (process.env.APP_DEBUG) {
-					warn(`${socket.id} could not be authenticated to ${options.form.channel_name}`);
-					warn(response);
-				}
-
-				error("Client cannot be authenticated, got HTTP status " + status);
-			}
+		} else {
+			response = await fetch(`${process.env.APP_URL}/broadcasting/auth`, {
+				method: "POST",
+				body: params,
+				headers: options
+			}, socket);
 		}
+
+		const status = response.status;
+		response = response.text;
+
+		if (status !== 200) {
+			if (process.env.APP_DEBUG) {
+				warn(`${socket.id} could not be authenticated to ${options.form.channel_name}`);
+				warn(response);
+			}
+
+			error("Client cannot be authenticated, got HTTP status " + status);
+
+			throw new Error();
+		}
+
+		if (process.env.APP_DEBUG) {
+			info(`${socket.id} authenticated for: ${options.form.channel_name}`);
+		}
+
+		return response;
 	}
 }

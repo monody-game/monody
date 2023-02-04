@@ -7,9 +7,10 @@ use App\Enums\Teams;
 use App\Events\ChatLock;
 use App\Events\MessageSended;
 use App\Facades\Redis;
-use App\Http\Middleware\RestrictToDockerNetwork;
+use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class GameChatControllerTest extends TestCase
@@ -111,7 +112,7 @@ class GameChatControllerTest extends TestCase
         Event::fake();
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/chat/lock', ['gameId' => $this->game['id']])
             ->assertNoContent();
 
@@ -126,7 +127,7 @@ class GameChatControllerTest extends TestCase
         $game = $this->game;
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/chat/lock', [
                 'gameId' => $game['id'],
                 'users' => $this->user->id,
@@ -151,7 +152,7 @@ class GameChatControllerTest extends TestCase
         $user = $this->user;
 
         $this
-            ->withoutMiddleware(RestrictToDockerNetwork::class)
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/chat/lock', [
                 'gameId' => $game['id'],
                 'team' => Teams::Werewolves->value,
@@ -166,6 +167,21 @@ class GameChatControllerTest extends TestCase
                 'socket' => null,
             ];
         });
+    }
+
+    public function testSendingMessageLargerThan500Chars()
+    {
+        Event::fake();
+
+        $this
+            ->actingAs($this->user, 'api')
+            ->post('/api/game/message/send', [
+                'content' => Str::random(501),
+                'gameId' => $this->game['id'],
+            ])
+            ->assertJsonValidationErrorFor('content');
+
+        Event::assertNotDispatched(MessageSended::class);
     }
 
     protected function setUp(): void

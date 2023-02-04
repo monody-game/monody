@@ -15,15 +15,19 @@
         aria-label="Envoyer"
         class="chat__send-button"
         type="submit"
+        :class="message.length > 500 ? 'locked' : ''"
         @click.prevent="send()"
         @keyup.stop
       >
         <svg class="chat__submit-icon">
           <use
             ref="icon"
-            href="/sprite.svg#send"
+            :href="message.length > 500 ? '/sprite.svg#lock' : '/sprite.svg#send'"
           />
         </svg>
+        <span v-if="message.length > 500">
+          {{ message.length }}/500
+        </span>
       </button>
     </div>
   </div>
@@ -45,9 +49,12 @@ const userStore = useUserStore();
 const route = useRoute();
 
 const send = async function() {
-	await ChatService.send(message.value);
+	if (message.value.length < 500) {
+		await ChatService.send(message.value);
+	}
 	message.value = "";
 };
+
 
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {

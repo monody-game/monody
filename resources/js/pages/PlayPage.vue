@@ -1,48 +1,50 @@
 <template>
   <div class="play-page">
-    <header class="play-page__header">
-      <div class="play-page__header-title">
-        <svg>
-          <use href="/sprite.svg#monody" />
-        </svg>
-        <h2>Monody</h2>
-      </div>
-      <button
-        @click="logout()"
-      >
-        Se déconnecter
-        <svg class="icon">
-          <use href="/sprite.svg#logout" />
-        </svg>
-      </button>
-    </header>
-    <div class="play-page__container">
-      <div class="play-page__games">
-        <header>
-          <p>Liste des parties :</p>
-          <button
-            class="play-page__button btn large"
-            @click="openModal()"
-          >
-            <i />
-            Créer
-          </button>
-        </header>
-        <div class="play-page__game-list">
-          <GamePresentation
-            v-for="game in games"
-            :key="game.id"
-            :game="game"
-            :roles="roles"
-          />
+    <div class="play-page__wrapper">
+      <header class="play-page__header">
+        <div class="play-page__header-title">
+          <svg>
+            <use href="/sprite.svg#monody" />
+          </svg>
+          <h2>Monody</h2>
         </div>
+        <button
+          @click="logout()"
+        >
+          Se déconnecter
+          <svg class="icon">
+            <use href="/sprite.svg#logout" />
+          </svg>
+        </button>
+      </header>
+      <div class="play-page__container">
+        <div class="play-page__games">
+          <header>
+            <p>Liste des parties :</p>
+            <button
+              class="play-page__button btn large"
+              @click="openModal()"
+            >
+              <i />
+              Créer
+            </button>
+          </header>
+          <div class="play-page__game-list">
+            <GamePresentation
+              v-for="game in games"
+              :key="game.id"
+              :game="game"
+              :roles="roles"
+            />
+          </div>
+        </div>
+        <PlayerPresentation />
       </div>
-      <PlayerPresentation />
+      <Transition name="modal">
+        <GameCreationModal v-if="store.isOpenned" />
+      </Transition>
+      <Footer />
     </div>
-    <Transition name="modal">
-      <GameCreationModal v-if="store.isOpenned" />
-    </Transition>
-    <Footer />
   </div>
 </template>
 

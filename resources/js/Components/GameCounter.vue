@@ -79,7 +79,7 @@ onBeforeRouteLeave(() => {
 const setData = async function (data) {
 	clearInterval(counterId.value);
 	time.value = data.counterDuration === -1 ? 0 : getDuration(data.counterDuration, data.startTimestamp);
-	totalTime.value = time.value;
+	totalTime.value = data.counterDuration === -1 ? 0 : data.counterDuration;
 	status.value = data.status;
 	round.value = data.round;
 	state = await getState(data.status.value);

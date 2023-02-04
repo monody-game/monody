@@ -43,6 +43,7 @@ import Chat from "../../Components/Chat/TheChat.vue";
 import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/game.js";
+import { useStore as usePopupStore } from "../../stores/popup.js";
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
@@ -50,6 +51,7 @@ import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 const route = useRoute();
 const router = useRouter();
 const store = useStore();
+const popupStore = usePopupStore();
 
 const gameId = route.params.id;
 const loading = ref(false);
@@ -69,6 +71,13 @@ window.addEventListener("unload", () => {
 });
 
 const disconnect = async function () {
-	await router.push("/play");
+	popupStore.setPopup({
+		warn: {
+			content: "Voulez-vous vraiment quitter la partie ?",
+			note: "Si oui, ",
+			link: "/play",
+			link_text: "cliquez ici."
+		}
+	});
 };
 </script>

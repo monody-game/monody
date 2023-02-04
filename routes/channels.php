@@ -10,6 +10,16 @@ Broadcast::channel('home', function () {
 
 Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
     $game = Redis::get("game:$gameId");
+    $members = Redis::get("game:$gameId:members") ?? [];
+    $member = array_filter($members, fn ($member) => $member['user_id'] === $user->id);
+
+    if ($game === null || ($game['is_started'] && count($member) >= 1)) {
+        return false;
+    }
+
+    if ($member) {
+        return false;
+    }
 
     if (isset($game['users']) && !in_array($user->id, $game['users'], true)) {
         $game['users'][] = $user->id;

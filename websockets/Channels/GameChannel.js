@@ -6,7 +6,7 @@ import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
 import { info } from "../Logger.js";
 
-const StartingState = (await fetch("https://web/api/state/0", { "method": "GET" })).json;
+const StartingState = (await fetch(`${process.env.API_URL}/state/0`, { "method": "GET" })).json;
 
 export class GameChannel {
 	constructor(io, emitter) {
@@ -62,7 +62,7 @@ export class GameChannel {
 			userId: member.user_id
 		});
 
-		await fetch("https://web/api/game/join", {
+		await fetch(`${process.env.API_URL}/game/join`, {
 			method: "POST",
 			body: params
 		});
@@ -103,7 +103,7 @@ export class GameChannel {
 			userId: member.user_id
 		});
 
-		await fetch("https://web/api/game/leave", {
+		await fetch(`${process.env.API_URL}/game/leave`, {
 			method: "POST",
 			body: params
 		});
@@ -113,7 +113,7 @@ export class GameChannel {
 			await this.onDelete(id);
 		} else {
 			await client.set(`game:${id}:members`, JSON.stringify(members));
-			game.users = members;
+			game.users = game.users.filter(userId => userId !== member.user_id);
 			await this.gameService.setGame(id, game);
 
 			const isMember = await this.isMember(channel, member);
@@ -134,7 +134,7 @@ export class GameChannel {
 	}
 
 	async onDelete(id) {
-		await fetch("https://web/api/game", {
+		await fetch(`${process.env.API_URL}/game`, {
 			method: "DELETE",
 			body: Body.make({ gameId: id })
 		});
