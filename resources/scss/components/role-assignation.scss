@@ -1,27 +1,69 @@
 .role-assignation__wrapper {
-	position: absolute;
-	inset: 50%;
-	transform: translateY(-50%) translateX(-50%);
-
 	overflow: hidden;
 
-	height: 100px;
-	width: 100px;
+	height: 160px;
+	width: 160px;
+
+	& > div img {
+		height: 160px;
+		aspect-ratio: 1 / 1;
+	}
+}
+
+
+.role-assignation__wrapper-large {
+	overflow: hidden;
+
+	height: 200px;
+	width: 200px;
+
+	transition: all .5s;
+
+	& > div img {
+		height: 200px;
+		aspect-ratio: 1 / 1;
+	}
 }
 
 .role-assignation__roles {
 	display: flex;
-	animation: slideRoles 2s ease-in-out alternate;
-	animation-iteration-count: infinite;
+	transform: translateX(var(--role-assignation-transform-length));
 }
 
-.role-assignation__wrapper div img {
-	height: 100px;
+.role-assignation__roles-large {
+	display: flex;
+	animation: slideRoles 2s cubic-bezier(.65, .05, .36, 1) both;
+}
+
+.role-assignation__modal-background {
+	height: 300px;
 	aspect-ratio: 1 / 1;
-}
 
-.role-assignation__reset:active .role-assignation__roles{
-	animation-play-state: running;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+
+	padding: space(2);
+
+	background-color: var(--dark-background);
+
+	& > p {
+		text-align: center;
+		font-size: 1.125em;
+		line-height: 100%;
+	}
+
+	& > p span:not(.bold) {
+		overflow: hidden;
+		display: inline-block;
+	}
+
+	& > p span span:not(.bold) {
+		opacity: 0;
+		animation: revealText .7s both;
+		transform: translateY(100%);
+	}
 }
 
 @keyframes slideRoles {
@@ -31,4 +73,19 @@
 	to {
 		transform: translateX(var(--role-assignation-transform-length));
 	}
+}
+
+@keyframes revealText {
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.role-assignation-overlay__villagers {
+	box-shadow: 0 0 32px 6px var(--villager-color);
+}
+
+.role-assignation-overlay__werewolves {
+	box-shadow: 0 0 32px 6px var(--werewolf-color);
 }

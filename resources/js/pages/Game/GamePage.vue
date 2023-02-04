@@ -27,6 +27,7 @@
     </div>
     <div class="game-page__main">
       <RoleAssignationPopup
+        v-if="assignationPopupStore.isOpenned"
         :roles="roles"
         assigned-role="1"
       />
@@ -44,14 +45,15 @@ import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import { useStore } from "../../stores/game.js";
 import { useStore as usePopupStore } from "../../stores/popup.js";
+import { useStore as useAssignationPopupStore } from "../../stores/role-assignation.js";
 import { ref } from "vue";
-import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRoute } from "vue-router";
 import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 
 const route = useRoute();
-const router = useRouter();
 const store = useStore();
 const popupStore = usePopupStore();
+const assignationPopupStore = useAssignationPopupStore();
 
 const gameId = route.params.id;
 const loading = ref(false);
