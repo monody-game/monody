@@ -62,7 +62,7 @@
 body {
 	font-family: "Sen", sans-serif;
 	font-size: 1rem;
-	color: #fff;
+	color: var(--light-background);
 	min-height: 100vh;
 	background-color: var(--dark-background);
 	overflow: hidden;
