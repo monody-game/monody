@@ -20,5 +20,6 @@ export default async function canJoin({ router, to }) {
 			"error":	"Vous ne pouvez rejoindre cette partie."
 		});
 		router.push("/play");
+		return false;
 	}
 }
