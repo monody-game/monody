@@ -10,5 +10,6 @@ export default async function exists({ router, to }) {
 
 	if (response.status !== 204) {
 		router.push({ name: "play" });
+		return false;
 	}
 }
