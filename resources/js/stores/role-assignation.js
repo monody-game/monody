@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useStore = defineStore("role-assignation", {
 	state: () => {
 		return {
-			isOpenned: false,
+			isOpenned: true,
 		};
 	},
 	actions: {

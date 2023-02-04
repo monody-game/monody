@@ -1,23 +1,23 @@
 .role-assignation__wrapper {
 	overflow: hidden;
 
-	height: 160px;
-	width: 160px;
+	height: 200px;
+	width: 200px;
+	position: absolute;
+	animation: reduceSize 1s both;
 
-	& > div img {
-		height: 160px;
+	& div img {
+		animation: reduceSize 1s both;
 		aspect-ratio: 1 / 1;
 	}
 }
-
 
 .role-assignation__wrapper-large {
 	overflow: hidden;
 
 	height: 200px;
 	width: 200px;
-
-	transition: all .5s;
+	position: absolute;
 
 	& > div img {
 		height: 200px;
@@ -36,6 +36,7 @@
 }
 
 .role-assignation__modal-background {
+	position: relative;
 	height: 300px;
 	aspect-ratio: 1 / 1;
 
@@ -51,7 +52,6 @@
 	& > p {
 		text-align: center;
 		font-size: 1.125em;
-		line-height: 100%;
 	}
 
 	& > p span:not(.bold) {
@@ -82,10 +82,25 @@
 	}
 }
 
+@keyframes reduceSize {
+	from {
+		height: 200px;
+		width: 200px;
+	}
+
+	to {
+		position: static;
+		height: 160px;
+		width: 160px;
+	}
+}
+
 .role-assignation-overlay__villagers {
-	box-shadow: 0 0 32px 6px var(--villager-color);
+	border-radius: 8px;
+	box-shadow: 0 0 32px 8px var(--villager-color);
 }
 
 .role-assignation-overlay__werewolves {
-	box-shadow: 0 0 32px 6px var(--werewolf-color);
+	border-radius: 8px;
+	box-shadow: 0 0 32px 8px var(--werewolf-color);
 }
