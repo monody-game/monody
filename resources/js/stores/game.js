@@ -7,7 +7,8 @@ export const useStore = defineStore("game", {
 			state: 0,
 			currentInteractionId: "",
 			availableActions: {},
-			playerRefs: []
+			playerRefs: [],
+			roles: []
 		};
 	},
 	actions: {
@@ -16,9 +17,9 @@ export const useStore = defineStore("game", {
 			if (player) {
 				const index = this.playerList.indexOf(player);
 				player.role = {
-					group: role.team_id,
+					team_id: role.team_id,
 					name: role.name,
-					see_has: role.display_name,
+					display_name: role.display_name,
 				};
 				this.playerList[index] = player;
 			}
