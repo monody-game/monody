@@ -64,9 +64,8 @@ const roles = ref([]);
 const store = useStore();
 const router = useRouter();
 
-onBeforeRouteLeave((to, from, next) => {
+onBeforeRouteLeave(() => {
 	window.Echo.leave("home");
-	next();
 });
 
 const retrievedGames = await window.JSONFetch("/game/list", "GET");

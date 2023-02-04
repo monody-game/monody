@@ -28,18 +28,25 @@
         </div>
       </div>
     </div>
-    <p
+    <div
       v-show="animationEnded"
       ref="roleText"
+      class="role-assignation__role-text"
     >
-      <span><span>Vous êtes : <span class="bold">{{ assignedRole.display_name.toLowerCase() }}</span>,</span></span> <br> <span><span>du camp des <span class="bold">{{ assignedRole.team.display_name.toLowerCase() }}</span></span></span>
-    </p>
+      <span>
+        <span>Vous êtes : <span class="bold">{{ assignedRole.display_name.toLowerCase() }}</span>,</span>
+      </span>
+      <span>
+        <span>du camp des <span class="bold">{{ assignedRole.team.display_name.toLowerCase() }}</span></span>
+      </span>
+    </div>
   </BaseModal>
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
 import BaseModal from "./Modal/BaseModal.vue";
+import ChatService from "../services/ChatService.js";
 
 const props = defineProps({
 	roles: {
@@ -47,7 +54,7 @@ const props = defineProps({
 		required: true,
 	},
 	assignedRole: {
-		type: String,
+		type: Number,
 		required: true
 	}
 });
@@ -59,16 +66,21 @@ const roles = ref(props.roles);
 const assignedRole = roles.value.filter(role => role.id === parseInt(props.assignedRole))[0];
 const roleOverlay = ref("");
 
-document.addEventListener("animationend", (e) => {
+document.addEventListener("animationend", async (e) => {
 	if (e.animationName === "slideRoles") {
 		animationEnded.value = true;
 		roleOverlay.value = "role-assignation-overlay__" + assignedRole.team.name;
+
+		await ChatService.sendMessage({
+			type: "info",
+			content: `Votre rôle est : ${assignedRole.display_name}`
+		});
 	}
 });
 
 onMounted(() => {
 	const children = roleText.value.children;
-	let delay = 1;
+	let delay = 1.1;
 
 	for (const span of children) {
 		if (span.localName !== "span") {

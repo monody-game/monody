@@ -6,7 +6,7 @@
 	position: absolute;
 	animation: reduceSize 1s both;
 
-	& div img {
+	& > div img {
 		animation: reduceSize 1s both;
 		aspect-ratio: 1 / 1;
 	}
@@ -48,22 +48,24 @@
 	padding: space(2);
 
 	background-color: var(--dark-background);
+}
 
-	& > p {
-		text-align: center;
-		font-size: 1.125em;
-	}
+.role-assignation__role-text {
+	text-align: center;
+	font-size: 1.125em;
 
-	& > p span:not(.bold) {
-		overflow: hidden;
-		display: inline-block;
-	}
+	display: grid;
+	gap: 6px;
+}
 
-	& > p span span:not(.bold) {
-		opacity: 0;
-		animation: revealText .7s both;
-		transform: translateY(100%);
-	}
+.role-assignation__role-text span:not(.bold) {
+	display: block;
+}
+
+.role-assignation__role-text span span:not(.bold) {
+	opacity: 0;
+	animation: revealText .7s both;
+	transform: translateY(100%);
 }
 
 @keyframes slideRoles {
