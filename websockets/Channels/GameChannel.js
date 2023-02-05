@@ -54,7 +54,7 @@ export class GameChannel {
 		await this.onSubscribed(socket, channel, members);
 
 		if (!isMember) {
-			this.onJoin(socket, channel, member);
+			await this.onJoin(socket, channel, member);
 		}
 
 		const params = Body.make({
@@ -76,6 +76,14 @@ export class GameChannel {
 
 		if (members.length === count && game.is_started === false) {
 			await this.gameService.startGame(channel, game, members, socket);
+
+			const list = await fetch(`${process.env.API_URL}/game/list`, {
+				method: "GET",
+			});
+
+			this.io.to("home").volatile.emit("game-list.update", "home", {
+				data: list.json
+			});
 		}
 	}
 
@@ -109,7 +117,7 @@ export class GameChannel {
 		});
 
 		if (members.length === 0) {
-			this.onLeave(channel, member);
+			await this.onLeave(channel, member);
 			await this.onDelete(id);
 		} else {
 			await client.set(`game:${id}:members`, JSON.stringify(members));
@@ -120,17 +128,31 @@ export class GameChannel {
 
 			if (!isMember && member) {
 				delete member.socketId;
-				this.onLeave(channel, member);
+				await this.onLeave(channel, member);
 			}
 		}
 	}
 
-	onJoin(socket, channel, member) {
+	async onJoin(socket, channel, member) {
 		socket.broadcast.to(channel).emit("presence:joining", channel, member);
+		const list = await fetch(`${process.env.API_URL}/game/list`, {
+			method: "GET",
+		});
+
+		this.io.to("home").volatile.emit("game-list.update", "home", {
+			data: list.json
+		});
 	}
 
-	onLeave(channel, member) {
+	async onLeave(channel, member) {
 		this.io.to(channel).emit("presence:leaving", channel, member);
+		const list = await fetch(`${process.env.API_URL}/game/list`, {
+			method: "GET",
+		});
+
+		this.io.to("home").volatile.emit("game-list.update", "home", {
+			data: list.json
+		});
 	}
 
 	async onDelete(id) {
@@ -139,7 +161,13 @@ export class GameChannel {
 			body: Body.make({ gameId: id })
 		});
 
-		this.io.to("home").emit("game.delete", "home", id);
+		const list = await fetch(`${process.env.API_URL}/game/list`, {
+			method: "GET",
+		});
+
+		this.io.to("home").volatile.emit("game-list.update", "home", {
+			data: list.json
+		});
 
 		info(`Deleting game with id: ${id}`);
 	}
