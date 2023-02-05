@@ -15,6 +15,7 @@
         class="roles__item"
       />
     </div>
+    <RolesBalance :selected-roles="getSelectedRoles" />
   </div>
 </template>
 
@@ -22,7 +23,8 @@
 import RoleSelector from "./RoleSelector.vue";
 import LogoSpinner from "../../../Spinners/LogoSpinner.vue";
 import { useStore } from "../../../../stores/GameCreationModal.js";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import RolesBalance from "./RolesBalance.vue";
 
 const roles = ref([]);
 const loading = ref(false);
@@ -33,6 +35,19 @@ onMounted(async () => {
 	await getRoles();
 	await getTeams();
 	loading.value = false;
+});
+
+const getSelectedRoles = computed(() => {
+	const selectedIds = store.selectedRoles;
+	const selectedRoles = [];
+
+	for (const role of roles.value) {
+		if (selectedIds.indexOf(role.id) !== -1) {
+			role.count = store.getRoleCountById(role.id);
+			selectedRoles.push(role);
+		}
+	}
+	return selectedRoles;
 });
 
 const getRoles = async function() {

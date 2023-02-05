@@ -2,12 +2,13 @@
 
 .btn {
   padding: 0;
-  border: none;
   border-radius: 6px;
+	border: var(--border-dark) solid 2px;
+
 	color: var(--dark-background);
   cursor: pointer;
 	background: var(--light-background) none;
-	transition: background-color 0.4s;
+	transition: background-color .2s;
 
   &:disabled {
     cursor: not-allowed;
@@ -18,30 +19,11 @@
 		background-color: var(--light-background-hover);
   }
 
-  &.small {
-    height: 20px;
-    width: 20px;
-  }
-
   &.medium {
     padding: space(.75) space(2);
   }
 
 	&.large {
 		padding: space(1) space(3);
-	}
-}
-
-.btn.secondary {
-	background: var(--light-dark-background);
-	color: #ffffff;
-
-	&:disabled {
-		cursor: not-allowed;
-		background-color: var(--light-dark-background-hover);
-	}
-
-	&:not(.disable-hover):hover {
-		background-color: var(--light-dark-background-hover);
 	}
 }

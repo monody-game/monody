@@ -4,10 +4,12 @@
       <button
         :class="count === 0 ? 'disable-hover' : ''"
         :disabled="count === 0"
-        class="btn small"
+        class="btn role-selector__operation-button role-selector__operation-minus"
         @click="substract()"
       >
-        -
+        <svg>
+          <use href="/sprite.svg#minus" />
+        </svg>
       </button>
       <img
         :alt="props.role.name"
@@ -18,10 +20,12 @@
       <button
         :class="count >= default_limit || count >= props.role.limit ? 'disable-hover' : ''"
         :disabled="count >= default_limit || count >= props.role.limit"
-        class="btn small"
+        class="btn role-selector__operation-button role-selector__operation-add"
         @click="add()"
       >
-        +
+        <svg>
+          <use href="/sprite.svg#plus" />
+        </svg>
       </button>
     </div>
     <p class="role-selector__count">

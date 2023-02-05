@@ -8,12 +8,11 @@
     </header>
     <div class="modal__page">
       <RolesModalPage v-if="currentPage === 1" />
-      <GameStateModalPage v-else-if="currentPage === 2" />
       <!--      <ShareModalPage v-else-if="currentPage === 3" />-->
     </div>
     <div class="modal__buttons">
       <button
-        class="btn medium secondary"
+        class="btn medium"
         @click="closeModal()"
       >
         Annuler
@@ -50,8 +49,6 @@
 
 <script setup>
 import RolesModalPage from "./Pages/Roles/RolesModalPage.vue";
-import GameStateModalPage from "./Pages/GameState/GameStateModalPage.vue";
-import ShareModalPage from "./Pages/ShareModalPage.vue";
 import BaseModal from "./BaseModal.vue";
 import { useStore } from "../../stores/GameCreationModal.js";
 import { useStore as useGameStore } from "../../stores/game.js";

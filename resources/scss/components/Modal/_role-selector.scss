@@ -10,21 +10,48 @@
   align-items: center;
 }
 
+button.role-selector__operation-button {
+	height: 24px;
+	aspect-ratio: 1 / 1;
+	border-radius: 50%;
+
+	display: grid;
+	place-items: center;
+
+	& svg {
+		height: 12px;
+		width: 12px;
+	}
+}
+
+.role-selector__operation-add {
+	transform: translateX(-4px);
+}
+
+.role-selector__operation-minus {
+	transform: translateX(4px);
+}
+
 .role-selector__image {
-  height: 45px;
-  width: 45px;
+  height: 60px;
+  aspect-ratio: 1 / 1;
   border-radius: 8px;
 }
 
 .role-selector__count {
-  background-color: var(--light-dark-background);
+  background-color: var(--light-background);
+
   width: 24px;
   height: 24px;
-  display: flex;
+
+	display: flex;
   justify-content: space-around;
   align-items: center;
-  border-radius: 100%;
-  z-index: 10;
+
+	border-radius: 50%;
+	border: var(--border-dark) solid 2px;
+
+	z-index: 10;
   transform: translateY(-7px);
   user-select: none;
 }
