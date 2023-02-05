@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Roles;
 use App\Enums\Teams;
 use App\Events\MessageSended;
 use App\Models\Message;
@@ -30,6 +31,21 @@ class ChatService
         broadcast(new MessageSended($message, true, [
             $this->getUsersByTeam(Teams::Werewolves, $data['gameId'])[0],
         ]));
+
+        /** @var array{}|string[] $littleGirl */
+        $littleGirl = $this->getUserIdByRole(Roles::LittleGirl, $data['gameId']);
+
+        if ($littleGirl !== []) {
+            $message->set('author', [
+                'id' => '',
+                'username' => 'Loup-garou',
+                'avatar' => '/images/roles/werewolf.png',
+            ]);
+
+            broadcast(new MessageSended($message, true, [
+                $littleGirl[0],
+            ]));
+        }
     }
 
     private function getAuthor(User $user): array
