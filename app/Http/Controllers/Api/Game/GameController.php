@@ -69,8 +69,12 @@ class GameController extends Controller
                 continue;
             }
 
-            /** @var User $owner */
+            /** @var ?User $owner */
             $owner = User::find($gameData['owner']);
+
+            if (!$owner) {
+                continue;
+            }
 
             $gameData['owner'] = [
                 'id' => $owner->id,

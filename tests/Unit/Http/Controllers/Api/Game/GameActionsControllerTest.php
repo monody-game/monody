@@ -78,7 +78,7 @@ class GameActionsControllerTest extends TestCase
         parent::setUp();
         $user = User::factory()->makeOne();
 
-        $this->game = $this
+        $game = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
                 'users' => User::factory(2)->make()->toArray(),
@@ -88,5 +88,7 @@ class GameActionsControllerTest extends TestCase
                     Roles::Werewolf->value,
                 ],
             ])->json('game');
+
+        $this->game = $game;
     }
 }

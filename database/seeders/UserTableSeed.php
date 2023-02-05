@@ -32,12 +32,12 @@ class UserTableSeed extends Seeder
             'created_at' => Carbon::now(),
         ]);
 
-		User::factory()->create([
-			'username' => 'gerard123',
-			'avatar' => '/storage/avatars/default.png',
-			'email' => 'gerard123@monody.fr',
-			'password' => Hash::make('gerard123'),
-			'created_at' => Carbon::now(),
-		]);
+        User::factory()->create([
+            'username' => 'gerard123',
+            'avatar' => '/storage/avatars/default.png',
+            'email' => 'gerard123@monody.fr',
+            'password' => Hash::make('gerard123'),
+            'created_at' => Carbon::now(),
+        ]);
     }
 }
