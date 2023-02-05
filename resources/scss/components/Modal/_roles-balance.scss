@@ -4,8 +4,10 @@
 }
 
 .roles-balance__balance {
+	position: relative;
+
   display: flex;
-  height: 8px;
+  height: 16px;
   width: 100%;
   margin-top: space(2);
 
@@ -20,12 +22,27 @@
   }
 }
 
+.roles-balance__bubble {
+	position: absolute;
+	top: -4px;
+	left: calc(var(--villager-balance-width) - 4px);
+
+	height: 24px;
+	width: 8px;
+
+	background-color: var(--light-background);
+	border: var(--border-dark) solid 3px;
+	border-radius: 5px;
+}
+
 .roles-balance__villagers {
   background: var(--villager-color);
   width: var(--villager-balance-width);
+	outline: var(--border-dark) solid 2px;
 }
 
 .roles-balance__werewolf {
   background: var(--werewolf-color);
   width: var(--werewolf-balance-width);
+	outline: var(--border-dark) solid 2px;
 }

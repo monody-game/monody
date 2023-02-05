@@ -2,7 +2,7 @@
 
 .roles__list {
 	display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   column-gap: 2%;
   box-sizing: border-box;
   margin-top: space(1);
@@ -16,7 +16,7 @@
 
 .roles__loader {
 	position: absolute;
-	background-color: var(--dark-background);
+	background-color: var(--light-background);
 	z-index: 1000;
 	height: 50%;
 	width: calc(100% - space(8));
