@@ -3,7 +3,7 @@
     <div class="chat__messages">
       <template
         v-for="message in store.messages"
-        :key="message + Date.now()"
+        :key="message.content + message.timestamp"
       >
         <TimeSeparator
           v-if="message.type === 'time_separator'"
