@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useStore = defineStore("GameCreationModal", {
+export const useStore = defineStore("game-creation-modal", {
 	state: () => {
 		return {
 			isOpenned: false,

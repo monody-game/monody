@@ -1,19 +1,43 @@
 @use "../../tools/functions" as *;
 
 .share-page__container {
-	margin-top: space(1);
+	margin-block: space(2) space(3);
+	display: grid;
+	gap: space(2);
+	place-items: center;
 }
 
-.share-page__twitter {
-	background-color: #1DA1F2;
-	height: 32px;
-	width: 32px;
-	display: grid;
-	place-items: center;
-	border-radius: 6px;
+.share-page__container a {
+	color: var(--light-background);
+	padding: space(2) space(8) space(2) space(2);
 
-	& > svg{
-		height: 24px;
-		width: 24px;
+	min-width: max-content;
+	max-width: 342px;
+	width: 342px;
+
+	display: flex;
+	gap: space(4);
+	align-items: center;
+
+	& svg {
+		height: 32px;
+		width: 32px;
 	}
+}
+
+.share-page__wrapper {
+	height: 100%;
+	width: 100%;
+}
+
+.share-page__social-twitter {
+	background-color: var(--twitter-color);
+}
+
+.share-page__social-discord {
+	background-color: var(--discord-color);
+}
+
+.share-page__social-link {
+	background-color: var(--share-color);
 }

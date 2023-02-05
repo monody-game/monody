@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useStore = defineStore("ProfileModal", {
+export const useStore = defineStore("profile-modal", {
 	state: () => {
 		return {
 			isOpenned: false,

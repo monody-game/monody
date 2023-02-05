@@ -2,41 +2,21 @@
   <BaseModal>
     <header>
       <h3>Création d'une partie</h3>
-      <p class="modal__page-status">
-        ({{ currentPage }}/{{ totalPage }})
-      </p>
     </header>
     <div class="modal__page">
-      <RolesModalPage v-if="currentPage === 1" />
-      <!--      <ShareModalPage v-else-if="currentPage === 3" />-->
+      <RolesModalPage />
     </div>
     <div class="modal__buttons">
       <button
         class="btn medium"
-        @click="closeModal()"
+        @click="store.close()"
       >
         Annuler
       </button>
       <div class="modal__buttons-right">
         <button
-          :class="currentPage === 1 ? 'disable-hover' : ''"
-          :disabled="currentPage === 1"
-          class="btn medium"
-          @click="previousPage()"
-        >
-          Précédent
-        </button>
-        <button
-          v-if="currentPage !== totalPage"
           :class="notEnoughSelectedRoles() === true ? 'disabled' : ''"
           :disabled="notEnoughSelectedRoles()"
-          class="btn medium"
-          @click="nextPage()"
-        >
-          Suivant
-        </button>
-        <button
-          v-if="currentPage === totalPage"
           class="btn medium"
           @click="finish()"
         >
@@ -50,21 +30,15 @@
 <script setup>
 import RolesModalPage from "./Pages/Roles/RolesModalPage.vue";
 import BaseModal from "./BaseModal.vue";
-import { useStore } from "../../stores/GameCreationModal.js";
+import { useStore } from "../../stores/game-creation-modal.js";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
-const currentPage = ref(1);
-const totalPage = ref(2);
 const store = useStore();
 const router = useRouter();
 const gameId = ref("");
 const gameStore = useGameStore();
-
-const closeModal = function () {
-	reset();
-};
 
 const notEnoughSelectedRoles = function () {
 	const selectedIds = store.selectedRoles;
@@ -86,14 +60,6 @@ const notEnoughSelectedRoles = function () {
 		);
 };
 
-const nextPage = async function() {
-	if (currentPage.value + 1 > totalPage.value) {
-		return;
-	}
-
-	currentPage.value++;
-};
-
 const finish = async function() {
 	const res = await window.JSONFetch("/game", "PUT", {
 		roles: store.selectedRoles
@@ -104,22 +70,10 @@ const finish = async function() {
 
 	if (store.gameId !== 0) {
 		gameStore.roles = store.roles.filter(role => store.selectedRoles.includes(role.id));
-		reset();
 
+		store.close();
+		localStorage.setItem("show_share", true);
 		await router.push("/game/" + gameId.value);
 	}
-
-	reset();
-};
-
-const reset = function () {
-	store.close();
-};
-
-const previousPage = function () {
-	if (currentPage.value + 1 < totalPage.value) {
-		return;
-	}
-	currentPage.value = currentPage.value - 1;
 };
 </script>

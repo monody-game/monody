@@ -20,8 +20,6 @@
 @import "./components/Modal/modal";
 @import "./components/Modal/role-selector";
 @import "./components/Modal/roles-page";
-@import "./components/Modal/role-show";
-@import "./components/Modal/game-state";
 @import "./components/Modal/roles-balance";
 @import "./components/Modal/profile-modal";
 @import "./components/Modal/game-creation-modal";
@@ -92,4 +90,8 @@ body {
 	--villager-color: #4c93d6;
 	--werewolf-color: #a51818;
 	--werewolf-color-darker: #811313;
+
+	--twitter-color: #1D9BF0;
+	--discord-color: #5865F2;
+	--share-color: #505860;
 }
