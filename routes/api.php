@@ -8,6 +8,8 @@ Route::get('/ping', 'PingController@ping');
 
 Route::post('/auth/login', 'Auth\LoginController@login');
 
+Route::get('/game/list', 'Game\GameController@list');
+
 Route::get('/oauth/link/discord', 'Oauth\DiscordOauthController@link');
 Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
 Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
@@ -66,7 +68,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/user', 'UserController@user')->name('verification.notice');
     Route::patch('/user', 'UserController@update');
 
-    Route::get('/game/list', 'Game\GameController@list');
     Route::put('/game', 'Game\GameController@new');
     Route::post('/game/check', 'Game\GameController@check');
 
