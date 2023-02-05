@@ -8,6 +8,7 @@ enum Roles: int
     case SimpleVillager = 2;
     case Psychic = 3;
     case Witch = 4;
+    case LittleGirl = 5;
 
     public function stringify(): string
     {
@@ -15,7 +16,8 @@ enum Roles: int
             self::Werewolf => 'Loup-garou',
             self::SimpleVillager => 'Simple villageois',
             self::Psychic => 'Voyante',
-            self::Witch => 'Sorcière'
+            self::Witch => 'Sorcière',
+            self::LittleGirl => 'Petite fille'
         };
     }
 
@@ -26,13 +28,14 @@ enum Roles: int
             self::SimpleVillager => 'simple_villager',
             self::Psychic => 'psychic',
             self::Witch => 'witch',
+            self::LittleGirl => 'little_girl'
         };
     }
 
     public function weight(): int
     {
         return match ($this) {
-            self::Werewolf => 2,
+            self::Werewolf, self::LittleGirl => 2,
             self::SimpleVillager => 1,
             self::Psychic, self::Witch => 3,
         };
@@ -42,19 +45,20 @@ enum Roles: int
     {
         return match ($this) {
             self::Werewolf, self::SimpleVillager => null,
-            self::Psychic, self::Witch => 1,
+            self::Psychic, self::Witch, self::LittleGirl => 1,
         };
     }
 
     public function full(): array
     {
         $role = Roles::from($this->value);
+        $image = file_exists(public_path("images/roles/{$role->name()}.png")) ? "/images/roles/{$role->name()}.png" : '/images/roles/default.png';
 
         return [
             'id' => $role->value,
             'name' => $role->name(),
             'display_name' => $role->stringify(),
-            'image' => "/images/roles/{$role->name()}.png",
+            'image' => $image,
             'limit' => $role->limit(),
             'weight' => $role->weight(),
             'team_id' => Teams::role($role)->value,

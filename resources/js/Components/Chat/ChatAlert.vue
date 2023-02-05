@@ -1,23 +1,25 @@
 <template>
-  <div class="alert-message__content">
-    <svg class="alert-message__icon">
-      <use :href="'/sprite.svg#' + props.type" />
-    </svg>
-    <p class="alert-message__text">
-      {{ props.message }}
-    </p>
-  </div>
-  <div
-    v-if="props.actions.length >= 1"
-    class="alert-message__actions"
-  >
+  <div :class="'alert-message__' + props.type">
+    <div class="alert-message__content">
+      <svg class="alert-message__icon">
+        <use :href="'/sprite.svg#' + props.type" />
+      </svg>
+      <p class="alert-message__text">
+        {{ props.message }}
+      </p>
+    </div>
     <div
-      v-for="action in props.actions"
-      :key="action.title"
-      class="btn medium"
-      @click="action.callback()"
+      v-if="props.actions.length >= 1"
+      class="alert-message__actions"
     >
-      {{ action.title }}
+      <div
+        v-for="action in props.actions"
+        :key="action.title"
+        class="btn medium"
+        @click="action.callback()"
+      >
+        {{ action.title }}
+      </div>
     </div>
   </div>
 </template>

@@ -31,11 +31,11 @@
 </template>
 
 <script setup>
+import { computed, onMounted, ref } from "vue";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
-import { computed, nextTick, onMounted, ref } from "vue";
+import { useStore as useChatStore } from "../../stores/chat.js";
 import PlayerInteractionBubble from "./PlayerInteractionBubble.vue";
-import ChatService from "../../services/ChatService.js";
 
 const props = defineProps({
 	player: {
@@ -50,6 +50,7 @@ const isDead = ref(false);
 const interactionType = ref("");
 const gameStore = useGameStore();
 const userStore = useUserStore();
+const chatStore = useChatStore();
 const player = ref(null);
 const gamePlayer = gameStore.getPlayerByID(props.player.id);
 
@@ -86,10 +87,7 @@ window.Echo
 			break;
 		case "psychic":
 			if (gamePlayer.role && gamePlayer.role.name === "psychic") {
-				ChatService.sendMessage({
-					"content": "Cliquez sur un joueur pour en connaitre le rôle !",
-					"type": "info"
-				});
+				chatStore.send("Cliquez sur un joueur pour en connaitre le rôle !", "info");
 				player.value.classList.add("player__hover-disabled");
 			} else {
 				player.value.classList.add("player__psychic-hover");
@@ -163,10 +161,10 @@ const send = async function(votingUser, votedUser) {
 
 	if (interactionType.value === "psychic") {
 		const role = await window.JSONFetch(`/roles/get/${res.data.response}`, "GET");
-		ChatService.sendMessage({
-			"content": `Vous avez choisi d'espionner le rôle de ${props.player.username} qui est ${role.data.role.display_name}`,
-			"type": "success"
-		});
+		chatStore.send(
+			`Vous avez choisi d'espionner le rôle de ${props.player.username} qui est ${role.data.role.display_name}`,
+			"success"
+		);
 	}
 };
 
@@ -195,11 +193,7 @@ const setupWitchActions = async (interaction) => {
 				for (const playerRef of list) {
 					playerRef.value.classList.add("player__witch-heal");
 				}
-
-				ChatService.sendMessage({
-					content: "Cliquez sur un joueur pour le réssuciter",
-					type: "info"
-				});
+				chatStore.send("Cliquez sur un joueur pour le ressuciter", "info");
 			},
 			id: "witch:revive"
 		},
@@ -209,10 +203,7 @@ const setupWitchActions = async (interaction) => {
 				for (const playerRef of gameStore.playerRefs) {
 					playerRef.value.classList.add("player__witch-kill");
 				}
-				ChatService.sendMessage({
-					content: "Cliquez sur un joueur pour l'éliminer",
-					type: "info"
-				});
+				chatStore.send("Cliquez sur un joueur pour l'éliminer", "info");
 			},
 			id: "witch:kill"
 		},
@@ -236,11 +227,7 @@ const setupWitchActions = async (interaction) => {
 	actionList = actionList.filter((action) => actions.includes(action.id));
 
 	if (gamePlayer.role && gamePlayer.role.name === "witch") {
-		ChatService.sendMessage({
-			content: "Choisissez l'action à effectuer cette nuit",
-			type: "info",
-			actionList
-		});
+		chatStore.send("Choisissez l'action à effectuer cette nuit", "info", null, actionList);
 	}
 };
 </script>

@@ -1,70 +1,71 @@
 <template>
   <div class="play-page">
-    <header class="play-page__header">
-      <div class="play-page__header-title">
-        <svg>
-          <use href="/sprite.svg#monody" />
-        </svg>
-        <h2>Monody</h2>
-      </div>
-      <button
-        @click="logout()"
-      >
-        Se déconnecter
-        <svg class="icon">
-          <use href="/sprite.svg#logout" />
-        </svg>
-      </button>
-    </header>
-    <div class="play-page__container">
-      <div class="play-page__games">
-        <header>
-          <p>Liste des parties :</p>
-          <button
-            class="play-page__button btn large"
-            @click="openModal()"
-          >
-            <i />
-            Créer
-          </button>
-        </header>
-        <div class="play-page__game-list">
-          <GamePresentation
-            v-for="game in games"
-            :key="game.id"
-            :game="game"
-            :roles="roles"
-          />
+    <div class="play-page__wrapper">
+      <header class="play-page__header">
+        <div class="play-page__header-title">
+          <svg>
+            <use href="/sprite.svg#monody" />
+          </svg>
+          <h2>Monody</h2>
         </div>
+        <button
+          @click="logout()"
+        >
+          Se déconnecter
+          <svg class="icon">
+            <use href="/sprite.svg#logout" />
+          </svg>
+        </button>
+      </header>
+      <div class="play-page__container">
+        <div class="play-page__games">
+          <header>
+            <p>Liste des parties :</p>
+            <button
+              class="play-page__button btn large"
+              @click="openModal()"
+            >
+              <i />
+              Créer
+            </button>
+          </header>
+          <div class="play-page__game-list">
+            <GamePresentation
+              v-for="game in games"
+              :key="game.id"
+              :game="game"
+              :roles="roles"
+            />
+          </div>
+        </div>
+        <PlayerPresentation />
       </div>
-      <PlayerPresentation />
+      <Transition name="modal">
+        <GameCreationModal v-if="store.isOpenned" />
+      </Transition>
+      <Footer />
     </div>
-    <Transition name="modal">
-      <GameCreationModal v-if="store.isOpenned" />
-    </Transition>
-    <Footer />
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { useStore } from "../stores/GameCreationModal.js";
+import { useStore as useModalStore } from "../stores/modal.js";
 import AuthService from "../services/AuthService.js";
 import Footer from "../Components/FooterComponent.vue";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
 import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";
-import { onBeforeRouteLeave, useRouter } from "vue-router";
-import { ref } from "vue";
-import { useStore } from "../stores/GameCreationModal.js";
-import { useStore as useModalStore } from "../stores/modal.js";
 
 const games = ref([]);
 const roles = ref([]);
 const store = useStore();
 const router = useRouter();
 
-onBeforeRouteLeave((to, from, next) => {
+onBeforeRouteLeave(() => {
 	window.Echo.leave("home");
-	next();
 });
 
 const retrievedGames = await window.JSONFetch("/game/list", "GET");
@@ -76,16 +77,16 @@ if (retrievedGames.data.games.length > 0) {
 	games.value = retrievedGames.data.games;
 }
 
-window.Echo.channel("home").listen(".game.created", async (e) => {
+window.Echo.channel("home").listen(".game-list.update", async (e) => {
 	if (roles.value.length === 0) {
 		const res = await window.JSONFetch("/roles", "GET");
 
 		roles.value = res.data.roles;
 	}
 
-	games.value.push(e.data.game);
-}).listen(".game.delete", (id) => {
-	games.value = games.value.filter(game => game.id !== id);
+	console.log(e.data, games.value);
+
+	games.value = e.data.games;
 });
 
 const logout = function () {

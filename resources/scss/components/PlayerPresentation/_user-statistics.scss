@@ -1,0 +1,20 @@
+.stats__container {
+	display: grid;
+	grid-template-columns: repeat(3, auto);
+	gap: space(2);
+}
+
+.stats__statistic {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	& > p {
+		font-size: 18px;
+	}
+
+	& > svg {
+		height: 32px;
+		width: 32px;
+	}
+}

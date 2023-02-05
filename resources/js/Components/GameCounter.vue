@@ -33,8 +33,8 @@
 </template>
 
 <script setup>
-import ChatService from "../services/ChatService";
-import { useStore } from "../stores/game";
+import { useStore } from "../stores/game.js";
+import { useStore as useChatStore } from "../stores/chat.js";
 import { onMounted, ref } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 
@@ -48,6 +48,7 @@ const counterIcon = ref(null);
 const status = ref(0);
 const sound = new Audio("../sounds/bip.mp3");
 const roundText = ref("");
+const chatStore = useChatStore();
 
 const getState = async function(toRetrieveState = null) {
 	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
@@ -57,7 +58,7 @@ const getState = async function(toRetrieveState = null) {
 
 onMounted(() =>	updateCircle());
 
-let state = {};
+let state = await getState();
 sound.load();
 roundText.value = state.name;
 icon.value = state.icon;
@@ -69,7 +70,9 @@ window.Echo.join(`game.${route.params.id}`)
 		}
 	})
 	.listen(".game.data", async (data) => {
-		await setData(data);
+		if (data && data.status !== status.value) {
+			await setData(data);
+		}
 	});
 
 onBeforeRouteLeave(() => {
@@ -79,7 +82,7 @@ onBeforeRouteLeave(() => {
 const setData = async function (data) {
 	clearInterval(counterId.value);
 	time.value = data.counterDuration === -1 ? 0 : getDuration(data.counterDuration, data.startTimestamp);
-	totalTime.value = time.value;
+	totalTime.value = data.counterDuration === -1 ? 0 : data.counterDuration;
 	status.value = data.status;
 	round.value = data.round;
 	state = await getState(data.status.value);
@@ -162,11 +165,10 @@ const updateOverlay = function () {
 	default:
 		break;
 	case 2:
-		ChatService.timeSeparator("Tombée de la nuit");
 		counterIcon.value.classList.remove("counter__icon-rotate");
 		break;
 	case 6:
-		ChatService.timeSeparator("Lever du jour");
+		chatStore.send("Lever du jour", "time_separator");
 		counterIcon.value.classList.add("counter__icon-rotate");
 		break;
 	case 8:

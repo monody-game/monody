@@ -26,6 +26,11 @@
       <Suspense><GameCounter /></Suspense>
     </div>
     <div class="game-page__main">
+      <RoleAssignationPopup
+        v-if="assignationPopupStore.isOpenned"
+        :roles="roles"
+        :assigned-role="assignedRole"
+      />
       <Chat />
       <LogoSpinner v-if="loading" />
       <PlayerList />
@@ -34,23 +39,51 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { onBeforeRouteLeave, useRoute } from "vue-router";
+import { useStore as useGameStore, useStore } from "../../stores/game.js";
+import { useStore as usePopupStore } from "../../stores/popup.js";
+import { useStore as useAssignationPopupStore } from "../../stores/role-assignation.js";
+import { useStore as useModalStore } from "../../stores/modal.js";
+import { useStore as useUserStore } from "../../stores/user.js";
+import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 import GameCounter from "../../Components/GameCounter.vue";
 import Chat from "../../Components/Chat/TheChat.vue";
 import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
-import { useStore } from "../../stores/game.js";
-import { ref } from "vue";
-import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
-const router = useRouter();
 const store = useStore();
+
+const popupStore = usePopupStore();
+const gameStore = useGameStore();
+const userStore = useUserStore();
+const assignationPopupStore = useAssignationPopupStore();
+const modalStore = useModalStore();
 
 const gameId = route.params.id;
 const loading = ref(false);
+const roles = store.roles;
+const assignedRole = ref(0);
 
 const actions = await window.JSONFetch("/interactions/actions", "GET");
 store.availableActions = actions.data;
+
+window.Echo.join(`game.${gameId}`)
+	.listen(".game.role-assign", async (role_id) => {
+		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
+		const role = res.data.role;
+		gameStore.setRole(userStore.id, role);
+		assignedRole.value = role.id;
+		modalStore.opennedModal = "role-assignation";
+		assignationPopupStore.isOpenned = true;
+
+		setTimeout(() => {
+			if (assignationPopupStore.isOpenned) {
+				modalStore.close();
+			}
+		}, 20000);
+	});
 
 onBeforeRouteLeave(() => {
 	window.Echo.leave(`game.${gameId}`);
@@ -63,6 +96,13 @@ window.addEventListener("unload", () => {
 });
 
 const disconnect = async function () {
-	await router.push("/play");
+	popupStore.setPopup({
+		warn: {
+			content: "Voulez-vous vraiment quitter la partie ?",
+			note: "Si oui, ",
+			link: "/play",
+			link_text: "cliquez ici."
+		}
+	});
 };
 </script>

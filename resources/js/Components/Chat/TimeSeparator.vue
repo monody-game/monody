@@ -1,7 +1,9 @@
 <template>
-  <p class="time-separator__message">
-    {{ props.message }}
-  </p>
+  <div class="time-separator__main">
+    <p class="time-separator__message">
+      {{ props.message }}
+    </p>
+  </div>
 </template>
 
 <script setup>

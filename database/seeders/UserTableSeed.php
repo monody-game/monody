@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UserTableSeed extends Seeder
 {
@@ -19,15 +20,23 @@ class UserTableSeed extends Seeder
             'username' => 'moon250',
             'email' => 'mooneupho@gmail.com',
             'level' => 100,
-            'password' => bcrypt('moon250bg'),
+            'password' => Hash::make('moon250bg'),
             'created_at' => Carbon::now(),
         ]);
 
         User::factory()->create([
             'username' => 'JohnDoe',
             'avatar' => '/storage/avatars/default.png',
-            'email' => 'johndoe@gmail.com',
-            'password' => bcrypt('johndoe'),
+            'email' => 'johndoe@monody.fr',
+            'password' => Hash::make('johndoe'),
+            'created_at' => Carbon::now(),
+        ]);
+
+        User::factory()->create([
+            'username' => 'gerard123',
+            'avatar' => '/storage/avatars/default.png',
+            'email' => 'gerard123@monody.fr',
+            'password' => Hash::make('gerard123'),
             'created_at' => Carbon::now(),
         ]);
     }

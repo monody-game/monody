@@ -10,6 +10,7 @@ use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class GameChatControllerTest extends TestCase
@@ -166,6 +167,21 @@ class GameChatControllerTest extends TestCase
                 'socket' => null,
             ];
         });
+    }
+
+    public function testSendingMessageLargerThan500Chars()
+    {
+        Event::fake();
+
+        $this
+            ->actingAs($this->user, 'api')
+            ->post('/api/game/message/send', [
+                'content' => Str::random(501),
+                'gameId' => $this->game['id'],
+            ])
+            ->assertJsonValidationErrorFor('content');
+
+        Event::assertNotDispatched(MessageSended::class);
     }
 
     protected function setUp(): void

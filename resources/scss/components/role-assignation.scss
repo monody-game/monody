@@ -1,0 +1,108 @@
+.role-assignation__wrapper {
+	overflow: hidden;
+
+	height: 200px;
+	width: 200px;
+	position: absolute;
+	animation: reduceSize 1s both;
+
+	& > div img {
+		animation: reduceSize 1s both;
+		aspect-ratio: 1 / 1;
+	}
+}
+
+.role-assignation__wrapper-large {
+	overflow: hidden;
+
+	height: 200px;
+	width: 200px;
+	position: absolute;
+
+	& > div img {
+		height: 200px;
+		aspect-ratio: 1 / 1;
+	}
+}
+
+.role-assignation__roles {
+	display: flex;
+	transform: translateX(var(--role-assignation-transform-length));
+}
+
+.role-assignation__roles-large {
+	display: flex;
+	animation: slideRoles 2s cubic-bezier(.65, .05, .36, 1) both;
+}
+
+.role-assignation__modal-background {
+	position: relative;
+	height: 300px;
+	aspect-ratio: 1 / 1;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+
+	padding: space(2);
+
+	background-color: var(--dark-background);
+}
+
+.role-assignation__role-text {
+	text-align: center;
+	font-size: 1.125em;
+
+	display: grid;
+	gap: 6px;
+}
+
+.role-assignation__role-text span:not(.bold) {
+	display: block;
+}
+
+.role-assignation__role-text span span:not(.bold) {
+	opacity: 0;
+	animation: revealText .7s both;
+	transform: translateY(100%);
+}
+
+@keyframes slideRoles {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(var(--role-assignation-transform-length));
+	}
+}
+
+@keyframes revealText {
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes reduceSize {
+	from {
+		height: 200px;
+		width: 200px;
+	}
+
+	to {
+		position: static;
+		height: 160px;
+		width: 160px;
+	}
+}
+
+.role-assignation-overlay__villagers {
+	border-radius: 8px;
+	box-shadow: 0 0 32px 8px var(--villager-color);
+}
+
+.role-assignation-overlay__werewolves {
+	border-radius: 8px;
+	box-shadow: 0 0 32px 8px var(--werewolf-color);
+}

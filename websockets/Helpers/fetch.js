@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import https from "node:https";
+import { error } from "../Logger.js";
 
 const agent = new https.Agent({
 	rejectUnauthorized: false,

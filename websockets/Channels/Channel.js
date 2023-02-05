@@ -1,6 +1,6 @@
 import { GameChannel } from "./GameChannel.js";
 import { PrivateChannel } from "./PrivateChannel.js";
-import { error, info } from "../Logger.js";
+import { error, info, log } from "../Logger.js";
 
 export class Channel {
 	privateChannels = ["private-*", "presence-*"];
@@ -75,7 +75,6 @@ export class Channel {
 				error(`Error during user joining channel ${data.channel}`);
 				error(e);
 			}
-			this.io.sockets.to(socket.id).emit("subscription_error", data.channel, e.status);
 		}
 	}
 

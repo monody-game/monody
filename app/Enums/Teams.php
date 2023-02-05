@@ -10,7 +10,7 @@ enum Teams: int
     public function roles(): array
     {
         return match ($this) {
-            self::Villagers => [Roles::SimpleVillager, Roles::Psychic, Roles::Witch],
+            self::Villagers => [Roles::SimpleVillager, Roles::Psychic, Roles::Witch, Roles::LittleGirl],
             self::Werewolves => [Roles::Werewolf]
         };
     }
@@ -19,7 +19,7 @@ enum Teams: int
     {
         return match ($role) {
             Roles::Werewolf => self::Werewolves,
-            Roles::SimpleVillager, Roles::Psychic, Roles::Witch => self::Villagers,
+            Roles::SimpleVillager, Roles::Psychic, Roles::Witch, Roles::LittleGirl => self::Villagers,
         };
     }
 
