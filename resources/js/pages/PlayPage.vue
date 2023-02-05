@@ -51,7 +51,7 @@
 <script setup>
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
-import { useStore } from "../stores/GameCreationModal.js";
+import { useStore } from "../stores/game-creation-modal.js";
 import { useStore as useModalStore } from "../stores/modal.js";
 import AuthService from "../services/AuthService.js";
 import Footer from "../Components/FooterComponent.vue";
@@ -84,8 +84,6 @@ window.Echo.channel("home").listen(".game-list.update", async (e) => {
 		roles.value = res.data.roles;
 	}
 
-	console.log(e.data, games.value);
-
 	games.value = e.data.games;
 });
 
@@ -97,6 +95,6 @@ const logout = function () {
 };
 
 const openModal = function () {
-	useModalStore().open("GameCreationModal");
+	useModalStore().open("game-creation-modal");
 };
 </script>

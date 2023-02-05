@@ -35,6 +35,9 @@
       <LogoSpinner v-if="loading" />
       <PlayerList />
     </div>
+    <Transition name="modal">
+      <ShareGameModal v-if="shareModalStore.isOpenned" />
+    </Transition>
   </div>
 </template>
 
@@ -46,15 +49,18 @@ import { useStore as usePopupStore } from "../../stores/popup.js";
 import { useStore as useAssignationPopupStore } from "../../stores/role-assignation.js";
 import { useStore as useModalStore } from "../../stores/modal.js";
 import { useStore as useUserStore } from "../../stores/user.js";
+import { useStore as useShareModalStore } from "../../stores/share-game-modal.js";
 import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 import GameCounter from "../../Components/GameCounter.vue";
 import Chat from "../../Components/Chat/TheChat.vue";
 import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
+import ShareGameModal from "../../Components/Modal/Pages/ShareGameModal.vue";
 
 const route = useRoute();
 const store = useStore();
 
+const shareModalStore = useShareModalStore();
 const popupStore = usePopupStore();
 const gameStore = useGameStore();
 const userStore = useUserStore();
@@ -68,6 +74,10 @@ const assignedRole = ref(0);
 
 const actions = await window.JSONFetch("/interactions/actions", "GET");
 store.availableActions = actions.data;
+
+if (localStorage.getItem("show_share") === "true") {
+	modalStore.open("share-game-modal");
+}
 
 window.Echo.join(`game.${gameId}`)
 	.listen(".game.role-assign", async (role_id) => {
