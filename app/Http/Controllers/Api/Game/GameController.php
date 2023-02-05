@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\AlertType;
 use App\Enums\States;
-use App\Events\GameCreated;
+use App\Events\GameListUpdate;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGameRequest;
 use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\JoinGameRequest;
-use App\Models\Game;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\RegisterHelperTrait;
@@ -122,7 +121,7 @@ class GameController extends Controller
             'avatar' => $user->avatar,
         ];
 
-        broadcast(new GameCreated(new Game($data)));
+        broadcast(new GameListUpdate($this->list()->getData(true)['games']));
 
         return new JsonResponse(['game' => $data]);
     }

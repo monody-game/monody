@@ -49,15 +49,15 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
+import { useStore } from "../stores/GameCreationModal.js";
+import { useStore as useModalStore } from "../stores/modal.js";
 import AuthService from "../services/AuthService.js";
 import Footer from "../Components/FooterComponent.vue";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
 import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";
-import { onBeforeRouteLeave, useRouter } from "vue-router";
-import { ref } from "vue";
-import { useStore } from "../stores/GameCreationModal.js";
-import { useStore as useModalStore } from "../stores/modal.js";
 
 const games = ref([]);
 const roles = ref([]);
@@ -77,16 +77,16 @@ if (retrievedGames.data.games.length > 0) {
 	games.value = retrievedGames.data.games;
 }
 
-window.Echo.channel("home").listen(".game.created", async (e) => {
+window.Echo.channel("home").listen(".game-list.update", async (e) => {
 	if (roles.value.length === 0) {
 		const res = await window.JSONFetch("/roles", "GET");
 
 		roles.value = res.data.roles;
 	}
 
-	games.value.push(e.data.game);
-}).listen(".game.delete", (id) => {
-	games.value = games.value.filter(game => game.id !== id);
+	console.log(e.data, games.value);
+
+	games.value = e.data.games;
 });
 
 const logout = function () {
