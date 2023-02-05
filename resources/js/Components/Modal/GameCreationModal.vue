@@ -54,6 +54,7 @@ import GameStateModalPage from "./Pages/GameState/GameStateModalPage.vue";
 import ShareModalPage from "./Pages/ShareModalPage.vue";
 import BaseModal from "./BaseModal.vue";
 import { useStore } from "../../stores/GameCreationModal.js";
+import { useStore as useGameStore } from "../../stores/game.js";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
@@ -62,16 +63,30 @@ const totalPage = ref(2);
 const store = useStore();
 const router = useRouter();
 const gameId = ref("");
+const gameStore = useGameStore();
 
 const closeModal = function () {
 	reset();
 };
 
 const notEnoughSelectedRoles = function () {
-	const selectedRoles = store.selectedRoles;
-	// return selectedRoles.length < 5;
+	const selectedIds = store.selectedRoles;
+	const selectedRoles = [];
+
+	for (const role of store.roles) {
+		if (selectedIds.indexOf(role.id) !== -1) {
+			role.count = store.getRoleCountById(role.id);
+			selectedRoles.push(role);
+		}
+	}
+
+	// return selectedIds.length < 5;
 	// TODO: replace line below with line above
-	return selectedRoles.length < 2;
+	return selectedIds.length < 2 ||
+		!(
+			selectedRoles.filter(role => role.team_id === 1).length >= 1 &&
+			selectedRoles.filter(role => role.team_id === 2).length >= 1
+		);
 };
 
 const nextPage = async function() {
@@ -90,11 +105,14 @@ const finish = async function() {
 	store.gameId = res.data.game.id;
 	gameId.value = res.data.game.id;
 
-	reset();
-
 	if (store.gameId !== 0) {
+		gameStore.roles = store.roles.filter(role => store.selectedRoles.includes(role.id));
+		reset();
+
 		await router.push("/game/" + gameId.value);
 	}
+
+	reset();
 };
 
 const reset = function () {

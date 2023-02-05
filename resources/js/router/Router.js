@@ -8,6 +8,7 @@ import GamePage from "../pages/Game/GamePage.vue";
 
 import exists from "./middleware/gameExists.js";
 import user from "./middleware/user.js";
+import canJoin from "./middleware/canJoinGame.js";
 
 const routes = [
 	{
@@ -38,7 +39,7 @@ const routes = [
 		name: "game",
 		component: GamePage,
 		meta: {
-			middleware: [user, exists]
+			middleware: [user, exists, canJoin]
 		}
 	},
 	{

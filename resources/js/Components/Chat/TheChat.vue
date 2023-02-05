@@ -1,67 +1,90 @@
 <template>
   <div class="chat__main">
-    <div class="chat__messages" />
+    <div class="chat__messages">
+      <template
+        v-for="message in store.messages"
+        :key="message.content + message.timestamp"
+      >
+        <TimeSeparator
+          v-if="message.type === 'time_separator'"
+          :message="message.content"
+        />
+        <ChatAlert
+          v-else-if="message.type !== 'message' && message.type !== 'werewolf'"
+          :message="message.content"
+          :type="message.type"
+        />
+        <ChatMessage
+          v-else
+          :message="message"
+        />
+      </template>
+    </div>
     <div class="chat__submit-form">
       <input
         ref="input"
-        v-model="message"
+        v-model="content"
         class="chat__send-input"
         placeholder="Envoyer un message"
         type="text"
-        @keyup.enter="send()"
+        @keyup.enter="sendMessage()"
       >
       <button
         ref="button"
         aria-label="Envoyer"
         class="chat__send-button"
         type="submit"
-        @click.prevent="send()"
+        :class="content.length > 500 ? 'locked' : ''"
+        @click.prevent="sendMessage()"
         @keyup.stop
       >
         <svg class="chat__submit-icon">
           <use
             ref="icon"
-            href="/sprite.svg#send"
+            :href="content.length > 500 ? '/sprite.svg#lock' : '/sprite.svg#send'"
           />
         </svg>
+        <span v-if="content.length > 500">
+          {{ content.length }}/500
+        </span>
       </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import ChatService from "../../services/ChatService.js";
-import { useStore as useGameStore } from "../../stores/game.js";
-import { useStore as useUserStore } from "../../stores/user.js";
 import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { onBeforeRouteLeave, useRoute } from "vue-router";
+import { useStore as useGameStore } from "../../stores/game.js";
+import { useStore } from "../../stores/chat.js";
+import { send } from "../../services/sendMessage.js";
+import ChatAlert from "./ChatAlert.vue";
+import ChatMessage from "./ChatMessage.vue";
+import TimeSeparator from "./TimeSeparator.vue";
 
-const message = ref("");
+const content = ref("");
 const input = ref(null);
 const button = ref(null);
 const icon = ref(null);
 const gameStore = useGameStore();
-const userStore = useUserStore();
 const route = useRoute();
+const store = useStore();
 
-const send = async function() {
-	await ChatService.send(message.value);
-	message.value = "";
+const sendMessage = async function() {
+	if (content.value.length < 500) {
+		await send(content.value);
+	}
+	content.value = "";
 };
+
+onBeforeRouteLeave(() => {
+	store.$reset();
+});
 
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
 		const payload = e.data.payload;
-		ChatService.sendMessage(payload, payload.type);
-	})
-	.listen(".game.role-assign", async (role_id) => {
-		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
-		const role = res.data.role;
-		gameStore.setRole(userStore.id, role);
-		await ChatService.sendMessage({
-			type: "info",
-			content: `Votre rôle est : ${role.display_name}`
-		});
+		store.send(payload.content, payload.type, payload.author);
 	})
 	.listen(".game.kill", async (e) => {
 		const payload = e.data.payload;
@@ -70,12 +93,9 @@ window.Echo.join(`game.${route.params.id}`)
 
 		if (killed === null) {
 			if (context === "vote") {
-				ChatService.sendMessage({
-					content: "Le village a décidé de ne tuer personne aujourd'hui !",
-					type: "death"
-				});
+				store.send("Le village a décidé de ne tuer personne aujourd'hui !", "death");
 			} else {
-				ChatService.sendMessage({ content: "Personne n'a été tué cette nuit !", type: "death" });
+				store.send("Personne n'a été tué cette nuit !", "death");
 			}
 			return;
 		}
@@ -84,19 +104,8 @@ window.Echo.join(`game.${route.params.id}`)
 		const role = await window.JSONFetch(`/game/user/${user.id}/role`, "GET");
 
 		if (context === "vote") {
-			ChatService.sendMessage(
-				{
-					content: `Le village a décidé de tuer ${user.username} qui était ${role.data.display_name}`,
-					type: "death"
-				}
-			);
-		} else {
-			ChatService.sendMessage(
-				{
-					content: `${user.username} a été tué cette nuit, il était ${role.data.display_name} !`,
-					type: "death"
-				}
-			);
+			store.send(`Le village a décidé de tuer ${user.username} qui était ${role.data.display_name}`, "death");
+		} else {			store.send(`${user.username} a été tué cette nuit, il était ${role.data.display_name} !`, "death");
 		}
 	})
 	.listen(".chat.lock", () => {
@@ -116,10 +125,6 @@ window.Echo.join(`game.${route.params.id}`)
 		const data = e.data.payload;
 		const winners = Object.keys(data.winners);
 		const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
-
-		await ChatService.sendMessage({
-			type: "info",
-			content: `La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(" ")} du camp des ${team.data.team.display_name}`
-		});
+		store.send(`La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(" ")} du camp des ${team.data.team.display_name}`, "info");
 	});
 </script>

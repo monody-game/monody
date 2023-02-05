@@ -2,31 +2,25 @@
 
 namespace App\Events;
 
-use App\Models\Game;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class GameCreated implements ShouldBroadcastNow
+class GameListUpdate implements ShouldBroadcastNow
 {
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
 
-    public array $game;
+    public array $games;
 
     public bool $volatile = true;
 
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct(Game $game)
+    public function __construct(array $games)
     {
-        $this->game = $game->all();
+        $this->games = $games;
     }
 
     /**
@@ -39,6 +33,6 @@ class GameCreated implements ShouldBroadcastNow
 
     public function broadcastAs(): string
     {
-        return 'game.created';
+        return 'game-list.update';
     }
 }

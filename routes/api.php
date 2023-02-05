@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Middleware\OptionalAuthentication;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/ping', 'PingController@ping');
 
 Route::post('/auth/login', 'Auth\LoginController@login');
+
+Route::get('/game/list', 'Game\GameController@list');
 
 Route::get('/oauth/link/discord', 'Oauth\DiscordOauthController@link');
 Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
@@ -27,6 +30,10 @@ Route::get('/team/{id}', 'TeamController@get');
 
 Route::get('/interactions/actions', 'Game\GameActionsController@all');
 Route::get('/interactions/actions/{gameId}/{interactionId}', 'Game\GameActionsController@get');
+
+Route::group(['middleware' => OptionalAuthentication::class], function () {
+    Route::get('/stats/{userId?}', 'StatisticsController@index');
+});
 
 Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/auth/register', 'Auth\RegisterController@register');
@@ -61,7 +68,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/user', 'UserController@user')->name('verification.notice');
     Route::patch('/user', 'UserController@update');
 
-    Route::get('/game/list', 'Game\GameController@list');
     Route::put('/game', 'Game\GameController@new');
     Route::post('/game/check', 'Game\GameController@check');
 

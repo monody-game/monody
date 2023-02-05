@@ -2,6 +2,7 @@
   <router-link
     :to="{ name: 'game', params: { id: props.game.id } }"
     class="game-show__container"
+    @click="setRoles"
   >
     <img
       :alt="props.game.owner.username + '\'s avatar'"
@@ -25,6 +26,8 @@
 </template>
 
 <script setup>
+import { useStore } from "../stores/game.js";
+
 const props = defineProps({
 	game: {
 		type: Object,
@@ -35,6 +38,7 @@ const props = defineProps({
 		required: true
 	}
 });
+const store = useStore();
 
 const getUserCount = function () {
 	let total = 0;
@@ -42,5 +46,18 @@ const getUserCount = function () {
 		total += parseInt(props.game.roles[count]);
 	}
 	return total;
+};
+
+const setRoles = async function () {
+	const roles = props.roles.filter(role => {
+		return Object.keys(props.game.roles).includes(role.id.toString());
+	});
+
+	for (const role of roles) {
+		const team = await window.JSONFetch(`/team/${role.team_id}`);
+		role.team = team.data.team;
+	}
+
+	store.roles = roles;
 };
 </script>
