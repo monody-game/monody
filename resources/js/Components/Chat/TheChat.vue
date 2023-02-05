@@ -54,7 +54,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore } from "../../stores/chat.js";
 import { send } from "../../services/sendMessage.js";
@@ -76,6 +76,10 @@ const sendMessage = async function() {
 	}
 	content.value = "";
 };
+
+onBeforeRouteLeave(() => {
+	store.$reset();
+});
 
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
