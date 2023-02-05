@@ -33,8 +33,8 @@
 </template>
 
 <script setup>
-import ChatService from "../services/ChatService";
-import { useStore } from "../stores/game";
+import { useStore } from "../stores/game.js";
+import { useStore as useChatStore } from "../stores/chat.js";
 import { onMounted, ref } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 
@@ -48,6 +48,7 @@ const counterIcon = ref(null);
 const status = ref(0);
 const sound = new Audio("../sounds/bip.mp3");
 const roundText = ref("");
+const chatStore = useChatStore();
 
 const getState = async function(toRetrieveState = null) {
 	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
@@ -164,11 +165,10 @@ const updateOverlay = function () {
 	default:
 		break;
 	case 2:
-		ChatService.timeSeparator("Tombée de la nuit");
 		counterIcon.value.classList.remove("counter__icon-rotate");
 		break;
 	case 6:
-		ChatService.timeSeparator("Lever du jour");
+		chatStore.send("Lever du jour", "time_separator");
 		counterIcon.value.classList.add("counter__icon-rotate");
 		break;
 	case 8:
