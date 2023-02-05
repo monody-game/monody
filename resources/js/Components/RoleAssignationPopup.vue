@@ -46,7 +46,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import BaseModal from "./Modal/BaseModal.vue";
-import ChatService from "../services/ChatService.js";
+import { useStore } from "../stores/chat.js";
 
 const props = defineProps({
 	roles: {
@@ -61,6 +61,7 @@ const props = defineProps({
 
 const animationEnded = ref(false);
 const roleText = ref(null);
+const chatStore = useStore();
 
 const roles = ref(props.roles);
 const assignedRole = roles.value.filter(role => role.id === parseInt(props.assignedRole))[0];
@@ -71,10 +72,7 @@ document.addEventListener("animationend", async (e) => {
 		animationEnded.value = true;
 		roleOverlay.value = "role-assignation-overlay__" + assignedRole.team.name;
 
-		await ChatService.sendMessage({
-			type: "info",
-			content: `Votre rôle est : ${assignedRole.display_name}`
-		});
+		chatStore.send(`Votre rôle est : ${assignedRole.display_name}`, "info");
 	}
 });
 
