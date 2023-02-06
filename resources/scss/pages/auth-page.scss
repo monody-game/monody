@@ -2,11 +2,11 @@
 	height: 100vh;
 	overflow: hidden;
 
-	background-image: url("../../public/images/monody_day.png");
+	background-image: var(--background-image);
 	background-size: cover;
 
-	a:hover {
-		text-decoration: underline;
+	a {
+		color: var(--secondary);
 	}
 }
 
@@ -30,7 +30,7 @@
 	display: flex;
 	align-items: center;
 	gap: space(1);
-	color: var(--dark-background);
+	color: var(--secondary);
 
 	position: absolute;
 	top: space(3);
@@ -42,9 +42,13 @@
 	width: 30px;
 }
 
+.auth-page__link {
+	width: max-content;
+}
+
 .auth-page__form-wrapper {
-	background-color: var(--light-background);
-	color: var(--dark-background);
+	background-color: var(--primary);
+	color: var(--secondary);
 
 	width: 500px;
 
@@ -73,10 +77,11 @@
 	position: relative;
 
 	& input {
-		background-color: #F6F3E6;
+		color: var(--secondary);
+		background-color: var(--primary-hover);
 		height: 40px;
 		border-radius: 4px;
-		border: #0f112725 solid 1px;
+		border: var(--border-secondary) solid 1px;
 		font-family: inherit;
 		padding-left: space(1);
 	}
@@ -90,12 +95,16 @@
 }
 
 .auth-page__form-group[data-is-invalid=true] input {
-	border: #b4000050 solid 2px;
+	border: var(--border-danger) solid 2px;
 }
 
 .auth-page__form-group p,
 .auth-page__error-icon {
 	color: var(--danger);
+}
+
+.auth-page__form-group svg:not(.auth-page__error-icon) {
+	color: var(--secondary);
 }
 
 .auth-page__form-group svg:not(.notice__icon) {
@@ -104,6 +113,10 @@
 	width: 24px;
 	right: 10px;
 	top: 34px;
+}
+
+.auth-page__show-password {
+	cursor: pointer;
 }
 
 .auth-page__show-password ~ .auth-page__error-icon {
@@ -118,15 +131,17 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: space(1);
+
 	margin-top: space(2);
 
 	& button {
-		border: #0f112725 solid 1px;
+		color: var(--secondary);
 		padding-block: space(1) !important;
 	}
 
 	& button:hover, button:disabled, button:disabled:hover {
-		background-color: #F6F3E6 !important;
+		background-color: var(--primary-hover) !important;
 	}
 }
 

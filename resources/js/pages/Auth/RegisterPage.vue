@@ -40,7 +40,10 @@
               type="text"
               name="username"
             >
-            <svg v-if="errors.username.errored">
+            <svg
+              v-if="errors.username.errored"
+              class="auth-page__error-icon"
+            >
               <use href="/sprite.svg#error" />
             </svg>
             <p v-if="errors.username.errored">
@@ -63,7 +66,10 @@
               type="email"
               name="email"
             >
-            <svg v-if="errors.email.errored">
+            <svg
+              v-if="errors.email.errored"
+              class="auth-page__error-icon"
+            >
               <use href="/sprite.svg#error" />
             </svg>
             <p v-if="errors.email.errored">

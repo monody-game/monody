@@ -18,6 +18,14 @@ p {
 	font-size: 16px;
 }
 
+a {
+	color: #0066FF;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
 .bold {
 	font-weight: bold;
 }

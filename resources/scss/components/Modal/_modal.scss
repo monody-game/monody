@@ -12,14 +12,14 @@
 }
 
 .modal__main {
-	color: var(--dark-background);
+	color: var(--secondary);
 
 	min-height: 55vh;
 	max-height: 532px;
 	width: 63vw;
 	max-width: 540px;
 
-	background-color: var(--light-background);
+	background-color: var(--primary);
 
   overflow-x: hidden;
   overflow-y: auto;
