@@ -89,6 +89,7 @@
   }
 
   & .btn-primary {
-      color: #0f1127;
+		background-color: var(--light-background);
+		color: var(--dark-background);
   }
 }
