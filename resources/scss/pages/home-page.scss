@@ -92,4 +92,9 @@
 		background-color: var(--light-background);
 		color: var(--dark-background);
   }
+
+	& .btn-primary:hover {
+		background-color: var(--light-background-hover) !important;
+		text-decoration: none;
+	}
 }
