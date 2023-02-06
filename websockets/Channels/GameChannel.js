@@ -4,9 +4,9 @@ import { GameService } from "../Services/GameService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
-import { info } from "../Logger.js";
+import { info, log } from "../Logger.js";
 
-const StartingState = (await fetch(`${process.env.API_URL}/state/0`, { "method": "GET" })).json;
+const StartingState = (await fetch(`${process.env.API_URL}/state/1`, { "method": "GET" })).json;
 
 export class GameChannel {
 	constructor(io, emitter) {
@@ -99,8 +99,10 @@ export class GameChannel {
 		if (!state) return;
 
 		if (state.status === StartingState.state) {
+			log(`Stopping starting state of game ${id}`);
 			await this.gameService.stopGameLaunch(channel);
 			game.is_started = false;
+			await this.gameService.setGame(id, game);
 		}
 
 		const member = members.find(m => m.socketId === socket.id);
@@ -169,7 +171,7 @@ export class GameChannel {
 			data: list.json
 		});
 
-		info(`Deleting game with id: ${id}`);
+		log(`Deleting game with id: ${id}`);
 	}
 
 	async onSubscribed(socket, channel, members) {

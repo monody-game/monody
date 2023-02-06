@@ -1,5 +1,5 @@
 import { client } from "./Connection.js";
-import { info } from "../Logger.js";
+import { log } from "../Logger.js";
 
 export class RedisSubscriber {
 	constructor() {
@@ -11,9 +11,9 @@ export class RedisSubscriber {
 	async subscribe(callback) {
 		await this.sub.pSubscribe("*", async (message, channel) => {
 			if (process.env.APP_DEBUG) {
-				info("Api emitted an event !");
-				info("Channel: " + channel);
-				info("Event: " + JSON.parse(message).event);
+				log("Api emitted an event !");
+				log("Channel: " + channel);
+				log("Event: " + JSON.parse(message).event);
 			}
 			return await callback(channel, JSON.parse(message));
 		});

@@ -46,6 +46,7 @@ export class GameService {
 	}
 
 	async stopGameLaunch(channel) {
+		this.emitter.emit("time.halt", gameId(channel));
 		await this.StateManager.setState({
 			status: WaitingState.state,
 			startTimestamp: Date.now(),
@@ -67,7 +68,7 @@ export class GameService {
 			const user = UserService.getUserBySocket(member.socketId, members);
 			const roleId = game.assigned_roles[user.user_id];
 			let role = await fetch(`${process.env.API_URL}/roles/get/${roleId}`, { method: "GET" });
-      
+
 			role = role.json.role;
 			io.to(member.socketId).emit("game.role-assign", channel, game.assigned_roles[user.user_id]);
 		}
