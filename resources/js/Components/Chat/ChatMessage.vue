@@ -26,5 +26,5 @@ const props = defineProps({
 		required: true
 	}
 });
-const avatar = window.location.origin + props.message.author.avatar;
+const avatar = window.location.origin + props.message.author.avatar + "?h=50&dpr=2";
 </script>
