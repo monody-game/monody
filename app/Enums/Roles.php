@@ -52,7 +52,7 @@ enum Roles: int
     public function full(): array
     {
         $role = Roles::from($this->value);
-        $image = file_exists(public_path("images/roles/{$role->name()}.png")) ? "/images/roles/{$role->name()}.png" : '/images/roles/default.png';
+        $image = file_exists(storage_path("app/public/roles/{$role->name()}.png")) ? "/assets/roles/{$role->name()}.png" : '/assets/roles/default.png';
 
         return [
             'id' => $role->value,

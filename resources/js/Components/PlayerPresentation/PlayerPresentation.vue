@@ -6,7 +6,7 @@
       </div>
       <ProgressBar style="position: relative;">
         <img
-          :src="store.avatar"
+          :src="store.avatar + '?h=200&dpr=2'"
           alt=""
           class="player-presentation__avatar"
         >
