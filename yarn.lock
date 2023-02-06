@@ -1510,6 +1510,11 @@ vite-plugin-full-reload@^1.0.5:
     picocolors "^1.0.0"
     picomatch "^2.3.1"
 
+vite-plugin-manifest-sri@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-manifest-sri/-/vite-plugin-manifest-sri-0.1.0.tgz#e2b9d0cebf7c7c307cee8aab3a8b3cf604bca921"
+  integrity sha512-m4gcEXwcA1MfCVYTLVHYsB03Xsc6L4VYfhxXmcYcS+rN3kTjuWkXMaA8OuOV1gFdi1bMJFkLTJCPciYApvCm/g==
+
 vite@^4.0.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/vite/-/vite-4.1.1.tgz#3b18b81a4e85ce3df5cbdbf4c687d93ebf402e6b"

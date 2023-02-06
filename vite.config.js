@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import manifestSRI from "vite-plugin-manifest-sri";
 import laravel from "laravel-vite-plugin";
 import fs from "node:fs";
 import autoprefixer from "autoprefixer";
@@ -23,6 +24,7 @@ export default defineConfig({
 				}
 			},
 		}),
+		manifestSRI()
 	],
 	css: {
 		postcss: {
