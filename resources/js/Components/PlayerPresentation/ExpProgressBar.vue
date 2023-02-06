@@ -16,5 +16,5 @@ const total_exp = 100;
 const expPercentage = (exp * total_exp) / 100;
 const progress = (expPercentage * 85) / 100;
 
-const progressStyle = `background-image: conic-gradient(from 206deg at 50% 50%, #FFF5CF 0 ${progress}%, #FFFCF1 0);`;
+const progressStyle = `background-image: conic-gradient(from 206deg at 50% 50%, var(--accent-primary) 0 ${progress}%, var(--primary) 0);`;
 </script>

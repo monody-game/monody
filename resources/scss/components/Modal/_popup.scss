@@ -1,8 +1,8 @@
 $popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'error' var(--danger);
 
 .popup__wrapper {
-	color: var(--dark-background);
-	background-color: var(--light-background);
+	color: var(--secondary);
+	background-color: var(--alt-background);
 
 	max-width: 500px;
 	min-width: 300px;
@@ -43,6 +43,10 @@ $popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 
 .popup__note {
 	color: #0f112780;
+
+	@media (prefers-color-scheme: dark) {
+		color: #fffcf180;
+	}
 }
 
 .popup__icon {

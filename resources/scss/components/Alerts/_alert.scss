@@ -6,8 +6,8 @@ $alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 	align-items: center;
 	gap: space(2);
 
-	background: var(--light-background);
-	color: var(--dark-background);
+	background: var(--alt-background);
+	color: var(--secondary);
 
 	height: 48px;
 
@@ -27,14 +27,19 @@ $alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 	height: 16px;
 	width: 16px;
 	cursor: pointer;
+	transition: color .2s;
+	color: #0f112740;
 
-	& use {
-		transition: color .2s;
-		color: #0f112740;
+	&:hover {
+		color: #0f112780;
 	}
 
-	&:hover use {
-		color: #0f112780;
+	@media (prefers-color-scheme: dark) {
+		color: #fffcf140;
+
+		&:hover {
+			color: #fffcf180;
+		}
 	}
 }
 

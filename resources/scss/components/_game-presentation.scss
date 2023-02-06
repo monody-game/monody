@@ -1,13 +1,13 @@
 .game-show__container {
 	display: flex;
 	align-items: center;
-	background: var(--light-background);
+	background: var(--primary);
 	padding: space(1) space(2);
 	margin-top: space(3);
-	color: var(--dark-background);
-	transition: background-color, outline-width .2s linear;
+	color: var(--secondary);
+	transition: background-color .2s, outline-width .2s;
 	border-radius: 6px;
-	outline: var(--border-dark) 1px solid;
+	outline: var(--border-secondary) 2px solid;
 
 	& .game-show__avatar {
 		border-radius: 50%;
@@ -31,8 +31,9 @@
 	}
 
 	&:hover {
-		background-color: var(--light-background-hover);
-		outline-width: 2px;
+		background-color: var(--dark-background-hover);
+		outline-width: 3px;
+		text-decoration: none;
 	}
 }
 

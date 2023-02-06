@@ -8,9 +8,9 @@
 	font-size: 18px;
 
 	&.pill-light {
-		background-color: var(--light-background);
-		color: var(--dark-background);
-		outline: var(--border-dark) solid 1px;
+		background-color: var(--primary);
+		color: var(--secondary);
+		outline: var(--border-secondary) solid 2px;
 	}
 
 	&.pill-small {

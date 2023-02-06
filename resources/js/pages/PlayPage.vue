@@ -25,7 +25,20 @@
               class="play-page__button btn large"
               @click="openModal()"
             >
-              <i />
+              <svg
+                width="25"
+                height="25"
+                viewBox="0 0 35 35"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17.5 17.5H5.83337M17.5 29.1666V17.5V29.1666ZM17.5 17.5V5.83331V17.5ZM17.5 17.5H29.1667H17.5Z"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+              </svg>
               Créer
             </button>
           </header>

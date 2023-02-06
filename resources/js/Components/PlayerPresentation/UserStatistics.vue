@@ -47,12 +47,12 @@
           height="19"
           rx="9.5"
           fill="var(--light-background)"
-          stroke="currentColor"
+          stroke="var(--dark-background)"
           stroke-width="2"
         />
         <path
           d="M22.9425 22.967L19.5 19.8944L16.0575 22.967L15 22.0165L19.5 18L24 22.0165L22.9425 22.967ZM22.9425 26.9835L19.5 23.9109L16.0575 26.9835L15 26.033L19.5 22.0165L24 26.033L22.9425 26.9835ZM22.9425 31L19.5 27.9274L16.0575 31L15 30.0494L19.5 26.033L24 30.0494L22.9425 31Z"
-          fill="currentColor"
+          fill="var(--dark-background)"
         />
       </svg>
       <p>{{ stats.longest_streak }}</p>
