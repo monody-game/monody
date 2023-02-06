@@ -3,7 +3,7 @@ import { GameService } from "./GameService.js";
 import { client } from "../Redis/Connection.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
-import { error, info, success, warn } from "../Logger.js";
+import { error, info, log, success, warn } from "../Logger.js";
 
 export class InteractionService {
 	static async openInteraction(io, channel, type) {
@@ -73,7 +73,7 @@ export class InteractionService {
 
 		await fetch(`${process.env.API_URL}/interactions`, { method: "DELETE", body: params });
 
-		info(`Closing ${type} interaction with id ${interactionId} in game ${id}.`);
+		log(`Closing ${type} interaction with id ${interactionId} in game ${id}.`);
 
 		if (callers !== "*") {
 			callers = JSON.parse(callers);

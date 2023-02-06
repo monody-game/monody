@@ -1,6 +1,6 @@
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
-import { error, info } from "../Logger.js";
+import { error, log } from "../Logger.js";
 import { warn } from "vue";
 
 export class PrivateChannel {
@@ -10,7 +10,7 @@ export class PrivateChannel {
 		};
 
 		if (process.env.APP_DEBUG) {
-			info(`Sending auth request to: "${process.env.APP_URL}"`);
+			log(`Sending auth request to: "${process.env.APP_URL}"`);
 		}
 
 		return this.serverRequest(socket, options);
@@ -52,7 +52,7 @@ export class PrivateChannel {
 		}
 
 		if (process.env.APP_DEBUG) {
-			info(`${socket.id} authenticated for: ${options.form.channel_name}`);
+			log(`${socket.id} authenticated for: ${options.form.channel_name}`);
 		}
 
 		return response;

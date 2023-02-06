@@ -5,7 +5,9 @@ import path from "node:path";
 chalk.level = 3;
 
 const log = (...data) => {
-	dataLog(data, "LOG");
+	if (process.env.APP_DEBUG) {
+		dataLog(data, "LOG");
+	}
 };
 
 const success = (...data) => {
