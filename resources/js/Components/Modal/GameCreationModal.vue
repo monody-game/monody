@@ -69,7 +69,14 @@ const finish = async function() {
 	gameId.value = res.data.game.id;
 
 	if (store.gameId !== 0) {
-		gameStore.roles = store.roles.filter(role => store.selectedRoles.includes(role.id));
+		const roles = store.roles.filter(role => store.selectedRoles.includes(role.id));
+
+		for (const role of roles) {
+			const team = await window.JSONFetch(`/team/${role.team_id}`);
+			role.team = team.data.team;
+		}
+
+		gameStore.roles = roles;
 
 		store.close();
 		localStorage.setItem("show_share", true);
