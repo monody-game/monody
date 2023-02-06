@@ -78,7 +78,7 @@ document.addEventListener("animationend", async (e) => {
 
 onMounted(() => {
 	const children = roleText.value.children;
-	let delay = 1.1;
+	let delay = 1;
 
 	for (const span of children) {
 		if (span.localName !== "span") {
