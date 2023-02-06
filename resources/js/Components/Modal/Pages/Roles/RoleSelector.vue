@@ -13,7 +13,7 @@
       </button>
       <img
         :alt="props.role.name"
-        :src="props.role.image"
+        :src="props.role.image + '?h=60&dpr=2'"
         :title="props.role.display_name"
         class="role-selector__image"
       >

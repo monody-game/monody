@@ -15,7 +15,7 @@
         <img
           v-for="role_id in Object.keys(props.game.roles)"
           :key="role_id"
-          :src="props.roles.find(role => parseInt(role.id) === parseInt(role_id)).image"
+          :src="props.roles.find(role => parseInt(role.id) === parseInt(role_id)).image + '?h=30&dpr=2'"
           alt=""
           class="game-show__role"
         >
