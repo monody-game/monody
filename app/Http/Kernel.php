@@ -2,7 +2,6 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\AddContentSecurityPolicyHeaders;
 use App\Http\Middleware\AddTokenToRequests;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
