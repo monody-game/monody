@@ -81,6 +81,10 @@ if (stats.wins !== "N/A" && stats.losses !== "N/A") {
 		winRate = stats.wins;
 	} else {
 		winRate = stats.wins / stats.losses;
+
+		if (!Number.isInteger(winRate)) {
+			winRate = winRate.toFixed(2);
+		}
 	}
 }
 </script>
