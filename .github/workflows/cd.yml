@@ -33,6 +33,8 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script_stop: true
           envs: APP_VERSION
+          debug: true
           script: |
+            echo "$(whoami)"
             sudo -i -u deploy
             ~/deploy.sh
