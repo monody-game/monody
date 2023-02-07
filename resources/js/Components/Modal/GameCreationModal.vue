@@ -55,8 +55,8 @@ const notEnoughSelectedRoles = function () {
 	// TODO: replace line below with line above
 	return selectedIds.length < 2 ||
 		!(
-			selectedRoles.filter(role => role.team_id === 1).length >= 1 &&
-			selectedRoles.filter(role => role.team_id === 2).length >= 1
+			selectedRoles.filter(role => role.team.id === 1).length >= 1 &&
+			selectedRoles.filter(role => role.team.id === 2).length >= 1
 		);
 };
 
@@ -69,14 +69,7 @@ const finish = async function() {
 	gameId.value = res.data.game.id;
 
 	if (store.gameId !== 0) {
-		const roles = store.roles.filter(role => store.selectedRoles.includes(role.id));
-
-		for (const role of roles) {
-			const team = await window.JSONFetch(`/team/${role.team_id}`);
-			role.team = team.data.team;
-		}
-
-		gameStore.roles = roles;
+		gameStore.roles = store.roles.filter(role => store.selectedRoles.includes(role.id));
 
 		store.close();
 		localStorage.setItem("show_share", true);

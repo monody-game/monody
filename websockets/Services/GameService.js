@@ -13,7 +13,7 @@ export class GameService {
 	constructor(io, emitter) {
 		this.io = io;
 		this.emitter = emitter;
-		this.StateManager = new StateManager(io);
+		this.StateManager = new StateManager(io, emitter);
 		this.counterService = new CounterService(io, emitter);
 	}
 
