@@ -35,5 +35,6 @@ jobs:
           envs: APP_VERSION
           debug: true
           script: |
-            exec bash
-            ~/deploy.sh
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            sh ~/deploy.sh
