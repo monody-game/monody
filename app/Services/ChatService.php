@@ -39,7 +39,7 @@ class ChatService
             $message->set('author', [
                 'id' => '',
                 'username' => 'Loup-garou',
-                'avatar' => '/images/roles/werewolf.png',
+                'avatar' => '/assets/roles/werewolf.png',
             ]);
 
             broadcast(new MessageSended($message, true, [

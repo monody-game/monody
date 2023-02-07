@@ -65,7 +65,7 @@
 
 .alert-message__death {
 	@extend .alert__main;
-	background: var(--danger);
+	background: var(--dark-danger);
 
 	& .alert-message__icon use {
 		color: #fff;

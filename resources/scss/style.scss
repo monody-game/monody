@@ -72,7 +72,9 @@ body {
 	--success: #46B800;
 	--info: #009ec0;
 	--warn: #F6970A;
-	--danger: #b40000;
+	--dark-danger: #b40000;
+	--light-danger: #FC0000;
+	--danger: var(--dark-danger);
 
 	--light-background: #fffcf1;
 	--light-background-hover: #F6F3E6;
@@ -115,7 +117,7 @@ body {
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--danger: #FC0000;
+		--danger: var(--light-danger);
 
 		--primary: var(--dark-background);
 		--primary-hover: var(--dark-background-hover);
