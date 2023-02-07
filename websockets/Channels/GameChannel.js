@@ -12,7 +12,7 @@ export class GameChannel {
 	constructor(io, emitter) {
 		this.io = io;
 		this.gameService = new GameService(io, emitter);
-		this.stateManager = new StateManager(io);
+		this.stateManager = new StateManager(io, emitter);
 	}
 
 	async getMembers(channel) {
