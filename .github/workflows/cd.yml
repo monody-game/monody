@@ -6,6 +6,8 @@ on:
   release:
     branches:
       - master
+    types:
+      - published
 
 jobs:
   deployment:
@@ -17,13 +19,15 @@ jobs:
 
       - name: 🐛 Debug
         run: |
-          echo ${GITHUB_REF}
-#      - name: ⬆️ Deploying
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.SSH_HOST }}
-#          username: ${{ secrets.SSH_USERNAME }}
-#          key: ${{ secrets.SSH_KEY }}
-#          script_stop: true
-#          script: |
-#            sh ~/deploy.sh
+          echo Deploying version "${GITHUB_REF/refs\/tags\//""}"
+      - name: ⬆️ Deploying
+        uses: appleboy/ssh-action@master
+        env:
+          APP_VERSION: "${GITHUB_REF/refs\/tags\//""}"
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script_stop: true
+          script: |
+            sh ~/deploy.sh
