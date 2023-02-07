@@ -10,7 +10,7 @@ enum Teams: int
     public function roles(): array
     {
         return match ($this) {
-            self::Villagers => [Roles::SimpleVillager, Roles::Psychic, Roles::Witch, Roles::LittleGirl],
+            self::Villagers => [Roles::SimpleVillager, Roles::Psychic, Roles::Witch, Roles::LittleGirl, Roles::Elder],
             self::Werewolves => [Roles::Werewolf]
         };
     }
@@ -19,8 +19,19 @@ enum Teams: int
     {
         return match ($role) {
             Roles::Werewolf => self::Werewolves,
-            Roles::SimpleVillager, Roles::Psychic, Roles::Witch, Roles::LittleGirl => self::Villagers,
+            Roles::SimpleVillager, Roles::Psychic, Roles::Witch, Roles::LittleGirl, Roles::Elder => self::Villagers,
         };
+    }
+
+    public function full(): array
+    {
+        $team = Teams::from($this->value);
+
+        return [
+            'id' => $team->value,
+            'name' => $team->name(),
+            'display_name' => $team->stringify(),
+        ];
     }
 
     public function stringify(): string

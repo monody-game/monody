@@ -9,6 +9,7 @@ enum Roles: int
     case Psychic = 3;
     case Witch = 4;
     case LittleGirl = 5;
+    case Elder = 6;
 
     public function stringify(): string
     {
@@ -17,7 +18,8 @@ enum Roles: int
             self::SimpleVillager => 'Simple villageois',
             self::Psychic => 'Voyante',
             self::Witch => 'Sorcière',
-            self::LittleGirl => 'Petite fille'
+            self::LittleGirl => 'Petite fille',
+            self::Elder => 'Ancien'
         };
     }
 
@@ -28,14 +30,15 @@ enum Roles: int
             self::SimpleVillager => 'simple_villager',
             self::Psychic => 'psychic',
             self::Witch => 'witch',
-            self::LittleGirl => 'little_girl'
+            self::LittleGirl => 'little_girl',
+            self::Elder => 'elder'
         };
     }
 
     public function weight(): int
     {
         return match ($this) {
-            self::Werewolf, self::LittleGirl => 2,
+            self::Werewolf, self::LittleGirl, self::Elder => 2,
             self::SimpleVillager => 1,
             self::Psychic, self::Witch => 3,
         };
@@ -45,7 +48,7 @@ enum Roles: int
     {
         return match ($this) {
             self::Werewolf, self::SimpleVillager => null,
-            self::Psychic, self::Witch, self::LittleGirl => 1,
+            self::Psychic, self::Witch, self::LittleGirl, self::Elder => 1,
         };
     }
 
@@ -61,7 +64,7 @@ enum Roles: int
             'image' => $image,
             'limit' => $role->limit(),
             'weight' => $role->weight(),
-            'team_id' => Teams::role($role)->value,
+            'team' => Teams::role($role)->full(),
         ];
     }
 

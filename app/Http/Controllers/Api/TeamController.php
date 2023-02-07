@@ -19,10 +19,6 @@ class TeamController extends Controller
     {
         $team = Teams::from($id);
 
-        return new JsonResponse(['team' => [
-            'id' => $id,
-            'name' => $team->name(),
-            'display_name' => $team->stringify(),
-        ]]);
+        return new JsonResponse(['team' => $team->full()]);
     }
 }
