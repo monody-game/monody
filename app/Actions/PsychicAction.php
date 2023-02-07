@@ -7,7 +7,6 @@ use App\Enums\Roles;
 use App\Events\InteractionUpdate;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
-use Exception;
 
 class PsychicAction implements ActionInterface
 {
@@ -17,21 +16,17 @@ class PsychicAction implements ActionInterface
     {
         $role = $this->getRole($userId);
 
-        return $role !== false && $role === Roles::Psychic && $this->alive($targetId, $this->getCurrentUserGameActivity($userId));
+        return $role === Roles::Psychic && $this->alive($targetId, $this->getCurrentUserGameActivity($userId));
     }
 
     public function call(string $targetId, InteractionActions $action, string $emitterId): int
     {
         $role = $this->getRole($targetId);
 
-        if ($role === false) {
-            throw new Exception('An error occured, try to see if the game is started');
-        }
-
         return $role->value;
     }
 
-    private function getRole(string $userId): Roles|false
+    private function getRole(string $userId): Roles
     {
         return $this->getRoleByUserId($userId, $this->getCurrentUserGameActivity($userId));
     }

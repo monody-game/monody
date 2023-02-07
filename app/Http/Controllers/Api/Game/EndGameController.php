@@ -8,6 +8,8 @@ use App\Events\GameLoose;
 use App\Events\GameWin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GameIdRequest;
+use App\Models\GameOutcome;
+use App\Models\Statistic;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\JsonResponse;
@@ -30,6 +32,7 @@ class EndGameController extends Controller
     {
         $gameId = $request->validated('gameId');
         $winners = $this->getWinningUsers($gameId);
+        $loosers = $this->getLoosingUsers($gameId);
         $payload = [
             'gameId' => $gameId,
         ];
@@ -39,7 +42,31 @@ class EndGameController extends Controller
             'winningTeam' => $this->getWinningTeam($gameId),
         ])));
         broadcast(new GameWin($payload, true, $winners));
-        broadcast(new GameLoose($payload, true, $this->getLoosingUsers($gameId)));
+        broadcast(new GameLoose($payload, true, $loosers));
+
+        foreach ([...$winners, ...$loosers] as $user) {
+            $win = in_array($user, $winners, true);
+            /** @var Statistic $stat */
+            $stat = Statistic::firstOrCreate(['user_id' => $user]);
+
+            if ($win) {
+                $stat->win_streak++;
+
+                if ($stat->win_streak > $stat->longest_streak) {
+                    $stat->longest_streak = $stat->win_streak;
+                }
+            } else {
+                $stat->win_streak = 0;
+            }
+
+            $stat->save();
+
+            $outcome = new GameOutcome();
+            $outcome->user_id = $user;
+            $outcome->role_id = $this->getRoleByUserId($user, $gameId)->value;
+            $outcome->win = $win;
+            $outcome->save();
+        }
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

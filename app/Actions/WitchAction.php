@@ -24,7 +24,7 @@ class WitchAction implements ActionInterface
 
         $role = $this->getRole($userId);
 
-        return $role !== false && $role === Roles::Witch && $actionCondition;
+        return $role === Roles::Witch && $actionCondition;
     }
 
     public function call(string $targetId, InteractionActions $action, string $emitterId): null
@@ -91,7 +91,7 @@ class WitchAction implements ActionInterface
         Redis::set("game:$gameId:deaths", $deaths);
     }
 
-    private function getRole(string $userId): Roles|false
+    private function getRole(string $userId): Roles
     {
         return $this->getRoleByUserId($userId, $this->getGameId($userId));
     }
