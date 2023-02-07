@@ -24,7 +24,7 @@ jobs:
       - name: ⬆️ Deploying
         uses: appleboy/ssh-action@master
         env:
-          TAG_REF: ${{ GITHUB_REF }}
+          TAG_REF: $GITHUB_REF
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
