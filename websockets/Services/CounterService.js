@@ -3,19 +3,18 @@ import { gameId } from "../Helpers/Functions.js";
 import { error, log } from "../Logger.js";
 
 export class CounterService {
-	counterId = {};
+	counterId = [];
 
 	constructor(io, emitter) {
 		this.io = io;
 		this.emitter = emitter;
-		this.manager = new StateManager(this.io);
+		this.manager = new StateManager(this.io, emitter);
 	}
 
 	async cycle(channel, socket, duration = null) {
 		this.clearListeners();
 
 		const id = gameId(channel);
-		let halt = false;
 
 		const counterId = setTimeout(async () => {
 			await this.cycle(channel, socket);
@@ -41,33 +40,28 @@ export class CounterService {
 		});
 
 		this.emitter.on("time.halt", async (gameId) => {
+			console.log("should be halting timeout :", this.counterId[gameId], this.counterId);
+
 			clearTimeout(this.counterId[gameId]);
 		});
 
 		this.counterId[id] = counterId[Symbol.toPrimitive]();
 
 		try {
-			halt = await this.manager.nextState(channel, this.counterId[id], socket);
+			await this.manager.nextState(channel, this.counterId[id], socket);
 		} catch (e) {
 			clearTimeout(this.counterId[id]);
 			error(`Error happenned during counter cycle in game ${id}:`);
 			error(e);
 		}
-
-		if (halt) {
-			this.stop(id);
-		}
-	}
-
-	stop(id) {
-		clearTimeout(this.counterId[id]);
 	}
 
 	clearListeners() {
-		const listeners = this.emitter.listeners("time.skip");
+		const listeners = [...this.emitter.listeners("time.skip"), ...this.emitter.listeners("time.halt")];
 
 		for (const listener of listeners) {
 			this.emitter.off("time.skip", listener);
+			this.emitter.off("time.halt", listener);
 		}
 	}
 }

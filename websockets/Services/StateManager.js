@@ -6,8 +6,9 @@ import { gameId } from "../Helpers/Functions.js";
 import { log } from "../Logger.js";
 
 export class StateManager {
-	constructor(io) {
+	constructor(io, emitter) {
 		this.io = io;
+		this.emitter = emitter;
 	}
 
 	/**
@@ -128,6 +129,8 @@ export class StateManager {
 			const endState = rounds[rounds.length - 1][0];
 			currentState = endState.identifier;
 			duration = endState.duration;
+
+			this.emitter.emit("time.halt", id);
 		}
 
 		await this.setState({
@@ -137,8 +140,6 @@ export class StateManager {
 			counterId: counterId,
 			round: currentRound
 		}, channel);
-
-		return halt;
 	}
 
 	async getNextStateDuration(channel) {
