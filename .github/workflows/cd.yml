@@ -19,7 +19,7 @@ jobs:
 
       - name: 🔢 Extract version name
         shell: bash
-        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/tags/})"
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         id: extract_tag
 
       - name: ⬆️ Deploying
@@ -35,6 +35,5 @@ jobs:
           envs: APP_VERSION
           debug: true
           script: |
-            echo "$(whoami)"
-            sudo -i -u deploy
+            exec bash
             ~/deploy.sh
