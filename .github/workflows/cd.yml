@@ -26,7 +26,6 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          key_path: ~/.ssh/id_ed25519
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script_stop: true
           script: |
