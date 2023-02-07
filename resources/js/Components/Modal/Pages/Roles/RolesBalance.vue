@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, reactive, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 
 const props = defineProps({
 	selectedRoles: {
