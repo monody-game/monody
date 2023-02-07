@@ -20,8 +20,11 @@ jobs:
       - name: 🐛 Debug
         run: |
           echo Deploying version "${GITHUB_REF/refs\/tags\//""}"
+
       - name: ⬆️ Deploying
         uses: appleboy/ssh-action@master
+        env:
+          TAG_REF: ${{ GITHUB_REF }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -29,5 +32,6 @@ jobs:
           key_path: ~/.ssh/id_ed25519
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script_stop: true
+          envs: TAG_REF
           script: |
             sh ~/deploy.sh
