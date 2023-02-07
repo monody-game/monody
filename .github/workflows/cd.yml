@@ -34,4 +34,5 @@ jobs:
           script_stop: true
           envs: APP_VERSION
           script: |
-            sh ~/deploy.sh
+            sudo -i -u deploy
+            ~/deploy.sh
