@@ -14,4 +14,6 @@ class Statistic extends Model
     use HasUuids;
 
     public $timestamps = false;
+
+    protected $fillable = ['user_id', 'win_streak', 'longest_streak'];
 }

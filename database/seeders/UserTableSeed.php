@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Statistic;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -16,7 +17,7 @@ class UserTableSeed extends Seeder
      */
     public function run()
     {
-        User::factory()->create([
+        $user = User::factory()->create([
             'username' => 'moon250',
             'email' => 'mooneupho@gmail.com',
             'level' => 100,
@@ -24,7 +25,11 @@ class UserTableSeed extends Seeder
             'created_at' => Carbon::now(),
         ]);
 
-        User::factory()->create([
+        $stat = new Statistic();
+        $stat->user_id = $user->id;
+        $stat->save();
+
+        $user = User::factory()->create([
             'username' => 'JohnDoe',
             'avatar' => '/assets/avatars/default.png',
             'email' => 'johndoe@monody.fr',
@@ -32,12 +37,20 @@ class UserTableSeed extends Seeder
             'created_at' => Carbon::now(),
         ]);
 
-        User::factory()->create([
+        $stat = new Statistic();
+        $stat->user_id = $user->id;
+        $stat->save();
+
+        $user = User::factory()->create([
             'username' => 'gerard123',
             'avatar' => '/assets/avatars/default.png',
             'email' => 'gerard123@monody.fr',
             'password' => Hash::make('gerard123'),
             'created_at' => Carbon::now(),
         ]);
+
+        $stat = new Statistic();
+        $stat->user_id = $user->id;
+        $stat->save();
     }
 }

@@ -100,13 +100,9 @@ trait MemberHelperTrait
         return $users;
     }
 
-    public function getRoleByUserId(string $userId, string $gameId): Roles|false
+    public function getRoleByUserId(string $userId, string $gameId): Roles
     {
         $game = Redis::get("game:$gameId");
-
-        if (!$game['is_started']) {
-            return false;
-        }
 
         return Roles::from($game['assigned_roles'][$userId]);
     }

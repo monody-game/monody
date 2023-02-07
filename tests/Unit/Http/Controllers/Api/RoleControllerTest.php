@@ -36,7 +36,7 @@ class RoleControllerTest extends TestCase
                 'id' => 1,
                 'name' => 'werewolf',
                 'display_name' => 'Loup-garou',
-                'image' => '/images/roles/werewolf.png',
+                'image' => '/assets/roles/werewolf.png',
                 'limit' => null,
                 'weight' => 2,
                 'team_id' => Teams::Werewolves->value,
