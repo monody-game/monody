@@ -7,40 +7,43 @@ import autoprefixer from "autoprefixer";
 import "dotenv/config";
 import "dotenv-expand/config";
 
-export default defineConfig({
-	plugins: [
-		laravel.default({
-			input: "resources/js/app.js",
-			refresh: ["public/**"]
-		}),
-		vue({
-			template: {
-				transformAssetUrls: {
-					base: null,
-					includeAbsolute: false,
+export default () => {
+	process.env = { ...process.env, VITE_APP_VERSION: process.env.APP_VERSION };
+	return defineConfig({
+		plugins: [
+			laravel.default({
+				input: "resources/js/app.js",
+				refresh: ["public/**"]
+			}),
+			vue({
+				template: {
+					transformAssetUrls: {
+						base: null,
+						includeAbsolute: false,
+					},
+					compilerOptions: {
+						isCustomElement: (tag) => ["spinning-dots"].includes(tag),
+					}
 				},
-				compilerOptions: {
-					isCustomElement: (tag) => ["spinning-dots"].includes(tag),
-				}
+			}),
+			manifestSRI()
+		],
+		css: {
+			postcss: {
+				plugins: [
+					autoprefixer({})
+				]
+			}
+		},
+		server: {
+			https: {
+				key: fs.readFileSync(process.env.CERT_PRIVATE_KEY_PATH),
+				cert: fs.readFileSync(process.env.CERT_PATH),
 			},
-		}),
-		manifestSRI()
-	],
-	css: {
-		postcss: {
-			plugins: [
-				autoprefixer({})
-			]
-		}
-	},
-	server: {
-		https: {
-			key: fs.readFileSync(process.env.CERT_PRIVATE_KEY_PATH),
-			cert: fs.readFileSync(process.env.CERT_PATH),
+			host: "localhost",
+			hmr: {
+				host: "localhost"
+			},
 		},
-		host: "localhost",
-		hmr: {
-			host: "localhost"
-		},
-	},
-});
+	});
+};
