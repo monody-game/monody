@@ -1,0 +1,29 @@
+name: Deployment
+
+concurrency: production
+
+on:
+  release:
+    branches:
+      - master
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: 💻 Check out repository code
+        uses: actions/checkout@v3
+
+      - name: 🐛 Debug
+        run: |
+          echo ${GITHUB_REF}
+#      - name: ⬆️ Deploying
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ${{ secrets.SSH_USERNAME }}
+#          key: ${{ secrets.SSH_KEY }}
+#          script_stop: true
+#          script: |
+#            sh ~/deploy.sh

@@ -1,6 +1,7 @@
 # Monody
 
 Monody is an online werewolf game.
+![Deploy](https://github.com/monody-game/monody/actions/workflows/cd.yml/badge.svg)
 
 ## Events :
 
