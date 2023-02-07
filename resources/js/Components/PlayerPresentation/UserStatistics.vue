@@ -76,7 +76,11 @@ for (const stat in apiStats) {
 	stats[stat] = apiStats[stat];
 }
 
-if (stats.wins !== "N/A" && stats.wins !== 0 && stats.losses !== "N/A" && stats.losses !== 0) {
-	winRate = stats.wins / stats.losses * 100;
+if (stats.wins !== "N/A" && stats.losses !== "N/A") {
+	if (stats.losses === 0) {
+		winRate = stats.wins;
+	} else {
+		winRate = stats.wins / stats.losses;
+	}
 }
 </script>
