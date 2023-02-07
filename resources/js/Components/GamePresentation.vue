@@ -49,15 +49,8 @@ const getUserCount = function () {
 };
 
 const setRoles = async function () {
-	const roles = props.roles.filter(role => {
+	store.roles = props.roles.filter(role => {
 		return Object.keys(props.game.roles).includes(role.id.toString());
 	});
-
-	for (const role of roles) {
-		const team = await window.JSONFetch(`/team/${role.team_id}`);
-		role.team = team.data.team;
-	}
-
-	store.roles = roles;
 };
 </script>

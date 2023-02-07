@@ -17,7 +17,7 @@ export const useStore = defineStore("game", {
 			if (player) {
 				const index = this.playerList.indexOf(player);
 				player.role = {
-					team_id: role.team_id,
+					team: role.team,
 					name: role.name,
 					display_name: role.display_name,
 				};
