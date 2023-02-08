@@ -63,6 +63,9 @@ class EndGameControllerTest extends TestCase
             ])
             ->assertNoContent();
 
+        $game = Redis::get("game:$gameId");
+        $this->assertTrue($game['ended']);
+
         Event::assertDispatched(function (GameEnd $event) use ($werewolf, $gameId) {
             return ((array) $event)['payload'] === [
                 'gameId' => $gameId,

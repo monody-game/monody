@@ -1,6 +1,7 @@
 import { StateManager } from "./StateManager.js";
 import { gameId } from "../Helpers/Functions.js";
 import { error, log } from "../Logger.js";
+import { client } from "../Redis/Connection.js";
 
 export class CounterService {
 	counterId = [];
@@ -15,6 +16,11 @@ export class CounterService {
 		this.clearListeners();
 
 		const id = gameId(channel);
+		const game = await client.get(`game:${id}`);
+
+		if (game.ended && game.ended === true) {
+			return;
+		}
 
 		const counterId = setTimeout(async () => {
 			await this.cycle(channel, socket);
