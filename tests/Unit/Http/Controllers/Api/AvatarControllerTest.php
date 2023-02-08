@@ -38,7 +38,7 @@ class AvatarControllerTest extends TestCase
 
         $this
             ->actingAs($this->user, 'api')
-            ->put('/api/avatars', [
+            ->post('/api/avatars', [
                 'avatar' => UploadedFile::fake()->image('avatartest.png', 400, 400),
             ])
             ->assertStatus(Response::HTTP_CREATED);
@@ -54,7 +54,7 @@ class AvatarControllerTest extends TestCase
 
         $this
             ->actingAs($this->user, 'api')
-            ->put('/api/avatars', [
+            ->post('/api/avatars', [
                 'avatar' => UploadedFile::fake()->image('avatartest.png', 400, 400),
             ])
             ->assertStatus(Response::HTTP_CREATED);
