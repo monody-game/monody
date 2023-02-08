@@ -43,8 +43,8 @@ const getPlayerByID = (id) => {
 	return store.getPlayerByID(id);
 };
 
-const getAvatar = (id) => {
-	return window.location.origin + getPlayerByID(id).avatar + "?h=26&dpr=2";
-};
+const getAvatar = computed((id) => {
+	return getPlayerByID(id).avatar + "?h=26&dpr=2";
+});
 </script>
 
