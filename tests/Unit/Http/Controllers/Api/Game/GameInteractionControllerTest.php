@@ -5,9 +5,11 @@ namespace Tests\Unit\Http\Controllers\Api\Game;
 use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\Roles;
+use App\Enums\States;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
+use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
 
 class GameInteractionControllerTest extends TestCase
@@ -279,5 +281,17 @@ class GameInteractionControllerTest extends TestCase
         Redis::set("game:{$this->game['id']}", $additionnalKeys);
 
         Redis::set("game:{$this->secondGame['id']}", array_merge(Redis::get("game:{$this->secondGame['id']}")), ['is_started' => true]);
+
+        Redis::set("game:{$this->game['id']}:state", [
+            'status' => States::Vote->value,
+            'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
+            'counterDuration' => States::Vote->duration(),
+        ]);
+
+        Redis::set("game:{$this->secondGame['id']}:state", [
+            'status' => States::Vote->value,
+            'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
+            'counterDuration' => States::Vote->duration(),
+        ]);
     }
 }

@@ -13,6 +13,7 @@ use App\Enums\States;
 use App\Events\TimeSkip;
 use App\Facades\Redis;
 use App\Traits\RegisterHelperTrait;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 
 class InteractionService
@@ -182,8 +183,9 @@ class InteractionService
         $interaction = $this->getInteraction($gameId, $id);
         $service = $this->getService($interaction['type']);
         $game = Redis::get("game:$gameId");
+        $state = Redis::get("game:$gameId:state");
 
-        if ($service->isSingleUse() && array_key_exists('used', $interaction) && $interaction['used']) {
+        if ($service->isSingleUse() && array_key_exists('used', $interaction) && $interaction['used'] && $state['startTimestamp'] - (Date::now()->timestamp - $state['counterDuration']) > 30) {
             return true;
         }
 

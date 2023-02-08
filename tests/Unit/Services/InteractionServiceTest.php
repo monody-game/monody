@@ -5,10 +5,12 @@ namespace Tests\Unit\Services;
 use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\Roles;
+use App\Enums\States;
 use App\Facades\Redis;
 use App\Models\User;
 use App\Services\InteractionService;
 use App\Traits\MemberHelperTrait;
+use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
 
 class InteractionServiceTest extends TestCase
@@ -175,6 +177,11 @@ class InteractionServiceTest extends TestCase
         }
 
         Redis::set("game:{$this->game['id']}:members", $members);
+        Redis::set("game:{$this->game['id']}:state", [
+            'status' => States::Vote->value,
+            'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
+            'counterDuration' => States::Vote->duration(),
+        ]);
         Redis::set("game:{$this->game['id']}", $additionnalKeys);
     }
 }
