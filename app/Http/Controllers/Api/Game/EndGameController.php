@@ -6,6 +6,7 @@ use App\Enums\Teams;
 use App\Events\GameEnd;
 use App\Events\GameLoose;
 use App\Events\GameWin;
+use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GameIdRequest;
 use App\Models\GameOutcome;
@@ -67,6 +68,10 @@ class EndGameController extends Controller
             $outcome->win = $win;
             $outcome->save();
         }
+
+        $game = Redis::get("game:$gameId");
+        $game['ended'] = true;
+        Redis::set("game:$gameId", $game);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

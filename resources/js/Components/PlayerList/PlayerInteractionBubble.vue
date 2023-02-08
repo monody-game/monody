@@ -43,8 +43,8 @@ const getPlayerByID = (id) => {
 	return store.getPlayerByID(id);
 };
 
-const getAvatar = computed((id) => {
+const getAvatar = (id) => {
 	return getPlayerByID(id).avatar + "?h=26&dpr=2";
-});
+};
 </script>
 
