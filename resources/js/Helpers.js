@@ -1,5 +1,5 @@
 import { useStore as useAlertStore } from "./stores/alerts.js";
-import { useStore as usePopupStore } from "./stores/popup.js";
+import { useStore as usePopupStore } from "./stores/modals/popup.js";
 import { useStore as useDebugStore } from "./stores/debug-bar.js";
 
 /**

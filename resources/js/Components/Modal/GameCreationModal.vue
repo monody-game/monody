@@ -30,7 +30,7 @@
 <script setup>
 import RolesModalPage from "./Pages/Roles/RolesModalPage.vue";
 import BaseModal from "./BaseModal.vue";
-import { useStore } from "../../stores/game-creation-modal.js";
+import { useStore } from "../../stores/modals/game-creation-modal.js";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
