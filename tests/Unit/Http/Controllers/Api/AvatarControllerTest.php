@@ -27,25 +27,25 @@ class AvatarControllerTest extends TestCase
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         Storage::assertExists("avatars/{$this->user->id}.png");
-        $this->assertSame("/storage/avatars/{$this->user->id}.png", $this->user->avatar);
+        $this->assertSame("/assets/avatars/{$this->user->id}.png", $this->user->avatar);
     }
 
     public function testUploadingAvatar(): void
     {
         Storage::fake();
 
-        $this->assertSame("/storage/avatars/{$this->user->id}.png", $this->user->avatar);
+        $this->assertSame("/assets/avatars/{$this->user->id}.png", $this->user->avatar);
 
         $this
             ->actingAs($this->user, 'api')
-            ->put('/api/avatars', [
+            ->post('/api/avatars', [
                 'avatar' => UploadedFile::fake()->image('avatartest.png', 400, 400),
             ])
             ->assertStatus(Response::HTTP_CREATED);
 
         Storage::assertExists("avatars/{$this->user->id}.png");
 
-        $this->assertSame("/storage/avatars/{$this->user->id}.png", $this->user->avatar);
+        $this->assertSame("/assets/avatars/{$this->user->id}.png", $this->user->avatar);
     }
 
     public function testDeletingAvatar(): void
@@ -54,13 +54,13 @@ class AvatarControllerTest extends TestCase
 
         $this
             ->actingAs($this->user, 'api')
-            ->put('/api/avatars', [
+            ->post('/api/avatars', [
                 'avatar' => UploadedFile::fake()->image('avatartest.png', 400, 400),
             ])
             ->assertStatus(Response::HTTP_CREATED);
 
         Storage::assertExists("avatars/{$this->user->id}.png");
-        $this->assertSame("/storage/avatars/{$this->user->id}.png", $this->user->avatar);
+        $this->assertSame("/assets/avatars/{$this->user->id}.png", $this->user->avatar);
 
         $this
             ->actingAs($this->user, 'api')
@@ -68,7 +68,7 @@ class AvatarControllerTest extends TestCase
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         Storage::assertMissing("avatars/{$this->user->id}.png");
-        $this->assertSame('/storage/avatars/default.png', $this->user->avatar);
+        $this->assertSame('/assets/avatars/default.png', $this->user->avatar);
     }
 
     protected function setUp(): void

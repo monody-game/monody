@@ -44,6 +44,9 @@ export default () => {
 			hmr: {
 				host: "localhost"
 			},
+			watch: {
+				ignored: ["**/storage/**"]
+			}
 		},
 	});
 };

@@ -1,0 +1,129 @@
+.profile-modal__wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: space(2);
+
+	flex: 1;
+	width: 100%;
+
+	margin-top: space(2);
+	margin-bottom: space(4);
+
+	.auth-page__form-group {
+		width: 100%;
+	}
+}
+
+.profile-modal__connections {
+	display: grid;
+	gap: space(1);
+}
+
+.profile-modal__connections-side-group {
+	display: flex;
+	align-items: center;
+	gap: space(1);
+}
+
+.profile-modal__connections-discord {
+	display: grid;
+	gap: space(2);
+
+	padding: space(2);
+	border-radius: 4px;
+	width: max-content;
+
+	color: var(--light-background);
+	background-color: var(--discord-color);
+
+	button {
+		background-color: var(--light-background);
+		color: var(--dark-background);
+	}
+
+	button:hover {
+		background-color: var(--light-background-hover) !important;
+	}
+
+	svg {
+		height: 40px;
+		width: 40px;
+	}
+}
+
+.profile-modal__avatar {
+	height: 80px;
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.profile-modal__side-group {
+	display: flex;
+	align-items: center;
+	gap: space(2);
+}
+
+.profile-modal__avatar-group {
+	position: relative;
+	display: grid;
+	place-items: center;
+
+	transition: background-color .2s, opacity .2s;
+
+	input {
+		display: none;
+	}
+
+	label {
+		cursor: pointer;
+		display: grid;
+		place-items: center;
+
+		position: absolute;
+		inset: 0;
+
+		opacity: 0;
+	}
+
+	.profile-modal__avatar-shadow {
+		transition: background-color .2s, opacity .2s;
+		border-radius: 50%;
+		cursor: pointer;
+		opacity: 0;
+		position: absolute;
+		inset: 0;
+
+		background-color: #0f112750;
+	}
+}
+
+.profile-modal__avatar-group[data-edited="true"] .profile-modal__avatar-shadow {
+	opacity: 1;
+}
+
+.profile-modal__avatar-group:not([data-edited="true"]):hover {
+	label {
+		opacity: 1;
+	}
+
+	.profile-modal__avatar-shadow {
+		opacity: 1;
+	}
+}
+
+.profile-modal__avatar-success {
+	position: absolute;
+
+	svg {
+		color: var(--light-background);
+		height: 40px;
+		width: 40px;
+	}
+}
+
+.profile-modal__avatar-group label svg {
+	transition: background-color .2s, opacity .2s;
+	height: 40px;
+	width: 40px;
+}

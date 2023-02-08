@@ -44,7 +44,7 @@ const getPlayerByID = (id) => {
 };
 
 const getAvatar = (id) => {
-	return window.location.origin + getPlayerByID(id).avatar;
+	return window.location.origin + getPlayerByID(id).avatar + "?h=26&dpr=2";
 };
 </script>
 

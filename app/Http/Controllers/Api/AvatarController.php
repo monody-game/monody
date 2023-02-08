@@ -9,6 +9,7 @@ use App\Services\AvatarGenerator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use League\Glide\Server;
 use Symfony\Component\HttpFoundation\Response;
 
 class AvatarController extends Controller
@@ -33,22 +34,28 @@ class AvatarController extends Controller
 
         Storage::put("avatars/$path", $result);
 
-        $user->avatar = Storage::url("$path");
+        $user->avatar = str_replace('storage', 'assets', Storage::url("$path"));
         $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 
-    public function upload(AvatarUploadRequest $request): JsonResponse
+    public function upload(AvatarUploadRequest $request, Server $server): JsonResponse
     {
         /** @var User $user */
         $user = $request->user();
+        $file = $request->validated('avatar');
 
-        $request->validated('avatar')->storeAs(
-            'avatars', "{$user->id}.png"
+        $file->storeAs(
+            'avatars', "{$user->id}.{$file->extension()}"
         );
 
-        $user->avatar = Storage::url("avatars/$user->id.png");
+        $avatarName = explode('/', $user->avatar);
+        $avatarName = $avatarName[array_key_last($avatarName)];
+
+        $server->deleteCache("avatars/{$avatarName}");
+
+        $user->avatar = str_replace('storage', 'assets', Storage::url("avatars/$user->id.{$file->extension()}"));
         $user->save();
 
         return (new JsonResponse(null, Response::HTTP_CREATED))
@@ -59,10 +66,10 @@ class AvatarController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
-        $path = str_replace('/storage/', '', $user->avatar);
+        $path = str_replace('/assets/', '', $user->avatar);
 
         Storage::delete($path);
-        $user->avatar = Storage::url('avatars/default.png');
+        $user->avatar = str_replace('storage', 'assets', Storage::url('avatars/default.png'));
         $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);

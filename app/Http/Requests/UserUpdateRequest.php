@@ -9,8 +9,8 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'string|nullable',
-            'email' => 'email|nullable',
+            'username' => 'min:3|max:24|string|unique:users|nullable',
+            'email' => 'email|unique:users|nullable',
         ];
     }
 }
