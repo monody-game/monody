@@ -47,8 +47,12 @@ import { ref } from "vue";
 import VisibilityToggle from "./VisibilityToggle.vue";
 import NoticeComponent from "../NoticeComponent.vue";
 
+
 const props = defineProps({
-	name: String,
+	name: {
+		required: true,
+		type: String
+	},
 	type: {
 		required: true,
 		type: String,
@@ -70,6 +74,7 @@ const props = defineProps({
 	}
 });
 
+console.log(props.name, props.type);
 defineEmits(["model"]);
 
 const content = ref(props.value);
