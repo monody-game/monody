@@ -14,7 +14,7 @@
       <img
         :alt="props.player.username + `'s avatar`"
         :class="isVoted === true ? 'player__is-voted' : ''"
-        :src="avatar + '?h=120&dpr=2'"
+        :src="props.player.avatar + '?h=120&dpr=2'"
         class="player__avatar"
       >
       <div class="player__is-dead">
@@ -66,10 +66,6 @@ const gameId = computed(() => {
 
 const userID = computed(() => {
 	return userStore.id;
-});
-
-const avatar = computed(() => {
-	return window.location.origin + props.player.avatar;
 });
 
 window.Echo

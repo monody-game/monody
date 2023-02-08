@@ -28,7 +28,12 @@ class UserControllerTest extends TestCase
             ->patch('/api/user', [
                 'email' => 'emailtest@test.com',
             ])
-            ->assertStatus(Response::HTTP_NO_CONTENT);
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJson([
+                'id' => $user->id,
+                'username' => 'John',
+                'email' => 'emailtest@test.com',
+            ]);
 
         $user = $user->refresh();
 

@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { useStore } from "../../../../stores/game-creation-modal.js";
+import { useStore } from "../../../../stores/modals/game-creation-modal.js";
 import { ref } from "vue";
 
 const props = defineProps({

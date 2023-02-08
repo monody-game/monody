@@ -28,7 +28,7 @@
       <span class="pill pill-light player-presentation__level">{{ store.username }}</span>
       <UserStatistics />
       <div class="player-presentation__footer">
-        <svg @click="soon()">
+        <svg @click="modalStore.open('profile-modal')">
           <use href="/sprite.svg#wheel" />
         </svg>
         <svg @click="soon()">
@@ -40,12 +40,15 @@
 </template>
 
 <script setup>
-import { useStore } from "../../stores/user";
-import { useStore as useAlertStore } from "../../stores/alerts";
+import { useStore } from "../../stores/user.js";
+import { useStore as useAlertStore } from "../../stores/alerts.js";
+import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import ProgressBar from "./ExpProgressBar.vue";
 import UserStatistics from "./UserStatistics.vue";
 
 const store = useStore();
+const modalStore = useModalStore();
+
 const soon = () => {
 	useAlertStore().addAlerts({
 		"info": "Un jour, peut-être ..."

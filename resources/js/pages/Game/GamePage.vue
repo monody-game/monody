@@ -47,11 +47,11 @@
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useStore as useGameStore, useStore } from "../../stores/game.js";
-import { useStore as usePopupStore } from "../../stores/popup.js";
-import { useStore as useAssignationPopupStore } from "../../stores/role-assignation.js";
-import { useStore as useModalStore } from "../../stores/modal.js";
+import { useStore as usePopupStore } from "../../stores/modals/popup.js";
+import { useStore as useAssignationPopupStore } from "../../stores/modals/role-assignation.js";
+import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import { useStore as useUserStore } from "../../stores/user.js";
-import { useStore as useShareModalStore } from "../../stores/share-game-modal.js";
+import { useStore as useShareModalStore } from "../../stores/modals/share-game-modal.js";
 import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 import GameCounter from "../../Components/GameCounter.vue";
 import Chat from "../../Components/Chat/TheChat.vue";

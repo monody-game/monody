@@ -42,7 +42,7 @@
 
 <script setup>
 import BaseModal from "../Modal/BaseModal.vue";
-import { useStore } from "../../stores/popup.js";
+import { useStore } from "../../stores/modals/popup.js";
 import { computed } from "vue";
 const store = useStore();
 

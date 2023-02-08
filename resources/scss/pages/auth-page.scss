@@ -83,7 +83,7 @@
 		border-radius: 4px;
 		border: var(--border-secondary) solid 1px;
 		font-family: inherit;
-		padding-left: space(1);
+		padding-left: space(2);
 	}
 
 	& label {
@@ -124,7 +124,8 @@
 }
 
 .auth-page__input-notice {
-	font-size: 16px;
+	font-size: 15px;
+	font-weight: normal;
 }
 
 .auth-page__submit-group {

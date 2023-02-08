@@ -40,8 +40,6 @@ export class CounterService {
 		});
 
 		this.emitter.on("time.halt", async (gameId) => {
-			console.log("should be halting timeout :", this.counterId[gameId], this.counterId);
-
 			clearTimeout(this.counterId[gameId]);
 		});
 
