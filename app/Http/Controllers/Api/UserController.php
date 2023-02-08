@@ -7,7 +7,6 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -27,6 +26,6 @@ class UserController extends Controller
 
         $user->save();
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new JsonResponse($user);
     }
 }
