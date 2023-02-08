@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { nextTick, onUnmounted, ref } from "vue";
 import BaseModal from "./Modal/BaseModal.vue";
 import { useStore } from "../stores/chat.js";
 
@@ -67,16 +67,16 @@ const roles = ref(props.roles);
 const assignedRole = roles.value.filter(role => role.id === parseInt(props.assignedRole))[0];
 const roleOverlay = ref("");
 
-document.addEventListener("animationend", async (e) => {
+const onAnimationEnd = async (e) => {
 	if (e.animationName === "slideRoles") {
 		animationEnded.value = true;
 		roleOverlay.value = "role-assignation-overlay__" + assignedRole.team.name;
 
 		chatStore.send(`Votre rôle est : ${assignedRole.display_name}`, "info");
 	}
-});
+};
 
-onMounted(() => {
+nextTick(() => {
 	const children = roleText.value.children;
 	let delay = 1;
 
@@ -88,6 +88,12 @@ onMounted(() => {
 		span.firstChild.style.animationDelay = `${delay}s`;
 		delay += 0.7;
 	}
+
+	document.addEventListener("animationend", onAnimationEnd);
+});
+
+onUnmounted(() => {
+	document.removeEventListener("animationend", onAnimationEnd);
 });
 
 document.documentElement.style.setProperty("--role-assignation-transform-length", `-${roles.value.length * 15 * 100}%`);
