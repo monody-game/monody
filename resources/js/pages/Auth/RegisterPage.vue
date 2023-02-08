@@ -29,103 +29,40 @@
             <div class="auth-page__loading-group-blur" />
             <DotsSpinner />
           </div>
-          <div
-            class="auth-page__form-group"
-            :data-is-invalid="errors.username.errored"
-          >
-            <label for="username">Nom d'utilisateur <span class="auth-page__input-notice">(Entre 3 et 24 caractères)</span></label>
-            <input
-              id="username"
-              v-model="username"
-              type="text"
-              name="username"
-            >
-            <svg
-              v-if="errors.username.errored"
-              class="auth-page__error-icon"
-            >
-              <use href="/sprite.svg#error" />
-            </svg>
-            <p v-if="errors.username.errored">
-              {{ errors.username.text }}
-            </p>
-          </div>
-          <div
-            class="auth-page__form-group"
-            :data-is-invalid="errors.email.errored"
-          >
-            <label for="email">
-              Email
-              <NoticeComponent title="Pourquoi dois-je donner cette information ?">
-                Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody). Veillez à rentrer une adresse mail valide, vous devrez la vérifier.
-              </NoticeComponent>
-            </label>
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              name="email"
-            >
-            <svg
-              v-if="errors.email.errored"
-              class="auth-page__error-icon"
-            >
-              <use href="/sprite.svg#error" />
-            </svg>
-            <p v-if="errors.email.errored">
-              {{ errors.email.text }}
-            </p>
-          </div>
-          <div
-            class="auth-page__form-group"
-            :data-is-invalid="errors.password.errored"
-          >
-            <label for="password">Mot de passe <span class="auth-page__input-notice">(plus de 8 caractères)</span></label>
-            <input
-              id="password"
-              v-model="password"
-              type="password"
-              name="password"
-            >
-            <VisibilityToggle
-              class="auth-page__show-password"
-              field="password"
-            />
-            <svg
-              v-if="errors.password.errored"
-              class="auth-page__error-icon"
-            >
-              <use href="/sprite.svg#error" />
-            </svg>
-            <p v-if="errors.password.errored">
-              {{ errors.password.text }}
-            </p>
-          </div>
-          <div
-            class="auth-page__form-group"
-            :data-is-invalid="password !== password_confirmation"
-          >
-            <label for="password_confirmation">Confirmez le mot de passe</label>
-            <input
-              id="password_confirmation"
-              v-model="password_confirmation"
-              type="password"
-              name="password_confirmation"
-            >
-            <VisibilityToggle
-              class="auth-page__show-password"
-              field="password_confirmation"
-            />
-            <svg
-              v-if="password !== password_confirmation"
-              class="auth-page__error-icon"
-            >
-              <use href="/sprite.svg#error" />
-            </svg>
-            <p v-if="password !== password_confirmation">
-              La confirmation du mot de passe doit être identique au mot de passe
-            </p>
-          </div>
+          <InputComponent
+            type="text"
+            label="Nom d'utilisateur"
+            label_note="entre 3 et 24 caractères"
+            name="username"
+            :errored="errors.username.errored"
+            :error="errors.username.text"
+            @model="newUsername => username = newUsername"
+          />
+          <InputComponent
+            type="email"
+            label="Email"
+            name="email"
+            :errored="errors.email.errored"
+            :error="errors.email.text"
+            @model="newEmail => email = newEmail"
+          />
+          <InputComponent
+            type="password"
+            label="Mot de passe"
+            label_note="plus de 8 caractères"
+            name="password"
+            :errored="errors.password.errored"
+            :error="errors.password.text"
+            @model="newPassword => password = newPassword"
+          />
+          <InputComponent
+            type="password"
+            label="Confirmez le mot de passe"
+            name="password_confirmation"
+            :errored="password !== password_confirmation"
+            error="La confirmation du mot de passe doit être identique au mot de passe"
+            @model="newConfirmationPassword => password_confirmation = newConfirmationPassword"
+          />
           <div class="auth-page__submit-group">
             <router-link
               class="auth-page__link"
@@ -187,6 +124,7 @@ import { useRouter } from "vue-router";
 import NoticeComponent from "../../Components/NoticeComponent.vue";
 import VisibilityToggle from "../../Components/Form/VisibilityToggle.vue";
 import { useStore } from "../../stores/alerts.js";
+import InputComponent from "../../Components/Form/InputComponent.vue";
 
 const router = useRouter();
 const username = ref("");

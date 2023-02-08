@@ -26,53 +26,20 @@
             <div class="auth-page__loading-group-blur" />
             <DotsSpinner />
           </div>
-          <div
-            class="auth-page__form-group"
-            :data-is-invalid="error.errored"
-          >
-            <label for="identifier">Email ou nom d'utilisateur</label>
-            <input
-              id="identifier"
-              v-model="username"
-              type="text"
-              name="identifier"
-            >
-            <svg
-              v-if="error.errored"
-              class="auth-page__error-icon"
-            >
-              <use href="/sprite.svg#error" />
-            </svg>
-            <p v-if="error.errored">
-              {{ error.text }}
-            </p>
-          </div>
-          <div
-            class="auth-page__form-group"
-            :data-is-invalid="error.errored"
-          >
-            <label for="password">Mot de passe</label>
-            <input
-              id="password"
-              v-model="password"
-              type="password"
-              name="password"
-              autocomplete="off"
-            >
-            <VisibilityToggle
-              class="auth-page__show-password"
-              field="password"
-            />
-            <svg
-              v-if="error.errored"
-              class="auth-page__error-icon"
-            >
-              <use href="/sprite.svg#error" />
-            </svg>
-            <p v-if="error.errored">
-              {{ error.text }}
-            </p>
-          </div>
+          <InputComponent
+            type="text"
+            :errored="error.errored"
+            :error="error.text"
+            label="Email ou nom d'utilisateur"
+            @model="(newUsername) => username = newUsername"
+          />
+          <InputComponent
+            type="password"
+            :errored="error.errored"
+            :error="error.text"
+            label="Mot de passe"
+            @model="(newPassword) => password = newPassword"
+          />
           <a class="auth-page__link">
             Mot de passe oublié ?
           </a>
@@ -102,6 +69,7 @@ import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import VisibilityToggle from "../../Components/Form/VisibilityToggle.vue";
+import InputComponent from "../../Components/Form/InputComponent.vue";
 
 const router = useRouter();
 const username = ref("");
