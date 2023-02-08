@@ -26,11 +26,13 @@
       <Suspense><GameCounter /></Suspense>
     </div>
     <div class="game-page__main">
-      <RoleAssignationPopup
-        v-if="assignationPopupStore.isOpenned"
-        :roles="roles"
-        :assigned-role="assignedRole"
-      />
+      <Transition name="modal">
+        <RoleAssignationPopup
+          v-if="assignationPopupStore.isOpenned"
+          :roles="roles"
+          :assigned-role="assignedRole"
+        />
+      </Transition>
       <Chat />
       <LogoSpinner v-if="loading" />
       <PlayerList />
