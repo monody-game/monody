@@ -33,7 +33,7 @@ class AvatarController extends Controller
 
         Storage::put("avatars/$path", $result);
 
-        $user->avatar = Storage::url("$path");
+        $user->avatar = str_replace('storage', 'assets', Storage::url("$path"));
         $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
@@ -48,7 +48,7 @@ class AvatarController extends Controller
             'avatars', "{$user->id}.png"
         );
 
-        $user->avatar = Storage::url("avatars/$user->id.png");
+        $user->avatar = str_replace('storage', 'assets', Storage::url("avatars/$user->id.png"));
         $user->save();
 
         return (new JsonResponse(null, Response::HTTP_CREATED))
@@ -59,10 +59,10 @@ class AvatarController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
-        $path = str_replace('/storage/', '', $user->avatar);
+        $path = str_replace('/assets/', '', $user->avatar);
 
         Storage::delete($path);
-        $user->avatar = Storage::url('avatars/default.png');
+        $user->avatar = str_replace('storage', 'assets', Storage::url('avatars/default.png'));
         $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
