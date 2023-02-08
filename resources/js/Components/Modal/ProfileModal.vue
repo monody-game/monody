@@ -5,11 +5,34 @@
     </header>
     <div class="profile-modal__wrapper">
       <div class="profile-modal__side-group">
-        <img
-          class="profile-modal__avatar"
-          :src="userStore.avatar + '?h=80&dpr=2'"
-          :alt="userStore.username + '\'s avatar'"
+        <div
+          class="profile-modal__avatar-group"
+          :data-edited="hasUploaded"
         >
+          <div class="profile-modal__avatar-shadow" />
+          <label for="profile-modal__avatar"><svg><use href="/sprite.svg#edit" /></svg></label>
+          <div
+            v-if="hasUploaded"
+            class="profile-modal__avatar-success"
+          >
+            <svg>
+              <use href="/sprite.svg#success" />
+            </svg>
+          </div>
+          <input
+            id="profile-modal__avatar"
+            ref="avatarInput"
+            type="file"
+            name="profile-modal__avatar"
+            accept="image/jpeg,image/webp,image/png"
+            @change="addFile"
+          >
+          <img
+            class="profile-modal__avatar"
+            :src="userStore.avatar + '?h=80&dpr=2'"
+            :alt="userStore.username + '\'s avatar'"
+          >
+        </div>
         <InputComponent
           type="text"
           name="username"
@@ -69,7 +92,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { nextTick, ref, watch } from "vue";
 import { useStore } from "../../stores/user.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import { useStore as useAlertStore } from "../../stores/alerts.js";
@@ -80,9 +103,21 @@ const userStore = useStore();
 const modalStore = useModalStore();
 const alertStore = useAlertStore();
 
+const avatarInput = ref(null);
 const username = ref(userStore.username);
 const email = ref(userStore.email);
 const usernameErrors = ref({});
+const hasUploaded = ref(false);
+
+const addFile = () => {
+	if (avatarInput.value.files.length > 0) {
+		hasUploaded.value = true;
+	}
+};
+
+nextTick(() => {
+	hasUploaded.value = avatarInput.value.files.length > 0;
+});
 
 watch(username, (newUsername) => {
 	if (newUsername.length > 24) {
@@ -111,10 +146,30 @@ const updateProfile = async () => {
 		modifiedFields.email = email.value;
 	}
 
-	if (Object.keys(modifiedFields).length === 0) {
+	if (avatarInput.value.files.length > 0) {
+		const formData = new FormData;
+		formData.append("avatar", avatarInput.value.files[0]);
+
+		const res = await fetch("/api/avatars", {
+			method: "POST",
+			body: formData
+		});
+
+		const responseContent = await res.json();
+
+		if (!res.ok) {
+			alertStore.addAlerts({
+				error: "Echec de l'upload de l'avatar, erreur : " + responseContent.message
+			});
+
+			return;
+		}
+	}
+
+	if (Object.keys(modifiedFields).length === 0 && hasUploaded.value === false) {
 		modalStore.close();
 		alertStore.addAlerts({
-			info: "Aucune changement effectué"
+			info: "Aucun changement effectué"
 		});
 
 		return;
@@ -134,6 +189,10 @@ const updateProfile = async () => {
 	alertStore.addAlerts({
 		success: "Profil modifié avec succès !"
 	});
+
+	if (hasUploaded.value) {
+		location.reload(true);
+	}
 
 	modalStore.close();
 };
