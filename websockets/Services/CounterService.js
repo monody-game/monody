@@ -16,7 +16,7 @@ export class CounterService {
 		this.clearListeners();
 
 		const id = gameId(channel);
-		const game = await client.get(`game:${id}`);
+		const game = await client.get(`game:${id}`) ?? [];
 
 		if (game.ended && game.ended === true) {
 			return;

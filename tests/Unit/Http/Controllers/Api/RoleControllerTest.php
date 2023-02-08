@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api;
 
+use App\Enums\Roles;
 use App\Enums\Teams;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
@@ -26,6 +27,17 @@ class RoleControllerTest extends TestCase
         $parsed = json_decode($response->getContent(), true)['roles'];
 
         $this->assertTrue(count($parsed) > 1);
+    }
+
+    public function testGettingAllRolesForOneGame(): void
+    {
+        $this
+            ->getJson("/api/roles/game/{$this->game['id']}")
+            ->assertOk()
+            ->assertJson([
+                Roles::Werewolf->full(),
+                Roles::SimpleVillager->full(),
+            ]);
     }
 
     public function testGetOneRole(): void

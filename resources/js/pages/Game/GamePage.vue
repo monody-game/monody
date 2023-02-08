@@ -29,7 +29,7 @@
       <Transition name="modal">
         <RoleAssignationPopup
           v-if="assignationPopupStore.isOpenned"
-          :roles="roles"
+          :roles="store.roles"
           :assigned-role="assignedRole"
         />
       </Transition>
@@ -73,6 +73,10 @@ const gameId = route.params.id;
 const loading = ref(false);
 const roles = store.roles;
 const assignedRole = ref(0);
+
+if (roles.length === 0) {
+	store.roles = (await window.JSONFetch(`/roles/game/${gameId}`, "GET")).data;
+}
 
 const actions = await window.JSONFetch("/interactions/actions", "GET");
 store.availableActions = actions.data;
