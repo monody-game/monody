@@ -133,22 +133,22 @@ trait MemberHelperTrait
         $member = $this->getMember($userId, $gameId);
         $members = $this->getMembers($gameId);
         $index = array_search($member, $members, true);
-		$usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
 
         if (!$member || false === $index) {
             return false;
         }
 
-		if (
-			$context === States::Werewolf->stringify() &&
-			$this->getRoleByUserId($userId, $gameId) === Roles::Elder &&
-			!in_array(Roles::Elder->name(), $usedActions)
-		) {
-			$usedActions[] = Roles::Elder->name();
-			Redis::set("game:$gameId:interactions:usedActions", $usedActions);
+        if (
+            $context === States::Werewolf->stringify() &&
+            $this->getRoleByUserId($userId, $gameId) === Roles::Elder &&
+            !in_array(Roles::Elder->name(), $usedActions, true)
+        ) {
+            $usedActions[] = Roles::Elder->name();
+            Redis::set("game:$gameId:interactions:usedActions", $usedActions);
 
-			return true;
-		}
+            return true;
+        }
 
         $member = array_splice($members, (int) $index, 1)[0];
 

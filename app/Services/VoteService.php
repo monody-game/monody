@@ -25,11 +25,11 @@ class VoteService
 
         $votes = self::getVotes($gameId);
         $authUserId = $votingUser ?? Auth::user()?->getAuthIdentifier();
-        $isVoting = self::isVoting($userId, $votes);
+        $isVoting = self::isVoting($authUserId, $votes);
 
-        if ($this->isVotingUser($userId, $votes, $authUserId)) {
+        if ($isVoting && $isVoting === $userId) {
             return $this->unvote($userId, $gameId);
-        } elseif ($isVoting && $isVoting !== $userId) {
+        } elseif ($isVoting) {
             $votes = $this->unvote($isVoting, $gameId);
         }
 
@@ -118,13 +118,15 @@ class VoteService
     {
         $votes = self::getVotes($game['id']);
         $majority = self::getMajority($votes);
+
         if (!$majority) {
             return false;
         }
+
         $majority = $votes[$majority];
         $voters = count(self::getVotingUsers($game['users'], $votes)) / 2;
 
-        return round($voters) >= (count($game['users']) / 2) && count($majority) > $voters;
+        return round($voters) >= (count($game['users']) / 2) && count($majority) >= $voters;
     }
 
     /**
