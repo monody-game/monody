@@ -21,18 +21,18 @@ class AppServiceProvider extends ServiceProvider
             return new RedisService();
         });
 
-		$this->app->singleton('League\Glide\Server', function () {
-			$filesystem = app('Illuminate\Contracts\Filesystem\Filesystem');
+        $this->app->singleton('League\Glide\Server', function () {
+            $filesystem = app('Illuminate\Contracts\Filesystem\Filesystem');
 
-			return ServerFactory::create([
-				'max_image_size' => 1000 * 1000,
-				'response' => new LaravelResponseFactory(app('request')),
-				'source' => $filesystem->getDriver(),
-				'cache' => $filesystem->getDriver(),
-				'cache_path_prefix' => '.cache',
-				'base_url' => 'img',
-			]);
-		});
+            return ServerFactory::create([
+                'max_image_size' => 1000 * 1000,
+                'response' => new LaravelResponseFactory(app('request')),
+                'source' => $filesystem->getDriver(),
+                'cache' => $filesystem->getDriver(),
+                'cache_path_prefix' => '.cache',
+                'base_url' => 'img',
+            ]);
+        });
     }
 
     public function boot(): void
