@@ -28,9 +28,9 @@ export class CounterService {
 
 			this.manager.setState({
 				status: state.status,
-				startTimestamp: Date.now(),
+				startTimestamp: state.startTimestamp,
 				counterDuration: data.to,
-				counterId: counterId,
+				counterId: this.counterId[data.gameId],
 				round: state.round
 			}, `presence-game.${data.gameId}`, true);
 
