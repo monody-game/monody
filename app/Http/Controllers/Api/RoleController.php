@@ -18,9 +18,15 @@ class RoleController extends Controller
 
     public function all(): JsonResponse
     {
-        $roles = Roles::all();
+        return new JsonResponse(['roles' => Roles::all()]);
+    }
 
-        return new JsonResponse(['roles' => $roles]);
+    public function game(string $gameId): JsonResponse
+    {
+        $game = $this->getGame($gameId);
+        $roles = array_map(fn ($role) => Roles::from($role)->full(), array_keys($game['roles']));
+
+        return new JsonResponse($roles);
     }
 
     public function get(int $id): JsonResponse

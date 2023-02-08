@@ -15,7 +15,8 @@ Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
 Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
 Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
 
-Route::get('/roles', 'RoleController@all');
+Route::get('/roles/', 'RoleController@all');
+Route::get('/roles/game/{gameId}', 'RoleController@game');
 Route::get('/roles/get/{id}', 'RoleController@get');
 Route::get('/roles/{group}', 'RoleController@group');
 
