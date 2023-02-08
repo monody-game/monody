@@ -24,6 +24,7 @@ export default class AuthService {
 		this.store.setUser({
 			id: data.id,
 			username: data.username,
+			email: data.email,
 			avatar: data.avatar,
 			level: data.level,
 			exp: data.exp

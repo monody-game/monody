@@ -1,0 +1,64 @@
+.profile-modal__wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: space(2);
+
+	flex: 1;
+	width: 100%;
+
+	margin-block: space(4);
+
+	.auth-page__form-group {
+		width: 100%;
+	}
+}
+
+.profile-modal__connections {
+	display: grid;
+	gap: space(1);
+}
+
+.profile-modal__connections-side-group {
+	display: flex;
+	align-items: center;
+	gap: space(1);
+}
+
+.profile-modal__connections-discord {
+	display: grid;
+	gap: space(2);
+
+	padding: space(2);
+	border-radius: 4px;
+	width: max-content;
+
+	color: var(--light-background);
+	background-color: var(--discord-color);
+
+	button {
+		background-color: var(--light-background);
+		color: var(--dark-background);
+	}
+
+	button:hover {
+		background-color: var(--light-background-hover) !important;
+	}
+
+	svg {
+		height: 40px;
+		width: 40px;
+	}
+}
+
+.profile-modal__avatar {
+	height: 80px;
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.profile-modal__side-group {
+	display: flex;
+	align-items: center;
+	gap: space(2);
+}

@@ -56,6 +56,10 @@
       <Transition name="modal">
         <GameCreationModal v-if="store.isOpenned" />
       </Transition>
+
+      <Transition name="modal">
+        <ProfileModal v-if="profileModalStore.isOpenned" />
+      </Transition>
       <Footer />
     </div>
   </div>
@@ -71,11 +75,14 @@ import Footer from "../Components/FooterComponent.vue";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
 import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";
+import { useStore as useProfileModalStore } from "../stores/modals/profile-modal.js";
+import ProfileModal from "../Components/Modal/ProfileModal.vue";
 
 const games = ref([]);
 const roles = ref([]);
 const store = useStore();
 const router = useRouter();
+const profileModalStore = useProfileModalStore();
 
 onBeforeRouteLeave(() => {
 	window.Echo.leave("home");

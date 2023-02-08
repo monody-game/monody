@@ -62,9 +62,15 @@ const props = defineProps({
 	},
 	error: String,
 	label: String,
-	labelNote: String
+	labelNote: String,
+	value: {
+		default: "",
+		type: String,
+		required: false
+	}
 });
+
 defineEmits(["model"]);
 
-const content = ref("");
+const content = ref(props.value);
 </script>
