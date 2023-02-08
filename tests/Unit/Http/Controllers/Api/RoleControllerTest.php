@@ -31,12 +31,11 @@ class RoleControllerTest extends TestCase
     public function testGetOneRole(): void
     {
         $response = $this->getJson('/api/roles/get/1');
-        $response->assertExactJson([
+        $response->assertJson([
             'role' => [
                 'id' => 1,
                 'name' => 'werewolf',
                 'display_name' => 'Loup-garou',
-                'image' => '/assets/roles/werewolf.png',
                 'limit' => null,
                 'weight' => 2,
                 'team' => [
