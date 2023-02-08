@@ -28,6 +28,7 @@
           </div>
           <InputComponent
             type="text"
+            name="username"
             :errored="error.errored"
             :error="error.text"
             label="Email ou nom d'utilisateur"
@@ -35,6 +36,7 @@
           />
           <InputComponent
             type="password"
+            name="password"
             :errored="error.errored"
             :error="error.text"
             label="Mot de passe"
@@ -68,7 +70,6 @@
 import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import VisibilityToggle from "../../Components/Form/VisibilityToggle.vue";
 import InputComponent from "../../Components/Form/InputComponent.vue";
 
 const router = useRouter();
