@@ -46,14 +46,15 @@ class AvatarController extends Controller
         $user = $request->user();
         $file = $request->validated('avatar');
 
-        $file->storeAs(
-            'avatars', "{$user->id}.{$file->extension()}"
-        );
-
         $avatarName = explode('/', $user->avatar);
         $avatarName = $avatarName[array_key_last($avatarName)];
 
+        Storage::delete("avatars/{$avatarName}");
         $server->deleteCache("avatars/{$avatarName}");
+
+        $file->storeAs(
+            'avatars', "{$user->id}.{$file->extension()}"
+        );
 
         $user->avatar = str_replace('storage', 'assets', Storage::url("avatars/$user->id.{$file->extension()}"));
         $user->save();
