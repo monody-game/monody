@@ -74,7 +74,6 @@ const props = defineProps({
 	}
 });
 
-console.log(props.name, props.type);
 defineEmits(["model"]);
 
 const content = ref(props.value);
