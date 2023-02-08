@@ -21,7 +21,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useStore } from "../../stores/modal.js";
+import { useStore } from "../../stores/modals/modal.js";
 
 const props = defineProps({
 	wrapper: {

@@ -22,7 +22,7 @@
 <script setup>
 import RoleSelector from "./RoleSelector.vue";
 import LogoSpinner from "../../../Spinners/LogoSpinner.vue";
-import { useStore } from "../../../../stores/game-creation-modal.js";
+import { useStore } from "../../../../stores/modals/game-creation-modal.js";
 import { computed, onMounted, ref } from "vue";
 import RolesBalance from "./RolesBalance.vue";
 

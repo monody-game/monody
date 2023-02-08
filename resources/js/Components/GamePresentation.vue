@@ -6,7 +6,7 @@
   >
     <img
       :alt="props.game.owner.username + '\'s avatar'"
-      :src="props.game.owner.avatar"
+      :src="props.game.owner.avatar + '?h=60&dpr=2'"
       class="game-show__avatar"
     >
     <div class="game-show__center">

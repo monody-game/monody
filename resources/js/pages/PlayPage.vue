@@ -64,8 +64,8 @@
 <script setup>
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
-import { useStore } from "../stores/game-creation-modal.js";
-import { useStore as useModalStore } from "../stores/modal.js";
+import { useStore } from "../stores/modals/game-creation-modal.js";
+import { useStore as useModalStore } from "../stores/modals/modal.js";
 import AuthService from "../services/AuthService.js";
 import Footer from "../Components/FooterComponent.vue";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
