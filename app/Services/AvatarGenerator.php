@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\User;
+use function array_key_exists;
 use Illuminate\Support\Facades\Storage;
+use function in_array;
 use Intervention\Image\Facades\Image as ImageFacade;
 use Intervention\Image\Image;
 
@@ -42,7 +44,7 @@ class AvatarGenerator
      */
     public function getOverlay(int $level): int
     {
-        if (\in_array($level, $this->overlayLevels, true)) {
+        if (in_array($level, $this->overlayLevels, true)) {
             return $level;
         }
 
@@ -53,7 +55,7 @@ class AvatarGenerator
 
             if (
                 $level < $overlayLevel &&
-                \array_key_exists($key - 1, $this->overlayLevels) &&
+                array_key_exists($key - 1, $this->overlayLevels) &&
                 $this->overlayLevels[$key - 1] > $level === false
             ) {
                 return $this->overlayLevels[$key - 1];
@@ -65,6 +67,6 @@ class AvatarGenerator
 
     public function toStoragePath(string $path): string
     {
-        return str_replace('/storage/', '', $path);
+        return str_replace('/assets/', '', $path);
     }
 }
