@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Enums\InteractionActions;
 use App\Enums\Roles;
 use App\Facades\Redis;
+use App\Services\ChatService;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 
@@ -86,6 +87,9 @@ class InfectedWerewolfAction implements ActionInterface
         $member['user_info']['is_dead'] = false;
         $member['user_info']['infected'] = true;
         $members = [...$members, $member];
+
+        $chat = new ChatService();
+        $chat->alert('Vous avez été infecté ! Vous devez désormais gagner avec les loup-garous', 'info', $gameId, [$targetId]);
 
         Redis::set("game:$gameId:members", $members);
         Redis::set("game:$gameId:deaths", $deaths);
