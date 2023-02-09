@@ -18,6 +18,8 @@ export class CounterService {
 		const id = gameId(channel);
 		const game = await GameService.getGame(id);
 
+		if (!game) return;
+
 		if (game.ended && game.ended === true) {
 			warn("Counter tried to change state in an ended game");
 			return;
