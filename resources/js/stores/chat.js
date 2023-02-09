@@ -8,12 +8,12 @@ export const useStore = defineStore("chat", {
 		};
 	},
 	actions: {
-		send(content, type, author = null, actionList = null) {
+		send(content, type, author = null, actionList = []) {
 			this.messages.push({
 				content,
 				type,
-				author,
-				actionList,
+				author: author,
+				actionList: actionList,
 				timestamp: Date.now()
 			});
 

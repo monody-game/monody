@@ -33,19 +33,19 @@
 	background-color: var(--light-background);
 	border: var(--border-dark) solid 3px;
 	border-radius: 5px;
-	transition: left .5s;
+	transition: left .3s;
 }
 
 .roles-balance__villagers {
   background: var(--villager-color);
   width: var(--villager-balance-width);
 	outline: var(--border-dark) solid 2px;
-	transition: width .5s;
+	transition: width .3s;
 }
 
 .roles-balance__werewolf {
   background: var(--werewolf-color);
   width: var(--werewolf-balance-width);
 	outline: var(--border-dark) solid 2px;
-	transition: width .5s;
+	transition: width .3s;
 }

@@ -78,15 +78,11 @@ trait MemberHelperTrait
     }
 
     /**
-     * @return array<int|string>|false
+     * @return array<int|string>
      */
-    public function getUserIdByRole(Roles $role, string $gameId): array|false
+    public function getUserIdByRole(Roles $role, string $gameId): array
     {
         $game = Redis::get("game:$gameId");
-
-        if (!$game['is_started']) {
-            return false;
-        }
 
         $deaths = Redis::get("game:$gameId:deaths") ?? [];
         $ids = array_keys($game['assigned_roles'], $role->value, true);
