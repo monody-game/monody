@@ -39,6 +39,7 @@ class RoundController extends Controller
 
         if ($gameId !== null && Redis::exists("game:$gameId")) {
             $game = Redis::get("game:$gameId");
+            $gameState = Redis::get("game:$gameId:state");
             $roles = array_keys($game['roles']);
 
             $roles = array_map(function ($role) {
@@ -49,6 +50,10 @@ class RoundController extends Controller
                 if (
                     !$state->isRoleState()
                 ) {
+                    continue;
+                }
+
+                if ($gameState['status'] === $state->value) {
                     continue;
                 }
 

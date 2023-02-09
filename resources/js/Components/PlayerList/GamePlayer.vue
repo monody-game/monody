@@ -103,7 +103,7 @@ window.Echo
 							id: gameStore.currentInteractionId,
 							gameId:	gameId.value,
 							targetId: interaction.data[0],
-							action: "infected_werewolf:skip"
+							action: "infected_werewolf:infect"
 						});
 					},
 					id: "infected_werewolf:infect"

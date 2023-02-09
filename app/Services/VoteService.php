@@ -125,7 +125,7 @@ class VoteService
 
         $voters = count(self::getVotingUsers($game['users'], $votes));
 
-        return $voters > (count($game['users']) / 2);
+        return $voters >= (count($game['users']) / 2);
     }
 
     /**

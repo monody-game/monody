@@ -137,6 +137,7 @@ class VoteServiceTest extends TestCase
                 'killedUser' => $this->secondUser->id,
                 'gameId' => $gameId,
                 'context' => 'vote',
+                'infected' => false,
             ];
         });
 
@@ -206,6 +207,7 @@ class VoteServiceTest extends TestCase
                 'killedUser' => $this->user->id,
                 'gameId' => $gameId,
                 'context' => 'vote',
+                'infected' => false,
             ];
         });
 
@@ -257,7 +259,7 @@ class VoteServiceTest extends TestCase
         $this->assertFalse(VoteService::hasMajorityVoted($this->thirdGame));
 
         $this->service->vote($this->user->id, $gameId, $this->secondUser->id);
-        $this->assertFalse(VoteService::hasMajorityVoted($this->thirdGame));
+        $this->assertTrue(VoteService::hasMajorityVoted($this->thirdGame));
 
         $this->service->vote($this->fourthUser->id, $gameId, $this->thirdUser->id);
         $this->assertTrue(VoteService::hasMajorityVoted($this->thirdGame));

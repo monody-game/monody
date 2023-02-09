@@ -185,6 +185,9 @@ class InteractionServiceTest extends TestCase
             ],
             'users' => array_map(fn ($user) => $user->id, $users),
             'is_started' => true,
+            'werewolves' => [
+                $this->werewolf->id, $this->infectedWerewolf->id,
+            ],
         ]);
 
         $members = [];

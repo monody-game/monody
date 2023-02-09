@@ -102,11 +102,17 @@ window.Echo.join(`game.${route.params.id}`)
 		}
 
 		const user = gameStore.getPlayerByID(killed);
-		const role = await window.JSONFetch(`/game/user/${user.id}/role`, "GET");
+		let role = await window.JSONFetch(`/game/user/${user.id}/role`, "GET");
+		role = role.data.display_name;
+
+		if (payload.infected && payload.infected === true) {
+			role = role + " (infecté)";
+		}
 
 		if (context === "vote") {
-			store.send(`Le village a décidé de tuer ${user.username} qui était ${role.data.display_name}`, "death");
-		} else {			store.send(`${user.username} a été tué cette nuit, il était ${role.data.display_name} !`, "death");
+			store.send(`Le village a décidé de tuer ${user.username} qui était ${role}`, "death");
+		} else {
+			store.send(`${user.username} a été tué cette nuit, il était ${role} !`, "death");
 		}
 	})
 	.listen(".chat.lock", () => {
