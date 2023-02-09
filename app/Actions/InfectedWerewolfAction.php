@@ -47,6 +47,7 @@ class InfectedWerewolfAction implements ActionInterface
 
     public function call(string $targetId, InteractionActions $action, string $emitterId): null
     {
+        $gameId = $this->getGameId($targetId);
         switch ($action) {
             case InteractionActions::InfectedSkip:
                 return null;
@@ -55,7 +56,7 @@ class InfectedWerewolfAction implements ActionInterface
                 break;
         }
 
-        $this->setUsed($action, $this->getGameId($targetId));
+        $this->setUsed(InteractionActions::Infect, $gameId);
 
         return null;
     }
@@ -83,6 +84,7 @@ class InfectedWerewolfAction implements ActionInterface
 
         $game['werewolves'][] = $targetId;
         $member['user_info']['is_dead'] = false;
+        $member['user_info']['infected'] = true;
         $members = [...$members, $member];
 
         Redis::set("game:$gameId:members", $members);
