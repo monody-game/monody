@@ -3,7 +3,8 @@ import getRounds from "./RoundService.js";
 import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
-import { log } from "../Logger.js";
+import { log, warn } from "../Logger.js";
+import { GameService } from "./GameService.js";
 
 export class StateManager {
 	constructor(io, emitter) {
@@ -61,6 +62,13 @@ export class StateManager {
    */
 	async nextState(channel, counterId) {
 		const id = gameId(channel);
+		const game = await GameService.getGame(id);
+
+		if (game.ended && game.ended === true) {
+			warn("Counter tried to retrieve next state in an ended game");
+			return;
+		}
+
 		const state = await this.getState(id);
 		let halt = false;
 

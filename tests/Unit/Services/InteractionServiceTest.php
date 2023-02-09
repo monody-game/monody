@@ -29,6 +29,8 @@ class InteractionServiceTest extends TestCase
 
     private User $werewolf;
 
+    private User $infectedWerewolf;
+
     public function testCreatingAnInteraction()
     {
         $expectedInteraction = [
@@ -100,6 +102,19 @@ class InteractionServiceTest extends TestCase
         $this->service->close($this->game['id'], $id);
         $this->assertFalse($this->alive($this->psychic->id, $this->game['id']));
 
+        // Infected Werewolf
+        $id = $this->service->create($this->game['id'], Interactions::InfectedWerewolf)['id'];
+        $this->service->call(InteractionActions::InfectedSkip, $id, $this->infectedWerewolf->id, $this->psychic->id);
+        $this->service->close($this->game['id'], $id);
+        $this->assertFalse($this->alive($this->psychic->id, $this->game['id']));
+
+        $id = $this->service->create($this->game['id'], Interactions::InfectedWerewolf)['id'];
+        $this->service->call(InteractionActions::Infect, $id, $this->infectedWerewolf->id, $this->psychic->id);
+        $this->service->close($this->game['id'], $id);
+        $this->assertTrue($this->alive($this->psychic->id, $this->game['id']));
+        $this->assertContains($this->psychic->id, Redis::get("game:{$this->game['id']}")['werewolves']);
+        $this->assertEmpty(Redis::get("game:{$this->game['id']}:deaths"));
+
         // Vote
         $id = $this->service->create($this->game['id'], Interactions::Vote)['id'];
         $vote = $this->service->call(InteractionActions::Vote, $id, $this->user->id, $this->witch->id);
@@ -139,6 +154,9 @@ class InteractionServiceTest extends TestCase
         $this->service->call(InteractionActions::Vote, $id, $this->user->id, $this->werewolf->id);
         $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
 
+        $this->service->call(InteractionActions::Vote, $id, $this->infectedWerewolf->id, $this->werewolf->id);
+        $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
+
         $this->service->call(InteractionActions::Vote, $id, $this->witch->id, $this->werewolf->id);
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
     }
@@ -146,14 +164,14 @@ class InteractionServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        [$this->user, $this->witch, $this->psychic, $this->werewolf] = User::factory(4)->create();
-        $users = [$this->user, $this->witch, $this->psychic, $this->werewolf];
+        [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf] = User::factory(5)->create();
+        $users = [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf];
         $this->service = new InteractionService();
 
         $this->game = $this
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
-                'roles' => [1, 2, 3, 4],
+                'roles' => [1, 2, 3, 4, 7],
             ])
             ->json('game');
 
@@ -163,9 +181,13 @@ class InteractionServiceTest extends TestCase
                 $this->user->id => 2,
                 $this->psychic->id => 3,
                 $this->witch->id => 4,
+                $this->infectedWerewolf->id => Roles::InfectedWerewolf,
             ],
             'users' => array_map(fn ($user) => $user->id, $users),
             'is_started' => true,
+            'werewolves' => [
+                $this->werewolf->id, $this->infectedWerewolf->id,
+            ],
         ]);
 
         $members = [];

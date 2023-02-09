@@ -50,10 +50,15 @@ class GameChatController extends Controller
         $deaths = Redis::get("game:{$gameId}:deaths") ?? [];
 
         foreach ($deaths as $death) {
+            /** @var array $member */
+            $member = $this->getMember($death['user'], $gameId);
+            $infected = array_key_exists('infected', $member['user_info']) ? $member['user_info']['infected'] : false;
+
             GameKill::broadcast([
                 'killedUser' => $death['user'],
                 'gameId' => $gameId,
                 'context' => $death['context'],
+                'infected' => $infected,
             ]);
         }
 
@@ -72,8 +77,13 @@ class GameChatController extends Controller
             $emitters = [];
 
             foreach (Teams::from($request->get('team'))->roles() as $role) {
-                /** @phpstan-ignore-next-line */
-                $emitters[] = $this->getUserIdByRole($role, $gameId)[0];
+                $users = $this->getUserIdByRole($role, $gameId);
+
+                if ($users === []) {
+                    continue;
+                }
+
+                $emitters = [...$emitters, ...$users];
             }
 
             broadcast(new ChatLock($gameId, true, $emitters));

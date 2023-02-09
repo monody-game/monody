@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api;
 
+use App\Enums\Roles;
 use App\Enums\Rounds;
 use App\Enums\States;
 use App\Models\User;
@@ -12,6 +13,8 @@ class RoundControllerTest extends TestCase
     private array $game;
 
     private array $secondGame;
+
+    private array $thirdGame;
 
     private array $firstRound;
 
@@ -85,7 +88,7 @@ class RoundControllerTest extends TestCase
 
     public function testGettingRoundsForGameWithSimpleRoles()
     {
-        $rounds = $this
+        $this
             ->get("/api/round/2/{$this->secondGame['id']}")
             ->assertOk()
             ->assertExactJson([
@@ -112,6 +115,40 @@ class RoundControllerTest extends TestCase
             ]);
     }
 
+    public function testGettingRoundInAGameWithNoSimpleWerewolf()
+    {
+        $this
+            ->get("/api/round/2/{$this->thirdGame['id']}")
+            ->assertOk()
+            ->assertExactJson([
+                [
+                    'identifier' => States::Night->value,
+                    'raw_name' => States::Night->stringify(),
+                    'duration' => States::Night->duration(),
+                ],
+                [
+                    'identifier' => States::Werewolf->value,
+                    'raw_name' => States::Werewolf->stringify(),
+                    'duration' => States::Werewolf->duration(),
+                ],
+                [
+                    'identifier' => States::InfectedWerewolf->value,
+                    'raw_name' => States::InfectedWerewolf->stringify(),
+                    'duration' => States::InfectedWerewolf->duration(),
+                ],
+                [
+                    'identifier' => States::Day->value,
+                    'raw_name' => States::Day->stringify(),
+                    'duration' => States::Day->duration(),
+                ],
+                [
+                    'identifier' => States::Vote->value,
+                    'raw_name' => States::Vote->stringify(),
+                    'duration' => States::Vote->duration(),
+                ],
+            ]);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -121,14 +158,21 @@ class RoundControllerTest extends TestCase
         $this->game = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [1, 1, 3],
+                'roles' => [Roles::Werewolf->value, Roles::Werewolf->value, Roles::Psychic->value],
             ])
             ->json('game');
 
         $this->secondGame = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [1, 2],
+                'roles' => [Roles::Werewolf->value, Roles::SimpleVillager->value],
+            ])
+            ->json('game');
+
+        $this->thirdGame = $this
+            ->actingAs($user, 'api')
+            ->put('/api/game', [
+                'roles' => [Roles::SimpleVillager->value, Roles::InfectedWerewolf->value],
             ])
             ->json('game');
 

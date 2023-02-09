@@ -1,7 +1,7 @@
 import { StateManager } from "./StateManager.js";
 import { gameId } from "../Helpers/Functions.js";
-import { error, log } from "../Logger.js";
-import { client } from "../Redis/Connection.js";
+import { error, log, warn } from "../Logger.js";
+import { GameService } from "./GameService.js";
 
 export class CounterService {
 	counterId = [];
@@ -16,9 +16,10 @@ export class CounterService {
 		this.clearListeners();
 
 		const id = gameId(channel);
-		const game = await client.get(`game:${id}`) ?? [];
+		const game = await GameService.getGame(id);
 
 		if (game.ended && game.ended === true) {
+			warn("Counter tried to change state in an ended game");
 			return;
 		}
 
@@ -34,7 +35,7 @@ export class CounterService {
 
 			this.manager.setState({
 				status: state.status,
-				startTimestamp: state.startTimestamp,
+				startTimestamp: Date.now(),
 				counterDuration: data.to,
 				counterId: this.counterId[data.gameId],
 				round: state.round

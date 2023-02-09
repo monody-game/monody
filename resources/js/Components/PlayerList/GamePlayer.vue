@@ -91,6 +91,36 @@ window.Echo
 			break;
 		case "witch":
 			setupWitchActions(interaction);
+			break;
+		case "infected_werewolf":
+			if (gamePlayer.role && gamePlayer.role.name === "infected_werewolf") {
+				const user = gameStore.getPlayerByID(interaction.data[0]);
+
+				chatStore.send(`Voulez-vous infecter ${user.username} ?`, "info", null, [{
+					title: "Oui",
+					async callback() {
+						await window.JSONFetch("/interactions/use", "POST", {
+							id: gameStore.currentInteractionId,
+							gameId:	gameId.value,
+							targetId: interaction.data[0],
+							action: "infected_werewolf:infect"
+						});
+					},
+					id: "infected_werewolf:infect"
+				},
+				{
+					title: "Non",
+					async callback() {
+						await window.JSONFetch("/interactions/use", "POST", {
+							id: gameStore.currentInteractionId,
+							gameId:	gameId.value,
+							action: "infected_werewolf:skip"
+						});
+					},
+					id: "infected_werewolf:skip"
+				}]);
+			}
+			break;
 		}
 	})
 	.listen(".interaction.close", ({ interaction }) => {
