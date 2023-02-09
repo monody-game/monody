@@ -78,25 +78,27 @@ class EndGameController extends Controller
 
     private function getWinningTeam(string $gameId): Teams
     {
-        if ($this->getUsersByTeam(Teams::Villagers, $gameId) === []) {
-            return Teams::Werewolves;
+        if ($this->getUsersByTeam(Teams::Werewolves, $gameId) === []) {
+            return Teams::Villagers;
         }
 
-        return Teams::Villagers;
+        return Teams::Werewolves;
     }
 
     private function enoughTeamPlayersToContinue(string $gameId): bool
     {
         $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
-        $werewolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
+        $werewolves = $this->getGame($gameId)['werewolves'];
+		$villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves));
 
         return $villagers !== [] && $werewolves !== [];
     }
 
     private function getWinningUsers(string $gameId): array
     {
-        $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
-        $werewolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
+		$villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
+		$werewolves = $this->getGame($gameId)['werewolves'];
+		$villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves));
 
         if ($werewolves === []) {
             return $villagers;

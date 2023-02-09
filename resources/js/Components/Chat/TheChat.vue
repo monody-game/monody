@@ -132,6 +132,6 @@ window.Echo.join(`game.${route.params.id}`)
 		const data = e.data.payload;
 		const winners = Object.keys(data.winners);
 		const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
-		store.send(`La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(" ")} du camp des ${team.data.team.display_name}`, "info");
+		store.send(`La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(", ")} du camp des ${team.data.team.display_name}`, "info");
 	});
 </script>
