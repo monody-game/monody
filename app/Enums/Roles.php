@@ -10,6 +10,7 @@ enum Roles: int
     case Witch = 4;
     case LittleGirl = 5;
     case Elder = 6;
+    case InfectedWerewolf = 7;
 
     public function stringify(): string
     {
@@ -19,7 +20,22 @@ enum Roles: int
             self::Psychic => 'Voyante',
             self::Witch => 'Sorcière',
             self::LittleGirl => 'Petite fille',
-            self::Elder => 'Ancien'
+            self::Elder => 'Ancien',
+            self::InfectedWerewolf => 'Loup malade',
+        };
+    }
+
+    public static function fromName(string $name): ?Roles
+    {
+        return match ($name) {
+            'werewolf' => self::Werewolf,
+            'simple_villager' => self::SimpleVillager,
+            'psychic' => self::Psychic,
+            'witch' => self::Witch,
+            'little_girl' => self::LittleGirl,
+            'elder' => self::Elder,
+            'infected_werewolf' => self::InfectedWerewolf,
+            default => null
         };
     }
 
@@ -31,7 +47,8 @@ enum Roles: int
             self::Psychic => 'psychic',
             self::Witch => 'witch',
             self::LittleGirl => 'little_girl',
-            self::Elder => 'elder'
+            self::Elder => 'elder',
+            self::InfectedWerewolf => 'infected_werewolf',
         };
     }
 
@@ -40,7 +57,7 @@ enum Roles: int
         return match ($this) {
             self::Werewolf, self::LittleGirl, self::Elder => 2,
             self::SimpleVillager => 1,
-            self::Psychic, self::Witch => 3,
+            self::Psychic, self::Witch, self::InfectedWerewolf => 3,
         };
     }
 
@@ -48,7 +65,21 @@ enum Roles: int
     {
         return match ($this) {
             self::Werewolf, self::SimpleVillager => null,
-            self::Psychic, self::Witch, self::LittleGirl, self::Elder => 1,
+            self::Psychic, self::Witch, self::LittleGirl, self::Elder, self::InfectedWerewolf => 1,
+        };
+    }
+
+    /**
+     * @return InteractionActions[]
+     */
+    public function getActions(): array
+    {
+        return match ($this) {
+            self::Psychic => [InteractionActions::Spectate],
+            self::Witch => [InteractionActions::WitchSkip, InteractionActions::KillPotion, InteractionActions::RevivePotion],
+            self::Werewolf => [InteractionActions::Kill],
+            self::InfectedWerewolf => [InteractionActions::Infect, InteractionActions::InfectedSkip],
+            default => []
         };
     }
 

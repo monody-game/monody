@@ -98,17 +98,12 @@ class GameInteractionController extends Controller
 
     private function getAuthorizedMembersByType(Interactions $type, string $gameId): string|array
     {
-        $authorized = '*';
-
-        if ($type === Interactions::Witch) {
-            $authorized = $this->getUserIdByRole(Roles::Witch, $gameId);
-        } elseif ($type === Interactions::Psychic) {
-            $authorized = $this->getUserIdByRole(Roles::Psychic, $gameId);
-        } elseif ($type === Interactions::Werewolves) {
-            $authorized = $this->getUsersByTeam(Teams::Werewolves, $gameId);
-        }
-
-        /** @var string|array $authorized */
-        return $authorized;
+        return match ($type) {
+            Interactions::Witch => $this->getUserIdByRole(Roles::Witch, $gameId),
+            Interactions::Psychic => $this->getUserIdByRole(Roles::Psychic, $gameId),
+            Interactions::Werewolves => $this->getUsersByTeam(Teams::Werewolves, $gameId),
+            Interactions::InfectedWerewolf => $this->getUserIdByRole(Roles::InfectedWerewolf, $gameId),
+            default => '*'
+        };
     }
 }

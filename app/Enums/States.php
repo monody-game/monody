@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use App\Facades\Redis;
+
 enum States: int
 {
     case Waiting = 0;
@@ -12,6 +14,7 @@ enum States: int
     case Werewolf = 3;
     case Witch = 4;
     case Psychic = 5;
+    case InfectedWerewolf = 10;
 
     case Day = 6;
     case Vote = 7;
@@ -30,9 +33,10 @@ enum States: int
             self::Starting => 'starting',
             self::Roles => 'roles',
             self::Night => 'night',
-            self::Werewolf => 'werewolf',
-            self::Witch => 'witch',
-            self::Psychic => 'psychic',
+            self::Werewolf => Roles::Werewolf->name(),
+            self::InfectedWerewolf => Roles::InfectedWerewolf->name(),
+            self::Witch => Roles::Witch->name(),
+            self::Psychic => Roles::Psychic->name(),
             self::Day => 'day',
             self::Vote => 'vote',
             self::End => 'end',
@@ -52,11 +56,12 @@ enum States: int
             self::Roles => 'Distribution des rôles',
             self::Night => 'Nuit',
             self::Werewolf => 'Tour des loups-garous',
+            self::InfectedWerewolf => 'Tour du loup malade',
             self::Witch => 'Tour de la sorcière',
             self::Psychic => 'Tour de la voyante',
             self::Day => 'Jour',
             self::Vote => 'Vote',
-            self::End => 'Fin de la partie'
+            self::End => 'Fin de la partie',
         };
     }
 
@@ -69,7 +74,7 @@ enum States: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles, self::Day, self::Vote, self::End => 'day',
-            self::Night, self::Werewolf, self::Witch, self::Psychic => 'night',
+            self::Night, self::Werewolf, self::InfectedWerewolf, self::Witch, self::Psychic => 'night',
         };
     }
 
@@ -78,7 +83,7 @@ enum States: int
         return match ($this) {
             self::Waiting, self::End => -1,
             self::Starting, self::Night => 10,
-            self::Roles => 30,
+            self::Roles, self::InfectedWerewolf => 30,
             self::Day, self::Vote, self::Werewolf, self::Psychic, self::Witch => 90
         };
     }
@@ -92,7 +97,7 @@ enum States: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles => 'wait',
-            self::Night, self::Witch, self::Werewolf, self::Psychic => 'night',
+            self::Night, self::Witch, self::Werewolf, self::InfectedWerewolf, self::Psychic => 'night',
             self::Day, self::Vote => 'day',
             self::End => 'trophy'
         };
@@ -106,7 +111,7 @@ enum States: int
     public function message(): ?string
     {
         return match ($this) {
-            self::Roles, self::Werewolf, self::Psychic, self::Witch => self::readeableStringify(),
+            self::Roles, self::Werewolf, self::InfectedWerewolf, self::Psychic, self::Witch => self::readeableStringify(),
             self::Vote => 'Début du ' . mb_strtolower(self::readeableStringify()),
             default => null
         };
@@ -136,7 +141,27 @@ enum States: int
             self::Waiting, self::Starting, self::Roles, self::Night, self::Day, self::End => null, // Cannot be skipped
             self::Vote => 30,
             self::Werewolf => 10,
-            self::Witch, self::Psychic => 0, // Skip the state to the next
+            self::Witch, self::Psychic, self::InfectedWerewolf => 0, // Skip the state to the next
         };
+    }
+
+    public function hasActionsLeft(string $gameId): bool
+    {
+        $role = Roles::fromName($this->stringify());
+        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+        $result = true;
+
+        if ($role === null) {
+            return false;
+        }
+
+        foreach ($role->getActions() as $action) {
+            if (in_array($action->value, $usedActions, true)) {
+                $result = false;
+                break;
+            }
+        }
+
+        return $result;
     }
 }

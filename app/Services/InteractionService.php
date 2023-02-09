@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Actions\ActionInterface;
+use App\Actions\InfectedWerewolfAction;
 use App\Actions\PsychicAction;
 use App\Actions\VoteAction;
 use App\Actions\WerewolvesAction;
@@ -203,6 +204,7 @@ class InteractionService
             Interactions::Witch => new WitchAction,
             Interactions::Psychic => new PsychicAction,
             Interactions::Werewolves => new WerewolvesAction,
+            Interactions::InfectedWerewolf => new InfectedWerewolfAction,
         };
     }
 }
