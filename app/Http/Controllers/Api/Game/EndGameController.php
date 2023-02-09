@@ -88,9 +88,9 @@ class EndGameController extends Controller
     private function enoughTeamPlayersToContinue(string $gameId): bool
     {
         $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
-        $wereolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
+        $werewolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
 
-        return $villagers !== [] && $wereolves !== [];
+        return $villagers !== [] && $werewolves !== [];
     }
 
     private function getWinningUsers(string $gameId): array
