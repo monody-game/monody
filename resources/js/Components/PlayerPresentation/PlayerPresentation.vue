@@ -11,13 +11,17 @@
           class="player-presentation__avatar"
         >
         <div class="player-presentation__levels">
-          <div>
+          <div
+            title="Niveau"
+          >
             <svg>
               <use href="/sprite.svg#level" />
             </svg>
             <p>{{ store.level }}</p>
           </div>
-          <div>
+          <div
+            title="Elo"
+          >
             <svg>
               <use href="/sprite.svg#elo" />
             </svg>

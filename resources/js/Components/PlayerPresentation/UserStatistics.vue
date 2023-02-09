@@ -1,36 +1,54 @@
 <template>
   <div class="stats__container">
-    <div class="stats__statistic">
+    <div
+      class="stats__statistic"
+      title="Nombre de victoires"
+    >
       <svg>
         <use href="/sprite.svg#trophy" />
       </svg>
       <p>{{ stats.wins }}</p>
     </div>
-    <div class="stats__statistic">
+    <div
+      class="stats__statistic"
+      title="Ratio de victoires"
+    >
       <svg>
         <use href="/sprite.svg#win_rate" />
       </svg>
       <p>{{ winRate }}</p>
     </div>
-    <div class="stats__statistic">
+    <div
+      class="stats__statistic"
+      title="Nombre de défaites"
+    >
       <svg>
         <use href="/sprite.svg#losses" />
       </svg>
       <p>{{ stats.losses }}</p>
     </div>
-    <div class="stats__statistic">
+    <div
+      class="stats__statistic"
+      title="Classement"
+    >
       <svg>
         <use href="/sprite.svg#ranking" />
       </svg>
       <p>{{ stats.rank }}</p>
     </div>
-    <div class="stats__statistic">
+    <div
+      class="stats__statistic"
+      title="Série de victoires"
+    >
       <svg>
         <use href="/sprite.svg#win_streak" />
       </svg>
       <p>{{ stats.win_streak }}</p>
     </div>
-    <div class="stats__statistic">
+    <div
+      class="stats__statistic"
+      title="Plus longue série de victoires"
+    >
       <svg
         viewBox="0 0 30 35"
         fill="none"
