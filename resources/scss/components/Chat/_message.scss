@@ -42,7 +42,6 @@
 	& > .btn {
 		color: var(--dark-background);
 		background-color: var(--light-background);
-		border: var(--border-dark) 2px solid;
 	}
 
 	& > .btn:not(:disabled):not(.disable-hover):hover {
