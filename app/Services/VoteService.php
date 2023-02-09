@@ -123,10 +123,9 @@ class VoteService
             return false;
         }
 
-        $majority = $votes[$majority];
-        $voters = count(self::getVotingUsers($game['users'], $votes)) / 2;
+        $voters = count(self::getVotingUsers($game['users'], $votes));
 
-        return round($voters) >= (count($game['users']) / 2) && count($majority) >= $voters;
+        return $voters > (count($game['users']) / 2);
     }
 
     /**

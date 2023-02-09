@@ -252,12 +252,16 @@ class VoteServiceTest extends TestCase
     public function testCheckingIfMajorityHasVoted()
     {
         $gameId = $this->thirdGame['id'];
+
         $this->service->vote($this->user->id, $gameId, $this->user->id);
         $this->assertFalse(VoteService::hasMajorityVoted($this->thirdGame));
+
         $this->service->vote($this->user->id, $gameId, $this->secondUser->id);
         $this->assertFalse(VoteService::hasMajorityVoted($this->thirdGame));
+
         $this->service->vote($this->fourthUser->id, $gameId, $this->thirdUser->id);
         $this->assertTrue(VoteService::hasMajorityVoted($this->thirdGame));
+
         $this->service->vote($this->thirdUser->id, $gameId, $this->fourthUser->id);
         $this->assertTrue(VoteService::hasMajorityVoted($this->thirdGame));
     }
