@@ -11,7 +11,7 @@ enum Teams: int
     {
         return match ($this) {
             self::Villagers => [Roles::SimpleVillager, Roles::Psychic, Roles::Witch, Roles::LittleGirl, Roles::Elder],
-            self::Werewolves => [Roles::Werewolf]
+            self::Werewolves => [Roles::Werewolf, Roles::InfectedWerewolf]
         };
     }
 

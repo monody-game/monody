@@ -72,8 +72,13 @@ class GameChatController extends Controller
             $emitters = [];
 
             foreach (Teams::from($request->get('team'))->roles() as $role) {
-                /** @phpstan-ignore-next-line */
-                $emitters[] = $this->getUserIdByRole($role, $gameId)[0];
+                $users = $this->getUserIdByRole($role, $gameId);
+
+                if ($users === []) {
+                    continue;
+                }
+
+                $emitters = [...$emitters, ...$users];
             }
 
             broadcast(new ChatLock($gameId, true, $emitters));

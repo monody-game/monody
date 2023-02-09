@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api;
 
+use App\Enums\Roles;
 use App\Enums\Rounds;
 use App\Enums\States;
 use App\Models\User;
@@ -121,14 +122,14 @@ class RoundControllerTest extends TestCase
         $this->game = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [1, 1, 3],
+                'roles' => [Roles::Werewolf->value, Roles::Werewolf->value, Roles::Psychic->value],
             ])
             ->json('game');
 
         $this->secondGame = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [1, 2],
+                'roles' => [Roles::Werewolf->value, Roles::SimpleVillager->value],
             ])
             ->json('game');
 
