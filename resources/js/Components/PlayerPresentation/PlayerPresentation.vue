@@ -25,7 +25,7 @@
           </div>
         </div>
       </ProgressBar>
-      <span class="pill pill-light player-presentation__level">{{ store.username }}</span>
+      <span class="pill pill-light player-presentation__name">{{ store.username }}</span>
       <UserStatistics />
       <div class="player-presentation__footer">
         <svg @click="modalStore.open('profile-modal')">
