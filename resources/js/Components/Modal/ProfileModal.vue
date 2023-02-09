@@ -191,8 +191,7 @@ const updateProfile = async () => {
 	});
 
 	if (hasUploaded.value) {
-		// location.reload(true);
-		window.location = window.location;
+		location.reload(true);
 	}
 
 	modalStore.close();
