@@ -52,7 +52,10 @@ class RoundController extends Controller
                     continue;
                 }
 
-                if (!in_array($state->stringify(), $roles, true)) {
+                if (
+                    !in_array($state->stringify(), $roles, true) ||
+                    count(array_filter($roles, fn ($role) => str_contains($state->stringify(), $role))) === 0
+                ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
                     continue;
