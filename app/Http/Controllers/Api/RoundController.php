@@ -55,6 +55,10 @@ class RoundController extends Controller
                 if (!in_array($state->stringify(), $roles, true)) {
                     $removedStates = array_splice($round, ($key - count($removedStates)), 1);
                 }
+
+                if (!$state->hasActionsLeft($gameId)) {
+                    $removedStates = array_splice($round, ($key - count($removedStates)), 1);
+                }
             }
         }
 
