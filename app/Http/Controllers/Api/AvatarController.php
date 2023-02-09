@@ -30,7 +30,9 @@ class AvatarController extends Controller
 
         $path = $this->generator->toStoragePath($user->avatar);
 
-        Storage::delete("avatars/$path");
+        if ($path !== 'default.png') {
+            Storage::delete("avatars/$path");
+        }
 
         Storage::put("avatars/$path", $result);
 
@@ -49,8 +51,11 @@ class AvatarController extends Controller
         $avatarName = explode('/', $user->avatar);
         $avatarName = $avatarName[array_key_last($avatarName)];
 
-        Storage::delete("avatars/{$avatarName}");
-        $server->deleteCache("avatars/{$avatarName}");
+        if ($avatarName !== 'default.png') {
+            Storage::delete("avatars/$avatarName");
+        }
+
+        $server->deleteCache("avatars/$avatarName");
 
         $file->storeAs(
             'avatars', "{$user->id}.{$file->extension()}"
