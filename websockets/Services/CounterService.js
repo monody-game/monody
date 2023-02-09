@@ -34,7 +34,7 @@ export class CounterService {
 
 			this.manager.setState({
 				status: state.status,
-				startTimestamp: state.startTimestamp,
+				startTimestamp: Date.now(),
 				counterDuration: data.to,
 				counterId: this.counterId[data.gameId],
 				round: state.round
