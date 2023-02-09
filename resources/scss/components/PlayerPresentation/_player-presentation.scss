@@ -34,11 +34,14 @@
 		object-fit: cover;
 	}
 
-	& .player-presentation__level {
+	& .player-presentation__name {
 		height: 48px;
 		transform: translateY(230px);
 		z-index: 100;
 		position: absolute;
+
+		width: max-content;
+		padding-inline: space(3);
 	}
 
 	& .player-presentation__exp {
@@ -49,11 +52,6 @@
 		height: 35px;
 		min-width: 100px;
 		width: min-content;
-	}
-
-	& .player-presentation__name {
-		font-size: 24px;
-		z-index: 10;
 	}
 }
 
