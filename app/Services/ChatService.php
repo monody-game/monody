@@ -22,6 +22,26 @@ class ChatService
         MessageSended::dispatch($message);
     }
 
+    public function alert(string $content, string $type, string $gameId, array|null $recievers = null): void
+    {
+        $message = new Message([
+            'gameId' => $gameId,
+            'author' => null,
+            'content' => $content,
+            'type' => $type,
+        ]);
+
+        if ($recievers !== null) {
+            broadcast(new MessageSended($message, true, [
+                ...$recievers,
+            ]));
+
+            return;
+        }
+
+        broadcast(new MessageSended($message));
+    }
+
     public function werewolf(array $data, User $user): void
     {
         $message = new Message($data);
