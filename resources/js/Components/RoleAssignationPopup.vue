@@ -15,14 +15,14 @@
             :key="role.id"
           >
             <img
-              :src="role.image"
+              :src="role.image + '?h=200&dpr=2'"
               :alt="role.display_name"
             >
           </div>
         </template>
         <div>
           <img
-            :src="assignedRole.image"
+            :src="assignedRole.image + '?h=200&dpr=2'"
             :alt="assignedRole.display_name"
           >
         </div>

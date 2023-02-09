@@ -13,6 +13,7 @@
           v-else-if="message.type !== 'message' && message.type !== 'werewolf'"
           :message="message.content"
           :type="message.type"
+          :actions="message.actionList"
         />
         <ChatMessage
           v-else

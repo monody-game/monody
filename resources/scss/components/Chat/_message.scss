@@ -38,6 +38,16 @@
 		white-space: nowrap;
 		flex: 1;
 	}
+
+	& > .btn {
+		color: var(--dark-background);
+		background-color: var(--light-background);
+		border: var(--border-dark) 2px solid;
+	}
+
+	& > .btn:not(:disabled):not(.disable-hover):hover {
+		background-color: var(--light-background-hover);
+	}
 }
 
 .message__werewolf {
