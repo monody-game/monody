@@ -96,7 +96,7 @@ class GameInteractionControllerTest extends TestCase
             Interactions::Vote->name => '*',
             Interactions::Witch->name => json_encode(['superWitch']),
             Interactions::Psychic->name => json_encode([$this->user->id]),
-            Interactions::Werewolves->name => json_encode([$this->secondUser->id, 'superWerewolf']),
+            Interactions::Werewolves->name => json_encode(['superSickWerewolf', $this->secondUser->id, 'superWerewolf']),
             Interactions::InfectedWerewolf->name => json_encode(['superSickWerewolf']),
         ];
 
