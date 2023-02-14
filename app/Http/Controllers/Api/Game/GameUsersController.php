@@ -26,8 +26,10 @@ class GameUsersController extends Controller
     {
         /** @var string $gameId */
         $gameId = $request->user()?->current_game;
+
         /** @var string[] $game */
         $game = $this->getGame($gameId);
+
         $userRole = $game['assigned_roles'][$request->validated('id')];
         $role = Roles::from($userRole)->full();
 

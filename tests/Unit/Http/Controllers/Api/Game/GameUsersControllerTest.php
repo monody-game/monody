@@ -9,6 +9,10 @@ use Tests\TestCase;
 
 class GameUsersControllerTest extends TestCase
 {
+    private User $user;
+
+    private User $secondUser;
+
     public function testListUsers()
     {
         $this->actingAs($this->user, 'api')
@@ -20,16 +24,17 @@ class GameUsersControllerTest extends TestCase
             ]);
     }
 
-    public function testGettingUserRole()
+    public function testGettingUserRole(): void
     {
         $this->secondUser->current_game = 'id';
+        $this->secondUser->save();
 
         Redis::set('game:id', json_encode([
             'assigned_roles' => [$this->secondUser->id => 1],
         ]));
 
         $response = $this->actingAs($this->secondUser, 'api')
-            ->call('GET', "/api/game/user/{$this->secondUser->id}/role", ['gameId' => 'id'])
+            ->call('GET', "/api/game/user/{$this->secondUser->id}/role")
             ->assertOk()
             ->json();
 

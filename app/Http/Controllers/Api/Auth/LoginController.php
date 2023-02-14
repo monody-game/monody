@@ -36,7 +36,7 @@ class LoginController extends Controller
             Cookie::forget('monody_access_token');
         }
 
-        $accessToken = $user->createToken('authToken')->accessToken;
+        $accessToken = $user->createToken('auth_token')->plainTextToken;
         $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Lax');
 
         return (new JsonResponse([]))
@@ -46,9 +46,9 @@ class LoginController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user()?->token()?->revoke();
+        $request->user()?->tokens()->delete();
 
-        Cookie::queue(Cookie::forget('monody_access_token'));
+        Cookie::expire('monody_access_token');
 
         return (new JsonResponse([]))
             ->withAlert(AlertType::Success, 'À bientôt !');
