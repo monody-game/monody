@@ -89,16 +89,16 @@ class EndGameController extends Controller
     {
         $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
         $werewolves = $this->getGame($gameId)['werewolves'];
-		$villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves));
+        $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
 
         return $villagers !== [] && $werewolves !== [];
     }
 
     private function getWinningUsers(string $gameId): array
     {
-		$villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
-		$werewolves = $this->getGame($gameId)['werewolves'];
-		$villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves));
+        $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
+        $werewolves = $this->getGame($gameId)['werewolves'];
+        $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
 
         if ($werewolves === []) {
             return $villagers;

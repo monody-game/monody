@@ -23,8 +23,6 @@ enum States: int
 
     /**
      * Returns the technical name of a state (usually single worded)
-     *
-     * @return string
      */
     public function stringify(): string
     {
@@ -45,8 +43,6 @@ enum States: int
 
     /**
      * Returns the name of a state, readeably
-     *
-     * @return string
      */
     public function readeableStringify(): string
     {
@@ -67,8 +63,6 @@ enum States: int
 
     /**
      * Return the background that should be used on theses states
-     *
-     * @return string
      */
     public function background(): string
     {
@@ -90,8 +84,6 @@ enum States: int
 
     /**
      * Return the icon representing the state (it will be shown on the counter)
-     *
-     * @return string
      */
     public function iconify(): string
     {
@@ -105,8 +97,6 @@ enum States: int
 
     /**
      * Return the message that should be sent just before the state begins
-     *
-     * @return string|null
      */
     public function message(): ?string
     {
@@ -119,8 +109,6 @@ enum States: int
 
     /**
      * Dictate if a state is a role one (psychic, witch, ...)
-     *
-     * @return bool
      */
     public function isRoleState(): bool
     {
@@ -132,8 +120,6 @@ enum States: int
 
     /**
      * Return the new time of the counter after a time skip within a state
-     *
-     * @return int|null
      */
     public function getTimeSkip(): ?int
     {

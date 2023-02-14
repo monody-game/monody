@@ -13,7 +13,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL', null),
+    'asset_url' => env('ASSET_URL', '/'),
 
     'timezone' => 'UTC',
 
@@ -56,7 +56,8 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\ResponseMacroProvider::class,
+        App\Providers\ResponseMacroServiceProvider::class,
+        App\Providers\RedisMockServiceProvider::class,
 
         Intervention\Image\ImageServiceProvider::class,
     ],

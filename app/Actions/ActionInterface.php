@@ -8,8 +8,6 @@ interface ActionInterface
 {
     /**
      * Indicate if the action can be used more than once
-     *
-     * @return bool
      */
     public function isSingleUse(): bool;
 
@@ -19,7 +17,6 @@ interface ActionInterface
      * @param  InteractionActions  $action The action that the user want to use
      * @param  string  $userId The action emitter
      * @param  string  $targetId The action target
-     * @return bool
      */
     public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool;
 
@@ -35,25 +32,18 @@ interface ActionInterface
 
     /**
      * Update clients with data edited after the action (voted players for example)
-     *
-     * @param  string  $userId
-     * @return void
      */
     public function updateClients(string $userId): void;
 
     /**
      * Return additional data that should be added to interaction payload
      *
-     * @param  string  $gameId
      * @return mixed Could be array, string, null, bool, ...
      */
     public function additionnalData(string $gameId): mixed;
 
     /**
      * Actions when closing the interaction
-     *
-     * @param  string  $gameId
-     * @return void
      */
     public function close(string $gameId): void;
 }
