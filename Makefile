@@ -31,7 +31,6 @@ migrate: install
 .PHONY: seed
 seed: migrate
 	php artisan db:seed
-	php artisan passport:install
 
 .PHONY: lint
 lint: install

@@ -12,7 +12,7 @@
         "ext-pdo": "*",
         "intervention/image": "^2.7",
         "laravel/framework": "^10.0",
-        "laravel/passport": "^11.7",
+        "laravel/sanctum": "^3.2",
         "league/glide-laravel": "^1.0",
         "predis/predis": "^2.0",
         "socialiteproviders/discord": "^4.1",
