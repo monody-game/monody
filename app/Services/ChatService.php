@@ -49,7 +49,7 @@ class ChatService
         $message->set('type', 'werewolf');
 
         broadcast(new MessageSended($message, true, [
-            $this->getUsersByTeam(Teams::Werewolves, $data['gameId']),
+            ...$this->getUsersByTeam(Teams::Werewolves, $data['gameId']),
         ]));
 
         /** @var array{}|string[] $littleGirl */
