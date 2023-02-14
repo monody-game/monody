@@ -124,6 +124,9 @@ class EndGameControllerTest extends TestCase
                 $this->user->id => 2,
             ],
             'is_started' => true,
+            'werewolves' => [
+                $this->secondUser->id,
+            ],
         ];
 
         Redis::set("game:{$this->game['id']}", array_merge(Redis::get("game:{$this->game['id']}"), $additionnalKeys));

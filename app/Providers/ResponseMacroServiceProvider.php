@@ -6,7 +6,7 @@ use App\Enums\AlertType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\ServiceProvider;
 
-class ResponseMacroProvider extends ServiceProvider
+class ResponseMacroServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {

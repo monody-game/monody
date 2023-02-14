@@ -35,7 +35,6 @@ class InteractionService
      * @param  string  $gameId The id of the game
      * @param  Interactions  $type The type of the interaction (vote, ...)
      * @param  array|string  $authorizedCallers The authorized users to use the interaction (by default it is everyone)
-     * @return array
      */
     public function create(string $gameId, Interactions $type, array|string $authorizedCallers = '*'): array
     {
@@ -176,8 +175,6 @@ class InteractionService
      * Dictate if state's duration should be skip, depending on interaction status
      *
      * @param  string  $id Interaction id
-     * @param  string  $gameId
-     * @return bool
      */
     public function shouldSkipTime(string $id, string $gameId): bool
     {
