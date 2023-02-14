@@ -31,6 +31,7 @@ div {
 	height: 100vh;
 	display: grid;
 	place-items: center;
+	color: var(--secondary);
 }
 
 svg {
@@ -44,7 +45,7 @@ main {
 }
 
 a {
-	color: #ffffff;
+	color: var(--secondary);
 	text-decoration: underline;
 	cursor: pointer;
 }
@@ -63,6 +64,6 @@ aside {
 	flex-direction: column;
 	gap: 8px;
 	padding-inline: 32px;
-	border-left: #ffffff 2px solid;
+	border-left: var(--secondary) 2px solid;
 }
 </style>
