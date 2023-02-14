@@ -113,15 +113,11 @@ trait MemberHelperTrait
             $member = $this->getUserIdByRole($role, $gameId);
 
             if ($member) {
-                $members[] = $member;
+                $members = array_merge($member, $members);
             }
         }
 
-        if ($members === []) {
-            return $members;
-        }
-
-        return $members[0];
+        return $members;
     }
 
     public function kill(string $userId, string $gameId, string $context): bool
