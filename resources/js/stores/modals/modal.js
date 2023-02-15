@@ -4,11 +4,12 @@ import { useStore as useProfileStore } from "./profile-modal.js";
 import { useStore as useGameShareStore } from "./share-game-modal.js";
 import { useStore as usePopupStore } from "./popup.js";
 import { useStore as useRoleAssignationStore } from "./role-assignation.js";
+import { useStore as useActivityConfirmationModalStore } from "./activity-confirmation-modal.js";
 
 export const useStore = defineStore("modal", {
 	state: () => {
 		return {
-			opennedModal: "popup",
+			opennedModal: "",
 		};
 	},
 	getters: {
@@ -24,6 +25,8 @@ export const useStore = defineStore("modal", {
 				return useRoleAssignationStore();
 			case "share-game-modal":
 				return useGameShareStore();
+			case "activity-confirmation-modal":
+				return useActivityConfirmationModalStore();
 			}
 		}
 	},

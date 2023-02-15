@@ -57,6 +57,7 @@
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useStore as useGameStore } from "../../stores/game.js";
+import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import { useStore } from "../../stores/chat.js";
 import { send } from "../../services/sendMessage.js";
 import ChatAlert from "./ChatAlert.vue";
@@ -70,6 +71,7 @@ const icon = ref(null);
 const gameStore = useGameStore();
 const route = useRoute();
 const store = useStore();
+let interval = null;
 
 const sendMessage = async function() {
 	if (content.value.length < 500) {
@@ -80,6 +82,10 @@ const sendMessage = async function() {
 
 onBeforeRouteLeave(() => {
 	store.$reset();
+
+	if (interval !== null) {
+		clearInterval(interval);
+	}
 });
 
 window.Echo.join(`game.${route.params.id}`)
@@ -133,5 +139,9 @@ window.Echo.join(`game.${route.params.id}`)
 		const winners = Object.keys(data.winners);
 		const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
 		store.send(`La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(", ")} du camp des ${team.data.team.display_name}`, "info");
+
+		interval = setInterval(() => {
+			useModalStore().open("activity-confirmation-modal");
+		}, 30000);
 	});
 </script>

@@ -40,6 +40,9 @@
     <Transition name="modal">
       <ShareGameModal v-if="shareModalStore.isOpenned" />
     </Transition>
+    <Transition name="modal">
+      <ActivityConfirmationModal v-if="activityConfirmationModalStore.isOpenned" />
+    </Transition>
   </div>
 </template>
 
@@ -52,12 +55,14 @@ import { useStore as useAssignationPopupStore } from "../../stores/modals/role-a
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useShareModalStore } from "../../stores/modals/share-game-modal.js";
+import { useStore as useActivityConfirmationModalStore } from "../../stores/modals/activity-confirmation-modal.js";
 import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 import GameCounter from "../../Components/GameCounter.vue";
 import Chat from "../../Components/Chat/TheChat.vue";
 import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
-import ShareGameModal from "../../Components/Modal/Pages/ShareGameModal.vue";
+import ShareGameModal from "../../Components/Modal/ShareGameModal.vue";
+import ActivityConfirmationModal from "../../Components/Modal/ActivityConfirmationModal.vue";
 
 const route = useRoute();
 const store = useStore();
@@ -68,6 +73,7 @@ const gameStore = useGameStore();
 const userStore = useUserStore();
 const assignationPopupStore = useAssignationPopupStore();
 const modalStore = useModalStore();
+const activityConfirmationModalStore = useActivityConfirmationModalStore();
 
 const gameId = route.params.id;
 const loading = ref(false);

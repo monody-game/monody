@@ -42,8 +42,8 @@
 
 <script setup>
 import { computed } from "vue";
-import { useStore as useAlertStore } from "../../../stores/alerts.js";
-import BaseModal from "../BaseModal.vue";
+import { useStore as useAlertStore } from "../../stores/alerts.js";
+import BaseModal from "./BaseModal.vue";
 import { useRoute } from "vue-router";
 
 const alertStore = useAlertStore();
