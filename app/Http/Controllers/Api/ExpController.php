@@ -14,18 +14,7 @@ class ExpController extends Controller
         /** @var string $user_id */
         $user_id = $request->user()?->id;
 
-        $exp = Exp::select('*')
-            ->where('user_id', $user_id)
-            ->get();
-
-        $exp = $exp->first();
-
-        if (null === $exp) {
-            $exp = new Exp();
-            $exp->user_id = $user_id;
-            $exp->exp = 0;
-            $exp->save();
-        }
+        $exp = Exp::firstOrCreate(['user_id' => $user_id]);
 
         return new JsonResponse([
             'user_id' => $exp->user_id,
