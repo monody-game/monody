@@ -83,9 +83,11 @@ const setData = async function (data) {
 	clearInterval(counterId.value);
 	time.value = data.counterDuration === -1 ? 0 : getDuration(data.counterDuration, data.startTimestamp);
 	totalTime.value = data.counterDuration === -1 ? 0 : data.counterDuration;
+
+	if (status.value !== data.status.value) state = await getState(data.status.value);
+
 	status.value = data.status;
 	round.value = data.round;
-	state = await getState(data.status.value);
 	roundText.value = state.name;
 	icon.value = state.icon;
 	useStore().state = data.state;
