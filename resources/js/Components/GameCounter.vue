@@ -92,7 +92,10 @@ const setData = async function (data) {
 	time.value = data.counterDuration === -1 ? 0 : getDuration(data.counterDuration, data.startTimestamp);
 	totalTime.value = data.counterDuration === -1 ? 0 : data.counterDuration;
 
-	if (status.value !== data.status.value) state = await getState(data.status.value);
+	if (status.value !== data.status.value) {
+		status.value = data.status;
+		state = await getState(data.status.value);
+	}
 
 	status.value = data.status;
 	round.value = data.round;

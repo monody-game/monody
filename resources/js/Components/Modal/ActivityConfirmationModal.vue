@@ -1,31 +1,39 @@
 <template>
-  <BaseModal>
-    <header>
-      <h3>Êtes-vous encore là ?</h3>
-    </header>
-
-    <div class="share-page__container">
-      <div
-        class="progress-bar"
-        :style="`background-image: conic-gradient(from 0deg at 50% 50%, var(--accent-primary) 0 ${progress}%, var(--primary) 0);`"
-      >
-        <p style="font-size: 28px;">
-          {{ time }}
+  <BaseModal
+    wrapper="popup__wrapper"
+    data-popup-type="info"
+  >
+    <header class="popup__header">
+      <div class="popup__header-left">
+        <svg class="popup__icon">
+          <use href="/sprite.svg#info" />
+        </svg>
+        <p
+          id="modal__title"
+          class="popup__title"
+        >
+          Êtes-vous encore là ?
         </p>
       </div>
-    </div>
+      <svg
+        class="popup__close"
+        @click="yes()"
+      >
+        <use href="/sprite.svg#cross" />
+      </svg>
+    </header>
 
-    <div class="modal__buttons">
+    <div class="modal__buttons popup__content">
       <button
         class="btn medium"
-        style="width: 200px;"
+        style="width: 47.5%;"
         @click="no()"
       >
         Non
       </button>
       <button
         class="btn medium"
-        style="width: 200px;"
+        style="width: 47.5%;"
         @click="yes()"
       >
         Oui
@@ -35,24 +43,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 import BaseModal from "./BaseModal.vue";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
 
 const modalStore = useModalStore();
 const router = useRouter();
-const progress = ref(100);
-const time = ref(30);
 
 const interval = setInterval(() => {
-	time.value--;
-	progress.value = time.value * 100 / 30;
-
-	if (time.value === 0) {
-		no();
-	}
-}, 1000);
+	no();
+}, 30000);
 
 const yes = () => {
 	modalStore.close();

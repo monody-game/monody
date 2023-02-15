@@ -140,8 +140,8 @@ window.Echo.join(`game.${route.params.id}`)
 		const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
 		store.send(`La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(", ")} du camp des ${team.data.team.display_name}`, "info");
 
-		interval = setInterval(() => {
+		interval = setTimeout(() => {
 			useModalStore().open("activity-confirmation-modal");
-		}, 30000);
+		}, 60000);
 	});
 </script>
