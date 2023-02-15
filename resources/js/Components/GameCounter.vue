@@ -33,10 +33,11 @@
 </template>
 
 <script setup>
-import { useStore } from "../stores/game.js";
-import { useStore as useChatStore } from "../stores/chat.js";
 import { onMounted, ref } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
+import { useStore } from "../stores/game.js";
+import { useStore as useChatStore } from "../stores/chat.js";
+import { useStore as useModalStore } from "../stores/modals/modal.js";
 
 const route = useRoute();
 const round = ref(0);
@@ -49,6 +50,7 @@ const status = ref(0);
 const sound = new Audio("../sounds/bip.mp3");
 const roundText = ref("");
 const chatStore = useChatStore();
+const modalStore = useModalStore();
 
 const getState = async function(toRetrieveState = null) {
 	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
@@ -67,6 +69,12 @@ window.Echo.join(`game.${route.params.id}`)
 	.listen(".game.state", async (data) => {
 		if (data) {
 			await setData(data);
+
+			if (data.status !== 1) return;
+
+			if (modalStore.opennedModal === "share-game-modal") {
+				modalStore.close();
+			}
 		}
 	})
 	.listen(".game.data", async (data) => {
