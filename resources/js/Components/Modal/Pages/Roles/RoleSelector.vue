@@ -11,6 +11,7 @@
           <use href="/sprite.svg#minus" />
         </svg>
       </button>
+      <span class="role-selector__name">{{ props.role.display_name }}</span>
       <img
         :alt="props.role.name"
         :src="props.role.image + '?h=60&dpr=2'"
