@@ -4,7 +4,10 @@ namespace Tests\Unit\Services;
 
 use App\Models\Exp;
 use App\Models\User;
+use App\Notifications\ExpEarned;
+use App\Notifications\LevelUp;
 use App\Services\ExpService;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class ExpServiceTest extends TestCase
@@ -13,12 +16,15 @@ class ExpServiceTest extends TestCase
 
     public function testAddingExp(): void
     {
+        Notification::fake();
+
         $user = User::factory()->create();
 
         $this->assertNull(Exp::where('user_id', $user->id)->first());
 
-        $this->service->add(4, $user->id);
+        $this->service->add(4, $user);
 
+        Notification::assertSentTo([$user], ExpEarned::class);
         $this->assertSame(4, Exp::where('user_id', $user->id)->first()->exp);
     }
 
@@ -32,11 +38,14 @@ class ExpServiceTest extends TestCase
 
     public function testLevelingUp(): void
     {
+        Notification::fake();
         $user = User::factory()->create();
 
         $this->assertSame(1, $user->level);
 
-        $this->service->add(10, $user->id);
+        $this->service->add(10, $user);
+        Notification::assertSentTo([$user], ExpEarned::class);
+        Notification::assertSentTo([$user], LevelUp::class);
 
         $user = $user->refresh();
 
@@ -46,11 +55,15 @@ class ExpServiceTest extends TestCase
 
     public function testAddingMoreExpThanNeededToLevelUp(): void
     {
+        Notification::fake();
+
         $user = User::factory([
             'level' => 2,
         ])->create();
 
-        $this->service->add(50, $user->id);
+        $this->service->add(50, $user);
+        Notification::assertSentTo([$user], ExpEarned::class);
+        Notification::assertSentTo([$user], LevelUp::class);
 
         $user = $user->refresh();
 
