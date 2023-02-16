@@ -14,7 +14,7 @@ class LevelUp extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        private array $payload
+        public array $payload
     ) {
     }
 
