@@ -14,7 +14,7 @@ class ExpEarned extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(private Exp $exp)
+    public function __construct(public Exp $exp)
     {
     }
 
