@@ -10,7 +10,9 @@ use App\Events\GameWin;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
+use App\Notifications\ExpEarned;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class EndGameControllerTest extends TestCase
@@ -46,6 +48,7 @@ class EndGameControllerTest extends TestCase
     public function testEndingAGame()
     {
         Event::fake();
+        Notification::fake();
 
         Redis::set("game:{$this->game['id']}:members", [
             ['user_id' => $this->user['id'], 'user_info' => array_merge($this->user->toArray(), ['is_dead' => true])],
@@ -65,6 +68,22 @@ class EndGameControllerTest extends TestCase
 
         $game = Redis::get("game:$gameId");
         $this->assertTrue($game['ended']);
+
+        Notification::assertSentTo($villager, ExpEarned::class, function ($notification) use ($villager) {
+            $user = $villager->refresh();
+
+            return $notification->exp->toArray()['exp'] === 10 && $user->level === 2;
+        });
+
+        Notification::assertSentTo($villager, ExpEarned::class, function ($notification) use ($villager) {
+            $user = $villager->refresh();
+            // Create a game that is ended
+            return $notification->exp->toArray()['exp'] === (10 + 20) && $user->level === 2;
+        });
+
+        Notification::assertSentTo($werewolf, ExpEarned::class, function ($notification) {
+            return $notification->exp->toArray()['exp'] === 50;
+        });
 
         Event::assertDispatched(function (GameEnd $event) use ($werewolf, $gameId) {
             return ((array) $event)['payload'] === [
@@ -103,7 +122,12 @@ class EndGameControllerTest extends TestCase
     {
         parent::setUp();
 
-        [$this->user, $this->secondUser] = User::factory(2)->create();
+        [$this->user, $this->secondUser] = User::factory(2)->create([
+            'level' => 3,
+        ]);
+
+        $this->user->level = 1;
+        $this->user->save();
 
         $this->game = $this
             ->actingAs($this->user, 'api')
