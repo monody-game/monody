@@ -11,6 +11,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GameIdRequest;
 use App\Models\GameOutcome;
 use App\Models\Statistic;
+use App\Models\User;
+use App\Services\ExpService;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\JsonResponse;
@@ -29,7 +31,7 @@ class EndGameController extends Controller
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 
-    public function index(GameIdRequest $request): JsonResponse
+    public function index(GameIdRequest $request, ExpService $expService): JsonResponse
     {
         $gameId = $request->validated('gameId');
         $winners = $this->getWinningUsers($gameId);
@@ -45,33 +47,41 @@ class EndGameController extends Controller
         broadcast(new GameWin($payload, true, $winners));
         broadcast(new GameLoose($payload, true, $loosers));
 
-        foreach ([...$winners, ...$loosers] as $user) {
-            $win = in_array($user, $winners, true);
-            /** @var Statistic $stat */
-            $stat = Statistic::firstOrCreate(['user_id' => $user]);
+        $game = Redis::get("game:$gameId");
+        $game['ended'] = true;
+        Redis::set("game:$gameId", $game);
+
+        foreach ([...$winners, ...$loosers] as $userId) {
+            $win = in_array($userId, $winners, true);
+            $stat = Statistic::firstOrCreate(['user_id' => $userId]);
+
+            /** @var User $user user is in game so it must be found */
+            $user = User::where('id', $userId)->first();
 
             if ($win) {
+                $expService->add(50, $user);
                 $stat->win_streak++;
 
                 if ($stat->win_streak > $stat->longest_streak) {
                     $stat->longest_streak = $stat->win_streak;
                 }
             } else {
+                $expService->add(20, $user);
                 $stat->win_streak = 0;
             }
 
             $stat->save();
 
             $outcome = new GameOutcome();
-            $outcome->user_id = $user;
-            $outcome->role_id = $this->getRoleByUserId($user, $gameId)->value;
+            $outcome->user_id = $userId;
+            $outcome->role_id = $this->getRoleByUserId($userId, $gameId)->value;
             $outcome->win = $win;
             $outcome->save();
-        }
 
-        $game = Redis::get("game:$gameId");
-        $game['ended'] = true;
-        Redis::set("game:$gameId", $game);
+            if ($userId === $game['owner']) {
+                $expService->add(20, $user->refresh());
+            }
+        }
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

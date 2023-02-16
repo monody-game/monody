@@ -33,7 +33,10 @@ export const useStore = defineStore("modal", {
 	actions: {
 		close() {
 			this.getModalStore(this.opennedModal).close();
-			this.opennedModal = null;
+
+			if (this.opennedModal !== "popup") {
+				this.opennedModal = null;
+			}
 		},
 		open(type) {
 			this.getModalStore(type).isOpenned = true;

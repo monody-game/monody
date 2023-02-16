@@ -1,4 +1,4 @@
-$popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'error' var(--danger);
+$popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'error' var(--danger), 'level' var(--level);
 
 .popup__wrapper {
 	color: var(--secondary);
@@ -55,18 +55,22 @@ $popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 }
 
 .popup__close {
-	align-self: flex-start;
 	height: 16px;
 	width: 16px;
 	cursor: pointer;
+	color: #0f112740;
+	transition: color .2s;
 
-	& use {
-		color: #0f112740;
-		transition: color .2s;
+	&:hover {
+		color: #0f112780;
 	}
 
-	&:hover use {
-		color: #0f112780;
+	@media (prefers-color-scheme: dark) {
+		color: #fffcf140;
+
+		&:hover {
+			color: #fffcf180;
+		}
 	}
 }
 
