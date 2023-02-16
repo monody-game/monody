@@ -1,7 +1,6 @@
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
-import { error, log } from "../Logger.js";
-import { warn } from "vue";
+import { error, log, warn } from "../Logger.js";
 
 export class PrivateChannel {
 	authenticate(socket, data) {

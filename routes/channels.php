@@ -34,3 +34,7 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
         'level' => $user->level,
     ];
 });
+
+Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+    return (string) $user->id === (string) $id;
+});

@@ -16,6 +16,7 @@ export default class AuthService {
 		const data = res.data;
 		res = await window.JSONFetch("/exp/get", "GET");
 		data.exp = res.data.exp;
+		data.next_level = res.data.next_level;
 
 		if (!data) {
 			return false;
@@ -27,7 +28,8 @@ export default class AuthService {
 			email: data.email,
 			avatar: data.avatar,
 			level: data.level,
-			exp: data.exp
+			exp: data.exp,
+			exp_needed: data.next_level
 		});
 
 		return true;

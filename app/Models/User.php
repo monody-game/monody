@@ -18,6 +18,10 @@ class User extends Authenticatable /*implements MustVerifyEmail*/
 
     protected $table = 'users';
 
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     /**
      * The attributes that are mass assignable.
      *

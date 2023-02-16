@@ -5,6 +5,7 @@ export const useStore = defineStore("popup", {
 		return {
 			isOpenned: false,
 			type: "error",
+			title: "",
 			content: "",
 			note: "",
 			link: "",
@@ -18,6 +19,7 @@ export const useStore = defineStore("popup", {
 		setPopup(payload) {
 			for (const type in payload) {
 				this.type = type;
+				this.title = payload[type].title;
 				this.content = payload[type].content;
 				this.note = payload[type].note;
 				this.link = payload[type].link;

@@ -8,6 +8,7 @@ export const useStore = defineStore("user", {
 		avatar: "",
 		level: 0,
 		exp: 0,
+		exp_needed: 0
 	}),
 	actions: {
 		setUser(payload) {
@@ -17,6 +18,7 @@ export const useStore = defineStore("user", {
 			this.avatar = payload.avatar;
 			this.level = payload.level;
 			this.exp = payload.exp;
+			this.exp_needed = payload.exp_needed;
 		},
 	},
 	getters: {
@@ -27,7 +29,8 @@ export const useStore = defineStore("user", {
 				email: this.email,
 				avatar: this.avatar,
 				level: this.level,
-				exp: this.exp
+				exp: this.exp,
+				exp_needed: this.exp_needed
 			};
 		}
 	}

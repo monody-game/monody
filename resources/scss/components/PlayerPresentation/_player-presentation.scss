@@ -9,7 +9,7 @@
 
 .player-presentation__main {
 	width: 100%;
-	height: calc(100% - space(6));
+	min-height: calc(100% - space(6));
 	max-height: 500px;
 
 	padding: space(3) space(2) space(2);
