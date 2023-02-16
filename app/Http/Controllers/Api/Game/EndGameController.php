@@ -47,6 +47,10 @@ class EndGameController extends Controller
         broadcast(new GameWin($payload, true, $winners));
         broadcast(new GameLoose($payload, true, $loosers));
 
+        $game = Redis::get("game:$gameId");
+        $game['ended'] = true;
+        Redis::set("game:$gameId", $game);
+
         foreach ([...$winners, ...$loosers] as $userId) {
             $win = in_array($userId, $winners, true);
             $stat = Statistic::firstOrCreate(['user_id' => $userId]);
@@ -73,11 +77,11 @@ class EndGameController extends Controller
             $outcome->role_id = $this->getRoleByUserId($userId, $gameId)->value;
             $outcome->win = $win;
             $outcome->save();
-        }
 
-        $game = Redis::get("game:$gameId");
-        $game['ended'] = true;
-        Redis::set("game:$gameId", $game);
+            if ($userId === $game['owner']) {
+                $expService->add(20, $user->refresh());
+            }
+        }
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

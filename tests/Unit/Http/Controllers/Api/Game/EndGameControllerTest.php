@@ -75,6 +75,12 @@ class EndGameControllerTest extends TestCase
             return $notification->exp->toArray()['exp'] === 10 && $user->level === 2;
         });
 
+        Notification::assertSentTo($villager, ExpEarned::class, function ($notification) use ($villager) {
+            $user = $villager->refresh();
+            // Create a game that is ended
+            return $notification->exp->toArray()['exp'] === (10 + 20) && $user->level === 2;
+        });
+
         Notification::assertSentTo($werewolf, ExpEarned::class, function ($notification) {
             return $notification->exp->toArray()['exp'] === 50;
         });
