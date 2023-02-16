@@ -1,7 +1,7 @@
 <template>
   <div
     class="progress-bar"
-    :style="progressStyle"
+    :style="`background-image: conic-gradient(from 201deg at 50% 50%, var(--accent-primary) 0 ${progress}%, var(--primary) 0);`"
   >
     <slot />
   </div>
@@ -9,12 +9,10 @@
 
 <script setup>
 import { useStore } from "../../stores/user";
+import { computed } from "vue";
 
-const exp = useStore()["exp"];
-const total_exp = 100;
+const store = useStore();
 
-const expPercentage = (exp * total_exp) / 100;
-const progress = (expPercentage * 85) / 100;
-
-const progressStyle = `background-image: conic-gradient(from 206deg at 50% 50%, var(--accent-primary) 0 ${progress}%, var(--primary) 0);`;
+const expPercentage = computed(() => (store.exp * 100) / store.exp_needed);
+const progress = computed(() => (expPercentage.value * 88) / 100);
 </script>

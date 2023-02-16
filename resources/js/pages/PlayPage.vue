@@ -70,12 +70,12 @@ import { ref } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useStore } from "../stores/modals/game-creation-modal.js";
 import { useStore as useModalStore } from "../stores/modals/modal.js";
+import { useStore as useProfileModalStore } from "../stores/modals/profile-modal.js";
 import AuthService from "../services/AuthService.js";
 import Footer from "../Components/FooterComponent.vue";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
 import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";
-import { useStore as useProfileModalStore } from "../stores/modals/profile-modal.js";
 import ProfileModal from "../Components/Modal/ProfileModal.vue";
 
 const games = ref([]);

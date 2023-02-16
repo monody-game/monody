@@ -8,39 +8,46 @@ use Tests\TestCase;
 
 class ExpControllerTest extends TestCase
 {
-    public function testGetExp(): void
+    public function testRetrievingUserExp(): void
     {
+        $user = User::factory([
+            'level' => 2,
+        ])->create();
+
+        Exp::factory()->create([
+            'user_id' => $user->id,
+            'exp' => 15,
+        ]);
+
         $this
-            ->actingAs($this->user, 'api')
+            ->actingAs($user, 'api')
             ->get('/api/exp/get')
             ->assertJson([
-                'user_id' => $this->user->id,
+                'user_id' => $user->id,
                 'exp' => 15,
+                'next_level' => 32,
             ]);
     }
 
     public function testGettingExpWithoutHavingSome()
     {
-        $this->assertNull(Exp::select('*')->where('user_id', $this->secondUser->id)->get()->first());
+        $user = User::factory()->create();
 
-        $response = $this->actingAs($this->secondUser, 'api')->getJson('/api/exp/get');
+        $this->assertNull(Exp::select('*')->where('user_id', $user->id)->get()->first());
+
+        $response = $this->actingAs($user, 'api')->getJson('/api/exp/get');
         $response
             ->assertJson([
-                'user_id' => $this->secondUser->id,
+                'user_id' => $user->id,
                 'exp' => 0,
             ]);
 
-        $created = Exp::select('*')->where('user_id', $this->secondUser->id)->get()->first();
+        $created = Exp::select('*')->where('user_id', $user->id)->get()->first();
         $this->assertSame(0, $created->exp);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        [$this->user, $this->secondUser] = User::factory(2)->create();
-        Exp::factory()->create([
-            'user_id' => $this->user->id,
-            'exp' => 15,
-        ]);
     }
 }

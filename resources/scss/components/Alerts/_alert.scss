@@ -1,4 +1,4 @@
-$alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'error' var(--danger);
+$alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'error' var(--danger), 'level' var(--level);
 
 .alert__container {
 	position: relative;

@@ -16,7 +16,7 @@ class CreateExpTable extends Migration
         Schema::create('exp', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
-            $table->integer('exp');
+            $table->integer('exp')->default(0);
         });
     }
 
