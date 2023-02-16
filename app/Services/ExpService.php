@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Exp;
 use App\Models\User;
+use App\Notifications\ExpEarned;
+use App\Notifications\LevelUp;
 
 class ExpService
 {
@@ -15,11 +17,9 @@ class ExpService
     /**
      * Add exp to user's balance
      */
-    public function add(int $quantity, string $userId): void
+    public function add(int $quantity, User $user): void
     {
-        /** @var User $user */
-        $user = User::find(['id' => $userId])->first();
-        $exp = Exp::firstOrCreate(['user_id' => $userId]);
+        $exp = Exp::firstOrCreate(['user_id' => $user->id]);
         $nextLevel = $this->nextLevelExp($user->level);
 
         $exp->exp += $quantity;
@@ -30,9 +30,16 @@ class ExpService
 
             $difference = $exp->exp - $nextLevel;
             $exp->exp = $difference;
+
+            $user->notify(new LevelUp([
+                'user_id' => $user->id,
+                'level' => $user->level,
+            ]));
         }
 
         $exp->save();
+
+        $user->notify(new ExpEarned($exp));
     }
 
     /**
