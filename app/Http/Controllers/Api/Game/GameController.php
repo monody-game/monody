@@ -149,24 +149,24 @@ class GameController extends Controller
 
     public function join(JoinGameRequest $request): JsonResponse
     {
-		$gameId = $request->validated('gameId');
+        $gameId = $request->validated('gameId');
         /** @var User $user */
         $user = User::find($request->validated('userId'));
         $user->current_game = $gameId;
         $user->save();
 
-		$werewolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
+        $werewolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
 
-		broadcast(
-			new WerewolvesList(
-				[
-					'gameId' => $gameId,
-					'list' => $werewolves,
-				],
-				true,
-				$werewolves
-			)
-		);
+        broadcast(
+            new WerewolvesList(
+                [
+                    'gameId' => $gameId,
+                    'list' => $werewolves,
+                ],
+                true,
+                $werewolves
+            )
+        );
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

@@ -69,20 +69,25 @@ class EndGameControllerTest extends TestCase
         $game = Redis::get("game:$gameId");
         $this->assertTrue($game['ended']);
 
-        Notification::assertSentTo($villager, ExpEarned::class, function ($notification) use ($villager) {
+        Notification::assertSentTo($villager, ExpEarned::class, function ($notification) use ($villager, $werewolf) {
             $user = $villager->refresh();
+            $werewolf = $werewolf->refresh();
 
-            return $notification->exp->toArray()['exp'] === 10 && $user->level === 2;
+            return $notification->exp->toArray()['exp'] === 10 && $user->level === 2 && $werewolf->level = 3;
         });
 
-        Notification::assertSentTo($villager, ExpEarned::class, function ($notification) use ($villager) {
+        Notification::assertSentTo($villager, ExpEarned::class, function ($notification) use ($villager, $werewolf) {
             $user = $villager->refresh();
+            $werewolf = $werewolf->refresh();
+
             // Create a game that is ended
-            return $notification->exp->toArray()['exp'] === (10 + 20) && $user->level === 2;
+            return $notification->exp->toArray()['exp'] === (10 + 20) && $user->level === 2 && $werewolf->level = 3;
         });
 
-        Notification::assertSentTo($werewolf, ExpEarned::class, function ($notification) {
-            return $notification->exp->toArray()['exp'] === 50;
+        Notification::assertSentTo($werewolf, ExpEarned::class, function ($notification) use ($werewolf) {
+            $werewolf = $werewolf->refresh();
+
+            return $notification->exp->toArray()['exp'] === 50 && $werewolf->level === 3;
         });
 
         Event::assertDispatched(function (GameEnd $event) use ($werewolf, $gameId) {
