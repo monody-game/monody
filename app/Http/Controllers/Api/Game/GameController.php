@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\AlertType;
 use App\Enums\States;
+use App\Enums\Teams;
 use App\Events\GameListUpdate;
+use App\Events\WerewolvesList;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGameRequest;
@@ -12,6 +14,7 @@ use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\JoinGameRequest;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
+use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 use function array_key_exists;
 use Illuminate\Http\JsonResponse;
@@ -21,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GameController extends Controller
 {
-    use RegisterHelperTrait, GameHelperTrait;
+    use RegisterHelperTrait, GameHelperTrait, MemberHelperTrait;
 
     public function check(Request $request): JsonResponse
     {
@@ -146,10 +149,24 @@ class GameController extends Controller
 
     public function join(JoinGameRequest $request): JsonResponse
     {
+		$gameId = $request->validated('gameId');
         /** @var User $user */
         $user = User::find($request->validated('userId'));
-        $user->current_game = $request->validated('gameId');
+        $user->current_game = $gameId;
         $user->save();
+
+		$werewolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
+
+		broadcast(
+			new WerewolvesList(
+				[
+					'gameId' => $gameId,
+					'list' => $werewolves,
+				],
+				true,
+				$werewolves
+			)
+		);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

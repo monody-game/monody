@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\Roles;
 use App\Enums\Teams;
+use App\Events\WerewolvesList;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GameIdRequest;
@@ -73,6 +74,17 @@ class RoleController extends Controller
         $game['werewolves'] = $werewolves;
 
         Redis::set("game:{$gameId}", $game);
+
+        broadcast(
+            new WerewolvesList(
+                [
+                    'gameId' => $gameId,
+                    'list' => $werewolves,
+                ],
+                true,
+                $werewolves
+            )
+        );
 
         return new JsonResponse();
     }
