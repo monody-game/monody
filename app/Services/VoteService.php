@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Teams;
 use App\Events\GameKill;
 use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
@@ -114,10 +115,15 @@ class VoteService
         return $votes ?? [];
     }
 
-    public static function hasMajorityVoted(array $game): bool
+    public function hasMajorityVoted(array $game, string $context): bool
     {
         $votes = self::getVotes($game['id']);
         $majority = self::getMajority($votes);
+        $allowedVoters = $game['users'];
+
+        if ($context === 'werewolves') {
+            $allowedVoters = self::getUsersByTeam(Teams::Werewolves, $game['id']);
+        }
 
         if (!$majority) {
             return false;
@@ -125,7 +131,7 @@ class VoteService
 
         $voters = count(self::getVotingUsers($game['users'], $votes));
 
-        return $voters >= (count($game['users']) / 2);
+        return $voters >= (count($allowedVoters) / 2);
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Enums\States;
 use App\Facades\Redis;
 use App\Models\User;
 use App\Services\InteractionService;
+use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
@@ -166,7 +167,7 @@ class InteractionServiceTest extends TestCase
         parent::setUp();
         [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf] = User::factory(5)->create();
         $users = [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf];
-        $this->service = new InteractionService();
+        $this->service = new InteractionService(new VoteService());
 
         $this->game = $this
             ->actingAs($this->user, 'api')
