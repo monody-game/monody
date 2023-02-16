@@ -29,6 +29,10 @@ class InteractionService
 
     use RegisterHelperTrait;
 
+    public function __construct(private readonly VoteService $voteService)
+    {
+    }
+
     /**
      * Create and start an interaction with the given parameters
      *
@@ -188,7 +192,7 @@ class InteractionService
         }
 
         if (in_array($interaction['type'], [Interactions::Vote->value, Interactions::Werewolves->value], true)) {
-            return VoteService::hasMajorityVoted($game);
+            return $this->voteService->hasMajorityVoted($game, $interaction['type']);
         }
 
         return false;
