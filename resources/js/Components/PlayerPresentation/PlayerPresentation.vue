@@ -47,27 +47,42 @@
 import { useStore } from "../../stores/user.js";
 import { useStore as useAlertStore } from "../../stores/alerts.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
+import { useStore as usePopupStore } from "../../stores/modals/popup.js";
 import ProgressBar from "./ExpProgressBar.vue";
 import UserStatistics from "./UserStatistics.vue";
 
 const store = useStore();
 const modalStore = useModalStore();
+const popupStore = usePopupStore();
+const alertStore = useAlertStore();
 
 window.Echo.private("App.Models.User." + store.id)
 	.notification((notification) => {
-		console.log(notification);
 		switch (notification.data.type) {
 		case "exp.earn":
+			if (notification.data.amount > 0) {
+				alertStore.addAlerts({
+					"level": `Vous venez de gagner ${notification.data.amount - store.exp} exp`
+				});
+			}
+
 			store.exp = notification.data.amount;
 			break;
 		case "exp.levelup":
 			store.exp_needed = notification.data.exp_needed;
 			store.level = notification.data.level;
+			popupStore.setPopup({
+				level: {
+					title: "Bravo !",
+					content: `Vous venez de passer niveau ${store.level} ! Continuez ainsi !`,
+					note: "Accumulez de l'expérience en jouant sur Monody !"
+				}
+			});
 		}
 	});
 
 const soon = () => {
-	useAlertStore().addAlerts({
+	alertStore.addAlerts({
 		"info": "Un jour, peut-être ..."
 	});
 };
