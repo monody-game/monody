@@ -23,6 +23,11 @@
           <use href="/sprite.svg#death" />
         </svg>
       </div>
+      <span
+        v-if="isWerewolf === true"
+        class="player__is-wolf"
+        title="Ce joueur est votre allié !"
+      />
     </div>
     <p class="player__username">
       {{ props.player.username }}
@@ -47,6 +52,7 @@ const props = defineProps({
 const votedBy = ref(props.player.voted_by);
 const isVoted = ref(false);
 const isDead = ref(false);
+const isWerewolf = ref(false);
 const interactionType = ref("");
 const gameStore = useGameStore();
 const userStore = useUserStore();
@@ -159,6 +165,13 @@ window.Echo
 		if (user.id === props.player.id) {
 			isDead.value = true;
 			player.value.setAttribute("data-is-dead", true);
+		}
+	})
+	.listen(".game.werewolves", (e) => {
+		for (const user of e.data.payload.list) {
+			if (props.player.id === user) {
+				isWerewolf.value = true;
+			}
 		}
 	});
 

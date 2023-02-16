@@ -47,7 +47,7 @@ import { computed } from "vue";
 const store = useStore();
 
 const title = computed(() => {
-	if (store.title !== "") return store.title;
+	if (typeof store.title !== "undefined" && store.title.length > 0) return store.title;
 
 	switch (store.type) {
 	case "success":
