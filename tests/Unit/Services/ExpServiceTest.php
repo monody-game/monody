@@ -71,6 +71,24 @@ class ExpServiceTest extends TestCase
         $this->assertSame(3, $user->level);
     }
 
+    public function testAddingWayMoreExpThanNeeded(): void
+    {
+        Notification::fake();
+
+        $user = User::factory([
+            'level' => 1,
+        ])->create();
+
+        $this->service->add(50, $user);
+        Notification::assertSentTo([$user], ExpEarned::class);
+        Notification::assertSentTo([$user], LevelUp::class);
+
+        $user = $user->refresh();
+
+        $this->assertSame(8, Exp::where('user_id', $user->id)->first()->exp);
+        $this->assertSame(3, $user->level);
+    }
+
     public function setUp(): void
     {
         $this->service = new ExpService();

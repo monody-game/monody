@@ -21,16 +21,22 @@ class ExpService
     {
         $exp = Exp::firstOrCreate(['user_id' => $user->id]);
         $nextLevel = $this->nextLevelExp($user->level);
+        $hasLeveledUp = false;
 
         $exp->exp += $quantity;
 
-        if ($exp->exp >= $nextLevel) {
+        while ($exp->exp >= $nextLevel) {
             $user->level++;
             $user->save();
 
             $difference = $exp->exp - $nextLevel;
             $exp->exp = $difference;
 
+            $hasLeveledUp = true;
+            $nextLevel = $this->nextLevelExp($user->level);
+        }
+
+        if ($hasLeveledUp) {
             $user->notify(new LevelUp([
                 'user_id' => $user->id,
                 'level' => $user->level,
