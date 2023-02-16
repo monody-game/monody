@@ -34,6 +34,7 @@ class ExpService
             $user->notify(new LevelUp([
                 'user_id' => $user->id,
                 'level' => $user->level,
+                'exp_needed' => $this->nextLevelExp($user->level),
             ]));
         }
 
