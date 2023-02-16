@@ -23,6 +23,7 @@ class LevelUp extends Notification
         return new BroadcastMessage([
             'user_id' => $this->payload['user_id'],
             'level' => $this->payload['level'],
+            'exp_needed' => $this->payload['exp_needed'],
         ]);
     }
 

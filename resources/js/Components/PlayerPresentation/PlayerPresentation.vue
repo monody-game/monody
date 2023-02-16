@@ -2,7 +2,7 @@
   <div class="player-presentation__container">
     <div class="player-presentation__main">
       <div class="pill pill-light player-presentation__exp">
-        {{ store.exp }}/100
+        {{ store.exp }}/{{ store.exp_needed }}
       </div>
       <ProgressBar style="position: relative;">
         <img
@@ -52,6 +52,19 @@ import UserStatistics from "./UserStatistics.vue";
 
 const store = useStore();
 const modalStore = useModalStore();
+
+window.Echo.private("App.Models.User." + store.id)
+	.notification((notification) => {
+		console.log(notification);
+		switch (notification.data.type) {
+		case "exp.earn":
+			store.exp = notification.data.amount;
+			break;
+		case "exp.levelup":
+			store.exp_needed = notification.data.exp_needed;
+			store.level = notification.data.level;
+		}
+	});
 
 const soon = () => {
 	useAlertStore().addAlerts({

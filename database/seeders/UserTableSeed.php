@@ -20,7 +20,7 @@ class UserTableSeed extends Seeder
         $user = User::factory()->create([
             'username' => 'moon250',
             'email' => '***REMOVED***',
-            'level' => 100,
+            'level' => 2,
             'password' => Hash::make('***REMOVED***'),
             'created_at' => Carbon::now(),
         ]);
