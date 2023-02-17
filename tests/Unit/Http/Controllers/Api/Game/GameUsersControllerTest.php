@@ -3,8 +3,8 @@
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Enums\Roles;
+use App\Facades\Redis;
 use App\Models\User;
-use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 
 class GameUsersControllerTest extends TestCase
@@ -29,9 +29,10 @@ class GameUsersControllerTest extends TestCase
         $this->secondUser->current_game = 'id';
         $this->secondUser->save();
 
-        Redis::set('game:id', json_encode([
+        Redis::set('game:id', [
             'assigned_roles' => [$this->secondUser->id => 1],
-        ]));
+            'dead_users' => [$this->secondUser->id],
+        ]);
 
         $response = $this->actingAs($this->secondUser, 'api')
             ->call('GET', "/api/game/user/{$this->secondUser->id}/role")

@@ -61,16 +61,9 @@ trait MemberHelperTrait
 
     public function alive(string $userId, string $gameId): bool
     {
-        $member = $this->getMember($userId, $gameId);
+        $game = Redis::get("game:$gameId");
 
-        if (!$member) {
-            return false;
-        }
-
-        if (
-            array_key_exists('is_dead', $member['user_info']) &&
-            true === $member['user_info']['is_dead']
-        ) {
+        if (array_key_exists('dead_users', $game) && in_array($userId, $game['dead_users'], true)) {
             return false;
         }
 
@@ -122,14 +115,13 @@ trait MemberHelperTrait
 
     public function kill(string $userId, string $gameId, string $context): bool
     {
-        $member = $this->getMember($userId, $gameId);
-        $members = $this->getMembers($gameId);
-        $index = array_search($member, $members, true);
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+        $game = Redis::get("game:$gameId");
 
-        if (!$member || false === $index) {
+        if (!in_array($userId, $game['users'], true)) {
             return false;
         }
+
+        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
 
         if (
             $context === States::Werewolf->stringify() &&
@@ -142,13 +134,11 @@ trait MemberHelperTrait
             return true;
         }
 
-        $member = array_splice($members, (int) $index, 1)[0];
-
-        $member['user_info']['is_dead'] = true;
-        $members = [...$members, $member];
+        $game['dead_users'][] = $userId;
 
         $deaths = Redis::get("game:$gameId:deaths") ?? [];
-        Redis::set("game:$gameId:members", $members);
+
+        Redis::set("game:$gameId", $game);
 
         Redis::set("game:$gameId:deaths", [...$deaths, [
             'user' => $userId,

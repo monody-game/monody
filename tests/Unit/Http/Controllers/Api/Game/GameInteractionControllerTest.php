@@ -145,10 +145,11 @@ class GameInteractionControllerTest extends TestCase
     public function testInteractingWhileBeingDead()
     {
         $gameId = $this->game['id'];
-        Redis::set("game:{$gameId}:members", [
-            ['user_id' => $this->user['id'], 'user_info' => array_merge($this->user->toArray(), ['is_dead' => true])],
-            ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
-        ]);
+
+        Redis::set(
+            "game:{$gameId}",
+            array_merge(Redis::get("game:{$gameId}"), ['dead_users' => [$this->user->id]])
+        );
 
         $res = $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)

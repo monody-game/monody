@@ -73,21 +73,16 @@ class InfectedWerewolfAction implements ActionInterface
             return;
         }
 
-        $member = $this->getMember($targetId, $gameId);
-        $members = $this->getMembers($gameId);
-        $index = array_search($member, $members, true);
-
-        if (!$member || false === $index) {
+        if (!array_key_exists('dead_users', $game) && in_array($targetId, $game['dead_users'], true)) {
             return;
         }
 
-        $member = array_splice($members, (int) $index, 1)[0];
+        $index = array_search($targetId, $game['dead_users'], true);
+        array_splice($game['dead_users'], (int) $index, 1);
         $deaths = array_filter($deaths, fn ($death) => $death['user'] !== $targetId);
 
         $game['werewolves'][] = $targetId;
-        $member['user_info']['is_dead'] = false;
-        $member['user_info']['infected'] = true;
-        $members = [...$members, $member];
+        $game['infected'] = $targetId;
 
         $chat = new ChatService();
         $chat->alert('Vous avez été infecté ! Vous devez désormais gagner avec les loup-garous', 'info', $gameId, [$targetId]);
@@ -103,7 +98,6 @@ class InfectedWerewolfAction implements ActionInterface
             )
         );
 
-        Redis::set("game:$gameId:members", $members);
         Redis::set("game:$gameId:deaths", $deaths);
         Redis::set("game:$gameId", $game);
     }
