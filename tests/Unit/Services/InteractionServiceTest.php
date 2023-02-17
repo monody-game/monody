@@ -159,7 +159,7 @@ class InteractionServiceTest extends TestCase
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
 
         $this->service->call(InteractionActions::Vote, $id, $this->witch->id, $this->werewolf->id);
-        $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
+        $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id'])); // Time is already skipped so in reality, it will not skip the time
     }
 
     protected function setUp(): void

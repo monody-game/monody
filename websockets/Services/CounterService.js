@@ -30,9 +30,14 @@ export class CounterService {
 		}, duration ?? ((await this.manager.getNextStateDuration(channel)) + 2) * 1000);
 
 		this.emitter.on("time.skip", async (data) => {
+			const state = await this.manager.getState(data.gameId);
+
+			if (state.skipped && state.skipped === "true") return;
+
+			console.log(this.counterId[data.gameId]);
+
 			clearTimeout(this.counterId[data.gameId]);
 
-			const state = await this.manager.getState(data.gameId);
 			log(`Skipping time in game ${data.gameId}, in state ${state.status} to time ${data.to}`);
 
 			this.manager.setState({
@@ -40,7 +45,8 @@ export class CounterService {
 				startTimestamp: Date.now(),
 				counterDuration: data.to,
 				counterId: this.counterId[data.gameId],
-				round: state.round
+				round: state.round,
+				skipped: true
 			}, `presence-game.${data.gameId}`, true);
 
 			setTimeout(async () => {

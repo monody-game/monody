@@ -154,7 +154,7 @@ class InteractionService
 
         $service->updateClients($emitterId);
 
-        if (!$this->shouldSkipTime($id, $gameId)) {
+        if (!$this->shouldSkipTime($id, $gameId) || $this->timeHasBeenSkipped($gameId)) {
             return $status;
         }
 
@@ -196,6 +196,16 @@ class InteractionService
         }
 
         return false;
+    }
+
+    /**
+     * Dictate if the current state has already been skipped in time
+     */
+    private function timeHasBeenSkipped(string $gameId): bool
+    {
+        $status = Redis::get("game:$gameId:state");
+
+        return array_key_exists('skipped', $status) && $status['skipped'] === true;
     }
 
     private function getService(string $type): ActionInterface
