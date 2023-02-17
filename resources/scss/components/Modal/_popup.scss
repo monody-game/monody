@@ -23,6 +23,7 @@ $popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	gap: space(3);
 
 	font-weight: bold;
 
@@ -55,6 +56,7 @@ $popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 }
 
 .popup__close {
+
 	height: 16px;
 	width: 16px;
 	cursor: pointer;
