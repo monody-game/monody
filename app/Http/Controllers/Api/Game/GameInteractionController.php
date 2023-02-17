@@ -103,6 +103,7 @@ class GameInteractionController extends Controller
             Interactions::Psychic => $this->getUserIdByRole(Roles::Psychic, $gameId),
             Interactions::Werewolves => $this->getUsersByTeam(Teams::Werewolves, $gameId),
             Interactions::InfectedWerewolf => $this->getUserIdByRole(Roles::InfectedWerewolf, $gameId),
+            Interactions::WhiteWerewolf => $this->getUserIdByRole(Roles::WhiteWerewolf, $gameId),
             default => '*'
         };
     }
