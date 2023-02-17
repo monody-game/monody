@@ -50,7 +50,8 @@ export class GameService {
 		await this.StateManager.setState({
 			status: WaitingState.state,
 			startTimestamp: Date.now(),
-			counterDuration: WaitingState.duration
+			counterDuration: WaitingState.duration,
+			round: 0
 		}, channel);
 	}
 

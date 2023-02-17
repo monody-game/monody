@@ -64,8 +64,7 @@ enum Roles: int
         return match ($this) {
             self::Werewolf, self::LittleGirl, self::Elder => 2,
             self::SimpleVillager => 1,
-            self::Psychic, self::Witch, self::InfectedWerewolf => 3,
-            default => 0
+            self::Psychic, self::Witch, self::InfectedWerewolf, self::WhiteWerewolf => 3,
         };
     }
 

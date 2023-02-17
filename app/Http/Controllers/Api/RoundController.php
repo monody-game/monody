@@ -71,9 +71,9 @@ class RoundController extends Controller
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
                 }
 
-				if ($state === States::WhiteWerewolf && ($gameState['round'] % 2 === 0 || $gameState['round'] === 0)) {
-					$removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
-				}
+                if ($state === States::WhiteWerewolf && ($gameState['round'] % 2 === 0 || $gameState['round'] === 0)) {
+                    $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+                }
             }
         }
 
