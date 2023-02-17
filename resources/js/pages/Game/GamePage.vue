@@ -56,7 +56,6 @@ import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useShareModalStore } from "../../stores/modals/share-game-modal.js";
 import { useStore as useActivityConfirmationModalStore } from "../../stores/modals/activity-confirmation-modal.js";
-import { useStore as useAlertStore } from "../../stores/alerts.js";
 import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 import GameCounter from "../../Components/GameCounter.vue";
 import Chat from "../../Components/Chat/TheChat.vue";
@@ -64,7 +63,6 @@ import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import ShareGameModal from "../../Components/Modal/ShareGameModal.vue";
 import ActivityConfirmationModal from "../../Components/Modal/ActivityConfirmationModal.vue";
-import confetti from "canvas-confetti";
 
 const route = useRoute();
 const store = useStore();
@@ -72,7 +70,6 @@ const store = useStore();
 const shareModalStore = useShareModalStore();
 const popupStore = usePopupStore();
 const gameStore = useGameStore();
-const alertStore = useAlertStore();
 const userStore = useUserStore();
 const assignationPopupStore = useAssignationPopupStore();
 const modalStore = useModalStore();
@@ -129,56 +126,5 @@ const disconnect = async function () {
 			link_text: "cliquez ici."
 		}
 	});
-};
-
-window.Echo.private("App.Models.User." + store.id)
-	.notification((notification) => {
-		switch (notification.data.type) {
-		case "exp.earn":
-			if (notification.data.amount > 0 && notification.data.amount - store.exp > 0) {
-				alertStore.addAlerts({
-					"level": `Vous venez de gagner ${notification.data.amount - store.exp} exp`
-				});
-			}
-
-			store.exp = notification.data.amount;
-			break;
-		case "exp.levelup":
-			store.exp_needed = notification.data.exp_needed;
-			store.level = notification.data.level;
-			popupStore.setPopup({
-				level: {
-					title: "Bravo !",
-					content: `Vous venez de passer niveau ${store.level} ! Continuez ainsi !`,
-					note: "Accumulez de l'expérience en jouant sur Monody !"
-				}
-			});
-
-			if (window.matchMedia("(prefers-reduced-motion: reduce)") === false || window.matchMedia("(prefers-reduced-motion: reduce)").matches === false) {
-				startParty();
-			}
-		}
-	});
-
-const startParty = () => {
-	const duration = 2 * 1000;
-	const animationEnd = Date.now() + duration;
-	const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
-
-	function randomInRange(min, max) {
-		return Math.random() * (max - min) + min;
-	}
-
-	const interval = setInterval(function() {
-		const timeLeft = animationEnd - Date.now();
-
-		if (timeLeft <= 0) {
-			return clearInterval(interval);
-		}
-
-		const particleCount = 50 * (timeLeft / duration);
-		confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-		confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
-	}, 250);
 };
 </script>
