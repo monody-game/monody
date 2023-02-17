@@ -140,6 +140,7 @@ class EndGameControllerTest extends TestCase
             ],
             'is_started' => true,
             'werewolves' => [
+                $this->user->id,
                 $this->secondUser->id,
             ],
         ];
@@ -152,6 +153,15 @@ class EndGameControllerTest extends TestCase
                 'gameId' => $game['id'],
             ])
             ->assertForbidden();
+
+        Redis::set("game:{$game['id']}", array_merge(Redis::get("game:{$game['id']}"), ['dead_users' => [$this->user->id]]));
+
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/game/end/check', [
+                'gameId' => $game['id'],
+            ])
+            ->assertNoContent();
     }
 
     protected function setUp(): void

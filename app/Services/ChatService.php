@@ -13,6 +13,18 @@ class ChatService
 {
     use MemberHelperTrait;
 
+    public function private(string $content, User $author, string $type, string $gameId, array $recievers): void
+    {
+        $message = new Message([
+            'gameId' => $gameId,
+            'author' => $this->getAuthor($author),
+            'content' => $content,
+            'type' => $type,
+        ]);
+
+        broadcast(new MessageSended($message, true, $recievers));
+    }
+
     public function send(array $data, User $user): void
     {
         $message = new Message($data);
@@ -32,9 +44,7 @@ class ChatService
         ]);
 
         if ($recievers !== null) {
-            broadcast(new MessageSended($message, true, [
-                ...$recievers,
-            ]));
+            broadcast(new MessageSended($message, true, $recievers));
 
             return;
         }

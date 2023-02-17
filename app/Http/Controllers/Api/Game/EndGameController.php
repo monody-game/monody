@@ -100,12 +100,12 @@ class EndGameController extends Controller
     {
         $game = $this->getGame($gameId);
         $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
-        $werewolves = $game['werewolves'];
+        $werewolves = array_filter($game['werewolves'], fn ($werewolf) => $this->alive($werewolf, $gameId));
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
         $whiteWerewolf = false;
 
         if (in_array(Roles::WhiteWerewolf->value, array_keys($game['roles']), true)) {
-            $whiteWerewolf = !in_array($this->getUserIdByRole(Roles::WhiteWerewolf, $gameId)[0], $game['dead_users'], true);
+            $whiteWerewolf = !in_array($this->getUserIdByRole(Roles::WhiteWerewolf, $gameId)[0], $game['dead_users'], true) && count($werewolves) > 1;
         }
 
         return ($villagers !== [] && $werewolves !== []) || $whiteWerewolf;
