@@ -183,7 +183,8 @@ const updateProfile = async () => {
 		email: res.data.email,
 		avatar: res.data.avatar,
 		level: res.data.level,
-		exp: userStore.exp
+		exp: userStore.exp,
+		exp_needed: userStore.exp_needed
 	});
 
 	alertStore.addAlerts({
