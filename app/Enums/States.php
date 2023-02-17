@@ -11,10 +11,11 @@ enum States: int
     case Roles = 9;
 
     case Night = 2;
-    case Werewolf = 3;
-    case Witch = 4;
     case Psychic = 5;
+    case Werewolf = 3;
     case InfectedWerewolf = 10;
+    case WhiteWerewolf = 11;
+    case Witch = 4;
 
     case Day = 6;
     case Vote = 7;
@@ -31,10 +32,11 @@ enum States: int
             self::Starting => 'starting',
             self::Roles => 'roles',
             self::Night => 'night',
+            self::Psychic => Roles::Psychic->name(),
             self::Werewolf => Roles::Werewolf->name(),
             self::InfectedWerewolf => Roles::InfectedWerewolf->name(),
+            self::WhiteWerewolf => Roles::WhiteWerewolf->name(),
             self::Witch => Roles::Witch->name(),
-            self::Psychic => Roles::Psychic->name(),
             self::Day => 'day',
             self::Vote => 'vote',
             self::End => 'end',
@@ -51,10 +53,11 @@ enum States: int
             self::Starting => 'Démarrage',
             self::Roles => 'Distribution des rôles',
             self::Night => 'Nuit',
+            self::Psychic => 'Tour de la voyante',
             self::Werewolf => 'Tour des loups-garous',
             self::InfectedWerewolf => 'Tour du loup malade',
+            self::WhiteWerewolf => 'Tour du loup blanc',
             self::Witch => 'Tour de la sorcière',
-            self::Psychic => 'Tour de la voyante',
             self::Day => 'Jour',
             self::Vote => 'Vote',
             self::End => 'Fin de la partie',
@@ -68,7 +71,7 @@ enum States: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles, self::Day, self::Vote, self::End => 'day',
-            self::Night, self::Werewolf, self::InfectedWerewolf, self::Witch, self::Psychic => 'night',
+            self::Night, self::Psychic, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Witch => 'night',
         };
     }
 
@@ -77,7 +80,7 @@ enum States: int
         return match ($this) {
             self::Waiting, self::End => -1,
             self::Starting, self::Night => 10,
-            self::Roles, self::InfectedWerewolf => 30,
+            self::Roles, self::InfectedWerewolf, self::WhiteWerewolf => 30,
             self::Day, self::Vote, self::Werewolf, self::Psychic, self::Witch => 90
         };
     }
@@ -89,7 +92,7 @@ enum States: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles => 'wait',
-            self::Night, self::Witch, self::Werewolf, self::InfectedWerewolf, self::Psychic => 'night',
+            self::Night, self::Witch, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic => 'night',
             self::Day, self::Vote => 'day',
             self::End => 'trophy'
         };
@@ -101,7 +104,7 @@ enum States: int
     public function message(): ?string
     {
         return match ($this) {
-            self::Roles, self::Werewolf, self::InfectedWerewolf, self::Psychic, self::Witch => self::readeableStringify(),
+            self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch => self::readeableStringify(),
             self::Vote => 'Début du ' . mb_strtolower(self::readeableStringify()),
             default => null
         };
@@ -127,7 +130,7 @@ enum States: int
             self::Waiting, self::Starting, self::Roles, self::Night, self::Day, self::End => null, // Cannot be skipped
             self::Vote => 30,
             self::Werewolf => 10,
-            self::Witch, self::Psychic, self::InfectedWerewolf => 0, // Skip the state to the next
+            self::Witch, self::Psychic, self::InfectedWerewolf, self::WhiteWerewolf => 0, // Skip the state to the next
         };
     }
 

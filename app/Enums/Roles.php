@@ -4,13 +4,17 @@ namespace App\Enums;
 
 enum Roles: int
 {
+    // Werewolves
     case Werewolf = 1;
+    case InfectedWerewolf = 7;
+    case WhiteWerewolf = 8;
+
+    // Villagers
     case SimpleVillager = 2;
     case Psychic = 3;
     case Witch = 4;
     case LittleGirl = 5;
     case Elder = 6;
-    case InfectedWerewolf = 7;
 
     public function stringify(): string
     {
@@ -22,6 +26,7 @@ enum Roles: int
             self::LittleGirl => 'Petite fille',
             self::Elder => 'Ancien',
             self::InfectedWerewolf => 'Loup malade',
+            self::WhiteWerewolf => 'Loup blanc'
         };
     }
 
@@ -35,7 +40,8 @@ enum Roles: int
             'little_girl' => self::LittleGirl,
             'elder' => self::Elder,
             'infected_werewolf' => self::InfectedWerewolf,
-            default => null
+            'white_werewolf' => self::WhiteWerewolf,
+            default => null,
         };
     }
 
@@ -49,6 +55,7 @@ enum Roles: int
             self::LittleGirl => 'little_girl',
             self::Elder => 'elder',
             self::InfectedWerewolf => 'infected_werewolf',
+            self::WhiteWerewolf => 'white_werewolf'
         };
     }
 
@@ -58,6 +65,7 @@ enum Roles: int
             self::Werewolf, self::LittleGirl, self::Elder => 2,
             self::SimpleVillager => 1,
             self::Psychic, self::Witch, self::InfectedWerewolf => 3,
+            default => 0
         };
     }
 
@@ -65,7 +73,7 @@ enum Roles: int
     {
         return match ($this) {
             self::Werewolf, self::SimpleVillager => null,
-            self::Psychic, self::Witch, self::LittleGirl, self::Elder, self::InfectedWerewolf => 1,
+            self::Psychic, self::Witch, self::LittleGirl, self::Elder, self::InfectedWerewolf, self::WhiteWerewolf => 1,
         };
     }
 
@@ -79,7 +87,8 @@ enum Roles: int
             self::Witch => [InteractionActions::WitchSkip, InteractionActions::KillPotion, InteractionActions::RevivePotion],
             self::Werewolf => [InteractionActions::Kill],
             self::InfectedWerewolf => [InteractionActions::Infect, InteractionActions::InfectedSkip],
-            default => []
+            self::WhiteWerewolf => [InteractionActions::BetrayalKill],
+            default => [],
         };
     }
 
