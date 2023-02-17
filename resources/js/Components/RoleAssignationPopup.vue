@@ -36,8 +36,11 @@
       <span>
         <span>Vous êtes : <span class="bold">{{ assignedRole.display_name.toLowerCase() }}</span>,</span>
       </span>
-      <span>
-        <span>du camp des <span class="bold">{{ assignedRole.team.display_name.toLowerCase() }}</span></span>
+      <span v-if="assignedRole.team.name === 'loners'">
+        <span>vous devez gagner seul.</span>
+      </span>
+      <span v-else>
+        <span>du camp des <span class="bold">{{ assignedRole.team.display_name.toLowerCase() }}</span>.</span>
       </span>
     </div>
   </BaseModal>

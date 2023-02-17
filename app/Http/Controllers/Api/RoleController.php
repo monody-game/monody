@@ -64,7 +64,7 @@ class RoleController extends Controller
                 $member = $this->pickMember($members, $assigned);
                 $assigned[$member] = $role;
 
-                if (Teams::role(Roles::from($role)) === Teams::Werewolves) {
+                if (in_array(Roles::from($role), Teams::Werewolves->roles(), true)) {
                     $werewolves[] = $member;
                 }
             }
