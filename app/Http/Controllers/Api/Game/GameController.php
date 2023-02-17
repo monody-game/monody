@@ -105,7 +105,8 @@ class GameController extends Controller
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
         $data['owner'] = $user->id;
-        $data['is_started'] = array_key_exists('is_started', $data) ? $data['is_started'] : false;
+        $data['is_started'] = false;
+        $data['dead_users'] = [];
         $id = $this->generateGameId();
         $data['id'] = $id;
 

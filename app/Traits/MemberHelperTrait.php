@@ -71,7 +71,7 @@ trait MemberHelperTrait
     }
 
     /**
-     * @return array<int|string>
+     * @return string[]
      */
     public function getUserIdByRole(Roles $role, string $gameId): array
     {

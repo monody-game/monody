@@ -91,6 +91,9 @@ enum Roles: int
         };
     }
 
+    /**
+     * @return array<string, string|int|array|null>
+     */
     public function full(): array
     {
         $role = Roles::from($this->value);
