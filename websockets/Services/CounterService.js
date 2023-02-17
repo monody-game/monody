@@ -34,8 +34,6 @@ export class CounterService {
 
 			if (state.skipped && state.skipped === "true") return;
 
-			console.log(this.counterId[data.gameId]);
-
 			clearTimeout(this.counterId[data.gameId]);
 
 			log(`Skipping time in game ${data.gameId}, in state ${state.status} to time ${data.to}`);

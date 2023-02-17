@@ -48,6 +48,7 @@ class GameControllerTest extends TestCase
             [
                 'status' => States::Waiting->value,
                 'counterDuration' => States::Waiting->duration(),
+                'round' => 0,
             ],
             Redis::get("game:{$res->json('game')['id']}:state")
         );
