@@ -14,7 +14,7 @@ class TeamControllerTest extends TestCase
     public function testGetAllTeams(): void
     {
         $response = $this->actingAs($this->user, 'api')->getJson('/api/teams');
-        $response->assertJsonCount(2, 'teams');
+        $response->assertJsonCount(3, 'teams');
     }
 
     public function testRetrievingOneTeam(): void
