@@ -152,6 +152,7 @@ class GameController extends Controller
     public function join(JoinGameRequest $request): JsonResponse
     {
         $gameId = $request->validated('gameId');
+		$game = $this->getGame($gameId);
         /** @var User $user */
         $user = User::find($request->validated('userId'));
         $user->current_game = $gameId;
@@ -166,7 +167,7 @@ class GameController extends Controller
                     'list' => $werewolves,
                 ],
                 true,
-                $werewolves
+                [...$werewolves, ...$game['dead_users']]
             )
         );
 
