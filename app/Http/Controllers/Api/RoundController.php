@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\Roles;
 use App\Enums\Rounds;
+use App\Enums\States;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -69,6 +70,10 @@ class RoundController extends Controller
                 if (!$state->hasActionsLeft($gameId)) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
                 }
+
+				if ($state === States::WhiteWerewolf && ($gameState['round'] % 2 === 0 || $gameState['round'] === 0)) {
+					$removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+				}
             }
         }
 
