@@ -67,27 +67,23 @@ class WitchAction implements ActionInterface
     private function revivePotion(string $targetId): void
     {
         $gameId = $this->getGameId($targetId);
+        $game = Redis::get("game:$gameId");
 
         if ($this->isUsed(InteractionActions::RevivePotion, $gameId)) {
             return;
         }
 
-        $member = $this->getMember($targetId, $gameId);
-        $members = $this->getMembers($gameId);
-        $index = array_search($member, $members, true);
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
-
-        if (!$member || false === $index) {
+        if (!array_key_exists('dead_users', $game) && in_array($targetId, $game['dead_users'], true)) {
             return;
         }
 
-        $member = array_splice($members, (int) $index, 1)[0];
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+
+        $index = array_search($targetId, $game['dead_users'], true);
+        array_splice($game['dead_users'], (int) $index, 1);
         $deaths = array_filter($deaths, fn ($death) => $death['user'] !== $targetId);
 
-        $member['user_info']['is_dead'] = false;
-        $members = [...$members, $member];
-
-        Redis::set("game:$gameId:members", $members);
+        Redis::set("game:$gameId", $game);
         Redis::set("game:$gameId:deaths", $deaths);
     }
 

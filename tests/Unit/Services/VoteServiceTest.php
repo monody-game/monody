@@ -141,22 +141,7 @@ class VoteServiceTest extends TestCase
             ];
         });
 
-        $this->assertSame(
-            [
-                [
-                    'user_id' => $this->user->id,
-                    'user_info' => $this->user->getAttributes(),
-                ],
-                [
-                    'user_id' => $this->secondUser->id,
-                    'user_info' => [
-                        ...$this->secondUser->getAttributes(),
-                        'is_dead' => true,
-                    ],
-                ],
-            ],
-            Redis::get("game:$gameId:members")
-        );
+        $this->assertSame([$this->secondUser->id], Redis::get("game:$gameId")['dead_users']);
     }
 
     public function testReturnsFalseIfThereIsNoVotes()
