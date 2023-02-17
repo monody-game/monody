@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Enums\Roles;
 use App\Enums\Teams;
 use App\Events\GameEnd;
 use App\Events\GameLoose;
@@ -97,21 +98,30 @@ class EndGameController extends Controller
 
     private function enoughTeamPlayersToContinue(string $gameId): bool
     {
+        $game = $this->getGame($gameId);
         $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
-        $werewolves = $this->getGame($gameId)['werewolves'];
+        $werewolves = $game['werewolves'];
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
+        $whiteWerewolf = false;
 
-        return $villagers !== [] && $werewolves !== [];
+        if (in_array(Roles::WhiteWerewolf->value, array_keys($game['roles']), true)) {
+            $whiteWerewolf = !in_array($this->getUserIdByRole(Roles::WhiteWerewolf, $gameId)[0], $game['dead_users'], true);
+        }
+
+        return ($villagers !== [] && $werewolves !== []) || $whiteWerewolf;
     }
 
     private function getWinningUsers(string $gameId): array
     {
+        $game = $this->getGame($gameId);
         $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
-        $werewolves = $this->getGame($gameId)['werewolves'];
+        $werewolves = $game['werewolves'];
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
 
         if ($werewolves === []) {
             return $villagers;
+        } elseif ($villagers === [] && in_array(Roles::WhiteWerewolf->value, $game['roles'], true)) {
+            return $this->getUserIdByRole(Roles::WhiteWerewolf, $gameId);
         }
 
         return $werewolves;
@@ -125,12 +135,16 @@ class EndGameController extends Controller
         return [...array_filter($users, fn ($user) => !in_array($user, $winners, true))];
     }
 
+    /**
+     * @param  string[]  $winners
+     * @return array<string, array<string, string|int|array|null>>
+     */
     private function getFormattedWinners(array $winners, string $gameId): array
     {
         $result = [];
 
         foreach ($winners as $winner) {
-            $result[$winner] = $this->getRoleByUserId($winner, $gameId);
+            $result[$winner] = $this->getRoleByUserId($winner, $gameId)->full();
         }
 
         return $result;

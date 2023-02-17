@@ -70,15 +70,17 @@ class GameControllerTest extends TestCase
                     1, 1, 2,
                 ],
             ])
-        ->assertOk();
+            ->assertOk()
+            ->json('game');
 
         $list = $this->actingAs($this->user, 'api')
             ->get('/api/game/list')
-            ->assertOk();
+            ->assertOk()
+            ->json('games');
 
-        $this->assertCount(1, $list->json('games'));
+        $this->assertCount(1, $list);
 
-        $game = $list->json('games')[0];
+        $game = $list[0];
         $this->assertArrayNotHasKey('is_started', $game);
         $this->assertArrayNotHasKey('assigned_roles', $game);
         $exceptedGame = $this->game;
@@ -89,7 +91,7 @@ class GameControllerTest extends TestCase
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
-                'gameId' => $res->json('game')['id'],
+                'gameId' => $res['id'],
             ]);
     }
 
@@ -110,10 +112,11 @@ class GameControllerTest extends TestCase
                 'roles' => [
                     1, 1, 2,
                 ],
-                'is_started' => true,
-            ]);
+            ])->json('game');
         Redis::set('game:1234', '');
         Redis::set('game:5678', '{}');
+
+        Redis::set("game:{$res['id']}", array_merge(Redis::get("game:{$res['id']}"), ['is_started' => true]));
 
         $this->actingAs($this->user, 'api')
             ->get('/api/game/list')
@@ -125,7 +128,7 @@ class GameControllerTest extends TestCase
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
-                'gameId' => $res->json('game')['id'],
+                'gameId' => $res['id'],
             ]);
     }
 
@@ -137,13 +140,13 @@ class GameControllerTest extends TestCase
                 'roles' => [
                     1, 1, 2,
                 ],
-            ]);
+            ])->json('game');
 
         $this->assertSame([
             'id' => $this->user->id,
             'username' => $this->user->username,
             'avatar' => $this->user->avatar,
-        ], json_decode($game->getContent(), true)['game']['owner']);
+        ], $game['owner']);
     }
 
     public function testDeleteGameWithWrongRequest()
@@ -158,7 +161,7 @@ class GameControllerTest extends TestCase
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->delete('/api/game', [])
+            ->delete('/api/game')
             ->assertJsonValidationErrorFor('gameId');
     }
 
@@ -170,23 +173,23 @@ class GameControllerTest extends TestCase
                 'roles' => [
                     1, 1, 2,
                 ],
-            ]);
+            ])->json('game');
 
-        $this->assertTrue(Redis::exists("game:{$game->json('game')['id']}"));
-        $this->assertTrue(Redis::exists("game:{$game->json('game')['id']}:state"));
+        $this->assertTrue(Redis::exists("game:{$game['id']}"));
+        $this->assertTrue(Redis::exists("game:{$game['id']}:state"));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
-                'gameId' => $game->json('game')['id'],
+                'gameId' => $game['id'],
             ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertFalse(Redis::exists("game:{$game->json('game')['id']}"));
-        $this->assertFalse(Redis::exists("game:{$game->json('game')['id']}:state"));
-        $this->assertFalse(Redis::exists("game:{$game->json('game')['id']}:votes"));
-        $this->assertFalse(Redis::exists("game:{$game->json('game')['id']}:interactions"));
-        $this->assertFalse(Redis::exists("game:{$game->json('game')['id']}:deaths"));
+        $this->assertFalse(Redis::exists("game:{$game['id']}"));
+        $this->assertFalse(Redis::exists("game:{$game['id']}:state"));
+        $this->assertFalse(Redis::exists("game:{$game['id']}:votes"));
+        $this->assertFalse(Redis::exists("game:{$game['id']}:interactions"));
+        $this->assertFalse(Redis::exists("game:{$game['id']}:deaths"));
     }
 
     public function testCheckGameWithWrongRequest()
@@ -221,11 +224,12 @@ class GameControllerTest extends TestCase
                 'roles' => [
                     1, 1, 2,
                 ],
-            ]);
+            ])
+            ->json('game');
 
         $this->actingAs($this->user, 'api')
             ->post('/api/game/check', [
-                'gameId' => $game->json('game')['id'],
+                'gameId' => $game['id'],
             ])->assertNoContent();
     }
 
@@ -236,11 +240,11 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [1, 3],
-            ]);
+            ])->json('game');
 
         $this->user->refresh();
 
-        $this->assertSame($game->json('game')['id'], $this->user->current_game);
+        $this->assertSame($game['id'], $this->user->current_game);
     }
 
     public function testSettingActivityWhenJoining()
@@ -250,9 +254,9 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [1, 3],
-            ]);
+            ])->json('game');
 
-        $gameId = $game->json('game')['id'];
+        $gameId = $game['id'];
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
@@ -274,9 +278,9 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [1, 3],
-            ]);
+            ])->json('game');
 
-        $gameId = $game->json('game')['id'];
+        $gameId = $game['id'];
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)

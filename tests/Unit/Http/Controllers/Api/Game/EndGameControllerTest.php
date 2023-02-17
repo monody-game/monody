@@ -94,7 +94,7 @@ class EndGameControllerTest extends TestCase
             return ((array) $event)['payload'] === [
                 'gameId' => $gameId,
                 'winners' => [
-                    $werewolf->id => Roles::Werewolf,
+                    $werewolf->id => Roles::Werewolf->full(),
                 ],
                 'winningTeam' => Teams::Werewolves,
             ];
@@ -123,6 +123,37 @@ class EndGameControllerTest extends TestCase
         });
     }
 
+    public function testCheckingIfTheGameShouldEndWithTheWhiteWerewolf()
+    {
+        $game = $this
+            ->actingAs($this->user, 'api')
+            ->put('/api/game', [
+                'roles' => [Roles::WhiteWerewolf->value, Roles::Werewolf->value],
+                'users' => [$this->secondUser->id],
+            ])
+            ->json('game');
+
+        $additionnalKeys = [
+            'assigned_roles' => [
+                $this->secondUser->id => Roles::WhiteWerewolf->value,
+                $this->user->id => Roles::Werewolf->value,
+            ],
+            'is_started' => true,
+            'werewolves' => [
+                $this->secondUser->id,
+            ],
+        ];
+
+        Redis::set("game:{$game['id']}", array_merge(Redis::get("game:{$game['id']}"), $additionnalKeys));
+
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/game/end/check', [
+                'gameId' => $game['id'],
+            ])
+            ->assertForbidden();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -141,11 +172,6 @@ class EndGameControllerTest extends TestCase
                 'users' => [$this->secondUser->id],
             ])
             ->json('game');
-
-        Redis::set("game:{$this->game['id']}:members", [
-            ['user_id' => $this->user['id'], 'user_info' => $this->user],
-            ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
-        ]);
 
         $additionnalKeys = [
             'assigned_roles' => [
