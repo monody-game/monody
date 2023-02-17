@@ -2,6 +2,8 @@
 
 namespace App\Enums;
 
+use NunoMaduro\Collision\Adapters\Phpunit\State;
+
 enum Rounds: int
 {
     case FirstRound = 1;
@@ -33,6 +35,7 @@ enum Rounds: int
                 States::Werewolf,
                 States::InfectedWerewolf,
                 States::Witch,
+				States::WhiteWerewolf,
                 States::Day,
                 States::Vote,
             ],
