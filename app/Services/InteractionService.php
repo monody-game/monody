@@ -7,6 +7,7 @@ use App\Actions\InfectedWerewolfAction;
 use App\Actions\PsychicAction;
 use App\Actions\VoteAction;
 use App\Actions\WerewolvesAction;
+use App\Actions\WhiteWerewolfAction;
 use App\Actions\WitchAction;
 use App\Enums\InteractionActions;
 use App\Enums\Interactions;
@@ -216,6 +217,7 @@ class InteractionService
             Interactions::Psychic => new PsychicAction,
             Interactions::Werewolves => new WerewolvesAction,
             Interactions::InfectedWerewolf => new InfectedWerewolfAction,
+            Interactions::WhiteWerewolf => new WhiteWerewolfAction
         };
     }
 }

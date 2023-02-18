@@ -94,7 +94,7 @@ class InfectedWerewolfAction implements ActionInterface
                     'list' => $game['werewolves'],
                 ],
                 true,
-                $game['werewolves']
+                [...$game['werewolves'], ...$game['dead_users']]
             )
         );
 

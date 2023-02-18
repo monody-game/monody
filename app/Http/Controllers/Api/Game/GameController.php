@@ -105,7 +105,8 @@ class GameController extends Controller
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
         $data['owner'] = $user->id;
-        $data['is_started'] = array_key_exists('is_started', $data) ? $data['is_started'] : false;
+        $data['is_started'] = false;
+        $data['dead_users'] = [];
         $id = $this->generateGameId();
         $data['id'] = $id;
 
@@ -119,6 +120,7 @@ class GameController extends Controller
         Redis::set("game:$id:state", [
             'status' => States::Waiting,
             'counterDuration' => States::Waiting->duration(),
+            'round' => 0,
         ]);
         Redis::set("game:$id:votes", []);
 
@@ -150,6 +152,7 @@ class GameController extends Controller
     public function join(JoinGameRequest $request): JsonResponse
     {
         $gameId = $request->validated('gameId');
+        $game = $this->getGame($gameId);
         /** @var User $user */
         $user = User::find($request->validated('userId'));
         $user->current_game = $gameId;
@@ -164,7 +167,7 @@ class GameController extends Controller
                     'list' => $werewolves,
                 ],
                 true,
-                $werewolves
+                [...$werewolves, ...$game['dead_users']]
             )
         );
 

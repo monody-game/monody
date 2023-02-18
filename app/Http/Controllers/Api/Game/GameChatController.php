@@ -31,12 +31,17 @@ class GameChatController extends Controller
     public function send(SendMessageRequest $request): JsonResponse
     {
         $gameId = $request->validated('gameId');
+        $game = $this->getGame($gameId);
         /** @var User $user */
         $user = $request->user();
         $state = $this->getState($gameId)['status'];
 
         if ($state === States::Werewolf->value && $this->isWerewolf($user['id'], $gameId)) {
             $this->service->werewolf($request->validated(), $user);
+        } elseif ($state === States::Werewolf->value && !$this->isWerewolf($user['id'], $gameId)) {
+            return new JsonResponse([], Response::HTTP_FORBIDDEN);
+        } elseif (!$this->alive($user->id, $gameId)) {
+            $this->service->private($request->validated('content'), $user, 'dead', $gameId, $game['dead_users']);
         } else {
             $this->service->send($request->validated(), $user);
         }

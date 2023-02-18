@@ -33,6 +33,7 @@ enum Rounds: int
                 States::Werewolf,
                 States::InfectedWerewolf,
                 States::Witch,
+                States::WhiteWerewolf,
                 States::Day,
                 States::Vote,
             ],

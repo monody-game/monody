@@ -23,10 +23,9 @@ class RoleControllerTest extends TestCase
 
     public function testGetAllRoles(): void
     {
-        $response = $this->getJson('/api/roles');
-        $parsed = json_decode($response->getContent(), true)['roles'];
+        $response = $this->getJson('/api/roles')->json('roles');
 
-        $this->assertTrue(count($parsed) > 1);
+        $this->assertTrue(count($response) > 1);
     }
 
     public function testGettingAllRolesForOneGame(): void

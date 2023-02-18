@@ -138,7 +138,15 @@ window.Echo.join(`game.${route.params.id}`)
 		const data = e.data.payload;
 		const winners = Object.keys(data.winners);
 		const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
-		store.send(`La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(", ")} du camp des ${team.data.team.display_name}`, "info");
+		let message = `La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(", ")}`;
+
+		if (team.data.team.name !== "loners") {
+			message += ` du camp des ${team.data.team.display_name}`;
+		} else {
+			message += ` qui était ${Object.values(data.winners)[0].display_name}`;
+		}
+
+		store.send(message, "info");
 
 		interval = setTimeout(() => {
 			useModalStore().open("activity-confirmation-modal");

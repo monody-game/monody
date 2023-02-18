@@ -64,6 +64,8 @@ const render = (roles) => {
 	}
 
 	for (const role of roles) {
+		if (role.team.name === "loners") continue;
+
 		if (role.team.id === 1) {
 			villagerWeight = villagerWeight + role.weight * role.count;
 		} else if (role.team.id === 2) {

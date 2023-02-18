@@ -90,7 +90,32 @@
 	aspect-ratio: 1 / 1;
 }
 
+.message__avatar-dead {
+	& > span {
+		position: absolute;
+		display: block;
+		height: 50px;
+		width: 50px;
+		background-color: #000000;
+		opacity: .45;
+		border-radius: 50%;
+	}
+
+	& > svg {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		height: 35px;
+		width: 35px;
+	}
+}
+
 .message__avatar {
+	position: relative;
+}
+
+.message__avatar, .message__avatar img {
 	height: 50px;
 	width: 50px;
 	border-radius: 50%;
