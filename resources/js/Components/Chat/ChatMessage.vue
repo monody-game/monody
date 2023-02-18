@@ -3,11 +3,21 @@
     class="message__main"
     :class="message.type === 'werewolf' ? 'message__werewolf' : ''"
   >
-    <img
-      :src="avatar"
-      alt=""
-      class="message__avatar"
-    >
+    <div class="message__avatar">
+      <span
+        v-if="props.message.type === 'dead'"
+        class="message__avatar-dead"
+      >
+        <span />
+        <svg>
+          <use href="/sprite.svg#death" />
+        </svg>
+      </span>
+      <img
+        :src="avatar"
+        alt=""
+      >
+    </div>
     <div class="message__texts">
       <p class="message__author">
         {{ props.message.author.username }}

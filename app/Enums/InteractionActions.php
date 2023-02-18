@@ -21,4 +21,7 @@ enum InteractionActions: string
     // Infected werewolf
     case Infect = 'infected_werewolf:infect';
     case InfectedSkip = 'infected_werewolf:skip';
+
+    // White Werewolf
+    case BetrayalKill = 'white_werewolf:kill';
 }

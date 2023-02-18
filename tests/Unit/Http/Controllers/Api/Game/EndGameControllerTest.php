@@ -94,7 +94,7 @@ class EndGameControllerTest extends TestCase
             return ((array) $event)['payload'] === [
                 'gameId' => $gameId,
                 'winners' => [
-                    $werewolf->id => Roles::Werewolf,
+                    $werewolf->id => Roles::Werewolf->full(),
                 ],
                 'winningTeam' => Teams::Werewolves,
             ];
@@ -123,6 +123,93 @@ class EndGameControllerTest extends TestCase
         });
     }
 
+    public function testCheckingIfTheGameShouldEndWithTheWhiteWerewolf()
+    {
+        Event::fake();
+
+        $game = $this
+            ->actingAs($this->user, 'api')
+            ->put('/api/game', [
+                'roles' => [Roles::WhiteWerewolf->value, Roles::Werewolf->value],
+                'users' => [$this->secondUser->id],
+            ])
+            ->json('game');
+
+        $gameId = $game['id'];
+
+        $additionnalKeys = [
+            'assigned_roles' => [
+                $this->secondUser->id => Roles::WhiteWerewolf->value,
+                $this->user->id => Roles::Werewolf->value,
+            ],
+            'is_started' => true,
+            'werewolves' => [
+                $this->user->id,
+                $this->secondUser->id,
+            ],
+        ];
+
+        Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), $additionnalKeys));
+
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/game/end/check', [
+                'gameId' => $gameId,
+            ])
+            ->assertForbidden();
+
+        Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), ['dead_users' => [$this->user->id]]));
+
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/game/end/check', [
+                'gameId' => $gameId,
+            ])
+            ->assertNoContent();
+
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/game/end', [
+                'gameId' => $gameId,
+            ])
+            ->assertNoContent();
+
+        $game = Redis::get("game:$gameId");
+        $this->assertTrue($game['ended']);
+
+        Event::assertDispatched(function (GameEnd $event) use ($gameId) {
+            return ((array) $event)['payload'] === [
+                'gameId' => $gameId,
+                'winners' => [
+                    $this->secondUser->id => Roles::WhiteWerewolf->full(),
+                ],
+                'winningTeam' => Teams::Loners,
+            ];
+        });
+
+        Event::assertDispatched(function (GameWin $event) use ($gameId) {
+            return (array) $event === [
+                'payload' => [
+                    'gameId' => $gameId,
+                ],
+                'private' => true,
+                'emitters' => [$this->secondUser->id],
+                'socket' => null,
+            ];
+        });
+
+        Event::assertDispatched(function (GameLoose $event) use ($gameId) {
+            return (array) $event === [
+                'payload' => [
+                    'gameId' => $gameId,
+                ],
+                'private' => true,
+                'emitters' => [$this->user->id],
+                'socket' => null,
+            ];
+        });
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -141,11 +228,6 @@ class EndGameControllerTest extends TestCase
                 'users' => [$this->secondUser->id],
             ])
             ->json('game');
-
-        Redis::set("game:{$this->game['id']}:members", [
-            ['user_id' => $this->user['id'], 'user_info' => $this->user],
-            ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
-        ]);
 
         $additionnalKeys = [
             'assigned_roles' => [
