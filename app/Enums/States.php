@@ -18,6 +18,7 @@ enum States: int
     case Witch = 4;
 
     case Day = 6;
+    case Mayor = 12;
     case Vote = 7;
 
     case End = 8;
@@ -38,6 +39,7 @@ enum States: int
             self::WhiteWerewolf => Roles::WhiteWerewolf->name(),
             self::Witch => Roles::Witch->name(),
             self::Day => 'day',
+            self::Mayor => 'mayor',
             self::Vote => 'vote',
             self::End => 'end',
         };
@@ -59,6 +61,7 @@ enum States: int
             self::WhiteWerewolf => 'Tour du loup blanc',
             self::Witch => 'Tour de la sorcière',
             self::Day => 'Jour',
+            self::Mayor => 'Élection du maire',
             self::Vote => 'Vote',
             self::End => 'Fin de la partie',
         };
@@ -70,7 +73,7 @@ enum States: int
     public function background(): string
     {
         return match ($this) {
-            self::Waiting, self::Starting, self::Roles, self::Day, self::Vote, self::End => 'day',
+            self::Waiting, self::Starting, self::Roles, self::Day, self::Mayor, self::Vote, self::End => 'day',
             self::Night, self::Psychic, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Witch => 'night',
         };
     }
@@ -81,7 +84,7 @@ enum States: int
             self::Waiting, self::End => -1,
             self::Starting, self::Night => 10,
             self::Roles, self::InfectedWerewolf, self::WhiteWerewolf => 30,
-            self::Day, self::Vote, self::Werewolf, self::Psychic, self::Witch => 90
+            self::Day, self::Mayor, self::Vote, self::Werewolf, self::Psychic, self::Witch => 90
         };
     }
 
@@ -93,7 +96,7 @@ enum States: int
         return match ($this) {
             self::Waiting, self::Starting, self::Roles => 'wait',
             self::Night, self::Witch, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic => 'night',
-            self::Day, self::Vote => 'day',
+            self::Day, self::Mayor, self::Vote => 'day',
             self::End => 'trophy'
         };
     }
@@ -106,6 +109,7 @@ enum States: int
         return match ($this) {
             self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch => self::readeableStringify(),
             self::Vote => 'Début du ' . mb_strtolower(self::readeableStringify()),
+            self::Mayor => 'Début de l\'' . mb_strtolower(self::readeableStringify()) . '. Présentez vous !',
             default => null
         };
     }
@@ -116,7 +120,7 @@ enum States: int
     public function isRoleState(): bool
     {
         return match ($this) {
-            self::Waiting, self::Starting, self::Roles, self::End, self::Day, self::Night, self::Vote => false,
+            self::Waiting, self::Starting, self::Roles, self::End, self::Day, self::Mayor, self::Night, self::Vote => false,
             default => true
         };
     }
@@ -128,7 +132,7 @@ enum States: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles, self::Night, self::Day, self::End => null, // Cannot be skipped
-            self::Vote => 30,
+            self::Vote, self::Mayor => 30,
             self::Werewolf => 10,
             self::Witch, self::Psychic, self::InfectedWerewolf, self::WhiteWerewolf => 0, // Skip the state to the next
         };

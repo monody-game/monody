@@ -20,6 +20,8 @@ class RoundControllerTest extends TestCase
 
     private array $secondRound;
 
+    private array $loopRound;
+
     public function testGettingAllRounds()
     {
         $rounds = Rounds::cases();
@@ -75,7 +77,7 @@ class RoundControllerTest extends TestCase
             ->assertExactJson([
                 $this->firstRound,
                 $this->secondRound,
-                $this->secondRound,
+                $this->loopRound,
                 [
                     [
                         'duration' => States::End->duration(),
@@ -108,9 +110,9 @@ class RoundControllerTest extends TestCase
                     'duration' => States::Day->duration(),
                 ],
                 [
-                    'identifier' => States::Vote->value,
-                    'raw_name' => States::Vote->stringify(),
-                    'duration' => States::Vote->duration(),
+                    'identifier' => States::Mayor->value,
+                    'raw_name' => States::Mayor->stringify(),
+                    'duration' => States::Mayor->duration(),
                 ],
             ]);
     }
@@ -142,9 +144,9 @@ class RoundControllerTest extends TestCase
                     'duration' => States::Day->duration(),
                 ],
                 [
-                    'identifier' => States::Vote->value,
-                    'raw_name' => States::Vote->stringify(),
-                    'duration' => States::Vote->duration(),
+                    'identifier' => States::Mayor->value,
+                    'raw_name' => States::Mayor->stringify(),
+                    'duration' => States::Mayor->duration(),
                 ],
             ]);
     }
@@ -176,7 +178,7 @@ class RoundControllerTest extends TestCase
             ])
             ->json('game');
 
-        $this->secondRound = [
+        $this->loopRound = [
             [
                 'identifier' => States::Night->value,
                 'raw_name' => States::Night->stringify(),
@@ -197,6 +199,19 @@ class RoundControllerTest extends TestCase
                 'raw_name' => States::Day->stringify(),
                 'duration' => States::Day->duration(),
             ],
+        ];
+
+        $this->secondRound = [
+            ...$this->loopRound,
+            [
+                'identifier' => States::Mayor->value,
+                'raw_name' => States::Mayor->stringify(),
+                'duration' => States::Mayor->duration(),
+            ],
+        ];
+
+        $this->loopRound = [
+            ...$this->loopRound,
             [
                 'identifier' => States::Vote->value,
                 'raw_name' => States::Vote->stringify(),
@@ -220,7 +235,7 @@ class RoundControllerTest extends TestCase
                 'raw_name' => States::Roles->stringify(),
                 'duration' => States::Roles->duration(),
             ],
-            ...$this->secondRound,
+            ...$this->loopRound,
         ];
     }
 }
