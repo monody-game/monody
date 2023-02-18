@@ -12,16 +12,16 @@ class ImageController extends Controller
 {
     public function show(Server $server, string $path): Response
     {
-		try {
-			/** @var StreamedResponse $res */
-			$res = $server->getImageResponse($path, request()->all());
-			$res->setMaxAge(5 * 60);
+        try {
+            /** @var StreamedResponse $res */
+            $res = $server->getImageResponse($path, request()->all());
+            $res->setMaxAge(5 * 60);
 
-			return $res;
-		} catch (FileNotFoundException $e) {
-			return new JsonResponse([
-				'message' => 'File not found.'
-			], Response::HTTP_NOT_FOUND);
-		}
+            return $res;
+        } catch (FileNotFoundException $e) {
+            return new JsonResponse([
+                'message' => 'File not found.',
+            ], Response::HTTP_NOT_FOUND);
+        }
     }
 }
