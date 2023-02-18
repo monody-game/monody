@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Actions\ActionInterface;
 use App\Actions\InfectedWerewolfAction;
+use App\Actions\MayorAction;
 use App\Actions\PsychicAction;
 use App\Actions\VoteAction;
 use App\Actions\WerewolvesAction;
@@ -192,7 +193,7 @@ class InteractionService
             return true;
         }
 
-        if (in_array($interaction['type'], [Interactions::Vote->value, Interactions::Werewolves->value], true)) {
+        if (in_array($interaction['type'], [Interactions::Vote->value, Interactions::Mayor->value, Interactions::Werewolves->value], true)) {
             return $this->voteService->hasMajorityVoted($game, $interaction['type']);
         }
 
@@ -217,7 +218,8 @@ class InteractionService
             Interactions::Psychic => new PsychicAction,
             Interactions::Werewolves => new WerewolvesAction,
             Interactions::InfectedWerewolf => new InfectedWerewolfAction,
-            Interactions::WhiteWerewolf => new WhiteWerewolfAction
+            Interactions::WhiteWerewolf => new WhiteWerewolfAction,
+            Interactions::Mayor => new MayorAction
         };
     }
 }

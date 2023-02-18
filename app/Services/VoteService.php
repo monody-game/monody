@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Enums\Teams;
 use App\Events\GameKill;
+use App\Events\MayorElected;
 use App\Facades\Redis;
+use App\Models\User;
 use App\Traits\MemberHelperTrait;
 use function array_key_exists;
 use function count;
@@ -61,6 +63,32 @@ class VoteService
         Redis::set("game:$gameId:votes", $votes);
 
         return $votes;
+    }
+
+    public function elect(string $gameId): string
+    {
+        $game = Redis::get("game:$gameId");
+        $gameUsers = $game['users'];
+        $votes = self::getVotes($gameId);
+
+        if ($votes === []) {
+            $mayor = $gameUsers[random_int(0, count($gameUsers))];
+        } else {
+            $mayor = self::getMajority($votes);
+        }
+
+        $game['mayor'] = $mayor;
+
+        Redis::set("game:$gameId", $game);
+
+        $this->clearVotes($gameId);
+
+        broadcast(new MayorElected([
+            'gameId' => $gameId,
+            'mayor' => $mayor,
+        ]));
+
+        return $mayor;
     }
 
     /**

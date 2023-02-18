@@ -12,7 +12,7 @@ class VoteAction implements ActionInterface
 {
     use MemberHelperTrait, RegisterHelperTrait;
 
-    private VoteService $service;
+    private readonly VoteService $service;
 
     public function __construct()
     {
