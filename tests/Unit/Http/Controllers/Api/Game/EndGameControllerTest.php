@@ -125,6 +125,8 @@ class EndGameControllerTest extends TestCase
 
     public function testCheckingIfTheGameShouldEndWithTheWhiteWerewolf()
     {
+        Event::fake();
+
         $game = $this
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
@@ -132,6 +134,8 @@ class EndGameControllerTest extends TestCase
                 'users' => [$this->secondUser->id],
             ])
             ->json('game');
+
+        $gameId = $game['id'];
 
         $additionnalKeys = [
             'assigned_roles' => [
@@ -145,23 +149,65 @@ class EndGameControllerTest extends TestCase
             ],
         ];
 
-        Redis::set("game:{$game['id']}", array_merge(Redis::get("game:{$game['id']}"), $additionnalKeys));
+        Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), $additionnalKeys));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/end/check', [
-                'gameId' => $game['id'],
+                'gameId' => $gameId,
             ])
             ->assertForbidden();
 
-        Redis::set("game:{$game['id']}", array_merge(Redis::get("game:{$game['id']}"), ['dead_users' => [$this->user->id]]));
+        Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), ['dead_users' => [$this->user->id]]));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/end/check', [
-                'gameId' => $game['id'],
+                'gameId' => $gameId,
             ])
             ->assertNoContent();
+
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/game/end', [
+                'gameId' => $gameId,
+            ])
+            ->assertNoContent();
+
+        $game = Redis::get("game:$gameId");
+        $this->assertTrue($game['ended']);
+
+        Event::assertDispatched(function (GameEnd $event) use ($gameId) {
+            return ((array) $event)['payload'] === [
+                'gameId' => $gameId,
+                'winners' => [
+                    $this->secondUser->id => Roles::WhiteWerewolf->full(),
+                ],
+                'winningTeam' => Teams::Loners,
+            ];
+        });
+
+        Event::assertDispatched(function (GameWin $event) use ($gameId) {
+            return (array) $event === [
+                'payload' => [
+                    'gameId' => $gameId,
+                ],
+                'private' => true,
+                'emitters' => [$this->secondUser->id],
+                'socket' => null,
+            ];
+        });
+
+        Event::assertDispatched(function (GameLoose $event) use ($gameId) {
+            return (array) $event === [
+                'payload' => [
+                    'gameId' => $gameId,
+                ],
+                'private' => true,
+                'emitters' => [$this->user->id],
+                'socket' => null,
+            ];
+        });
     }
 
     protected function setUp(): void

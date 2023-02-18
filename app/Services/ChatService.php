@@ -55,14 +55,14 @@ class ChatService
 
     public function werewolf(array $data, User $user): void
     {
-		$game = Redis::get("game:{$data['gameId']}");
+        $game = Redis::get("game:{$data['gameId']}");
         $message = new Message($data);
         $message->set('author', $this->getAuthor($user));
         $message->set('type', 'werewolf');
 
         broadcast(new MessageSended($message, true, [
             ...$this->getUsersByTeam(Teams::Werewolves, $data['gameId']),
-			...$game['dead_users']
+            ...$game['dead_users'],
         ]));
 
         /** @var array{}|string[] $littleGirl */

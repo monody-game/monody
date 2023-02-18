@@ -42,7 +42,7 @@ class WerewolvesAction implements ActionInterface
     public function updateClients(string $userId): void
     {
         $gameId = $this->getGameId($userId);
-		$game = Redis::get("game:$gameId");
+        $game = Redis::get("game:$gameId");
 
         broadcast(new InteractionUpdate([
             'gameId' => $gameId,
