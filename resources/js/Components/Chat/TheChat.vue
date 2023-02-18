@@ -143,7 +143,7 @@ window.Echo.join(`game.${route.params.id}`)
 		if (team.data.team.name !== "loners") {
 			message += ` du camp des ${team.data.team.display_name}`;
 		} else {
-			message += ` qui était ${data.winners[0].display_name}`;
+			message += ` qui était ${Object.values(data.winners)[0].display_name}`;
 		}
 
 		store.send(message, "info");

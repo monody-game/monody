@@ -119,10 +119,10 @@ class VoteService
     {
         $votes = self::getVotes($game['id']);
         $majority = self::getMajority($votes);
-        $allowedVoters = $game['users'];
+        $allowedVoters = count($game['users']) - count($game['dead_users']);
 
         if ($context === 'werewolves') {
-            $allowedVoters = self::getUsersByTeam(Teams::Werewolves, $game['id']);
+            $allowedVoters = count(self::getUsersByTeam(Teams::Werewolves, $game['id']));
         }
 
         if (!$majority) {
@@ -131,7 +131,7 @@ class VoteService
 
         $voters = count(self::getVotingUsers($game['users'], $votes));
 
-        return $voters >= (count($allowedVoters) / 2);
+        return $voters >= ($allowedVoters / 2);
     }
 
     /**

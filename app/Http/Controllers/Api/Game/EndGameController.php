@@ -89,8 +89,16 @@ class EndGameController extends Controller
 
     private function getWinningTeam(string $gameId): Teams
     {
-        if ($this->getUsersByTeam(Teams::Werewolves, $gameId) === []) {
+        $werewolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
+
+        if ($werewolves === []) {
             return Teams::Villagers;
+        }
+
+        if (
+            $werewolves === $this->getUserIdByRole(Roles::WhiteWerewolf, $gameId)
+        ) {
+            return Teams::Loners;
         }
 
         return Teams::Werewolves;
@@ -115,16 +123,14 @@ class EndGameController extends Controller
     {
         $game = $this->getGame($gameId);
         $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
-        $werewolves = $game['werewolves'];
+        $werewolves = array_filter($game['werewolves'], fn ($werewolf) => $this->alive($werewolf, $gameId));
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
 
         if ($werewolves === []) {
             return $villagers;
-        } elseif ($villagers === [] && in_array(Roles::WhiteWerewolf->value, $game['roles'], true)) {
-            return $this->getUserIdByRole(Roles::WhiteWerewolf, $gameId);
         }
 
-        return $werewolves;
+        return [...$werewolves];
     }
 
     private function getLoosingUsers(string $gameId): array
