@@ -75,6 +75,8 @@ const render = (roles) => {
 
 	const totalWeight = villagerWeight + werewolfWeight;
 
+	if (totalWeight === 0) return;
+
 	werewolfWidth.value = Math.floor((werewolfWeight * 100) / totalWeight);
 	villagerWidth.value = Math.floor((villagerWeight * 100) / totalWeight);
 
