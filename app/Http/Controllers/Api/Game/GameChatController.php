@@ -55,6 +55,14 @@ class GameChatController extends Controller
         $game = Redis::get("game:$gameId");
         $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
+		if($deaths === []) {
+			GameKill::broadcast([
+				'killedUser' => null,
+				'gameId' => $gameId,
+				'context' => '',
+			]);
+		}
+
         foreach ($deaths as $death) {
             $infected = array_key_exists('infected', $game) && $game['infected'] === $death['user'];
 
