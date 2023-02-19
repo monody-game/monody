@@ -92,12 +92,14 @@ const userID = computed(() => {
 window.Echo
 	.join(`game.${gameId.value}`)
 	.listen(".interaction.open", ({ interaction }) => {
+		console.log(interaction);
 		interactionType.value = interaction.type;
 		gameStore.currentInteractionId = interaction.id;
 
 		switch (interaction.type) {
 		case "vote":
 		case "werewolves":
+		case "white_werewolf":
 			if (isDead.value === false) {
 				player.value.classList.add("player__votable");
 			}
@@ -153,6 +155,7 @@ window.Echo
 		switch (interaction.type) {
 		case "vote":
 		case "werewolves":
+		case "white_werewolf":
 		case "mayor":
 			if (player.value) {
 				player.value.classList.remove("player__votable", "player__electable");

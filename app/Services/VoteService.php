@@ -6,11 +6,11 @@ use App\Enums\Teams;
 use App\Events\GameKill;
 use App\Events\MayorElected;
 use App\Facades\Redis;
-use App\Models\User;
 use App\Traits\MemberHelperTrait;
 use function array_key_exists;
 use function count;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use function in_array;
 
 class VoteService
@@ -83,6 +83,8 @@ class VoteService
 
         $this->clearVotes($gameId);
 
+        Log::debug('should be broadcasting to game ' . $gameId);
+
         broadcast(new MayorElected([
             'gameId' => $gameId,
             'mayor' => $mayor,
@@ -97,13 +99,13 @@ class VoteService
     public function afterVote(string $gameId, string $context = 'vote'): string|false
     {
         $votes = self::getVotes($gameId);
-		$game = Redis::get("game:$gameId");
+        $game = Redis::get("game:$gameId");
         $deaths = Redis::get("game:$gameId:deaths") ?? [];
-		$mayor = '';
+        $mayor = '';
 
-		if(array_key_exists('mayor', $game)) {
-			$mayor = $game['mayor'];
-		}
+        if (array_key_exists('mayor', $game)) {
+            $mayor = $game['mayor'];
+        }
 
         if ([] === $votes) {
             if ($context === 'vote') {
@@ -176,11 +178,11 @@ class VoteService
         $majority = array_key_first($votes) ?? '';
 
         foreach ($votes as $voted => $by) {
-			$votersCount = count($by);
+            $votersCount = count($by);
 
-			if($mayor !== '' && in_array($mayor, $by)) {
-				$votersCount += 1;
-			}
+            if ($mayor !== '' && in_array($mayor, $by, true)) {
+                $votersCount += 1;
+            }
 
             if ($votersCount > count($votes[$majority])) {
                 $majority = $voted;

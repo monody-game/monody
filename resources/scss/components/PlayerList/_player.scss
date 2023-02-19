@@ -9,10 +9,6 @@
 	width: max-content;
 	user-select: none;
 
-	&.player__votable, .player__electable{
-		cursor: pointer;
-	}
-
 	& .player__is-dead-shadow {
 		display: block;
 		height: 125px;
@@ -60,12 +56,12 @@
   box-shadow: 0 0 32px 6px #e50000;
 }
 
-.player__electable:hover,
-.player__electable.player__is-voted {
+.player__electable:hover .player__avatar-container img,
+.player__electable.player__is-voted .player__avatar-container img{
 	box-shadow: 0 0 32px 6px var(--info);
 }
 
-.player__votable:hover, .player__witch-kill:hover {
+.player__votable:hover, .player__witch-kill:hover, .player__electable:hover {
 	cursor: pointer;
 }
 

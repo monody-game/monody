@@ -189,7 +189,7 @@ class InteractionService
         $game = Redis::get("game:$gameId");
         $state = Redis::get("game:$gameId:state");
 
-        if ($service->isSingleUse() && array_key_exists('used', $interaction) && $interaction['used'] && $state['startTimestamp'] - (Date::now()->timestamp - $state['counterDuration']) > 30) {
+        if ($service->isSingleUse() || (array_key_exists('used', $interaction) && $interaction['used']) && $state['startTimestamp'] - (Date::now()->timestamp - $state['counterDuration']) > 30) {
             return true;
         }
 
