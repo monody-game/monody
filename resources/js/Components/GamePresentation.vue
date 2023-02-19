@@ -12,14 +12,24 @@
     <div class="game-show__center">
       <p>{{ props.game.owner.username }}</p>
       <div class="game-show__roles">
-        <img
-          v-for="role_id in Object.keys(props.game.roles)"
+        <div
+          v-for="role_id in props.game.roles"
           :key="role_id"
-          :src="props.roles.find(role => parseInt(role.id) === parseInt(role_id)).image + '?h=30&dpr=2'"
-          alt=""
           class="game-show__role"
-          :title="props.roles.find(role => parseInt(role.id) === parseInt(role_id)).display_name"
         >
+          <span
+            v-if="props.game.roles[role_id] > 1"
+            class="game-show__role-count"
+          >
+            {{ props.game.roles[role_id] }}
+          </span>
+          <img
+            :src="props.roles.find(role => parseInt(role.id) === parseInt(role_id)).image + '?h=30&dpr=2'"
+            alt=""
+            class="game-show__role-image"
+            :title="props.roles.find(role => parseInt(role.id) === parseInt(role_id)).display_name"
+          >
+        </div>
       </div>
     </div>
     <p>{{ props.game.users.length }} / {{ getUserCount() }}</p>
