@@ -17,9 +17,12 @@
         :src="props.player.avatar + '?h=120&dpr=2'"
         class="player__avatar"
       >
-      <div class="player__is-dead">
+      <div
+        v-if="isDead === true"
+        class="player__is-dead"
+      >
         <span class="player__is-dead-shadow" />
-        <svg v-if="isDead === true">
+        <svg>
           <use href="/sprite.svg#death" />
         </svg>
       </div>

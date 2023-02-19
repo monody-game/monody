@@ -46,7 +46,6 @@ class MayorAction implements ActionInterface
 
     public function close(string $gameId): void
     {
-        // TODO: Implement close() method.
     }
 
     private function getGameId(string $userId): string
