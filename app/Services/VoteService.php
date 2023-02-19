@@ -97,7 +97,13 @@ class VoteService
     public function afterVote(string $gameId, string $context = 'vote'): string|false
     {
         $votes = self::getVotes($gameId);
+		$game = Redis::get("game:$gameId");
         $deaths = Redis::get("game:$gameId:deaths") ?? [];
+		$mayor = '';
+
+		if(array_key_exists('mayor', $game)) {
+			$mayor = $game['mayor'];
+		}
 
         if ([] === $votes) {
             if ($context === 'vote') {
@@ -111,7 +117,7 @@ class VoteService
             return false;
         }
 
-        $majority = self::getMajority($votes);
+        $majority = self::getMajority($votes, $mayor);
 
         if (!$this->alive($majority, $gameId) && array_filter($deaths, fn ($death) => $death['user'] === $majority) !== []) {
             GameKill::dispatch([
@@ -165,18 +171,24 @@ class VoteService
     /**
      * Return the most voted user
      */
-    public static function getMajority(array $votes): string
+    public static function getMajority(array $votes, string $mayor = ''): string
     {
         $majority = array_key_first($votes) ?? '';
 
         foreach ($votes as $voted => $by) {
-            if (count($by) > count($votes[$majority])) {
+			$votersCount = count($by);
+
+			if($mayor !== '' && in_array($mayor, $by)) {
+				$votersCount += 1;
+			}
+
+            if ($votersCount > count($votes[$majority])) {
                 $majority = $voted;
 
                 continue;
             }
 
-            if (count($by) === count($votes[$majority])) {
+            if ($votersCount === count($votes[$majority])) {
                 $toRandomPick = [
                     $majority,
                     $voted,
