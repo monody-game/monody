@@ -267,11 +267,6 @@ class VoteServiceTest extends TestCase
                 'roles' => [1, 2],
             ])->getContent(), true)['game'];
 
-        Redis::set("game:{$this->game['id']}:members", [
-            ['user_id' => $this->user->id, 'user_info' => $this->user],
-            ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
-        ]);
-
         Redis::set("game:{$this->game['id']}:state", [
             'status' => States::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
@@ -285,11 +280,6 @@ class VoteServiceTest extends TestCase
                 'roles' => [1, 2],
             ])->getContent(), true)['game'];
 
-        Redis::set("game:{$this->secondGame['id']}:members", [
-            ['user_id' => $this->user->id, 'user_info' => $this->user],
-            ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
-        ]);
-
         Redis::set("game:{$this->secondGame['id']}:state", [
             'status' => States::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
@@ -302,13 +292,6 @@ class VoteServiceTest extends TestCase
                 'users' => [$this->secondUser->id, $this->thirdUser->id, $this->fourthUser->id],
                 'roles' => [1, 2],
             ])->json('game');
-
-        Redis::set("game:{$this->thirdGame['id']}:members", [
-            ['user_id' => $this->user->id, 'user_info' => $this->user],
-            ['user_id' => $this->secondUser->id, 'user_info' => $this->secondUser],
-            ['user_id' => $this->thirdUser->id, 'user_info' => $this->thirdUser],
-            ['user_id' => $this->fourthUser->id, 'user_info' => $this->fourthUser],
-        ]);
 
         Redis::set("game:{$this->thirdGame['id']}:state", [
             'status' => States::Vote->value,

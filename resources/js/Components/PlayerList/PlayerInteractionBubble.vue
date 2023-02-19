@@ -3,7 +3,7 @@
     class="player-interaction-bubble__container"
     :class="color"
   >
-    <span v-if="props.type === 'vote' || props.type === 'werewolves'">
+    <span v-if="props.type === 'vote' || props.type === 'werewolves' || props.type === 'mayor'">
       <img
         v-for="voter in props.data"
         :key="voter"
@@ -27,7 +27,7 @@ const props = defineProps({
 		type: String,
 		required: true,
 		validator(value) {
-			return ["vote", "werewolves", "witch"].includes(value);
+			return ["vote", "werewolves", "witch", "mayor"].includes(value);
 		}
 	},
 	data: [Object, Array],

@@ -9,11 +9,7 @@
 	width: max-content;
 	user-select: none;
 
-	&.player__votable{
-		cursor: pointer;
-	}
-
-	&[data-is-dead="true"] .player__is-dead-shadow {
+	& .player__is-dead-shadow {
 		display: block;
 		height: 125px;
 		width: 125px;
@@ -60,18 +56,35 @@
   box-shadow: 0 0 32px 6px #e50000;
 }
 
-.player__votable:hover, .player__witch-kill:hover {
+.player__electable:hover .player__avatar-container img,
+.player__electable.player__is-voted .player__avatar-container img{
+	box-shadow: 0 0 32px 6px var(--info);
+}
+
+.player__votable:hover, .player__witch-kill:hover, .player__electable:hover {
 	cursor: pointer;
 }
 
+.player__badges {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	display: flex;
+	align-items: start;
+	width: max-content;
+	gap: 4px;
+}
+
 .player__is-wolf {
-  position: absolute;
   background-color: #e50000;
-  height: 16px;
-  width: 16px;
+  height: 18px;
+  width: 18px;
   border-radius: 50%;
-  right: 8px;
-  top: 8px;
+}
+
+.player__is-mayor, .player__is-mayor svg {
+	height: 30px;
+	width: 20px;
 }
 
 .player__username {

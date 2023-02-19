@@ -27,7 +27,17 @@ enum Rounds: int
                 States::Day,
                 States::Vote,
             ],
-            self::SecondRound, self::LoopRound => [
+            self::SecondRound => [
+                States::Night,
+                States::Psychic,
+                States::Werewolf,
+                States::InfectedWerewolf,
+                States::Witch,
+                States::WhiteWerewolf,
+                States::Day,
+                States::Mayor,
+            ],
+            self::LoopRound => [
                 States::Night,
                 States::Psychic,
                 States::Werewolf,

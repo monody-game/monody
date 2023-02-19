@@ -17,17 +17,31 @@
         :src="props.player.avatar + '?h=120&dpr=2'"
         class="player__avatar"
       >
-      <div class="player__is-dead">
+      <div
+        v-if="isDead === true"
+        class="player__is-dead"
+      >
         <span class="player__is-dead-shadow" />
-        <svg v-if="isDead === true">
+        <svg>
           <use href="/sprite.svg#death" />
         </svg>
       </div>
-      <span
-        v-if="isWerewolf === true"
-        class="player__is-wolf"
-        title="Ce joueur est votre allié !"
-      />
+      <div class="player__badges">
+        <span
+          v-if="isWerewolf === true"
+          class="player__is-wolf"
+          title="Ce joueur est votre allié !"
+        />
+        <span
+          v-if="isMayor === true"
+          title="Ce joueur est le maire !"
+          class="player__is-mayor"
+        >
+          <svg>
+            <use href="/sprite.svg#mayor" />
+          </svg>
+        </span>
+      </div>
     </div>
     <p class="player__username">
       {{ props.player.username }}
@@ -52,6 +66,7 @@ const props = defineProps({
 const votedBy = ref(props.player.voted_by);
 const isVoted = ref(false);
 const isDead = ref(false);
+const isMayor = ref(false);
 const isWerewolf = ref(false);
 const interactionType = ref("");
 const gameStore = useGameStore();
@@ -77,14 +92,21 @@ const userID = computed(() => {
 window.Echo
 	.join(`game.${gameId.value}`)
 	.listen(".interaction.open", ({ interaction }) => {
+		console.log(interaction);
 		interactionType.value = interaction.type;
 		gameStore.currentInteractionId = interaction.id;
 
 		switch (interaction.type) {
 		case "vote":
 		case "werewolves":
+		case "white_werewolf":
 			if (isDead.value === false) {
 				player.value.classList.add("player__votable");
+			}
+			break;
+		case "mayor":
+			if (isDead.value === false) {
+				player.value.classList.add("player__electable");
 			}
 			break;
 		case "psychic":
@@ -133,8 +155,10 @@ window.Echo
 		switch (interaction.type) {
 		case "vote":
 		case "werewolves":
-			if (player.value && player.value.classList.contains("player__votable")) {
-				player.value.classList.remove("player__votable");
+		case "white_werewolf":
+		case "mayor":
+			if (player.value) {
+				player.value.classList.remove("player__votable", "player__electable");
 			}
 
 			votedBy.value = [];
@@ -172,6 +196,11 @@ window.Echo
 			if (props.player.id === user) {
 				isWerewolf.value = true;
 			}
+		}
+	})
+	.listen(".game.mayor", (e) => {
+		if (props.player.id === e.data.payload.mayor) {
+			isMayor.value = true;
 		}
 	});
 
