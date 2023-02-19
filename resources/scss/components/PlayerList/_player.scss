@@ -64,14 +64,28 @@
 	cursor: pointer;
 }
 
+.player__badges {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	display: flex;
+	align-items: center;
+	width: max-content;
+	gap: 4px;
+}
+
 .player__is-wolf {
-  position: absolute;
   background-color: #e50000;
   height: 16px;
   width: 16px;
   border-radius: 50%;
-  right: 8px;
-  top: 8px;
+}
+
+.player__is-mayor, .player__is-mayor svg {
+	background-color: var(--light-background);
+	height: 20px;
+	width: 20px;
+	border-radius: 50%;
 }
 
 .player__username {
