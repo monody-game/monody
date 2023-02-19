@@ -92,7 +92,6 @@ const userID = computed(() => {
 window.Echo
 	.join(`game.${gameId.value}`)
 	.listen(".interaction.open", ({ interaction }) => {
-		console.log(interaction);
 		interactionType.value = interaction.type;
 		gameStore.currentInteractionId = interaction.id;
 
