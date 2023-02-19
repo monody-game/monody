@@ -6,12 +6,14 @@ use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\Roles;
 use App\Enums\States;
+use App\Events\MayorElected;
 use App\Facades\Redis;
 use App\Models\User;
 use App\Services\InteractionService;
 use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class InteractionServiceTest extends TestCase
@@ -51,8 +53,8 @@ class InteractionServiceTest extends TestCase
 
     public function testEndingInteraction()
     {
-        $interaction = $this->service->create('otherGame', Interactions::Vote);
-        $this->assertNull($this->service->close('otherGame', $interaction['id']));
+        $interaction = $this->service->create($this->game['id'], Interactions::Vote);
+        $this->assertNull($this->service->close($this->game['id'], $interaction['id']));
 
         $this->assertEmpty(Redis::get('game:otherGame:interactions'));
     }
@@ -142,6 +144,32 @@ class InteractionServiceTest extends TestCase
         $this->assertSame($this->service::USER_CANNOT_USE_THIS_INTERACTION, $res);
     }
 
+    public function testElectingAMayor()
+    {
+        Event::fake();
+
+        $userId = $this->werewolf->id;
+        $gameId = $this->game['id'];
+
+        $id = $this->service->create($gameId, Interactions::Mayor)['id'];
+        $this->service->call(InteractionActions::Elect, $id, $this->psychic->id, $userId);
+        $this->service->call(InteractionActions::Elect, $id, $userId, $userId);
+        $this->service->call(InteractionActions::Elect, $id, $this->witch->id, $userId);
+        $this->service->close($gameId, $id);
+
+        Event::assertDispatched(function (MayorElected $event) use ($userId, $gameId) {
+            return ((array) $event)['payload'] === [
+                'gameId' => $gameId,
+                'mayor' => $userId,
+            ];
+        });
+
+        $game = Redis::get("game:{$this->game['id']}");
+
+        $this->assertArrayHasKey('mayor', $game);
+        $this->assertSame($userId, $game['mayor']);
+    }
+
     public function testShouldSkipTimer()
     {
         $id = $this->service->create($this->game['id'], Interactions::Psychic)['id'];
@@ -160,6 +188,18 @@ class InteractionServiceTest extends TestCase
 
         $this->service->call(InteractionActions::Vote, $id, $this->witch->id, $this->werewolf->id);
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id'])); // Time is already skipped so in reality, it will not skip the time
+
+        Redis::set("game:{$this->game['id']}:votes", []);
+
+        $id = $this->service->create($this->game['id'], Interactions::Mayor)['id'];
+        $this->service->call(InteractionActions::Elect, $id, $this->psychic->id, $this->werewolf->id);
+        $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
+
+        $this->service->call(InteractionActions::Elect, $id, $this->user->id, $this->werewolf->id);
+        $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
+
+        $this->service->call(InteractionActions::Elect, $id, $this->infectedWerewolf->id, $this->werewolf->id);
+        $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
     }
 
     protected function setUp(): void
