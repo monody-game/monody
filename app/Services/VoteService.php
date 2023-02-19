@@ -10,7 +10,6 @@ use App\Traits\MemberHelperTrait;
 use function array_key_exists;
 use function count;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use function in_array;
 
 class VoteService
@@ -82,8 +81,6 @@ class VoteService
         Redis::set("game:$gameId", $game);
 
         $this->clearVotes($gameId);
-
-        Log::debug('should be broadcasting to game ' . $gameId);
 
         broadcast(new MayorElected([
             'gameId' => $gameId,
