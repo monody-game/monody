@@ -178,6 +178,7 @@ const updateOverlay = function () {
 	default:
 		break;
 	case 2:
+		chatStore.send("Tombée de la nuit", "time_separator");
 		counterIcon.value.classList.remove("counter__icon-rotate");
 		break;
 	case 6:

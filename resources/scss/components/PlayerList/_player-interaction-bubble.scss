@@ -48,6 +48,16 @@
 	width: 12px;
 }
 
+.player-interaction-bubble__mayor-color {
+	& > span {
+		background: var(--level);
+	}
+
+	& > svg > use {
+		color: var(--level);
+	}
+}
+
 .player-interaction-bubble__werewolves-color {
 	& > span {
 		background: var(--werewolf-color-darker);

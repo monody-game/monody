@@ -16,7 +16,7 @@ enum Interactions: string
     {
         return [
             self::Vote->value => InteractionActions::Vote,
-            self::Mayor->value => InteractionActions::Vote,
+            self::Mayor->value => InteractionActions::Elect,
             self::Witch->value => [InteractionActions::RevivePotion, InteractionActions::KillPotion, InteractionActions::WitchSkip],
             self::Psychic->value => InteractionActions::Spectate,
             self::Werewolves->value => InteractionActions::Kill,

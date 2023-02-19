@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Enums\InteractionActions;
+use App\Events\InteractionUpdate;
 use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
@@ -37,6 +38,12 @@ class MayorAction implements ActionInterface
 
     public function updateClients(string $userId): void
     {
+        $gameId = $this->getGameId($userId);
+        broadcast(new InteractionUpdate([
+            'gameId' => $gameId,
+            'type' => InteractionActions::Vote->value,
+            'votedPlayers' => $this->service::getVotes($gameId),
+        ]));
     }
 
     public function additionnalData(string $gameId): null
@@ -46,6 +53,7 @@ class MayorAction implements ActionInterface
 
     public function close(string $gameId): void
     {
+        $this->service->elect($gameId);
     }
 
     private function getGameId(string $userId): string
