@@ -13,15 +13,15 @@
       <p>{{ props.game.owner.username }}</p>
       <div class="game-show__roles">
         <div
-          v-for="role_id in props.game.roles"
+          v-for="(count, role_id) in props.game.roles"
           :key="role_id"
           class="game-show__role"
         >
           <span
-            v-if="props.game.roles[role_id] > 1"
+            v-if="count > 1"
             class="game-show__role-count"
           >
-            {{ props.game.roles[role_id] }}
+            {{ count }}
           </span>
           <img
             :src="props.roles.find(role => parseInt(role.id) === parseInt(role_id)).image + '?h=30&dpr=2'"
