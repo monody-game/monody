@@ -40,8 +40,14 @@ window.Echo.join(`game.${route.params.id}`)
 
 const addUser = function (player) {
 	player = injectPlayersProperties([player])[0];
-	playerList.value.push(player);
-	gameStore.playerList.push(player);
+	if (!playerList.value.includes(player)) {
+		console.warn(`User ${player.id} was already shown in game`);
+		playerList.value.push(player);
+	}
+	if (!gameStore.playerList.includes(player)) {
+		console.warn(`User ${player.id} was already in the list of players`);
+		gameStore.playerList.push(player);
+	}
 };
 
 const removeUser = function (player) {
