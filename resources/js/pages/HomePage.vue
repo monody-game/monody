@@ -1,5 +1,8 @@
 <template>
-  <div class="home-page">
+  <div
+    v-once
+    class="home-page"
+  >
     <header class="home-page__header">
       <router-link :to="{ name: 'home_page' }">
         Comment jouer
