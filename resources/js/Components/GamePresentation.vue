@@ -2,7 +2,7 @@
   <router-link
     :to="{ name: 'game', params: { id: props.game.id } }"
     class="game-show__container"
-    @click="setRoles"
+    @click="setGame()"
   >
     <img
       :alt="props.game.owner.username + '\'s avatar'"
@@ -59,9 +59,11 @@ const getUserCount = function () {
 	return total;
 };
 
-const setRoles = async function () {
+const setGame = async function () {
 	store.roles = props.roles.filter(role => {
 		return Object.keys(props.game.roles).includes(role.id.toString());
 	});
+
+	store.owner = props.game.owner;
 };
 </script>

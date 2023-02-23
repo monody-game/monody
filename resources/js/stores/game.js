@@ -9,7 +9,8 @@ export const useStore = defineStore("game", {
 			availableActions: {},
 			playerRefs: [],
 			roles: [],
-			assignedRole: {}
+			assignedRole: {},
+			owner: {}
 		};
 	},
 	actions: {

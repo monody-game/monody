@@ -32,6 +32,7 @@ import RolesModalPage from "./Pages/Roles/RolesModalPage.vue";
 import BaseModal from "./BaseModal.vue";
 import { useStore } from "../../stores/modals/game-creation-modal.js";
 import { useStore as useGameStore } from "../../stores/game.js";
+import { useStore as useUserStore } from "../../stores/user.js";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 
@@ -39,6 +40,7 @@ const store = useStore();
 const router = useRouter();
 const gameId = ref("");
 const gameStore = useGameStore();
+const userStore = useUserStore();
 
 const notEnoughSelectedRoles = function () {
 	const selectedIds = store.selectedRoles;
@@ -70,6 +72,7 @@ const finish = async function() {
 
 	if (store.gameId !== 0) {
 		gameStore.roles = store.roles.filter(role => store.selectedRoles.includes(role.id));
+		gameStore.owner = userStore.getUser;
 
 		store.close();
 		localStorage.setItem("show_share", true);
