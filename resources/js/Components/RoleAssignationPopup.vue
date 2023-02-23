@@ -50,6 +50,7 @@
 import { nextTick, onUnmounted, ref } from "vue";
 import BaseModal from "./Modal/BaseModal.vue";
 import { useStore } from "../stores/chat.js";
+import { useStore as useGameStore } from "../stores/game.js";
 
 const props = defineProps({
 	roles: {
@@ -65,6 +66,7 @@ const props = defineProps({
 const animationEnded = ref(false);
 const roleText = ref(null);
 const chatStore = useStore();
+const gameStore = useGameStore();
 const timeout = null;
 
 const roles = ref(props.roles);
@@ -95,6 +97,7 @@ nextTick(() => {
 
 	setTimeout(() => {
 		chatStore.send(`Votre rôle est : ${assignedRole.display_name}`, "info");
+		gameStore.assignedRole = assignedRole;
 	}, 5000);
 });
 

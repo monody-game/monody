@@ -36,6 +36,13 @@
       <Chat />
       <LogoSpinner v-if="loading" />
       <PlayerList />
+      <img
+        v-if="typeof gameStore.assignedRole.id !== 'undefined'"
+        :src="gameStore.assignedRole.image"
+        :alt="gameStore.assignedRole.display_name"
+        :title="gameStore.assignedRole.display_name"
+        class="game-page__role"
+      >
     </div>
     <Transition name="modal">
       <ShareGameModal v-if="shareModalStore.isOpenned" />
