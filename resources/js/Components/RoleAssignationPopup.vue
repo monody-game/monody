@@ -65,6 +65,7 @@ const props = defineProps({
 const animationEnded = ref(false);
 const roleText = ref(null);
 const chatStore = useStore();
+const timeout = null;
 
 const roles = ref(props.roles);
 const assignedRole = roles.value.filter(role => role.id === parseInt(props.assignedRole))[0];
@@ -74,8 +75,6 @@ const onAnimationEnd = async (e) => {
 	if (e.animationName === "slideRoles") {
 		animationEnded.value = true;
 		roleOverlay.value = "role-assignation-overlay__" + assignedRole.team.name;
-
-		chatStore.send(`Votre rôle est : ${assignedRole.display_name}`, "info");
 	}
 };
 
@@ -93,10 +92,18 @@ nextTick(() => {
 	}
 
 	document.addEventListener("animationend", onAnimationEnd);
+
+	setTimeout(() => {
+		chatStore.send(`Votre rôle est : ${assignedRole.display_name}`, "info");
+	}, 5000);
 });
 
 onUnmounted(() => {
 	document.removeEventListener("animationend", onAnimationEnd);
+
+	if (timeout) {
+		clearTimeout(timeout);
+	}
 });
 
 document.documentElement.style.setProperty("--role-assignation-transform-length", `-${roles.value.length * 15 * 100}%`);
