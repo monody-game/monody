@@ -35,10 +35,10 @@
 
 .game-page__header {
   display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr 1fr auto;
 	place-items: start;
   margin-top: space(3);
-  margin-left: space(4);
+  margin-inline: space(4);
 }
 
 .game-page__home-link {
@@ -82,4 +82,10 @@
   display: flex;
   height: 100%;
   max-height: 90vh;
+}
+
+.game-page__details {
+	height: 28px;
+	aspect-ratio: 1 / 1;
+	cursor: pointer;
 }

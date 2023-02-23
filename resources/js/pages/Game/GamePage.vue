@@ -24,6 +24,12 @@
         <p>Accueil</p>
       </a>
       <Suspense><GameCounter /></Suspense>
+      <svg
+        class="game-page__details"
+        @click="modalStore.open('game-details')"
+      >
+        <use href="/sprite.svg#question" />
+      </svg>
     </div>
     <div class="game-page__main">
       <Transition name="modal">
@@ -50,6 +56,9 @@
     <Transition name="modal">
       <ActivityConfirmationModal v-if="activityConfirmationModalStore.isOpenned" />
     </Transition>
+    <Transition name="modal">
+      <GameDetailsModal v-if="modalStore.opennedModal === 'game-details'" />
+    </Transition>
   </div>
 </template>
 
@@ -70,6 +79,7 @@ import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import ShareGameModal from "../../Components/Modal/ShareGameModal.vue";
 import ActivityConfirmationModal from "../../Components/Modal/ActivityConfirmationModal.vue";
+import GameDetailsModal from "../../Components/Modal/GameDetailsModal.vue";
 
 const route = useRoute();
 const store = useStore();

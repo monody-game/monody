@@ -2,6 +2,7 @@
   <div class="role-selector__container">
     <div class="role-selector__main">
       <button
+        v-if="operations"
         :class="count === 0 ? 'disable-hover' : ''"
         :disabled="count === 0"
         class="btn role-selector__operation-button role-selector__operation-minus"
@@ -19,6 +20,7 @@
         class="role-selector__image"
       >
       <button
+        v-if="operations"
         :class="count >= default_limit || count >= props.role.limit ? 'disable-hover' : ''"
         :disabled="count >= default_limit || count >= props.role.limit"
         class="btn role-selector__operation-button role-selector__operation-add"
@@ -43,6 +45,11 @@ const props = defineProps({
 	role: {
 		type: Object,
 		required: true
+	},
+	operations: {
+		type: Boolean,
+		required: false,
+		default: true
 	}
 });
 
