@@ -56,6 +56,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            EncryptCookies::class,
             AddTokenToRequests::class,
             ThrottleRequests::class . ':api',
             SubstituteBindings::class,
