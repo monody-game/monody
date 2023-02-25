@@ -192,7 +192,7 @@ class GameController extends Controller
         }
 
         $game = Redis::get("game:$gameId");
-		/** @var User $owner */
+        /** @var User $owner */
         $owner = User::where('id', $game['owner'])->first();
         $votes = Redis::get("game:$gameId:votes");
         $state = Redis::get("game:$gameId:state");

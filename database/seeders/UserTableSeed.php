@@ -35,7 +35,7 @@ class UserTableSeed extends Seeder
             'email' => 'johndoe@monody.fr',
             'password' => Hash::make('johndoe'),
             'created_at' => Carbon::now(),
-			'level' => 3
+            'level' => 3,
         ]);
 
         $stat = new Statistic();
@@ -46,7 +46,7 @@ class UserTableSeed extends Seeder
             'username' => 'gerard123',
             'avatar' => '/assets/avatars/default.png',
             'email' => 'gerard123@monody.fr',
-			'level' => 2,
+            'level' => 2,
             'password' => Hash::make('gerard123'),
             'created_at' => Carbon::now(),
         ]);
