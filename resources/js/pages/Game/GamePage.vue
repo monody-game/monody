@@ -96,10 +96,6 @@ const loading = ref(false);
 let roles = store.roles;
 const assignedRole = ref(0);
 
-/* if (roles.length === 0) {
-	store.roles = (await window.JSONFetch(`/roles/game/${gameId}`, "GET")).data;
-} */
-
 const actions = await window.JSONFetch("/interactions/actions", "GET");
 store.availableActions = actions.data;
 
@@ -159,15 +155,13 @@ window.Echo.join(`game.${gameId}`)
 		store.werewolves = e.data.payload.list;
 	});
 
-onBeforeRouteLeave(() => {
+const leave = () => {
 	window.Echo.leave(`game.${gameId}`);
 	store.$reset();
-});
+};
 
-window.addEventListener("unload", () => {
-	window.Echo.leave(`game.${gameId}`);
-	store.$reset();
-});
+onBeforeRouteLeave(leave);
+window.addEventListener("unload", leave);
 
 const disconnect = async function () {
 	popupStore.setPopup({
