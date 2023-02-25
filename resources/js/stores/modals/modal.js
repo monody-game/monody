@@ -10,7 +10,7 @@ import { useStore as useGameDetailsModal } from "./game-details.js";
 export const useStore = defineStore("modal", {
 	state: () => {
 		return {
-			opennedModal: "",
+			opennedModal: "popup",
 		};
 	},
 	getters: {
@@ -35,10 +35,11 @@ export const useStore = defineStore("modal", {
 	},
 	actions: {
 		close() {
+			if (!this.opennedModal) return;
 			this.getModalStore(this.opennedModal).close();
 
 			if (this.opennedModal !== "popup") {
-				this.opennedModal = null;
+				this.opennedModal = "popup";
 			}
 		},
 		open(type) {
