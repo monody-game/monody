@@ -340,6 +340,7 @@ class GameControllerTest extends TestCase
                         Roles::Witch->value => 1,
                     ],
                     'dead_users' => [],
+                    'voted_users' => [],
                     'state' => [
                         'status' => States::Waiting->value,
                         'counterDuration' => States::Waiting->duration(),
