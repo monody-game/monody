@@ -3,6 +3,7 @@
     ref="player"
     :data-id="props.player.id"
     class="player__container"
+    :data-is-dead="isDead"
     @click="send(userID, props.player.id)"
   >
     <PlayerInteractionBubble
@@ -78,6 +79,25 @@ const gamePlayer = gameStore.getPlayerByID(props.player.id);
 onMounted(() => {
 	if (player.value !== null) {
 		gameStore.playerRefs.push(player);
+	}
+});
+
+gameStore.$subscribe((mutation, state) => {
+	if (state.dead_users.includes(props.player.id)) {
+		isDead.value = true;
+	}
+
+	if (state.werewolves.includes(props.player.id)) {
+		isWerewolf.value = true;
+	}
+
+	if (Object.keys(state.voted_users).includes(props.player.id)) {
+		isVoted.value = true;
+		votedBy.value = gameStore.voted_users[props.player.id];
+	}
+
+	if (state.mayor === props.player.id) {
+		isMayor.value = true;
 	}
 });
 
@@ -175,33 +195,7 @@ window.Echo
 		gameStore.currentInteractionId = "";
 	})
 	.listen(".interaction.vote", ({ data }) => addVote(data))
-	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data))
-	.listen(".game.kill", (e) => {
-		const killed = e.data.payload.killedUser;
-
-		if (killed === null) {
-			return;
-		}
-
-		const user = gameStore.getPlayerByID(killed);
-
-		if (user.id === props.player.id) {
-			isDead.value = true;
-			player.value.setAttribute("data-is-dead", true);
-		}
-	})
-	.listen(".game.werewolves", (e) => {
-		for (const user of e.data.payload.list) {
-			if (props.player.id === user) {
-				isWerewolf.value = true;
-			}
-		}
-	})
-	.listen(".game.mayor", (e) => {
-		if (props.player.id === e.data.payload.mayor) {
-			isMayor.value = true;
-		}
-	});
+	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data));
 
 const send = async function(votingUser, votedUser) {
 	let action = null;
