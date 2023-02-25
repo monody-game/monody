@@ -42,9 +42,12 @@
             label="Mot de passe"
             @model="(newPassword) => password = newPassword"
           />
-          <a class="auth-page__link">
+          <router-link
+            class="auth-page__link"
+            to="forgot"
+          >
             Mot de passe oublié ?
-          </a>
+          </router-link>
           <div class="auth-page__submit-group">
             <router-link
               class="auth-page__link"
