@@ -23,7 +23,7 @@ class PasswordController extends Controller
             ? (new JsonResponse())->withPopup(
 				AlertType::Success,
 				'Un email vient de vous être envoyé avec un lien pour changer votre mot de passe !',
-				'le mail peut mettre quelques minutes à arriver, veillez à regarder dans vos spams également.'
+				'le mail peut mettre quelques minutes à arriver, veillez à regarder dans vos spams également. Vous pouvez fermer cette page'
 			)
             : (new JsonResponse(null, Response::HTTP_BAD_REQUEST))->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status));
     }
@@ -49,6 +49,6 @@ class PasswordController extends Controller
 
         return $status === Password::PASSWORD_RESET
             ? new JsonResponse()
-            : (new JsonResponse())->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status));
+            : (new JsonResponse(null, Response::HTTP_BAD_REQUEST))->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status));
     }
 }
