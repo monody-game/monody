@@ -21,10 +21,10 @@ class PasswordController extends Controller
 
         return $status === Password::RESET_LINK_SENT
             ? (new JsonResponse())->withPopup(
-				AlertType::Success,
-				'Un email vient de vous être envoyé avec un lien pour changer votre mot de passe !',
-				'le mail peut mettre quelques minutes à arriver, veillez à regarder dans vos spams également. Vous pouvez fermer cette page'
-			)
+                AlertType::Success,
+                'Un email vient de vous être envoyé avec un lien pour changer votre mot de passe !',
+                'le mail peut mettre quelques minutes à arriver, veillez à regarder dans vos spams également. Vous pouvez fermer cette page'
+            )
             : (new JsonResponse(null, Response::HTTP_BAD_REQUEST))->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status));
     }
 

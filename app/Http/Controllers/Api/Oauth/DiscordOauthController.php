@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
+use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,7 +32,9 @@ final class DiscordOauthController extends Controller
         }
 
         try {
-            $discordUser = Socialite::driver('discord')->stateless()->user();
+			/** @var AbstractProvider $driver */
+			$driver = Socialite::driver('discord');
+            $discordUser = $driver->stateless()->user();
         } catch (Exception) {
             return (new JsonResponse([], Response::HTTP_BAD_REQUEST))
                 ->withMessage('An error occurred, try to relog.');
