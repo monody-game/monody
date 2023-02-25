@@ -347,6 +347,7 @@ class GameControllerTest extends TestCase
                         'round' => 0,
                         'startTimestamp' => Carbon::now()->timestamp,
                     ],
+                    'current_interactions' => [],
                 ],
             ]);
 
