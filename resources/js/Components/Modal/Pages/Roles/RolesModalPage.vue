@@ -20,10 +20,10 @@
 </template>
 
 <script setup>
+import { computed, onMounted, ref } from "vue";
 import RoleSelector from "./RoleSelector.vue";
 import LogoSpinner from "../../../Spinners/LogoSpinner.vue";
 import { useStore } from "../../../../stores/modals/game-creation-modal.js";
-import { computed, onMounted, ref } from "vue";
 import RolesBalance from "./RolesBalance.vue";
 
 const roles = ref([]);

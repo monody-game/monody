@@ -8,7 +8,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class WerewolvesList implements ShouldBroadcastNow
+class MayorElected implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -16,9 +16,7 @@ class WerewolvesList implements ShouldBroadcastNow
      * Create a new event instance.
      */
     public function __construct(
-        public array $payload,
-        public bool $private = true,
-        public array $recipients = []
+        public array $payload
     ) {
     }
 
@@ -29,6 +27,6 @@ class WerewolvesList implements ShouldBroadcastNow
 
     public function broadcastAs(): string
     {
-        return 'game.werewolves';
+        return 'game.mayor';
     }
 }

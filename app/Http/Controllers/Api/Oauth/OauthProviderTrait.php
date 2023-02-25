@@ -10,10 +10,12 @@ trait OauthProviderTrait
     /**
      * @param  string[]  $scopes
      */
-    public function generateProvider(string $provider, array $scopes): AbstractProvider
+    public function generateProvider(string $name, array $scopes): AbstractProvider
     {
-        return Socialite::driver($provider)
-            ->stateless()
+        /** @var AbstractProvider $provider */
+        $provider = Socialite::driver($name);
+
+        return $provider->stateless()
             ->scopes($scopes);
     }
 }

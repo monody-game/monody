@@ -16,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
 
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             return (new MailMessage)
-                ->subject('Vérifiez votre adresse mail')
+                ->subject('Monody | Vérifiez votre adresse mail')
                 ->line('Cliquez sur le bouton ci-dessous afin de vérifier votre adresse mail.')
                 ->action('Vérifier', $url);
         });

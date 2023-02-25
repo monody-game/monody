@@ -15,7 +15,7 @@ export default async function canJoin({ router, to }) {
 		})
 	});
 
-	if (res.status === 403) {
+	if (!res.ok) {
 		alerts.addAlerts({
 			"error":	"Vous ne pouvez rejoindre cette partie."
 		});

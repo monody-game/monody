@@ -24,6 +24,12 @@
         <p>Accueil</p>
       </a>
       <Suspense><GameCounter /></Suspense>
+      <svg
+        class="game-page__details"
+        @click="modalStore.open('game-details')"
+      >
+        <use href="/sprite.svg#question" />
+      </svg>
     </div>
     <div class="game-page__main">
       <Transition name="modal">
@@ -36,6 +42,13 @@
       <Chat />
       <LogoSpinner v-if="loading" />
       <PlayerList />
+      <img
+        v-if="typeof store.assignedRole.id !== 'undefined'"
+        :src="store.assignedRole.image"
+        :alt="store.assignedRole.display_name"
+        :title="store.assignedRole.display_name"
+        class="game-page__role"
+      >
     </div>
     <Transition name="modal">
       <ShareGameModal v-if="shareModalStore.isOpenned" />
@@ -43,13 +56,16 @@
     <Transition name="modal">
       <ActivityConfirmationModal v-if="activityConfirmationModalStore.isOpenned" />
     </Transition>
+    <Transition name="modal">
+      <GameDetailsModal v-if="modalStore.opennedModal === 'game-details'" />
+    </Transition>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
-import { useStore as useGameStore, useStore } from "../../stores/game.js";
+import { useStore } from "../../stores/game.js";
 import { useStore as usePopupStore } from "../../stores/modals/popup.js";
 import { useStore as useAssignationPopupStore } from "../../stores/modals/role-assignation.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
@@ -63,13 +79,13 @@ import PlayerList from "../../Components/PlayerList/PlayerList.vue";
 import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import ShareGameModal from "../../Components/Modal/ShareGameModal.vue";
 import ActivityConfirmationModal from "../../Components/Modal/ActivityConfirmationModal.vue";
+import GameDetailsModal from "../../Components/Modal/GameDetailsModal.vue";
 
 const route = useRoute();
 const store = useStore();
 
 const shareModalStore = useShareModalStore();
 const popupStore = usePopupStore();
-const gameStore = useGameStore();
 const userStore = useUserStore();
 const assignationPopupStore = useAssignationPopupStore();
 const modalStore = useModalStore();
@@ -77,12 +93,8 @@ const activityConfirmationModalStore = useActivityConfirmationModalStore();
 
 const gameId = route.params.id;
 const loading = ref(false);
-const roles = store.roles;
+let roles = store.roles;
 const assignedRole = ref(0);
-
-if (roles.length === 0) {
-	store.roles = (await window.JSONFetch(`/roles/game/${gameId}`, "GET")).data;
-}
 
 const actions = await window.JSONFetch("/interactions/actions", "GET");
 store.availableActions = actions.data;
@@ -92,10 +104,32 @@ if (localStorage.getItem("show_share") === "true") {
 }
 
 window.Echo.join(`game.${gameId}`)
+	.listen(".game.data", async (e) => {
+		e = e.data.payload;
+		store.owner = e.owner;
+
+		if (Object.keys(e.roles) !== roles.map(role => role.id) || roles.length === 0) {
+			roles = [];
+			for (const role in e.roles) {
+				const res = await window.JSONFetch(`/roles/get/${role}`, "GET");
+				const rolePayload = res.data.role;
+				rolePayload.count = e.roles[role];
+				roles.push(rolePayload);
+			}
+		}
+
+		store.voted_users = e.voted_users;
+		store.dead_users = e.dead_users;
+		store.roles = roles;
+
+		if (e.current_interactions.length > 0) {
+			store.currentInteractionId = e.current_interactions[0].id;
+		}
+	})
 	.listen(".game.role-assign", async (role_id) => {
 		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
 		const role = res.data.role;
-		gameStore.setRole(userStore.id, role);
+		store.setRole(userStore.id, role);
 		assignedRole.value = role.id;
 		modalStore.opennedModal = "role-assignation";
 		assignationPopupStore.isOpenned = true;
@@ -105,17 +139,29 @@ window.Echo.join(`game.${gameId}`)
 				modalStore.close();
 			}
 		}, 20000);
+	})
+	.listen(".game.kill", (e) => {
+		const killed = e.data.payload.killedUser;
+
+		if (killed === null) {
+			return;
+		}
+
+		store.dead_users.push(killed);
+	})
+	.listen(".game.mayor", (e) => {
+		store.mayor = e.data.payload.mayor;
+	}).listen(".game.werewolves", (e) => {
+		store.werewolves = e.data.payload.list;
 	});
 
-onBeforeRouteLeave(() => {
+const leave = () => {
 	window.Echo.leave(`game.${gameId}`);
 	store.$reset();
-});
+};
 
-window.addEventListener("unload", () => {
-	window.Echo.leave(`game.${gameId}`);
-	store.$reset();
-});
+onBeforeRouteLeave(leave);
+window.addEventListener("unload", leave);
 
 const disconnect = async function () {
 	popupStore.setPopup({

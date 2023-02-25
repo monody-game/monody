@@ -1,0 +1,55 @@
+.game-details__wrapper {
+	flex-direction: column;
+	justify-content: initial;
+
+	gap: space(3);
+}
+
+.game-details__group {
+	display: grid;
+	gap: space(2);
+}
+
+.game-details__roles .roles__list{
+	margin-top: space(2);
+}
+
+.game-details__owner {
+	display: flex;
+	gap: space(1);
+
+	& img {
+		height: 50px;
+		aspect-ratio: 1 / 1;
+		object-fit: cover;
+
+		border-radius: 50%;
+	}
+}
+
+.game-details__owner-right{
+	display: flex;
+	flex-direction: column;
+	gap: space(.5);
+}
+
+.game-details__owner-stats {
+	display: flex;
+	gap: space(2);
+
+	& div {
+		display: flex;
+		gap: space(.5);
+		align-items: center;
+	}
+
+	& div svg {
+		height: 24px;
+		aspect-ratio: 1 / 1;
+	}
+}
+
+.game-details .modal__buttons-right {
+	flex: 1;
+	justify-content: flex-end;
+}

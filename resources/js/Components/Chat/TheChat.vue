@@ -10,7 +10,7 @@
           :message="message.content"
         />
         <ChatAlert
-          v-else-if="message.type !== 'message' && message.type !== 'werewolf'"
+          v-else-if="message.type !== 'message' && message.type !== 'werewolf' && message.type !== 'dead'"
           :message="message.content"
           :type="message.type"
           :actions="message.actionList"

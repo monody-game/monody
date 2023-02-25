@@ -78,7 +78,7 @@ class GameChatController extends Controller
         if ($request->has('users')) {
             broadcast(new ChatLock($gameId, true, (array) $request->get('users')));
         } elseif ($request->has('team')) {
-            $emitters = [];
+            $recipients = [];
 
             foreach (Teams::from($request->get('team'))->roles() as $role) {
                 $users = $this->getUserIdByRole($role, $gameId);
@@ -87,10 +87,10 @@ class GameChatController extends Controller
                     continue;
                 }
 
-                $emitters = [...$emitters, ...$users];
+                $recipients = [...$recipients, ...$users];
             }
 
-            broadcast(new ChatLock($gameId, true, $emitters));
+            broadcast(new ChatLock($gameId, true, $recipients));
         } else {
             broadcast(new ChatLock($gameId));
         }

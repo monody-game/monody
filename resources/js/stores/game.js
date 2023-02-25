@@ -8,7 +8,13 @@ export const useStore = defineStore("game", {
 			currentInteractionId: "",
 			availableActions: {},
 			playerRefs: [],
-			roles: []
+			roles: [],
+			assignedRole: {},
+			owner: {},
+			dead_users: [],
+			voted_users: {},
+			mayor: "",
+			werewolves: []
 		};
 	},
 	actions: {

@@ -37,7 +37,7 @@ class LoginController extends Controller
         }
 
         $accessToken = $user->createToken('auth_token')->plainTextToken;
-        $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Lax');
+        $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Strict');
 
         return (new JsonResponse([]))
             ->withAlert(AlertType::Success, 'Bon jeu !')

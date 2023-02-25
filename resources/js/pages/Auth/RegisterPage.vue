@@ -118,12 +118,10 @@
 </template>
 
 <script setup>
-import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import NoticeComponent from "../../Components/NoticeComponent.vue";
-import VisibilityToggle from "../../Components/Form/VisibilityToggle.vue";
 import { useStore } from "../../stores/alerts.js";
+import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import InputComponent from "../../Components/Form/InputComponent.vue";
 
 const router = useRouter();
@@ -172,7 +170,7 @@ watch(username, (newUsername) => {
 watch(password, (newPassword) => {
 	if (newPassword.length < 8) {
 		errors.value.password.errored = true;
-		errors.value.password.text = "Votre mot-de-passe doit faire plus de 8 caractères";
+		errors.value.password.text = "Votre mot de passe doit faire plus de 8 caractères";
 	} else {
 		errors.value.password.errored = false;
 		errors.value.password.text = "";

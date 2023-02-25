@@ -4,7 +4,7 @@ import { GameService } from "../Services/GameService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
-import { info, log } from "../Logger.js";
+import { log } from "../Logger.js";
 
 const StartingState = (await fetch(`${process.env.API_URL}/state/1`, { "method": "GET" })).json;
 
@@ -69,10 +69,6 @@ export class GameChannel {
 
 		const count = await this.gameService.getRolesCount(id);
 		const game = await GameService.getGame(id);
-
-		setTimeout(async () => {
-			this.io.to(socket.id).emit("game.data", channel, await this.stateManager.getState(gameId(channel)));
-		}, 100);
 
 		if (members.length === count && game.is_started === false) {
 			await this.gameService.startGame(channel, game, members, socket);
@@ -144,6 +140,12 @@ export class GameChannel {
 		this.io.to("home").volatile.emit("game-list.update", "home", {
 			data: list.json
 		});
+
+		const gameData = await fetch(`${process.env.API_URL}/game/${gameId(channel)}`, {
+			method: "GET"
+		});
+
+		this.io.to(member.socketId).emit("game.data", channel, { data: { payload: gameData.json.game } });
 	}
 
 	async onLeave(channel, member) {

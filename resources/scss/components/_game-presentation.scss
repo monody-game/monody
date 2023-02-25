@@ -20,7 +20,7 @@
 		margin-top: space(1);
 	}
 
-	& .game-show__role {
+	& .game-show__role-image {
 		height: 30px;
 		width: 30px;
 		margin-right: space(1);
@@ -35,6 +35,29 @@
 		outline-width: 3px;
 		text-decoration: none;
 	}
+}
+
+.game-show__role {
+	display: inline-block;
+	position: relative;
+}
+
+.game-show__role-count {
+	height: 20px;
+	width: 20px;
+
+	border: var(--border-secondary) solid 2px;
+	border-radius: 50%;
+
+	display: grid;
+	place-items: center;
+
+	position: absolute;
+	bottom: -2px;
+	right: 2px;
+	z-index: 10;
+
+	background-color: var(--primary-hover);
 }
 
 .game-show__center {

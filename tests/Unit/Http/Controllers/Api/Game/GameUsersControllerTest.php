@@ -16,7 +16,7 @@ class GameUsersControllerTest extends TestCase
     public function testListUsers()
     {
         $this->actingAs($this->user, 'api')
-            ->call('GET', '/api/game/users', ['gameId' => $this->game['id']])
+            ->get("/api/game/{$this->game['id']}/users")
             ->assertJson([
                 'users' => [
                     $this->user['id'],

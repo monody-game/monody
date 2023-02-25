@@ -19,6 +19,7 @@ export const useStore = defineStore("game-creation-modal", {
 						count++;
 					}
 				});
+
 				return count;
 			};
 		},
