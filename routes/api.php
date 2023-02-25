@@ -43,6 +43,7 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/roles/assign', 'RoleController@assign');
 
     Route::delete('/game', 'Game\GameController@delete');
+    Route::get('/game/{gameId}', 'Game\GameController@data');
     Route::post('/game/join', 'Game\GameController@join');
     Route::post('/game/leave', 'Game\GameController@leave');
 
@@ -74,7 +75,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::put('/game', 'Game\GameController@new');
     Route::post('/game/check', 'Game\GameController@check');
 
-    Route::get('/game/users', 'Game\GameUsersController@list');
+    Route::get('/game/{id}/users', 'Game\GameUsersController@list');
     Route::get('/game/user/{id}/role', 'Game\GameUsersController@role');
 
     Route::post('/game/message/send', 'Game\GameChatController@send');

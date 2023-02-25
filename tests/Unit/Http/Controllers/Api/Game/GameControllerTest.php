@@ -2,29 +2,22 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
+use App\Enums\Roles;
 use App\Enums\States;
 use App\Facades\Redis;
-use App\Http\Controllers\Api\Game\GameController;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class GameControllerTest extends TestCase
 {
-    private GameController $controller;
-
     private User $user;
 
     private User $secondUser;
 
     private array $game;
-
-    public function testGeneratingGameId()
-    {
-        $id = $this->controller->generateGameId();
-        $this->assertMatchesRegularExpression("/^[a-zA-Z\d]+[^+\/=]+$/", $id);
-    }
 
     public function testCreatingGameWithWrongRequest()
     {
@@ -49,6 +42,7 @@ class GameControllerTest extends TestCase
                 'status' => States::Waiting->value,
                 'counterDuration' => States::Waiting->duration(),
                 'round' => 0,
+                'startTimestamp' => Carbon::now()->timestamp,
             ],
             Redis::get("game:{$res->json('game')['id']}:state")
         );
@@ -315,13 +309,58 @@ class GameControllerTest extends TestCase
             ->assertUnprocessable();
     }
 
+    public function testRetrievingGameData()
+    {
+        $res = $this->actingAs($this->user, 'api')->put('/api/game', [
+            'users' => [],
+            'roles' => [
+                Roles::Werewolf->value,
+                Roles::WhiteWerewolf->value,
+                Roles::Werewolf->value,
+                Roles::Witch->value,
+            ],
+        ])->json('game');
+
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->get("/api/game/{$res['id']}")
+            ->assertJson([
+                'game' => [
+                    'id' => $res['id'],
+                    'owner' => [
+                        'id' => $this->user->id,
+                        'username' => $this->user->username,
+                        'avatar' => $this->user->avatar,
+                        'level' => $this->user->level,
+                        'elo' => 'N/A',
+                    ],
+                    'roles' => [
+                        Roles::Werewolf->value => 2,
+                        Roles::WhiteWerewolf->value => 1,
+                        Roles::Witch->value => 1,
+                    ],
+                    'dead_users' => [],
+                    'state' => [
+                        'status' => States::Waiting->value,
+                        'counterDuration' => States::Waiting->duration(),
+                        'round' => 0,
+                        'startTimestamp' => Carbon::now()->timestamp,
+                    ],
+                ],
+            ]);
+
+		$this
+			->withoutMiddleware(RestrictToLocalNetwork::class)
+			->get("/api/game/unexisting")
+			->assertNotFound();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
 
         Redis::flushDb();
 
-        $this->controller = new GameController();
         $this->user = User::factory()->create();
         $this->secondUser = User::factory()->create();
         $this->game = [

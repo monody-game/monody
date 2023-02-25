@@ -19,6 +19,7 @@ use App\Traits\RegisterHelperTrait;
 use function array_key_exists;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -107,7 +108,7 @@ class GameController extends Controller
         $data['owner'] = $user->id;
         $data['is_started'] = false;
         $data['dead_users'] = [];
-        $id = $this->generateGameId();
+        $id = Str::random(12);
         $data['id'] = $id;
 
         if (!array_search($data['owner'], $data['users'], true)) {
@@ -121,6 +122,7 @@ class GameController extends Controller
             'status' => States::Waiting,
             'counterDuration' => States::Waiting->duration(),
             'round' => 0,
+            'startTimestamp' => Carbon::now()->timestamp,
         ]);
         Redis::set("game:$id:votes", []);
 
@@ -133,11 +135,6 @@ class GameController extends Controller
         broadcast(new GameListUpdate($this->list()->getData(true)['games']));
 
         return new JsonResponse(['game' => $data]);
-    }
-
-    public function generateGameId(): string
-    {
-        return Str::random(12);
     }
 
     public function delete(GameIdRequest $request): JsonResponse
@@ -186,5 +183,32 @@ class GameController extends Controller
         $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    public function data(string $gameId): JsonResponse
+    {
+		if(!Redis::exists("game:$gameId")) {
+			return new JsonResponse("Game $gameId not found.", Response::HTTP_NOT_FOUND);
+		}
+
+        $game = Redis::get("game:$gameId");
+        $owner = User::where('id', $game['owner'])->first();
+        $state = Redis::get("game:$gameId:state");
+
+        return new JsonResponse([
+            'game' => [
+                'id' => $gameId,
+                'owner' => [
+                    'id' => $owner->id,
+                    'username' => $owner->username,
+                    'avatar' => $owner->avatar,
+                    'level' => $owner->level,
+                    'elo' => 'N/A',
+                ],
+                'roles' => $game['roles'],
+                'dead_users' => $game['dead_users'],
+                'state' => $state,
+            ],
+        ]);
     }
 }
