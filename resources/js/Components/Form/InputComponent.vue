@@ -12,7 +12,7 @@
         ({{ props.labelNote }})
       </span>
       <NoticeComponent
-        v-if="props.type === 'email'"
+        v-if="props.type === 'email' && props.note"
         title="Pourquoi dois-je donner cette information ?"
       >
         Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody). Veillez à rentrer une adresse mail valide, vous devrez la vérifier.
@@ -70,6 +70,11 @@ const props = defineProps({
 	value: {
 		default: "",
 		type: String,
+		required: false
+	},
+	note: {
+		default: true,
+		type: Boolean,
 		required: false
 	}
 });

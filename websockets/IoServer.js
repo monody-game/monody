@@ -58,7 +58,7 @@ export class IoServer {
 
 			const members = await GameService.getMembers(gameId(channel));
 
-			for (let caller of message.data.emitters) {
+			for (let caller of message.data.recipients) {
 				caller = members.find(member => member.user_id === caller);
 				if (caller) {
 					this.server.to(caller.socketId).emit(message.event, channel, { data: { payload: message.data.payload } });

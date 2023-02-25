@@ -3,6 +3,7 @@
     ref="player"
     :data-id="props.player.id"
     class="player__container"
+    :data-is-dead="isDead"
     @click="send(userID, props.player.id)"
   >
     <PlayerInteractionBubble
@@ -17,17 +18,31 @@
         :src="props.player.avatar + '?h=120&dpr=2'"
         class="player__avatar"
       >
-      <div class="player__is-dead">
+      <div
+        v-if="isDead === true"
+        class="player__is-dead"
+      >
         <span class="player__is-dead-shadow" />
-        <svg v-if="isDead === true">
+        <svg>
           <use href="/sprite.svg#death" />
         </svg>
       </div>
-      <span
-        v-if="isWerewolf === true"
-        class="player__is-wolf"
-        title="Ce joueur est votre allié !"
-      />
+      <div class="player__badges">
+        <span
+          v-if="isWerewolf === true"
+          class="player__is-wolf"
+          title="Ce joueur est votre allié !"
+        />
+        <span
+          v-if="isMayor === true"
+          title="Ce joueur est le maire !"
+          class="player__is-mayor"
+        >
+          <svg>
+            <use href="/sprite.svg#mayor" />
+          </svg>
+        </span>
+      </div>
     </div>
     <p class="player__username">
       {{ props.player.username }}
@@ -52,6 +67,7 @@ const props = defineProps({
 const votedBy = ref(props.player.voted_by);
 const isVoted = ref(false);
 const isDead = ref(false);
+const isMayor = ref(false);
 const isWerewolf = ref(false);
 const interactionType = ref("");
 const gameStore = useGameStore();
@@ -63,6 +79,25 @@ const gamePlayer = gameStore.getPlayerByID(props.player.id);
 onMounted(() => {
 	if (player.value !== null) {
 		gameStore.playerRefs.push(player);
+	}
+});
+
+gameStore.$subscribe((mutation, state) => {
+	if (state.dead_users.includes(props.player.id)) {
+		isDead.value = true;
+	}
+
+	if (state.werewolves.includes(props.player.id)) {
+		isWerewolf.value = true;
+	}
+
+	if (Object.keys(state.voted_users).includes(props.player.id)) {
+		isVoted.value = true;
+		votedBy.value = gameStore.voted_users[props.player.id];
+	}
+
+	if (state.mayor === props.player.id) {
+		isMayor.value = true;
 	}
 });
 
@@ -83,8 +118,14 @@ window.Echo
 		switch (interaction.type) {
 		case "vote":
 		case "werewolves":
+		case "white_werewolf":
 			if (isDead.value === false) {
 				player.value.classList.add("player__votable");
+			}
+			break;
+		case "mayor":
+			if (isDead.value === false) {
+				player.value.classList.add("player__electable");
 			}
 			break;
 		case "psychic":
@@ -133,8 +174,10 @@ window.Echo
 		switch (interaction.type) {
 		case "vote":
 		case "werewolves":
-			if (player.value && player.value.classList.contains("player__votable")) {
-				player.value.classList.remove("player__votable");
+		case "white_werewolf":
+		case "mayor":
+			if (player.value) {
+				player.value.classList.remove("player__votable", "player__electable");
 			}
 
 			votedBy.value = [];
@@ -152,28 +195,7 @@ window.Echo
 		gameStore.currentInteractionId = "";
 	})
 	.listen(".interaction.vote", ({ data }) => addVote(data))
-	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data))
-	.listen(".game.kill", (e) => {
-		const killed = e.data.payload.killedUser;
-
-		if (killed === null) {
-			return;
-		}
-
-		const user = gameStore.getPlayerByID(killed);
-
-		if (user.id === props.player.id) {
-			isDead.value = true;
-			player.value.setAttribute("data-is-dead", true);
-		}
-	})
-	.listen(".game.werewolves", (e) => {
-		for (const user of e.data.payload.list) {
-			if (props.player.id === user) {
-				isWerewolf.value = true;
-			}
-		}
-	});
+	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data));
 
 const send = async function(votingUser, votedUser) {
 	let action = null;

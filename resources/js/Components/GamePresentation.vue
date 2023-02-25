@@ -2,7 +2,7 @@
   <router-link
     :to="{ name: 'game', params: { id: props.game.id } }"
     class="game-show__container"
-    @click="setRoles"
+    @click="setGame()"
   >
     <img
       :alt="props.game.owner.username + '\'s avatar'"
@@ -12,13 +12,24 @@
     <div class="game-show__center">
       <p>{{ props.game.owner.username }}</p>
       <div class="game-show__roles">
-        <img
-          v-for="role_id in Object.keys(props.game.roles)"
+        <div
+          v-for="(count, role_id) in props.game.roles"
           :key="role_id"
-          :src="props.roles.find(role => parseInt(role.id) === parseInt(role_id)).image + '?h=30&dpr=2'"
-          alt=""
           class="game-show__role"
         >
+          <span
+            v-if="count > 1"
+            class="game-show__role-count"
+          >
+            {{ count }}
+          </span>
+          <img
+            :src="props.roles.find(role => parseInt(role.id) === parseInt(role_id)).image + '?h=30&dpr=2'"
+            alt=""
+            class="game-show__role-image"
+            :title="props.roles.find(role => parseInt(role.id) === parseInt(role_id)).display_name"
+          >
+        </div>
       </div>
     </div>
     <p>{{ props.game.users.length }} / {{ getUserCount() }}</p>
@@ -48,9 +59,11 @@ const getUserCount = function () {
 	return total;
 };
 
-const setRoles = async function () {
+const setGame = async function () {
 	store.roles = props.roles.filter(role => {
 		return Object.keys(props.game.roles).includes(role.id.toString());
 	});
+
+	store.owner = props.game.owner;
 };
 </script>

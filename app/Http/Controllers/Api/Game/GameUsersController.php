@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\Roles;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\UserRoleRequest;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
@@ -15,9 +14,9 @@ class GameUsersController extends Controller
     use GameHelperTrait;
     use MemberHelperTrait;
 
-    public function list(GameIdRequest $request): JsonResponse
+    public function list(string $gameId): JsonResponse
     {
-        $game = $this->getGame($request->validated('gameId'));
+        $game = $this->getGame($gameId);
 
         return new JsonResponse(['users' => $game['users']]);
     }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-once>
     <main>
       <svg
         fill="none"

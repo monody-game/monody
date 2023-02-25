@@ -77,10 +77,8 @@ window.Echo.join(`game.${route.params.id}`)
 			}
 		}
 	})
-	.listen(".game.data", async (data) => {
-		if (data && data.status !== status.value) {
-			await setData(data);
-		}
+	.listen(".game.data", async ({ data }) => {
+		await setData(data.payload.state);
 	});
 
 onBeforeRouteLeave(() => {
@@ -178,6 +176,7 @@ const updateOverlay = function () {
 	default:
 		break;
 	case 2:
+		chatStore.send("Tombée de la nuit", "time_separator");
 		counterIcon.value.classList.remove("counter__icon-rotate");
 		break;
 	case 6:

@@ -1,11 +1,11 @@
 .cache
 !avatars
-!roles
 !.gitignore
+!roles
 !roles/default.png
 !roles/simple_villager.png
 !roles/psychic.png
 !roles/werewolf.png
 !roles/white_werewolf.png
 !roles/witch.png
-!roles/angel.png
+!roles/infected_werewolf.png

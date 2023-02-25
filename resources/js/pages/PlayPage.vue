@@ -1,7 +1,10 @@
 <template>
   <div class="play-page">
     <div class="play-page__wrapper">
-      <header class="play-page__header">
+      <header
+        v-once
+        class="play-page__header"
+      >
         <div class="play-page__header-title">
           <svg>
             <use href="/sprite.svg#monody" />

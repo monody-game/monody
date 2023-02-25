@@ -20,7 +20,7 @@ class MessageSended implements ShouldBroadcast
     public function __construct(
         Message $message,
         public bool $private = false,
-        public array $emitters = []
+        public array $recipients = []
     ) {
         $this->payload = $message->all();
     }

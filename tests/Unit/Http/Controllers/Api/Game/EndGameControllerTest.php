@@ -106,7 +106,7 @@ class EndGameControllerTest extends TestCase
                     'gameId' => $gameId,
                 ],
                 'private' => true,
-                'emitters' => [$villager->id],
+                'recipients' => [$villager->id],
                 'socket' => null,
             ];
         });
@@ -117,7 +117,7 @@ class EndGameControllerTest extends TestCase
                     'gameId' => $gameId,
                 ],
                 'private' => true,
-                'emitters' => [$werewolf->id],
+                'recipients' => [$werewolf->id],
                 'socket' => null,
             ];
         });
@@ -193,7 +193,7 @@ class EndGameControllerTest extends TestCase
                     'gameId' => $gameId,
                 ],
                 'private' => true,
-                'emitters' => [$this->secondUser->id],
+                'recipients' => [$this->secondUser->id],
                 'socket' => null,
             ];
         });
@@ -204,7 +204,7 @@ class EndGameControllerTest extends TestCase
                     'gameId' => $gameId,
                 ],
                 'private' => true,
-                'emitters' => [$this->user->id],
+                'recipients' => [$this->user->id],
                 'socket' => null,
             ];
         });
