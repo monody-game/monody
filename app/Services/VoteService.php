@@ -200,11 +200,6 @@ class VoteService
         return $majority;
     }
 
-    private function isVotingUser(string $userId, array $votes, string $votingUser): bool
-    {
-        return array_key_exists($userId, $votes) && in_array($votingUser, $votes[$userId], true);
-    }
-
     private static function getVotingUsers(array $users, array $votes): array
     {
         $voters = [];
