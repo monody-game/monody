@@ -46,9 +46,9 @@ class ResponseMacroServiceProvider extends ServiceProvider
                     'content' => $content,
                 ];
 
-				if($note !== null) {
-					$popup['note'] = $note;
-				}
+                if ($note !== null) {
+                    $popup['note'] = $note;
+                }
 
                 if ($link !== null) {
                     $popup['link'] = $link;
