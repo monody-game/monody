@@ -349,10 +349,10 @@ class GameControllerTest extends TestCase
                 ],
             ]);
 
-		$this
-			->withoutMiddleware(RestrictToLocalNetwork::class)
-			->get("/api/game/unexisting")
-			->assertNotFound();
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->get('/api/game/unexisting')
+            ->assertNotFound();
     }
 
     protected function setUp(): void

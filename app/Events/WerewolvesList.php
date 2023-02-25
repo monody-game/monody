@@ -18,7 +18,7 @@ class WerewolvesList implements ShouldBroadcastNow
     public function __construct(
         public array $payload,
         public bool $private = true,
-        public array $emitters = []
+        public array $recipients = []
     ) {
     }
 

@@ -4,7 +4,7 @@ import { GameService } from "../Services/GameService.js";
 import fetch from "../Helpers/fetch.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
-import { info, log } from "../Logger.js";
+import { log } from "../Logger.js";
 
 const StartingState = (await fetch(`${process.env.API_URL}/state/1`, { "method": "GET" })).json;
 
