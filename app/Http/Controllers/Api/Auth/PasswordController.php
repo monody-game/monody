@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Symfony\Component\HttpFoundation\Response;
 
 class PasswordController extends Controller
 {
@@ -19,8 +20,12 @@ class PasswordController extends Controller
         $status = Password::sendResetLink($request->only('email'));
 
         return $status === Password::RESET_LINK_SENT
-            ? new JsonResponse()
-            : (new JsonResponse())->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status));
+            ? (new JsonResponse())->withPopup(
+				AlertType::Success,
+				'Un email vient de vous être envoyé avec un lien pour changer votre mot de passe !',
+				'le mail peut mettre quelques minutes à arriver, veillez à regarder dans vos spams également.'
+			)
+            : (new JsonResponse(null, Response::HTTP_BAD_REQUEST))->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status));
     }
 
     public function token(Request $request): JsonResponse

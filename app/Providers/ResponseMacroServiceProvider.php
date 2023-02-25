@@ -44,8 +44,11 @@ class ResponseMacroServiceProvider extends ServiceProvider
             ) {
                 $popup = [
                     'content' => $content,
-                    'note' => $note,
                 ];
+
+				if($note !== null) {
+					$popup['note'] = $note;
+				}
 
                 if ($link !== null) {
                     $popup['link'] = $link;
@@ -53,7 +56,7 @@ class ResponseMacroServiceProvider extends ServiceProvider
                 }
 
                 /** @phpstan-ignore-next-line  */
-                $this->addData('popup', [
+                $this->addData('popups', [
                     $type->value => $popup,
                 ]);
 

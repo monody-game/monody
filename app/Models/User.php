@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPassword;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -51,4 +52,9 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'discord_token',
         'discord_refresh_token',
     ];
+
+	public function sendPasswordResetNotification($token)
+	{
+		$this->notify(new ResetPassword($token));
+	}
 }
