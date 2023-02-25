@@ -101,7 +101,7 @@ class GameChatControllerTest extends TestCase
                     'type' => 'werewolf',
                 ],
                 'private' => true,
-                'emitters' => [$user->id],
+                'recipients' => [$user->id],
                 'socket' => null,
             ];
         });
@@ -138,7 +138,7 @@ class GameChatControllerTest extends TestCase
             return (array) $event === [
                 'gameId' => $game['id'],
                 'private' => true,
-                'emitters' => [$user->id],
+                'recipients' => [$user->id],
                 'socket' => null,
             ];
         });
@@ -163,7 +163,7 @@ class GameChatControllerTest extends TestCase
             return (array) $event === [
                 'gameId' => $game['id'],
                 'private' => true,
-                'emitters' => [$user->id],
+                'recipients' => [$user->id],
                 'socket' => null,
             ];
         });

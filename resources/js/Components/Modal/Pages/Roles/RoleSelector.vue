@@ -60,7 +60,7 @@ const currentSelectedCount = function () {
 	return store.getRoleCountById(props.role.id) ?? 0;
 };
 
-const count = ref(currentSelectedCount());
+const count = ref(props.role.count ?? currentSelectedCount());
 
 const substract = function () {
 	if (count.value === 0) {

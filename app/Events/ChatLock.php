@@ -16,7 +16,7 @@ class ChatLock implements ShouldBroadcastNow
     public function __construct(
         public string $gameId,
         public bool $private = false,
-        public array $emitters = []
+        public array $recipients = []
     ) {
     }
 

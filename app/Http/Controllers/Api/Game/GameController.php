@@ -187,9 +187,9 @@ class GameController extends Controller
 
     public function data(string $gameId): JsonResponse
     {
-		if(!Redis::exists("game:$gameId")) {
-			return new JsonResponse("Game $gameId not found.", Response::HTTP_NOT_FOUND);
-		}
+        if (!Redis::exists("game:$gameId")) {
+            return new JsonResponse("Game $gameId not found.", Response::HTTP_NOT_FOUND);
+        }
 
         $game = Redis::get("game:$gameId");
         $owner = User::where('id', $game['owner'])->first();
