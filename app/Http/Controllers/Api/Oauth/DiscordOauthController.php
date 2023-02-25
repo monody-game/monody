@@ -32,8 +32,8 @@ final class DiscordOauthController extends Controller
         }
 
         try {
-			/** @var AbstractProvider $driver */
-			$driver = Socialite::driver('discord');
+            /** @var AbstractProvider $driver */
+            $driver = Socialite::driver('discord');
             $discordUser = $driver->stateless()->user();
         } catch (Exception) {
             return (new JsonResponse([], Response::HTTP_BAD_REQUEST))
@@ -48,7 +48,7 @@ final class DiscordOauthController extends Controller
             'discord_refresh_token' => $discordUser->accessTokenResponseBody['refresh_token'],
         ]);
 
-        $user->avatar = '/images/avatar/default.png' === $user->avatar ? $discordUser->getAvatar() : $user->avatar;
+        $user->avatar = '/images/avatar/default.png' === $user->avatar && $discordUser->getAvatar() !== null ? $discordUser->getAvatar() : $user->avatar;
 
         /** @var \Illuminate\Http\Client\Response $res */
         $res = Http::withToken($discordUser->accessTokenResponseBody['access_token'])
