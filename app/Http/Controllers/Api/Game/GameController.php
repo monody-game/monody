@@ -193,6 +193,7 @@ class GameController extends Controller
 
         $game = Redis::get("game:$gameId");
         $owner = User::where('id', $game['owner'])->first();
+        $votes = Redis::get("game:$gameId:votes");
         $state = Redis::get("game:$gameId:state");
 
         return new JsonResponse([
@@ -207,6 +208,7 @@ class GameController extends Controller
                 ],
                 'roles' => $game['roles'],
                 'dead_users' => $game['dead_users'],
+                'voted_users' => $votes,
                 'state' => $state,
             ],
         ]);
