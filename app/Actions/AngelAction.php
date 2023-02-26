@@ -47,8 +47,10 @@ class AngelAction implements ActionInterface
     {
         $game = Redis::get("game:$gameId");
         $users = array_filter($game['users'], fn ($user) => $user !== $this->getUserIdByRole(Roles::Angel, $gameId)[0]);
+		/** @var int<5, max> $count */
+		$count = count($users);
 
-        $target = $users[random_int(0, count($users) - 1)];
+        $target = $users[random_int(0, $count - 1)];
         $game['angel_target'] = $target;
 
         Redis::set("game:$gameId", $game);
