@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Services\RedisService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -16,10 +15,6 @@ class AppServiceProvider extends ServiceProvider
         Vite::useScriptTagAttributes([
             'defer' => true,
         ]);
-
-        $this->app->singleton(RedisService::class, function () {
-            return new RedisService();
-        });
 
         $this->app->singleton('League\Glide\Server', function () {
             $filesystem = app('Illuminate\Contracts\Filesystem\Filesystem');

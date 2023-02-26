@@ -34,7 +34,6 @@ class GameController extends Controller
                 ->withMessage('Please specify a game id to check');
         }
 
-        /** @var bool $game */
         $game = Redis::exists("game:{$request->get('gameId')}");
 
         if ($game) {
@@ -48,21 +47,14 @@ class GameController extends Controller
 
     public function list(): JsonResponse
     {
-        $cursor = '0';
-        /** @var string[] $games */
-        /** @phpstan-ignore-next-line */
-        $games = Redis::scan($cursor, ['MATCH' => 'game:*', 'COUNT' => 20])[1];
+        $games = $this->getGames();
         $list = [];
 
-        if (!$games) {
+        if ($games === []) {
             return new JsonResponse(['games' => []]);
         }
 
         foreach ($games as $game) {
-            if (!(bool) preg_match('/^game:[^:]+$/', $game)) {
-                continue;
-            }
-
             $gameData = Redis::get($game);
 
             if (!$gameData) {
@@ -73,8 +65,7 @@ class GameController extends Controller
                 continue;
             }
 
-            /** @var ?User $owner */
-            $owner = User::find($gameData['owner']);
+            $owner = User::where('id', $gameData['owner'])->first();
 
             if (!$owner) {
                 continue;
@@ -215,5 +206,16 @@ class GameController extends Controller
                 'current_interactions' => $interactions,
             ],
         ]);
+    }
+
+    /**
+     * @return array{}|string[]
+     */
+    private function getGames(): array
+    {
+        $pattern = 'game:[a-zA-Z0-9]+$';
+        $cursor = 0;
+
+        return Redis::scan($cursor, ['MATCH' => $pattern, 'LIMIT' => 20])[1];
     }
 }

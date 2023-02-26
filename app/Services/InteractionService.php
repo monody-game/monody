@@ -179,7 +179,7 @@ class InteractionService
     }
 
     /**
-     * Dictate if state's duration should be skip, depending on interaction status
+     * Dictate if state's duration should be skipped, depending on interaction status
      *
      * @param  string  $id Interaction id
      */
@@ -214,14 +214,14 @@ class InteractionService
     private function getService(string $type): ActionInterface
     {
         return match (Interactions::from($type)) {
-            Interactions::Vote => new VoteAction,
+            Interactions::Vote => app(VoteAction::class),
             Interactions::Witch => new WitchAction,
             Interactions::Psychic => new PsychicAction,
-            Interactions::Werewolves => new WerewolvesAction,
+            Interactions::Werewolves => app(WerewolvesAction::class),
             Interactions::InfectedWerewolf => new InfectedWerewolfAction,
-            Interactions::WhiteWerewolf => new WhiteWerewolfAction,
-            Interactions::Mayor => new MayorAction,
-            Interactions::Angel => new AngelAction
+            Interactions::WhiteWerewolf => app(WhiteWerewolfAction::class),
+            Interactions::Mayor => app(MayorAction::class),
+            Interactions::Angel => app(AngelAction::class)
         };
     }
 }

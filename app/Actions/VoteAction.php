@@ -12,11 +12,9 @@ class VoteAction implements ActionInterface
 {
     use MemberHelperTrait, RegisterHelperTrait;
 
-    private readonly VoteService $service;
-
-    public function __construct()
+    public function __construct(
+        private readonly VoteService $service)
     {
-        $this->service = new VoteService();
     }
 
     public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
