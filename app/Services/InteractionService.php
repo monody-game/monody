@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Actions\ActionInterface;
+use App\Actions\AngelAction;
 use App\Actions\InfectedWerewolfAction;
 use App\Actions\MayorAction;
 use App\Actions\PsychicAction;
@@ -219,7 +220,8 @@ class InteractionService
             Interactions::Werewolves => new WerewolvesAction,
             Interactions::InfectedWerewolf => new InfectedWerewolfAction,
             Interactions::WhiteWerewolf => new WhiteWerewolfAction,
-            Interactions::Mayor => new MayorAction
+            Interactions::Mayor => new MayorAction,
+            Interactions::Angel => new AngelAction
         };
     }
 }

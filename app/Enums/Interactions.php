@@ -11,6 +11,7 @@ enum Interactions: string
     case InfectedWerewolf = 'infected_werewolf';
     case WhiteWerewolf = 'white_werewolf';
     case Mayor = 'mayor';
+    case Angel = 'angel';
 
     public static function getActions(): array
     {
@@ -22,6 +23,7 @@ enum Interactions: string
             self::Werewolves->value => InteractionActions::Kill,
             self::InfectedWerewolf->value => [InteractionActions::Infect, InteractionActions::InfectedSkip],
             self::WhiteWerewolf->value => InteractionActions::BetrayalKill,
+            self::Angel->value => [],
         ];
     }
 }
