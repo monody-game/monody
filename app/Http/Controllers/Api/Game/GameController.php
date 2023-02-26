@@ -55,6 +55,10 @@ class GameController extends Controller
         }
 
         foreach ($games as $game) {
+            if (!(bool) preg_match('/^game:[^:]+$/', $game)) {
+                continue;
+            }
+
             $gameData = Redis::get($game);
 
             if (!$gameData) {
@@ -213,9 +217,8 @@ class GameController extends Controller
      */
     private function getGames(): array
     {
-        $pattern = 'game:[a-zA-Z0-9]+$';
         $cursor = 0;
 
-        return Redis::scan($cursor, ['MATCH' => $pattern, 'LIMIT' => 20])[1];
+        return Redis::scan($cursor, ['MATCH' => 'game:*', 'COUNT' => 20])[1];
     }
 }
