@@ -6,7 +6,11 @@ use App\Services\RedisService;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \App\Services\RedisService
+ * @method void set(string $key, array|int|string $value)
+ * @method mixed get(string $key)
+ * @method bool exists(string $key)
+ *
+ * @see RedisService
  * @see \Illuminate\Redis\RedisManager
  */
 class Redis extends Facade
