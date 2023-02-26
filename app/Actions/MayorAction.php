@@ -12,11 +12,9 @@ class MayorAction implements ActionInterface
 {
     use MemberHelperTrait, RegisterHelperTrait;
 
-    private readonly VoteService $service;
-
-    public function __construct()
+    public function __construct(
+        private readonly VoteService $service)
     {
-        $this->service = new VoteService();
     }
 
     public function isSingleUse(): bool
@@ -59,5 +57,10 @@ class MayorAction implements ActionInterface
     private function getGameId(string $userId): string
     {
         return $this->getCurrentUserGameActivity($userId);
+    }
+
+    public function status(string $gameId): null
+    {
+        return null;
     }
 }

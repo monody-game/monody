@@ -141,4 +141,9 @@ class InfectedWerewolfAction implements ActionInterface
 
         return in_array($action->value, $usedActions, true);
     }
+
+    public function status(string $gameId): null
+    {
+        return null;
+    }
 }

@@ -96,6 +96,11 @@ class GameInteractionController extends Controller
         };
     }
 
+    public function status(CreateInteractionRequest $request): JsonResponse
+    {
+        return new JsonResponse($this->service->status($request->validated('gameId'), $request->validated('type')));
+    }
+
     private function getAuthorizedMembersByType(Interactions $type, string $gameId): string|array
     {
         return match ($type) {
@@ -104,6 +109,7 @@ class GameInteractionController extends Controller
             Interactions::Werewolves => $this->getUsersByTeam(Teams::Werewolves, $gameId),
             Interactions::InfectedWerewolf => $this->getUserIdByRole(Roles::InfectedWerewolf, $gameId),
             Interactions::WhiteWerewolf => $this->getUserIdByRole(Roles::WhiteWerewolf, $gameId),
+            Interactions::Angel => $this->getUserIdByRole(Roles::Angel, $gameId),
             default => '*'
         };
     }

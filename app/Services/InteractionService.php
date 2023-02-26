@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Actions\ActionInterface;
+use App\Actions\AngelAction;
 use App\Actions\InfectedWerewolfAction;
 use App\Actions\MayorAction;
 use App\Actions\PsychicAction;
@@ -55,7 +56,7 @@ class InteractionService
             'type' => $type->value,
         ];
 
-        $action = $this->getService($type->value);
+        $action = $this->getService($type);
         $data = $action->additionnalData($gameId);
 
         if ($data !== null) {
@@ -138,7 +139,7 @@ class InteractionService
             return self::INVALID_ACTION_ON_INTERACTION;
         }
 
-        $service = $this->getService($type);
+        $service = $this->getService(Interactions::from($type));
 
         if (
             !$service->canInteract($action, $emitterId, $targetId) ||
@@ -178,7 +179,7 @@ class InteractionService
     }
 
     /**
-     * Dictate if state's duration should be skip, depending on interaction status
+     * Dictate if state's duration should be skipped, depending on interaction status
      *
      * @param  string  $id Interaction id
      */
@@ -200,6 +201,13 @@ class InteractionService
         return false;
     }
 
+    public function status(string $gameId, Interactions $type): mixed
+    {
+        $service = $this->getService($type);
+
+        return $service->status($gameId);
+    }
+
     /**
      * Dictate if the current state has already been skipped in time
      */
@@ -210,16 +218,21 @@ class InteractionService
         return array_key_exists('skipped', $status) && $status['skipped'] === true;
     }
 
-    private function getService(string $type): ActionInterface
+    private function getService(Interactions|string $type): ActionInterface
     {
-        return match (Interactions::from($type)) {
-            Interactions::Vote => new VoteAction,
+        if (is_string($type)) {
+            $type = Interactions::from($type);
+        }
+
+        return match ($type) {
+            Interactions::Vote => app(VoteAction::class),
             Interactions::Witch => new WitchAction,
             Interactions::Psychic => new PsychicAction,
-            Interactions::Werewolves => new WerewolvesAction,
+            Interactions::Werewolves => app(WerewolvesAction::class),
             Interactions::InfectedWerewolf => new InfectedWerewolfAction,
-            Interactions::WhiteWerewolf => new WhiteWerewolfAction,
-            Interactions::Mayor => new MayorAction
+            Interactions::WhiteWerewolf => app(WhiteWerewolfAction::class),
+            Interactions::Mayor => app(MayorAction::class),
+            Interactions::Angel => app(AngelAction::class)
         };
     }
 }
