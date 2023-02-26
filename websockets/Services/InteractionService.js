@@ -3,7 +3,7 @@ import { GameService } from "./GameService.js";
 import { client } from "../Redis/Connection.js";
 import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
-import { error, info, log, success, warn } from "../Logger.js";
+import { error, log, success, warn } from "../Logger.js";
 
 export class InteractionService {
 	static async openInteraction(io, channel, type) {
