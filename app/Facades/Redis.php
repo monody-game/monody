@@ -6,9 +6,10 @@ use App\Services\RedisService;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method void set(string $key, array|int|string $value)
- * @method mixed get(string $key)
- * @method bool exists(string $key)
+ * @method static void set(string $key, array|int|string $value)
+ * @method static mixed get(string $key)
+ * @method static bool exists(string $key)
+ * @method static array scan(int &$cursor, array $params)
  *
  * @see RedisService
  * @see \Illuminate\Redis\RedisManager
