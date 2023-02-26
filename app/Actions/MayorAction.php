@@ -58,4 +58,9 @@ class MayorAction implements ActionInterface
     {
         return $this->getCurrentUserGameActivity($userId);
     }
+
+    public function status(string $gameId): null
+    {
+        return null;
+    }
 }

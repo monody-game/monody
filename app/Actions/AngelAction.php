@@ -72,4 +72,18 @@ class AngelAction implements ActionInterface
     {
         return $this->getCurrentUserGameActivity($userId);
     }
+
+    /**
+     * Return true if the angel has won (if his target is dead)
+     */
+    public function status(string $gameId): bool
+    {
+        $game = Redis::get("game:$gameId");
+
+        if (in_array($game['angel_target'], $game['dead_users'], true)) {
+            return true;
+        }
+
+        return false;
+    }
 }

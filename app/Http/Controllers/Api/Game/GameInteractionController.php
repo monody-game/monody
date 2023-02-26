@@ -96,6 +96,11 @@ class GameInteractionController extends Controller
         };
     }
 
+    public function status(CreateInteractionRequest $request): JsonResponse
+    {
+        return new JsonResponse($this->service->status($request->validated('gameId'), $request->validated('type')));
+    }
+
     private function getAuthorizedMembersByType(Interactions $type, string $gameId): string|array
     {
         return match ($type) {

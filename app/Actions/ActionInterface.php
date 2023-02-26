@@ -46,4 +46,9 @@ interface ActionInterface
      * Actions when closing the interaction
      */
     public function close(string $gameId): void;
+
+    /**
+     * Status of the interaction (e.g. angel's interaction returns a "true" status if the angel has won)
+     */
+    public function status(string $gameId): mixed;
 }
