@@ -2,6 +2,7 @@ import { InteractionService } from "../Services/InteractionService.js";
 import Body from "../Helpers/Body.js";
 import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
+import { client } from "../Redis/Connection.js";
 
 export default {
 	identifier: 7,
@@ -11,8 +12,17 @@ export default {
 	},
 	async after(io, channel) {
 		await InteractionService.closeInteraction(io, channel, "vote");
+		const id = gameId(channel);
+
+		const interactions = JSON.parse(await client.get(`game:${id}:interactions`));
+		const interaction = interactions.find(interactionListItem => interactionListItem.type === "angel");
+
+		if (interaction) {
+			await InteractionService.closeInteraction(io, channel, "angel");
+		}
+
 		const body = Body.make({
-			gameId: gameId(channel)
+			gameId: id
 		});
 		const baseURL = `${process.env.API_URL}/game`;
 
