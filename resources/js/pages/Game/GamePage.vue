@@ -72,6 +72,7 @@ import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useShareModalStore } from "../../stores/modals/share-game-modal.js";
 import { useStore as useActivityConfirmationModalStore } from "../../stores/modals/activity-confirmation-modal.js";
+import { useStore as useChatStore } from "../../stores/chat.js";
 import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 import GameCounter from "../../Components/GameCounter.vue";
 import Chat from "../../Components/Chat/TheChat.vue";
@@ -84,6 +85,7 @@ import GameDetailsModal from "../../Components/Modal/GameDetailsModal.vue";
 const route = useRoute();
 const store = useStore();
 
+const chatStore = useChatStore();
 const shareModalStore = useShareModalStore();
 const popupStore = usePopupStore();
 const userStore = useUserStore();
@@ -151,8 +153,15 @@ window.Echo.join(`game.${gameId}`)
 	})
 	.listen(".game.mayor", (e) => {
 		store.mayor = e.data.payload.mayor;
-	}).listen(".game.werewolves", (e) => {
+	})
+	.listen(".game.werewolves", (e) => {
 		store.werewolves = e.data.payload.list;
+	})
+	.listen(".interaction.open", ({ interaction }) => {
+		if (interaction.type === "angel") {
+			store.angel_target = interaction.data;
+			chatStore.send(`Votre cible est : ${store.getPlayerByID(interaction.data).username}. Si votre cible vient à mourir avant la prochaine nuit, vous gagnerez la partie instantanément.`);
+		}
 	});
 
 const leave = () => {

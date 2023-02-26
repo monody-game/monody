@@ -17,6 +17,8 @@ export class InteractionService {
 		try {
 			const interaction = res.json.interaction;
 
+			console.log(res);
+
 			const interactionId = interaction.id;
 			let callers = interaction.authorizedCallers;
 			let data = null;
