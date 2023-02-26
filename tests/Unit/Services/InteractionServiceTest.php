@@ -34,6 +34,8 @@ class InteractionServiceTest extends TestCase
 
     private User $infectedWerewolf;
 
+    private User $angel;
+
     public function testCreatingAnInteraction()
     {
         $expectedInteraction = [
@@ -202,11 +204,29 @@ class InteractionServiceTest extends TestCase
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
     }
 
+    public function testCreatingAngelInteraction()
+    {
+        $gameId = $this->game['id'];
+        $interaction = $this->service->create($gameId, Interactions::Angel, $this->getUserIdByRole(Roles::Angel, $gameId));
+
+        $this->assertSame([
+            'gameId' => $gameId,
+            'id' => $interaction['id'],
+            'authorizedCallers' => json_encode([$this->angel->id]),
+            'type' => Interactions::Angel->value,
+            'data' => $interaction['data'],
+        ], $interaction);
+
+        $this->assertNotSame($this->angel->id, $interaction['data']);
+        $this->assertContains($interaction['data'], $this->game['users']);
+        $this->assertSame(Redis::get("game:$gameId")['angel_target'], $interaction['data']);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
-        [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf] = User::factory(5)->create();
-        $users = [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf];
+        [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf, $this->angel] = User::factory(6)->create();
+        $users = [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf, $this->angel];
         $this->service = new InteractionService(new VoteService());
 
         $this->game = $this
@@ -223,6 +243,7 @@ class InteractionServiceTest extends TestCase
                 $this->psychic->id => 3,
                 $this->witch->id => 4,
                 $this->infectedWerewolf->id => Roles::InfectedWerewolf,
+                $this->angel->id => Roles::Angel,
             ],
             'users' => array_map(fn ($user) => $user->id, $users),
             'is_started' => true,
@@ -246,5 +267,7 @@ class InteractionServiceTest extends TestCase
             'counterDuration' => States::Vote->duration(),
         ]);
         Redis::set("game:{$this->game['id']}", $additionnalKeys);
+
+        $this->game = $additionnalKeys;
     }
 }
