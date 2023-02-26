@@ -100,6 +100,7 @@ class GameInteractionControllerTest extends TestCase
             Interactions::Werewolves->name => json_encode(['whiteWerewolf', 'superSickWerewolf', $this->secondUser->id, 'superWerewolf']),
             Interactions::InfectedWerewolf->name => json_encode(['superSickWerewolf']),
             Interactions::WhiteWerewolf->name => json_encode(['whiteWerewolf']),
+            Interactions::Angel->name => json_encode(['superAngel']),
         ];
 
         foreach (Interactions::cases() as $interaction) {
@@ -267,6 +268,7 @@ class GameInteractionControllerTest extends TestCase
                 'superWitch' => Roles::Witch,
                 'superSickWerewolf' => Roles::InfectedWerewolf,
                 'whiteWerewolf' => Roles::WhiteWerewolf,
+                'superAngel' => Roles::Angel,
             ],
             'users' => [
                 $this->user->id,
@@ -275,6 +277,7 @@ class GameInteractionControllerTest extends TestCase
                 'superWitch',
                 'superSickWerewolf',
                 'whiteWerewolf',
+                'superAngel',
             ],
             'is_started' => true,
         ]);
@@ -286,6 +289,7 @@ class GameInteractionControllerTest extends TestCase
             ['user_id' => 'superWitch', 'user_info' => []],
             ['user_id' => 'superSickWerewolf', 'user_info' => []],
             ['user_id' => 'whiteWerewolf', 'user_info' => []],
+            ['user_id' => 'superAngel', 'user_info' => []],
         ]);
 
         Redis::set("game:{$this->game['id']}", $additionnalKeys);

@@ -29,13 +29,22 @@
       </div>
       <div class="player__badges">
         <span
+          v-if="isTargeted === true"
+          title="Ce joueur est votre cible"
+          class="player__is-target"
+        >
+          <svg>
+            <use href="/sprite.svg#target" />
+          </svg>
+        </span>
+        <span
           v-if="isWerewolf === true"
+          title="Ce joueur est votre allié"
           class="player__is-wolf"
-          title="Ce joueur est votre allié !"
         />
         <span
           v-if="isMayor === true"
-          title="Ce joueur est le maire !"
+          title="Ce joueur est le maire"
           class="player__is-mayor"
         >
           <svg>
@@ -64,15 +73,18 @@ const props = defineProps({
 	}
 });
 
-const votedBy = ref(props.player.voted_by);
+const gameStore = useGameStore();
+const userStore = useUserStore();
+const chatStore = useChatStore();
+
 const isVoted = ref(false);
 const isDead = ref(false);
 const isMayor = ref(false);
 const isWerewolf = ref(false);
+const isTargeted = ref(false);
+
+const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
-const gameStore = useGameStore();
-const userStore = useUserStore();
-const chatStore = useChatStore();
 const player = ref(null);
 const gamePlayer = gameStore.getPlayerByID(props.player.id);
 
@@ -98,6 +110,10 @@ gameStore.$subscribe((mutation, state) => {
 
 	if (state.mayor === props.player.id) {
 		isMayor.value = true;
+	}
+
+	if (state.angel_target === props.player.id) {
+		isTargeted.value = true;
 	}
 });
 

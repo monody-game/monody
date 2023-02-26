@@ -59,6 +59,7 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/interactions/use', 'Game\GameInteractionController@interact');
+    Route::post('/interactions/status', 'Game\GameInteractionController@status');
 
     Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
     Route::post('/oauth/unlink/google', 'Oauth\GoogleOauthController@unlink');

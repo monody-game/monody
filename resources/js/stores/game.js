@@ -14,7 +14,8 @@ export const useStore = defineStore("game", {
 			dead_users: [],
 			voted_users: {},
 			mayor: "",
-			werewolves: []
+			werewolves: [],
+			angel_target: ""
 		};
 	},
 	actions: {

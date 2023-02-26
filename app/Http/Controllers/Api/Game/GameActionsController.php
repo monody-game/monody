@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api\Game;
 use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Facades\Redis;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 
-class GameActionsController extends GameController
+class GameActionsController extends Controller
 {
     public function all(): JsonResponse
     {

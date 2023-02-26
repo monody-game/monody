@@ -77,9 +77,24 @@
 
 .player__is-wolf {
   background-color: #e50000;
-  height: 18px;
-  width: 18px;
+  height: 20px;
+  width: 20px;
   border-radius: 50%;
+}
+
+.player__is-target {
+	height: 20px;
+	width: 20px;
+	color: var(--dark-background);
+	background-color: var(--light-background);
+	display: grid;
+	place-items: center;
+	border-radius: 50%;
+
+	& > svg {
+		height: 17px;
+		width: 17px;
+	}
 }
 
 .player__is-mayor, .player__is-mayor svg {
