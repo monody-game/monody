@@ -56,7 +56,7 @@ class InteractionService
             'type' => $type->value,
         ];
 
-        $action = $this->getService($type->value);
+        $action = $this->getService($type);
         $data = $action->additionnalData($gameId);
 
         if ($data !== null) {
@@ -139,7 +139,7 @@ class InteractionService
             return self::INVALID_ACTION_ON_INTERACTION;
         }
 
-        $service = $this->getService($type);
+        $service = $this->getService(Interactions::from($type));
 
         if (
             !$service->canInteract($action, $emitterId, $targetId) ||
@@ -201,6 +201,13 @@ class InteractionService
         return false;
     }
 
+    public function status(string $gameId, Interactions $type): mixed
+    {
+        $service = $this->getService($type);
+
+        return $service->status($gameId);
+    }
+
     /**
      * Dictate if the current state has already been skipped in time
      */
@@ -211,9 +218,13 @@ class InteractionService
         return array_key_exists('skipped', $status) && $status['skipped'] === true;
     }
 
-    private function getService(string $type): ActionInterface
+    private function getService(Interactions|string $type): ActionInterface
     {
-        return match (Interactions::from($type)) {
+        if (is_string($type)) {
+            $type = Interactions::from($type);
+        }
+
+        return match ($type) {
             Interactions::Vote => app(VoteAction::class),
             Interactions::Witch => new WitchAction,
             Interactions::Psychic => new PsychicAction,
