@@ -15,9 +15,9 @@ enum Roles: int
     case LittleGirl = 5;
     case Elder = 6;
 
-	// Loners
-	case WhiteWerewolf = 8;
-	case Angel = 9;
+    // Loners
+    case WhiteWerewolf = 8;
+    case Angel = 9;
 
     public function stringify(): string
     {
@@ -30,7 +30,7 @@ enum Roles: int
             self::Elder => 'Ancien',
             self::InfectedWerewolf => 'Loup malade',
             self::WhiteWerewolf => 'Loup blanc',
-			self::Angel => 'Ange'
+            self::Angel => 'Ange'
         };
     }
 
@@ -45,7 +45,7 @@ enum Roles: int
             'elder' => self::Elder,
             'infected_werewolf' => self::InfectedWerewolf,
             'white_werewolf' => self::WhiteWerewolf,
-			'angel' => self::Angel,
+            'angel' => self::Angel,
             default => null,
         };
     }
@@ -61,7 +61,7 @@ enum Roles: int
             self::Elder => 'elder',
             self::InfectedWerewolf => 'infected_werewolf',
             self::WhiteWerewolf => 'white_werewolf',
-			self::Angel => 'angel',
+            self::Angel => 'angel',
         };
     }
 
