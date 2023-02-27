@@ -160,7 +160,10 @@ window.Echo.join(`game.${gameId}`)
 	.listen(".interaction.open", ({ interaction }) => {
 		if (interaction.type === "angel") {
 			store.angel_target = interaction.data;
-			chatStore.send(`Votre cible est : ${store.getPlayerByID(interaction.data).username}. Si votre cible vient à mourir avant la prochaine nuit, vous gagnerez la partie instantanément.`);
+			chatStore.send(
+				`Votre cible est : ${store.getPlayerByID(interaction.data).username}. Si votre cible vient à mourir avant la prochaine nuit, vous gagnerez la partie instantanément.`,
+				"info"
+			);
 		}
 	});
 
