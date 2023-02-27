@@ -185,3 +185,15 @@
 	backdrop-filter: blur(2px);
 	cursor: not-allowed;
 }
+
+@media screen and (max-width: 450px) {
+	.auth-page__form-wrapper {
+		width: 100%;
+		padding-inline: space(1);
+	}
+
+	.auth-page__link {
+		width: auto;
+		word-break: break-word;
+	}
+}
