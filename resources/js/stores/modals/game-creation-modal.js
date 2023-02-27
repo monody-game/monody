@@ -39,6 +39,8 @@ export const useStore = defineStore("game-creation-modal", {
 			this.isOpenned = false;
 			this.selectedRoles = [];
 			this.gameId = null;
+			this.roles.map(role => role.count = 0);
+
 			document.documentElement.style.removeProperty(
 				"--villager-balance-width"
 			);
