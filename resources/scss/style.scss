@@ -65,6 +65,10 @@ body {
 	min-height: 100vh;
 	background-color: var(--dark-background);
 	overflow: hidden;
+
+	@media screen and (max-width: 600px) {
+		overflow: auto;
+	}
 }
 
 :root {
