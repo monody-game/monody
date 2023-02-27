@@ -95,6 +95,10 @@
 		height: 17px;
 		width: 17px;
 	}
+
+	& > * {
+		color: var(--dark-background);
+	}
 }
 
 .player__is-mayor, .player__is-mayor svg {
