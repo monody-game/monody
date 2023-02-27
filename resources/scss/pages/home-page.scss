@@ -2,7 +2,7 @@
 
 .home-page {
   color: #fff;
-  height: 100vh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -30,7 +30,7 @@
 
 .home-page__logo {
   height: 100px;
-  width: 100px;
+	aspect-ratio: 1 / 1;
   transform: translateY(10px);
 }
 
@@ -96,5 +96,35 @@
 	& .btn-primary:hover {
 		background-color: var(--light-background-hover) !important;
 		text-decoration: none;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.home-page__title {
+		align-items: initial;
+
+		& p {
+			font-size: 1.75em;
+		}
+	}
+
+
+	.home-page__logo {
+		height: 1.3em;
+		margin-top: 5px;
+	}
+
+	.home-page__play-text {
+		font-size: 1.75em;
+
+		&::before,
+		&::after {
+			display: inline-block;
+			content: "";
+			border-top: 3px solid #fff;
+			width: 32vw;
+			margin: 0 space(1);
+			transform: translateY(-.35rem);
+		}
 	}
 }
