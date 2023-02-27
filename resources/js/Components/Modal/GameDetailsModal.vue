@@ -71,4 +71,5 @@ import RolesBalance from "./Pages/Roles/RolesBalance.vue";
 const gameStore = useGameStore();
 const store = useStore();
 const roles = gameStore.roles;
+console.log(roles);
 </script>

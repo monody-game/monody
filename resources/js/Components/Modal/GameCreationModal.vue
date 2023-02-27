@@ -9,7 +9,7 @@
     <div class="modal__buttons">
       <button
         class="btn medium"
-        @click="store.close()"
+        @click="modalStore.close()"
       >
         Annuler
       </button>
