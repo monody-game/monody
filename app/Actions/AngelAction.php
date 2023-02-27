@@ -82,7 +82,7 @@ class AngelAction implements ActionInterface
     {
         $game = Redis::get("game:$gameId");
 
-        if (in_array($game['angel_target'], $game['dead_users'], true) && !in_array($this->getUserIdByRole(Roles::Angel, $gameId)[0], $game['dead_users'])) {
+        if (in_array($game['angel_target'], $game['dead_users'], true) && !in_array($this->getUserIdByRole(Roles::Angel, $gameId)[0], $game['dead_users'], true)) {
             return true;
         }
 
