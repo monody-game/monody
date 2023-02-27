@@ -357,6 +357,18 @@ class GameControllerTest extends TestCase
             ->assertNotFound();
     }
 
+    public function testCreatingAGameWithMultipleSingleRoles()
+    {
+        $this
+            ->actingAs($this->user)
+            ->put('/api/game', [
+                'roles' => [
+                    Roles::Witch->value, Roles::Witch->value, Roles::Werewolf->value,
+                ],
+            ])
+            ->assertUnprocessable();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();

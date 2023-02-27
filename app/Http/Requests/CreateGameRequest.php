@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\RejectMultipleUniqueRoles;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateGameRequest extends FormRequest
@@ -10,7 +11,7 @@ class CreateGameRequest extends FormRequest
     {
         return [
             'users' => 'array',
-            'roles' => 'array|required',
+            'roles' => ['array', 'required', new RejectMultipleUniqueRoles()],
         ];
     }
 }
