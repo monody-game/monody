@@ -28,7 +28,7 @@
 
 <style scoped>
 div {
-	height: 100vh;
+	height: 100svh;
 	display: grid;
 	place-items: center;
 	color: var(--secondary);
