@@ -1,5 +1,5 @@
 <template>
-  <BaseModal>
+  <BaseModal class="share-page__background">
     <header>
       <h3>Partagez votre partie !</h3>
     </header>

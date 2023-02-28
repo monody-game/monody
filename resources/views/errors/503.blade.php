@@ -49,7 +49,7 @@
 			padding: 0;
 
 			background-color: #0f1127; font-family: 'Sen', sans-serif;
-			height: 100vh;
+			height: 100svh;
 			color: #fffcf1;
 
 			display: grid;
@@ -57,7 +57,7 @@
 		}
 
 		main {
-			height: 100vh;
+			height: 100svh;
 			width: 100vw;
 
 			display: flex;
