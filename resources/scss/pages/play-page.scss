@@ -38,7 +38,7 @@
 	@media screen and (max-width: 600px) {
 		grid-template-columns: initial;
 		grid-template-rows: 1fr 1fr;
-		gap: space(1);
+		gap: space(3);
 	}
 }
 
@@ -117,7 +117,8 @@
 
 	@media screen and (max-width: 960px) {
 		width: 100%;
-		padding-inline: space(2);
+		max-height: 480px;
+		padding: space(2);
 	}
 
 	& header {
