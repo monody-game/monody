@@ -3,7 +3,7 @@
 .roles__list {
 	display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  column-gap: 2%;
+  column-gap: space(3);
   box-sizing: border-box;
   margin-top: space(1);
   margin-bottom: space(1);
