@@ -3,8 +3,10 @@
   grid-template-columns: repeat(auto-fit, minmax(171px, 1fr));
 	gap: space(2);
 	height: 100%;
+	width: 100%;
 	overflow: auto;
 	padding: space(3);
+	position: relative;
 
 	@media screen and (max-width: 600px) {
 		grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
