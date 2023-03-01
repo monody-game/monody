@@ -96,3 +96,38 @@
   height: 40px;
   width: 40px;
 }
+
+@media screen and (max-width: 600px) {
+	.day {
+		--chat-background: #fffcf180;
+	}
+
+	.night {
+		--chat-background: #0f112780;
+	}
+
+	.chat__main {
+		max-height: 280px;
+		width: auto;
+		max-width: initial;
+		min-width: auto;
+
+		border-radius: 0;
+		margin: 0;
+	}
+
+	.chat__submit-form {
+		height: 50px;
+	}
+
+	.chat__messages {
+		height: calc(100% - 50px);
+
+		padding: 0;
+	}
+
+	.chat__submit-icon {
+		height: 30px;
+		aspect-ratio: 1 / 1;
+	}
+}

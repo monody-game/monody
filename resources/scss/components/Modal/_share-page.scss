@@ -41,3 +41,10 @@
 .share-page__background .modal__main {
 	max-width: 420px;
 }
+
+@media screen and (max-width: 600px) {
+	.share-page__background .modal__main {
+		margin: 0;
+		padding-inline: 0;
+	}
+}

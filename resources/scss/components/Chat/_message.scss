@@ -131,3 +131,13 @@
 	overflow-wrap: anywhere;
 	line-height: 1.2rem;
 }
+
+@media screen and (max-width: 600px) {
+	.message__author {
+		color: var(--unchanged-color);
+	}
+
+	.message__main {
+		margin: 0;
+	}
+}
