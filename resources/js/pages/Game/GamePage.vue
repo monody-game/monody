@@ -42,13 +42,6 @@
       <Chat />
       <LogoSpinner v-if="loading" />
       <PlayerList />
-      <img
-        v-if="typeof store.assignedRole.id !== 'undefined'"
-        :src="store.assignedRole.image"
-        :alt="store.assignedRole.display_name"
-        :title="store.assignedRole.display_name"
-        class="game-page__role"
-      >
     </div>
     <Transition name="modal">
       <ShareGameModal v-if="shareModalStore.isOpenned" />
@@ -92,8 +85,6 @@ const userStore = useUserStore();
 const assignationPopupStore = useAssignationPopupStore();
 const modalStore = useModalStore();
 const activityConfirmationModalStore = useActivityConfirmationModalStore();
-
-chatStore.send("Test alert !!", "success");
 
 const gameId = route.params.id;
 const loading = ref(false);

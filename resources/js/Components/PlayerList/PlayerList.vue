@@ -9,6 +9,13 @@
       :key="player.id"
       :player="player"
     />
+    <img
+      v-if="typeof gameStore.assignedRole.id !== 'undefined'"
+      :src="gameStore.assignedRole.image"
+      :alt="gameStore.assignedRole.display_name"
+      :title="gameStore.assignedRole.display_name"
+      class="game-page__role"
+    >
   </div>
 </template>
 
