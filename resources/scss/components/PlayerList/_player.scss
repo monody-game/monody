@@ -3,8 +3,8 @@
 .player__container {
 	display: flex;
 	flex-direction: column;
+	position: relative;
 	align-items: center;
-	margin: space(3);
 	height: max-content;
 	width: max-content;
 	user-select: none;
@@ -12,7 +12,7 @@
 	& .player__is-dead-shadow {
 		display: block;
 		height: 125px;
-		width: 125px;
+		aspect-ratio: 1 / 1;
 		background-color: #000000;
 		opacity: .45;
 		border-radius: 20px;
@@ -21,8 +21,7 @@
 
 .player__is-dead {
 	position: absolute;
-	height: 125px;
-	width: 125px;
+	inset: 0;
 	border-radius: 20px;
 
 	& > svg {
@@ -31,13 +30,12 @@
 		left: 50%;
 		transform: translate(-50%, -50%);
 		height: 70px;
-		width: 70px;
+		aspect-ratio: 1 / 1;
 	}
 }
 
 .player__avatar {
   height: 125px;
-  width: 125px;
   border-radius: 20px;
 	aspect-ratio: 1 / 1;
 	object-fit: cover;
@@ -53,12 +51,12 @@
 .player__is-voted,
 .player__votable:hover .player__avatar-container img,
 .player__witch-kill:hover .player__avatar-container img {
-  box-shadow: 0 0 32px 6px #e50000;
+  box-shadow: 0 0 20px 4px #e50000;
 }
 
 .player__electable:hover .player__avatar-container img,
-.player__electable.player__is-voted .player__avatar-container img{
-	box-shadow: 0 0 32px 6px var(--info);
+.player__is-voted.player__electable .player__avatar-container img{
+	box-shadow: 0 0 20px 4px var(--info);
 }
 
 .player__votable:hover, .player__witch-kill:hover, .player__electable:hover {
@@ -78,13 +76,13 @@
 .player__is-wolf {
   background-color: #e50000;
   height: 20px;
-  width: 20px;
+	aspect-ratio: 1 / 1;
   border-radius: 50%;
 }
 
 .player__is-target {
 	height: 20px;
-	width: 20px;
+	aspect-ratio: 1 / 1;
 	color: var(--dark-background);
 	background-color: var(--light-background);
 	display: grid;
@@ -93,7 +91,7 @@
 
 	& > svg {
 		height: 17px;
-		width: 17px;
+		aspect-ratio: 1 / 1;
 	}
 
 	& > * {
@@ -103,7 +101,7 @@
 
 .player__is-mayor, .player__is-mayor svg {
 	height: 30px;
-	width: 20px;
+	aspect-ratio: 2 / 3;
 }
 
 .player__username {
@@ -131,7 +129,7 @@
 	cursor: pointer;
 
 	& > .player__avatar-container img {
-		box-shadow: 0 0 32px 6px var(--villager-color);
+		box-shadow: 0 0 20 4px var(--villager-color);
 	}
 }
 
@@ -143,10 +141,46 @@
 	cursor: pointer;
 
 	& > .player__avatar-container img {
-		box-shadow: 0 0 32px 6px var(--success);
+		box-shadow: 0 0 20px 4px var(--success);
 	}
 }
 
 .player__hover-disabled {
 	cursor: not-allowed;
+}
+
+@media screen and (max-width: 600px) {
+	.player__avatar, .player__container .player__is-dead-shadow {
+		height: 75px;
+	}
+
+	.player__is-dead svg {
+		height: 45px;
+	}
+
+	.player__is-wolf {
+		height: 15px;
+	}
+
+	.player__is-target {
+		height: 15px;
+	}
+
+	.player__is-target svg {
+		height: 12px;
+	}
+
+	.player__is-mayor, .player__is-mayor svg {
+		height: 25px;
+	}
+
+	.day .player__username, .night .player__username {
+		font-size: .9rem;
+		padding-inline: space(1);
+		padding-block: space(.5);
+	}
+
+	.player__avatar-container {
+		margin-bottom: space(-1);
+	}
 }
