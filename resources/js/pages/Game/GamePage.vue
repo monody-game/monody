@@ -93,6 +93,8 @@ const assignationPopupStore = useAssignationPopupStore();
 const modalStore = useModalStore();
 const activityConfirmationModalStore = useActivityConfirmationModalStore();
 
+chatStore.send("Test alert !!", "success");
+
 const gameId = route.params.id;
 const loading = ref(false);
 let roles = store.roles;

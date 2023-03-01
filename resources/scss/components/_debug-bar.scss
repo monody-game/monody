@@ -77,3 +77,9 @@
 		background-color: var(--light-background-hover);
 	}
 }
+
+@media screen and (max-width: 600px) {
+	.debug-bar__wrapper {
+		display: none;
+	}
+}
