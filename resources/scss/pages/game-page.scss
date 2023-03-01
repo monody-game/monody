@@ -91,6 +91,7 @@
 @media screen and (max-width: 600px) {
 	.game-page__main {
 		flex-direction: column-reverse;
+		max-height: initial;
 	}
 
 	.game-page__home-link {

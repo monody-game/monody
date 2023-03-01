@@ -98,14 +98,6 @@
 }
 
 @media screen and (max-width: 600px) {
-	.day {
-		--chat-background: #fffcf180;
-	}
-
-	.night {
-		--chat-background: #0f112780;
-	}
-
 	.chat__main {
 		max-height: 280px;
 		width: auto;
