@@ -11,10 +11,10 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "intervention/image": "^2.7",
-        "laravel/framework": "^10.0",
+        "laravel/framework": "^10",
         "laravel/sanctum": "^3.2",
         "league/glide-laravel": "^1.0",
-        "predis/predis": "^2.0",
+        "predis/predis": "2.1.1",
         "socialiteproviders/discord": "^4.1",
         "spatie/laravel-ignition": "^2.0"
     },
