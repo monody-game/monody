@@ -6,10 +6,7 @@ use Illuminate\Support\Facades\Redis as RedisFacade;
 use Illuminate\Support\Str;
 
 /**
- * @method static array scan(int &$cursor, array $params)
- * @method static void del(string $key)
- *
- * @see \Illuminate\Redis\RedisManager
+ * {@inheritDoc}
  */
 class Redis implements RedisInterface
 {
@@ -41,7 +38,7 @@ class Redis implements RedisInterface
         return (bool) RedisFacade::exists($key);
     }
 
-    public function __call($method, $parameters)
+    public function __call(string $method, array $parameters): mixed
     {
         return RedisFacade::__call($method, $parameters);
     }
