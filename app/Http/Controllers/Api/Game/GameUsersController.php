@@ -11,8 +11,7 @@ use Illuminate\Http\JsonResponse;
 
 class GameUsersController extends Controller
 {
-    use GameHelperTrait;
-    use MemberHelperTrait;
+    use GameHelperTrait, MemberHelperTrait;
 
     public function list(string $gameId): JsonResponse
     {

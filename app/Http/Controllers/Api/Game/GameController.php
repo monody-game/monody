@@ -7,13 +7,13 @@ use App\Enums\States;
 use App\Enums\Teams;
 use App\Events\GameListUpdate;
 use App\Events\WerewolvesList;
-use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGameRequest;
 use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\JoinGameRequest;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
+use App\Traits\InteractsWithRedis;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 use function array_key_exists;
@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GameController extends Controller
 {
-    use RegisterHelperTrait, GameHelperTrait, MemberHelperTrait;
+    use RegisterHelperTrait, GameHelperTrait, MemberHelperTrait, InteractsWithRedis;
 
     public function check(Request $request): JsonResponse
     {
@@ -34,7 +34,7 @@ class GameController extends Controller
                 ->withMessage('Please specify a game id to check');
         }
 
-        $game = Redis::exists("game:{$request->get('gameId')}");
+        $game = $this->redis()->exists("game:{$request->get('gameId')}");
 
         if ($game) {
             return new JsonResponse([], Response::HTTP_NO_CONTENT);
@@ -59,7 +59,7 @@ class GameController extends Controller
                 continue;
             }
 
-            $gameData = Redis::get($game);
+            $gameData = $this->redis()->get($game);
 
             if (!$gameData) {
                 continue;
@@ -112,14 +112,14 @@ class GameController extends Controller
             $data['users'] = array_merge($data['users'], [$data['owner']]);
         }
 
-        Redis::set("game:$id", $data);
-        Redis::set("game:$id:state", [
+        $this->redis()->set("game:$id", $data);
+        $this->redis()->set("game:$id:state", [
             'status' => States::Waiting,
             'counterDuration' => States::Waiting->duration(),
             'round' => 0,
             'startTimestamp' => Carbon::now()->timestamp,
         ]);
-        Redis::set("game:$id:votes", []);
+        $this->redis()->set("game:$id:votes", []);
 
         $data['owner'] = [
             'id' => $user->id,
@@ -182,16 +182,16 @@ class GameController extends Controller
 
     public function data(string $gameId): JsonResponse
     {
-        if (!Redis::exists("game:$gameId")) {
+        if (!$this->redis()->exists("game:$gameId")) {
             return new JsonResponse("Game $gameId not found.", Response::HTTP_NOT_FOUND);
         }
 
-        $game = Redis::get("game:$gameId");
+        $game = $this->redis()->get("game:$gameId");
         /** @var User $owner */
         $owner = User::where('id', $game['owner'])->first();
-        $votes = Redis::get("game:$gameId:votes");
-        $state = Redis::get("game:$gameId:state");
-        $interactions = Redis::get("game:$gameId:interactions") ?? [];
+        $votes = $this->redis()->get("game:$gameId:votes");
+        $state = $this->redis()->get("game:$gameId:state");
+        $interactions = $this->redis()->get("game:$gameId:interactions") ?? [];
 
         return new JsonResponse([
             'game' => [
@@ -219,6 +219,6 @@ class GameController extends Controller
     {
         $cursor = 0;
 
-        return Redis::scan($cursor, ['MATCH' => 'game:*', 'COUNT' => 20])[1];
+        return $this->redis()->scan($cursor, ['MATCH' => 'game:*', 'COUNT' => 20])[1];
     }
 }

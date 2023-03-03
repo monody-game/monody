@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\RedisMock\PredisConnectorMock;
 use Illuminate\Support\ServiceProvider;
 
 class RedisMockServiceProvider extends ServiceProvider
@@ -20,7 +19,6 @@ class RedisMockServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->app->make('redis')->extend('mock', function () {
-            return new PredisConnectorMock();
         });
     }
 }

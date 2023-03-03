@@ -5,13 +5,13 @@ namespace App\Actions;
 use App\Enums\InteractionActions;
 use App\Enums\Roles;
 use App\Enums\States;
-use App\Facades\Redis;
+use App\Traits\InteractsWithRedis;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 
 class WitchAction implements ActionInterface
 {
-    use MemberHelperTrait, RegisterHelperTrait;
+    use MemberHelperTrait, RegisterHelperTrait, InteractsWithRedis;
 
     public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
     {
@@ -48,10 +48,10 @@ class WitchAction implements ActionInterface
 
     private function setUsed(InteractionActions $action, string $gameId): void
     {
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+        $usedActions = $this->redis()->get("game:$gameId:interactions:usedActions") ?? [];
         $usedActions[] = $action->value;
 
-        Redis::set("game:$gameId:interactions:usedActions", $usedActions);
+        $this->redis()->set("game:$gameId:interactions:usedActions", $usedActions);
     }
 
     private function killPotion(string $targetId): void
@@ -68,7 +68,7 @@ class WitchAction implements ActionInterface
     private function revivePotion(string $targetId): void
     {
         $gameId = $this->getGameId($targetId);
-        $game = Redis::get("game:$gameId");
+        $game = $this->redis()->get("game:$gameId");
 
         if ($this->isUsed(InteractionActions::RevivePotion, $gameId)) {
             return;
@@ -78,14 +78,14 @@ class WitchAction implements ActionInterface
             return;
         }
 
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+        $deaths = $this->redis()->get("game:$gameId:deaths") ?? [];
 
         $index = array_search($targetId, $game['dead_users'], true);
         array_splice($game['dead_users'], (int) $index, 1);
         $deaths = array_filter($deaths, fn ($death) => $death['user'] !== $targetId);
 
-        Redis::set("game:$gameId", $game);
-        Redis::set("game:$gameId:deaths", $deaths);
+        $this->redis()->set("game:$gameId", $game);
+        $this->redis()->set("game:$gameId:deaths", $deaths);
     }
 
     private function getRole(string $userId): Roles
@@ -113,14 +113,14 @@ class WitchAction implements ActionInterface
 
     public function additionnalData(string $gameId): array
     {
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+        $deaths = $this->redis()->get("game:$gameId:deaths") ?? [];
 
         return array_map(fn ($death) => $death['user'], $deaths);
     }
 
     private function isUsed(InteractionActions $action, string $gameId): bool
     {
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+        $usedActions = $this->redis()->get("game:$gameId:interactions:usedActions") ?? [];
 
         return in_array($action->value, $usedActions, true);
     }

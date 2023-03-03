@@ -15,7 +15,7 @@ use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\States;
 use App\Events\TimeSkip;
-use App\Facades\Redis;
+use App\Traits\InteractsWithRedis;
 use App\Traits\RegisterHelperTrait;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
@@ -30,7 +30,7 @@ class InteractionService
 
     const INVALID_ACTION_ON_INTERACTION = 4000;
 
-    use RegisterHelperTrait;
+    use RegisterHelperTrait, InteractsWithRedis;
 
     public function __construct(private readonly VoteService $voteService)
     {
@@ -63,7 +63,7 @@ class InteractionService
             $interaction['data'] = $data;
         }
 
-        Redis::set($key, [$interaction, ...(Redis::get($key) ?? [])]);
+        $this->redis()->set($key, [$interaction, ...($this->redis()->get($key) ?? [])]);
 
         return $interaction;
     }
@@ -73,11 +73,11 @@ class InteractionService
      */
     public function close(string $gameId, string $id): int|null
     {
-        if (!Redis::exists("game:$gameId:interactions")) {
+        if (!$this->redis()->exists("game:$gameId:interactions")) {
             return self::NOT_ANY_INTERACTION_STARTED;
         }
 
-        $interactions = Redis::get("game:$gameId:interactions");
+        $interactions = $this->redis()->get("game:$gameId:interactions");
         $interaction = array_search($id, array_column($interactions, 'id'), true);
 
         if ($interaction === false) {
@@ -90,7 +90,7 @@ class InteractionService
 
         array_splice($interactions, $interaction, 1);
 
-        Redis::set("game:$gameId:interactions", $interactions);
+        $this->redis()->set("game:$gameId:interactions", $interactions);
 
         return null;
     }
@@ -100,7 +100,7 @@ class InteractionService
      */
     private function getInteraction(string $gameId, string $id): array
     {
-        $interactions = Redis::get("game:$gameId:interactions") ?? [];
+        $interactions = $this->redis()->get("game:$gameId:interactions") ?? [];
         $interaction = array_search($id, array_column($interactions, 'id'), true);
 
         if ($interaction === false) {
@@ -112,7 +112,7 @@ class InteractionService
 
     private function updateInteraction(array $interaction, string $gameId): void
     {
-        $interactions = Redis::get("game:$gameId:interactions") ?? [];
+        $interactions = $this->redis()->get("game:$gameId:interactions") ?? [];
 
         $index = array_search($interaction['id'], array_column($interactions, 'id'), true);
 
@@ -123,7 +123,7 @@ class InteractionService
         array_splice($interactions, $index, 1);
         $interactions[] = $interaction;
 
-        Redis::set("game:$gameId:interactions", $interactions);
+        $this->redis()->set("game:$gameId:interactions", $interactions);
     }
 
     /**
@@ -161,7 +161,7 @@ class InteractionService
             return $status;
         }
 
-        $state = Redis::get("game:$gameId:state");
+        $state = $this->redis()->get("game:$gameId:state");
         $state = States::from($state['status']);
 
         $skipDuration = $state->getTimeSkip();
@@ -187,8 +187,8 @@ class InteractionService
     {
         $interaction = $this->getInteraction($gameId, $id);
         $service = $this->getService($interaction['type']);
-        $game = Redis::get("game:$gameId");
-        $state = Redis::get("game:$gameId:state");
+        $game = $this->redis()->get("game:$gameId");
+        $state = $this->redis()->get("game:$gameId:state");
 
         if ($service->isSingleUse() || (array_key_exists('used', $interaction) && $interaction['used']) && $state['startTimestamp'] - (Date::now()->timestamp - $state['counterDuration']) > 30) {
             return true;
@@ -213,7 +213,7 @@ class InteractionService
      */
     private function timeHasBeenSkipped(string $gameId): bool
     {
-        $status = Redis::get("game:$gameId:state");
+        $status = $this->redis()->get("game:$gameId:state");
 
         return array_key_exists('skipped', $status) && $status['skipped'] === true;
     }

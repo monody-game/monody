@@ -4,14 +4,14 @@ namespace App\Actions;
 
 use App\Enums\InteractionActions;
 use App\Enums\Roles;
-use App\Facades\Redis;
 use App\Services\EndGameService;
+use App\Traits\InteractsWithRedis;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 
 class AngelAction implements ActionInterface
 {
-    use MemberHelperTrait, RegisterHelperTrait;
+    use MemberHelperTrait, RegisterHelperTrait, InteractsWithRedis;
 
     public function __construct(
         private readonly EndGameService $service
@@ -31,7 +31,7 @@ class AngelAction implements ActionInterface
     public function call(string $targetId, InteractionActions $action, string $emitterId): bool
     {
         $gameId = $this->getGameId($emitterId);
-        $game = Redis::get("game:$gameId");
+        $game = $this->redis()->get("game:$gameId");
 
         return in_array($game['angel_target'], $game['dead_users'], true);
     }
@@ -45,7 +45,7 @@ class AngelAction implements ActionInterface
      */
     public function additionnalData(string $gameId): string
     {
-        $game = Redis::get("game:$gameId");
+        $game = $this->redis()->get("game:$gameId");
         $users = array_filter($game['users'], fn ($user) => $user !== $this->getUserIdByRole(Roles::Angel, $gameId)[0]);
         /** @var int<5, max> $count */
         $count = count($users);
@@ -53,7 +53,7 @@ class AngelAction implements ActionInterface
         $target = $users[random_int(0, $count - 1)];
         $game['angel_target'] = $target;
 
-        Redis::set("game:$gameId", $game);
+        $this->redis()->set("game:$gameId", $game);
 
         return $target;
     }
@@ -63,7 +63,7 @@ class AngelAction implements ActionInterface
      */
     public function close(string $gameId): void
     {
-        $game = Redis::get("game:$gameId");
+        $game = $this->redis()->get("game:$gameId");
 
         if (in_array($game['angel_target'], $game['dead_users'], true)) {
             $this->service->end($gameId, $this->getUserIdByRole(Roles::Angel, $gameId));
@@ -80,7 +80,7 @@ class AngelAction implements ActionInterface
      */
     public function status(string $gameId): bool
     {
-        $game = Redis::get("game:$gameId");
+        $game = $this->redis()->get("game:$gameId");
 
         if (in_array($game['angel_target'], $game['dead_users'], true) && !in_array($this->getUserIdByRole(Roles::Angel, $gameId)[0], $game['dead_users'], true)) {
             return true;

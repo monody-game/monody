@@ -4,16 +4,18 @@ namespace Tests\Unit\Services;
 
 use App\Enums\States;
 use App\Events\GameKill;
-use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use App\Services\VoteService;
+use App\Traits\InteractsWithRedis;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class VoteServiceTest extends TestCase
 {
+    use InteractsWithRedis;
+
     private VoteService $service;
 
     private array $game;
@@ -34,14 +36,14 @@ class VoteServiceTest extends TestCase
     {
         $this->service->vote($this->secondUser->id, $this->game['id']);
 
-        $votes = Redis::get("game:{$this->game['id']}:votes");
+        $votes = $this->redis()->get("game:{$this->game['id']}:votes");
         $this->assertSame([
             $this->secondUser->id => [$this->user->id],
         ], $votes);
 
         $this->service->vote($this->user->id, $this->game['id'], $this->secondUser->id);
 
-        $votes = Redis::get("game:{$this->game['id']}:votes");
+        $votes = $this->redis()->get("game:{$this->game['id']}:votes");
 
         $this->assertSame([
             $this->secondUser->id => [$this->user->id],
@@ -51,17 +53,17 @@ class VoteServiceTest extends TestCase
 
     public function testSwitchingVote()
     {
-        Redis::set("game:{$this->game['id']}:votes", []);
+        $this->redis()->set("game:{$this->game['id']}:votes", []);
         $this->service->vote($this->secondUser->id, $this->game['id']);
 
-        $votes = Redis::get("game:{$this->game['id']}:votes");
+        $votes = $this->redis()->get("game:{$this->game['id']}:votes");
         $this->assertSame([
             $this->secondUser->id => [$this->user->id],
         ], $votes);
 
         $this->service->vote($this->user->id, $this->game['id']);
 
-        $votes = Redis::get("game:{$this->game['id']}:votes");
+        $votes = $this->redis()->get("game:{$this->game['id']}:votes");
 
         $this->assertSame([
             $this->user->id => [$this->user->id],
@@ -111,7 +113,7 @@ class VoteServiceTest extends TestCase
     {
         Event::fake();
         $gameId = $this->game['id'];
-        Redis::set("game:$gameId:members", json_encode(
+        $this->redis()->set("game:$gameId:members", json_encode(
             [
                 [
                     'user_id' => $this->user->id,
@@ -141,7 +143,7 @@ class VoteServiceTest extends TestCase
             ];
         });
 
-        $this->assertSame([$this->secondUser->id], Redis::get("game:$gameId")['dead_users']);
+        $this->assertSame([$this->secondUser->id], $this->redis()->get("game:$gameId")['dead_users']);
     }
 
     public function testReturnsFalseIfThereIsNoVotes()
@@ -219,7 +221,7 @@ class VoteServiceTest extends TestCase
         Event::fake();
 
         $this->service->kill($this->secondUser->id, $gameId, 'vote');
-        Redis::set("game:$gameId:votes", json_encode([
+        $this->redis()->set("game:$gameId:votes", json_encode([
             $this->secondUser->id => [
                 $this->secondUser->id,
             ],
@@ -267,7 +269,7 @@ class VoteServiceTest extends TestCase
                 'roles' => [1, 2],
             ])->getContent(), true)['game'];
 
-        Redis::set("game:{$this->game['id']}:state", [
+        $this->redis()->set("game:{$this->game['id']}:state", [
             'status' => States::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
             'counterDuration' => States::Vote->duration(),
@@ -280,7 +282,7 @@ class VoteServiceTest extends TestCase
                 'roles' => [1, 2],
             ])->getContent(), true)['game'];
 
-        Redis::set("game:{$this->secondGame['id']}:state", [
+        $this->redis()->set("game:{$this->secondGame['id']}:state", [
             'status' => States::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
             'counterDuration' => States::Vote->duration(),
@@ -293,7 +295,7 @@ class VoteServiceTest extends TestCase
                 'roles' => [1, 2],
             ])->json('game');
 
-        Redis::set("game:{$this->thirdGame['id']}:state", [
+        $this->redis()->set("game:{$this->thirdGame['id']}:state", [
             'status' => States::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
             'counterDuration' => States::Vote->duration(),

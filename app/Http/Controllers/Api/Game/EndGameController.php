@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 class EndGameController extends Controller
 {
     public function __construct(
-        private readonly EndGameService $service
+        private readonly EndGameService $service,
     ) {
     }
 

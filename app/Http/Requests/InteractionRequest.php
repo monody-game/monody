@@ -15,7 +15,7 @@ class InteractionRequest extends FormRequest
         return [
             'id' => ['uuid', 'required'],
             'targetId' => ['exists:users,id', new InGameRule(null)],
-            'gameId' => ['string', new GameExistsRule(), 'required'],
+            'gameId' => ['string', app(GameExistsRule::class), 'required'],
             'action' => [new Enum(InteractionActions::class), 'required'],
         ];
     }

@@ -5,14 +5,14 @@ namespace App\Actions;
 use App\Enums\InteractionActions;
 use App\Enums\Roles;
 use App\Events\WerewolvesList;
-use App\Facades\Redis;
 use App\Services\ChatService;
+use App\Traits\InteractsWithRedis;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 
 class InfectedWerewolfAction implements ActionInterface
 {
-    use MemberHelperTrait, RegisterHelperTrait;
+    use MemberHelperTrait, RegisterHelperTrait, InteractsWithRedis;
 
     public function isSingleUse(): bool
     {
@@ -30,7 +30,7 @@ class InfectedWerewolfAction implements ActionInterface
             if (!$target) {
                 $actionCondition = false;
             } else {
-                $deaths = Redis::get("game:$gameId:deaths");
+                $deaths = $this->redis()->get("game:$gameId:deaths");
 
                 if (
                     array_key_exists('is_dead', $target['user_info']) &&
@@ -66,8 +66,8 @@ class InfectedWerewolfAction implements ActionInterface
     public function infection(string $targetId): void
     {
         $gameId = $this->getGameId($targetId);
-        $game = Redis::get("game:$gameId");
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+        $game = $this->redis()->get("game:$gameId");
+        $deaths = $this->redis()->get("game:$gameId:deaths") ?? [];
 
         if ($this->isUsed(InteractionActions::Infect, $gameId)) {
             return;
@@ -98,8 +98,8 @@ class InfectedWerewolfAction implements ActionInterface
             )
         );
 
-        Redis::set("game:$gameId:deaths", $deaths);
-        Redis::set("game:$gameId", $game);
+        $this->redis()->set("game:$gameId:deaths", $deaths);
+        $this->redis()->set("game:$gameId", $game);
     }
 
     public function updateClients(string $userId): void
@@ -108,7 +108,7 @@ class InfectedWerewolfAction implements ActionInterface
 
     public function additionnalData(string $gameId): mixed
     {
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+        $deaths = $this->redis()->get("game:$gameId:deaths") ?? [];
 
         return array_map(fn ($death) => $death['user'], $deaths);
     }
@@ -129,15 +129,15 @@ class InfectedWerewolfAction implements ActionInterface
 
     private function setUsed(InteractionActions $action, string $gameId): void
     {
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+        $usedActions = $this->redis()->get("game:$gameId:interactions:usedActions") ?? [];
         $usedActions[] = $action->value;
 
-        Redis::set("game:$gameId:interactions:usedActions", $usedActions);
+        $this->redis()->set("game:$gameId:interactions:usedActions", $usedActions);
     }
 
     private function isUsed(InteractionActions $action, string $gameId): bool
     {
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+        $usedActions = $this->redis()->get("game:$gameId:interactions:usedActions") ?? [];
 
         return in_array($action->value, $usedActions, true);
     }

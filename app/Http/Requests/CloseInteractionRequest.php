@@ -10,7 +10,7 @@ class CloseInteractionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'gameId' => ['required', 'string', new GameExistsRule],
+            'gameId' => ['required', 'string', app(GameExistsRule::class)],
             'id' => ['required', 'uuid'],
         ];
     }

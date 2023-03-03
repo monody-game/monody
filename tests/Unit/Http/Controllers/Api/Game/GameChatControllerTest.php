@@ -6,15 +6,17 @@ use App\Enums\States;
 use App\Enums\Teams;
 use App\Events\ChatLock;
 use App\Events\MessageSended;
-use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
+use App\Traits\InteractsWithRedis;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class GameChatControllerTest extends TestCase
 {
+    use InteractsWithRedis;
+
     public function testSendingMessage()
     {
         Event::fake();
@@ -76,9 +78,9 @@ class GameChatControllerTest extends TestCase
 
         $gameId = $this->game['id'];
         $user = $this->user;
-        $state = Redis::get("game:{$gameId}:state");
+        $state = $this->redis()->get("game:{$gameId}:state");
         $state['status'] = States::Werewolf->value;
-        Redis::set("game:$gameId:state", $state);
+        $this->redis()->set("game:$gameId:state", $state);
 
         $this
             ->actingAs($this->user, 'api')
@@ -195,7 +197,7 @@ class GameChatControllerTest extends TestCase
             'users' => [],
         ])['game'];
 
-        $game = Redis::get("game:{$this->game['id']}");
+        $game = $this->redis()->get("game:{$this->game['id']}");
 
         $game['assigned_roles'] = [
             $this->user->id => 1,
@@ -204,9 +206,9 @@ class GameChatControllerTest extends TestCase
 
         $game['is_started'] = true;
 
-        Redis::set("game:{$this->game['id']}", $game);
+        $this->redis()->set("game:{$this->game['id']}", $game);
 
-        Redis::set("game:{$this->game['id']}:members", [
+        $this->redis()->set("game:{$this->game['id']}:members", [
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
             ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
         ]);
