@@ -2,6 +2,14 @@
 
 namespace App\Contracts;
 
+use Illuminate\Redis\RedisManager;
+
+/**
+ * @method array scan(int &$cursor, array $params)
+ * @method void del(string $key)
+ *
+ * @see RedisManager
+ */
 interface RedisInterface
 {
     public function get(string $key): mixed;
