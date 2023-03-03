@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use App\Contracts\RedisInterface;
 use App\Enums\Teams;
 use App\Events\GameKill;
 use App\Events\MayorElected;
-use App\Facades\Redis;
+use App\Traits\InteractsWithRedis;
 use App\Traits\MemberHelperTrait;
 use function array_key_exists;
 use function count;
@@ -14,7 +15,7 @@ use function in_array;
 
 class VoteService
 {
-    use MemberHelperTrait;
+    use MemberHelperTrait, InteractsWithRedis;
 
     /**
      * @return array<string, array<string>>
@@ -37,7 +38,7 @@ class VoteService
 
         $votes[$userId][] = $authUserId;
 
-        Redis::set("game:$gameId:votes", $votes);
+        $this->redis()->set("game:$gameId:votes", $votes);
 
         return $votes;
     }
@@ -59,14 +60,14 @@ class VoteService
             unset($votes[$userId]);
         }
 
-        Redis::set("game:$gameId:votes", $votes);
+        $this->redis()->set("game:$gameId:votes", $votes);
 
         return $votes;
     }
 
     public function elect(string $gameId): string
     {
-        $game = Redis::get("game:$gameId");
+        $game = $this->redis()->get("game:$gameId");
         $gameUsers = $game['users'];
         $votes = self::getVotes($gameId);
 
@@ -78,7 +79,7 @@ class VoteService
 
         $game['mayor'] = $mayor;
 
-        Redis::set("game:$gameId", $game);
+        $this->redis()->set("game:$gameId", $game);
 
         $this->clearVotes($gameId);
 
@@ -96,8 +97,8 @@ class VoteService
     public function afterVote(string $gameId, string $context = 'vote'): string|false
     {
         $votes = self::getVotes($gameId);
-        $game = Redis::get("game:$gameId");
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+        $game = $this->redis()->get("game:$gameId");
+        $deaths = $this->redis()->get("game:$gameId:deaths") ?? [];
         $mayor = '';
 
         if (array_key_exists('mayor', $game)) {
@@ -136,13 +137,13 @@ class VoteService
 
     private function clearVotes(string $gameId): void
     {
-        Redis::set("game:$gameId:votes", []);
+        $this->redis()->set("game:$gameId:votes", []);
     }
 
     public static function getVotes(string $gameId): array
     {
         /** @var array|null $votes */
-        $votes = Redis::get("game:$gameId:votes");
+        $votes = app()->make(RedisInterface::class)->get("game:$gameId:votes");
 
         /** @var array|null $votes */
         return $votes ?? [];

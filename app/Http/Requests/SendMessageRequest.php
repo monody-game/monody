@@ -11,7 +11,7 @@ class SendMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'gameId' => ['string', 'required', new GameExistsRule(), new InGameRule(null)],
+            'gameId' => ['string', 'required', app(GameExistsRule::class), new InGameRule(null)],
             'content' => 'required|string|max:500',
         ];
     }

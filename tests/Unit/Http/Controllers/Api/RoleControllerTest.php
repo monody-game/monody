@@ -4,16 +4,16 @@ namespace Tests\Unit\Http\Controllers\Api;
 
 use App\Enums\Roles;
 use App\Enums\Teams;
-use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
+use App\Traits\InteractsWithRedis;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class RoleControllerTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, InteractsWithRedis;
 
     private User $user;
 
@@ -87,7 +87,7 @@ class RoleControllerTest extends TestCase
 
     public function testAssigningRoles()
     {
-        $assigned = Redis::get("game:{$this->game['id']}")['assigned_roles'];
+        $assigned = $this->redis()->get("game:{$this->game['id']}")['assigned_roles'];
         $this->assertEmpty($assigned);
 
         $this
@@ -95,7 +95,7 @@ class RoleControllerTest extends TestCase
             ->post('/api/roles/assign', ['gameId' => $this->game['id']])
             ->assertOk();
 
-        $game = Redis::get("game:{$this->game['id']}");
+        $game = $this->redis()->get("game:{$this->game['id']}");
 
         $this->assertCount(2, $game['assigned_roles']);
         $this->assertCount(1, $game['werewolves']);
@@ -111,7 +111,7 @@ class RoleControllerTest extends TestCase
             ->put('/api/game', ['roles' => [1, 2]])
             ->json('game');
 
-        Redis::set("game:{$this->game['id']}:members", [
+        $this->redis()->set("game:{$this->game['id']}:members", [
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
             ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
         ]);

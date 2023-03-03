@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\InteractionActions;
 use App\Enums\Interactions;
-use App\Facades\Redis;
 use App\Http\Controllers\Controller;
+use App\Traits\InteractsWithRedis;
 use Illuminate\Http\JsonResponse;
 
 class GameActionsController extends Controller
 {
+    use InteractsWithRedis;
+
     public function all(): JsonResponse
     {
         return new JsonResponse(Interactions::getActions());
@@ -17,8 +19,8 @@ class GameActionsController extends Controller
 
     public function get(string $gameId, string $interactionId): JsonResponse
     {
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
-        $interactions = Redis::get("game:$gameId:interactions") ?? [];
+        $usedActions = $this->redis()->get("game:$gameId:interactions:usedActions") ?? [];
+        $interactions = $this->redis()->get("game:$gameId:interactions") ?? [];
 
         $interaction = array_filter($interactions, fn ($interaction) => $interaction['id'] === $interactionId)[0];
 

@@ -4,15 +4,17 @@ namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Enums\Roles;
 use App\Enums\States;
-use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
+use App\Traits\InteractsWithRedis;
 use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class GameControllerTest extends TestCase
 {
+    use InteractsWithRedis;
+
     private User $user;
 
     private User $secondUser;
@@ -35,7 +37,7 @@ class GameControllerTest extends TestCase
             ],
         ]);
 
-        $game = Redis::get("game:{$res->json('game')['id']}");
+        $game = $this->redis()->get("game:{$res->json('game')['id']}");
 
         $this->assertSame(
             [
@@ -44,7 +46,7 @@ class GameControllerTest extends TestCase
                 'round' => 0,
                 'startTimestamp' => Carbon::now()->timestamp,
             ],
-            Redis::get("game:{$res->json('game')['id']}:state")
+            $this->redis()->get("game:{$res->json('game')['id']}:state")
         );
         $this->assertSame(sort($this->game), sort($game));
 
@@ -107,10 +109,10 @@ class GameControllerTest extends TestCase
                     1, 1, 2,
                 ],
             ])->json('game');
-        Redis::set('game:1234', '');
-        Redis::set('game:5678', '{}');
+        $this->redis()->set('game:1234', '');
+        $this->redis()->set('game:5678', '{}');
 
-        Redis::set("game:{$res['id']}", array_merge(Redis::get("game:{$res['id']}"), ['is_started' => true]));
+        $this->redis()->set("game:{$res['id']}", array_merge($this->redis()->get("game:{$res['id']}"), ['is_started' => true]));
 
         $this->actingAs($this->user, 'api')
             ->get('/api/game/list')
@@ -118,7 +120,7 @@ class GameControllerTest extends TestCase
                 'games' => [],
             ]);
 
-        Redis::del('game:1234', 'game:5678');
+        $this->redis()->del('game:1234', 'game:5678');
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
@@ -169,8 +171,8 @@ class GameControllerTest extends TestCase
                 ],
             ])->json('game');
 
-        $this->assertTrue(Redis::exists("game:{$game['id']}"));
-        $this->assertTrue(Redis::exists("game:{$game['id']}:state"));
+        $this->assertTrue($this->redis()->exists("game:{$game['id']}"));
+        $this->assertTrue($this->redis()->exists("game:{$game['id']}:state"));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
@@ -179,11 +181,11 @@ class GameControllerTest extends TestCase
             ])
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
-        $this->assertFalse(Redis::exists("game:{$game['id']}"));
-        $this->assertFalse(Redis::exists("game:{$game['id']}:state"));
-        $this->assertFalse(Redis::exists("game:{$game['id']}:votes"));
-        $this->assertFalse(Redis::exists("game:{$game['id']}:interactions"));
-        $this->assertFalse(Redis::exists("game:{$game['id']}:deaths"));
+        $this->assertFalse($this->redis()->exists("game:{$game['id']}"));
+        $this->assertFalse($this->redis()->exists("game:{$game['id']}:state"));
+        $this->assertFalse($this->redis()->exists("game:{$game['id']}:votes"));
+        $this->assertFalse($this->redis()->exists("game:{$game['id']}:interactions"));
+        $this->assertFalse($this->redis()->exists("game:{$game['id']}:deaths"));
     }
 
     public function testCheckGameWithWrongRequest()
@@ -373,7 +375,7 @@ class GameControllerTest extends TestCase
     {
         parent::setUp();
 
-        Redis::flushDb();
+        $this->redis()->flushDb();
 
         $this->user = User::factory()->create();
         $this->secondUser = User::factory()->create();

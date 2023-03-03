@@ -4,7 +4,6 @@ namespace Tests\Unit\Traits;
 
 use App\Enums\Roles;
 use App\Enums\Teams;
-use App\Facades\Redis;
 use App\Models\User;
 use App\Traits\MemberHelperTrait;
 use Exception;
@@ -26,7 +25,7 @@ class MemberHelperTraitTest extends TestCase
 
     public function testGettingMembers()
     {
-        $this->assertSame(Redis::get($this->key), $this->getMembers($this->gameId));
+        $this->assertSame($this->redis()->get($this->key), $this->getMembers($this->gameId));
     }
 
     public function testGettingSpecificMember()
@@ -83,12 +82,12 @@ class MemberHelperTraitTest extends TestCase
 
         $this->key = "game:$this->gameId:members";
 
-        Redis::set($this->key, [
+        $this->redis()->set($this->key, [
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
             ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
         ]);
 
-        Redis::set("game:{$this->gameId}1:members", [
+        $this->redis()->set("game:{$this->gameId}1:members", [
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
         ]);
@@ -101,14 +100,14 @@ class MemberHelperTraitTest extends TestCase
             ])
             ->json('game');
 
-        Redis::set("game:{$this->game['id']}", array_merge($this->game, [
+        $this->redis()->set("game:{$this->game['id']}", array_merge($this->game, [
             'assigned_roles' => [
                 $this->user['id'] => Roles::InfectedWerewolf->value,
                 $this->secondUser['id'] => Roles::Werewolf->value,
             ],
         ]));
 
-        Redis::set("game:{$this->game['id']}:members", [
+        $this->redis()->set("game:{$this->game['id']}:members", [
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
             ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
         ]);

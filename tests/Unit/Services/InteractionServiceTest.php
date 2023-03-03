@@ -7,10 +7,10 @@ use App\Enums\Interactions;
 use App\Enums\Roles;
 use App\Enums\States;
 use App\Events\MayorElected;
-use App\Facades\Redis;
 use App\Models\User;
 use App\Services\InteractionService;
 use App\Services\VoteService;
+use App\Traits\InteractsWithRedis;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
@@ -18,7 +18,7 @@ use Tests\TestCase;
 
 class InteractionServiceTest extends TestCase
 {
-    use MemberHelperTrait;
+    use MemberHelperTrait, InteractsWithRedis;
 
     private InteractionService $service;
 
@@ -46,7 +46,7 @@ class InteractionServiceTest extends TestCase
 
         $interaction = $this->service->create('test', Interactions::Vote);
 
-        $redisInteraction = Redis::get('game:test:interactions');
+        $redisInteraction = $this->redis()->get('game:test:interactions');
         $expectedInteraction['id'] = $interaction['id'];
 
         $this->assertSame(sort($expectedInteraction), sort($interaction));
@@ -58,7 +58,7 @@ class InteractionServiceTest extends TestCase
         $interaction = $this->service->create($this->game['id'], Interactions::Vote);
         $this->assertNull($this->service->close($this->game['id'], $interaction['id']));
 
-        $this->assertEmpty(Redis::get('game:otherGame:interactions'));
+        $this->assertEmpty($this->redis()->get('game:otherGame:interactions'));
     }
 
     public function testEndingUnexistantInteraction()
@@ -117,8 +117,8 @@ class InteractionServiceTest extends TestCase
         $this->service->call(InteractionActions::Infect, $id, $this->infectedWerewolf->id, $this->psychic->id);
         $this->service->close($this->game['id'], $id);
         $this->assertTrue($this->alive($this->psychic->id, $this->game['id']));
-        $this->assertContains($this->psychic->id, Redis::get("game:{$this->game['id']}")['werewolves']);
-        $this->assertEmpty(Redis::get("game:{$this->game['id']}:deaths"));
+        $this->assertContains($this->psychic->id, $this->redis()->get("game:{$this->game['id']}")['werewolves']);
+        $this->assertEmpty($this->redis()->get("game:{$this->game['id']}:deaths"));
 
         // Vote
         $id = $this->service->create($this->game['id'], Interactions::Vote)['id'];
@@ -166,7 +166,7 @@ class InteractionServiceTest extends TestCase
             ];
         });
 
-        $game = Redis::get("game:{$this->game['id']}");
+        $game = $this->redis()->get("game:{$this->game['id']}");
 
         $this->assertArrayHasKey('mayor', $game);
         $this->assertSame($userId, $game['mayor']);
@@ -191,7 +191,7 @@ class InteractionServiceTest extends TestCase
         $this->service->call(InteractionActions::Vote, $id, $this->witch->id, $this->werewolf->id);
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id'])); // Time is already skipped so in reality, it will not skip the time
 
-        Redis::set("game:{$this->game['id']}:votes", []);
+        $this->redis()->set("game:{$this->game['id']}:votes", []);
 
         $id = $this->service->create($this->game['id'], Interactions::Mayor)['id'];
         $this->service->call(InteractionActions::Elect, $id, $this->psychic->id, $this->werewolf->id);
@@ -219,7 +219,7 @@ class InteractionServiceTest extends TestCase
 
         $this->assertNotSame($this->angel->id, $interaction['data']);
         $this->assertContains($interaction['data'], $this->game['users']);
-        $this->assertSame(Redis::get("game:$gameId")['angel_target'], $interaction['data']);
+        $this->assertSame($this->redis()->get("game:$gameId")['angel_target'], $interaction['data']);
     }
 
     protected function setUp(): void
@@ -260,13 +260,13 @@ class InteractionServiceTest extends TestCase
             $members[] = ['user_id' => $user->id, 'user_info' => $user];
         }
 
-        Redis::set("game:{$this->game['id']}:members", $members);
-        Redis::set("game:{$this->game['id']}:state", [
+        $this->redis()->set("game:{$this->game['id']}:members", $members);
+        $this->redis()->set("game:{$this->game['id']}:state", [
             'status' => States::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
             'counterDuration' => States::Vote->duration(),
         ]);
-        Redis::set("game:{$this->game['id']}", $additionnalKeys);
+        $this->redis()->set("game:{$this->game['id']}", $additionnalKeys);
 
         $this->game = $additionnalKeys;
     }
