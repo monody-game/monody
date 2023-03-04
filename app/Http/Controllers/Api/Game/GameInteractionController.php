@@ -6,19 +6,19 @@ use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\Roles;
 use App\Enums\Teams;
+use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CloseInteractionRequest;
 use App\Http\Requests\CreateInteractionRequest;
 use App\Http\Requests\InteractionRequest;
 use App\Services\InteractionService;
-use App\Traits\InteractsWithRedis;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class GameInteractionController extends Controller
 {
-    use MemberHelperTrait, InteractsWithRedis;
+    use MemberHelperTrait;
 
     public function __construct(
         private readonly InteractionService $service
@@ -68,7 +68,7 @@ class GameInteractionController extends Controller
         $gameId = $request->validated('gameId');
         $id = $request->validated('id');
         $targetId = $request->validated('targetId', '');
-        $deaths = $this->redis()->get("game:$gameId:deaths") ?? [];
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
         if (!$this->alive($userId, $gameId) && array_filter($deaths, fn ($death) => $death['user'] === $userId) === []) {
             return (new JsonResponse([], Response::HTTP_FORBIDDEN))

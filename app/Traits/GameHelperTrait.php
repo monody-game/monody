@@ -2,28 +2,28 @@
 
 namespace App\Traits;
 
+use App\Facades\Redis;
+
 trait GameHelperTrait
 {
-    use InteractsWithRedis;
-
     public function getGame(string $gameId): array
     {
-        return $this->redis()->get("game:{$gameId}");
+        return Redis::get("game:{$gameId}");
     }
 
     public function getState(string $gameId): array
     {
-        return $this->redis()->get("game:$gameId:state");
+        return Redis::get("game:$gameId:state");
     }
 
     public function clearRedisKeys(string $gameId): void
     {
-        $this->redis()->del("game:$gameId");
-        $this->redis()->del("game:$gameId:members");
-        $this->redis()->del("game:$gameId:state");
-        $this->redis()->del("game:$gameId:votes");
-        $this->redis()->del("game:$gameId:interactions");
-        $this->redis()->del("game:$gameId:interactions:usedActions");
-        $this->redis()->del("game:$gameId:deaths");
+        Redis::del("game:$gameId");
+        Redis::del("game:$gameId:members");
+        Redis::del("game:$gameId:state");
+        Redis::del("game:$gameId:votes");
+        Redis::del("game:$gameId:interactions");
+        Redis::del("game:$gameId:interactions:usedActions");
+        Redis::del("game:$gameId:deaths");
     }
 }

@@ -6,14 +6,14 @@ use App\Enums\InteractionActions;
 use App\Enums\States;
 use App\Enums\Teams;
 use App\Events\InteractionUpdate;
+use App\Facades\Redis;
 use App\Services\VoteService;
-use App\Traits\InteractsWithRedis;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 
 class WerewolvesAction implements ActionInterface
 {
-    use MemberHelperTrait, RegisterHelperTrait, InteractsWithRedis;
+    use MemberHelperTrait, RegisterHelperTrait;
 
     public function __construct(
         private readonly VoteService $service
@@ -40,7 +40,7 @@ class WerewolvesAction implements ActionInterface
     public function updateClients(string $userId): void
     {
         $gameId = $this->getGameId($userId);
-        $game = $this->redis()->get("game:$gameId");
+        $game = Redis::get("game:$gameId");
 
         broadcast(new InteractionUpdate([
             'gameId' => $gameId,

@@ -1,12 +1,17 @@
 <?php
 
-namespace App\Contracts;
+namespace App\Services;
 
 use Illuminate\Support\Str;
 
-class RedisMock implements RedisInterface
+class RedisMock
 {
     public array $data = [];
+
+    public function data(): array
+    {
+        return $this->data;
+    }
 
     public function get(string $key): mixed
     {

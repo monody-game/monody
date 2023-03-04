@@ -5,14 +5,14 @@ namespace App\Services;
 use App\Enums\Roles;
 use App\Enums\Teams;
 use App\Events\MessageSended;
+use App\Facades\Redis;
 use App\Models\Message;
 use App\Models\User;
-use App\Traits\InteractsWithRedis;
 use App\Traits\MemberHelperTrait;
 
 class ChatService
 {
-    use MemberHelperTrait, InteractsWithRedis;
+    use MemberHelperTrait;
 
     public function private(string $content, User $author, string $type, string $gameId, array $recievers): void
     {
@@ -55,7 +55,7 @@ class ChatService
 
     public function werewolf(array $data, User $user): void
     {
-        $game = $this->redis()->get("game:{$data['gameId']}");
+        $game = Redis::get("game:{$data['gameId']}");
         $message = new Message($data);
         $message->set('author', $this->getAuthor($user));
         $message->set('type', 'werewolf');

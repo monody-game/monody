@@ -2,13 +2,11 @@
 
 namespace App\Rules;
 
-use App\Traits\InteractsWithRedis;
+use App\Facades\Redis;
 use Illuminate\Contracts\Validation\Rule;
 
 readonly class GameExistsRule implements Rule
 {
-    use InteractsWithRedis;
-
     /**
      * Determine if the validation rule passes.
      *
@@ -17,7 +15,7 @@ readonly class GameExistsRule implements Rule
      */
     public function passes($attribute, $value): bool
     {
-        return $this->redis()->exists("game:$value");
+        return Redis::exists("game:$value");
     }
 
     /**

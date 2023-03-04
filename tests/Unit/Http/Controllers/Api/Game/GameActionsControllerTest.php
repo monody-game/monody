@@ -5,15 +5,13 @@ namespace Http\Controllers\Api\Game;
 use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\Roles;
+use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
-use App\Traits\InteractsWithRedis;
 use Tests\TestCase;
 
 class GameActionsControllerTest extends TestCase
 {
-    use InteractsWithRedis;
-
     private array $game;
 
     public function testGettingAllActions()
@@ -63,7 +61,7 @@ class GameActionsControllerTest extends TestCase
                 ],
             ]);
 
-        $this->redis()->set("game:{$this->game['id']}:interactions:usedActions", [InteractionActions::RevivePotion->value]);
+        Redis::set("game:{$this->game['id']}:interactions:usedActions", [InteractionActions::RevivePotion->value]);
 
         $this
             ->get("/api/interactions/actions/{$this->game['id']}/{$interaction['id']}")

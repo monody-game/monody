@@ -3,14 +3,12 @@
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
 use App\Enums\Roles;
+use App\Facades\Redis;
 use App\Models\User;
-use App\Traits\InteractsWithRedis;
 use Tests\TestCase;
 
 class GameUsersControllerTest extends TestCase
 {
-    use InteractsWithRedis;
-
     private User $user;
 
     private User $secondUser;
@@ -31,7 +29,7 @@ class GameUsersControllerTest extends TestCase
         $this->secondUser->current_game = 'id';
         $this->secondUser->save();
 
-        $this->redis()->set('game:id', [
+        Redis::set('game:id', [
             'assigned_roles' => [$this->secondUser->id => 1],
             'dead_users' => [$this->secondUser->id],
         ]);

@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Traits\InteractsWithRedis;
+use App\Facades\Redis;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -10,8 +10,6 @@ use function in_array;
 
 class InGameRule implements Rule, DataAwareRule
 {
-    use InteractsWithRedis;
-
     /**
      * @var string[]
      */
@@ -34,7 +32,7 @@ class InGameRule implements Rule, DataAwareRule
     {
         $gameId = 'gameId' === $attribute ? $value : $this->data['gameId'];
 
-        if (!$this->redis()->exists("game:$gameId")) {
+        if (!Redis::exists("game:$gameId")) {
             return false;
         }
 
@@ -44,7 +42,7 @@ class InGameRule implements Rule, DataAwareRule
             $userId = $attribute === $this->userIdField ? $value : $this->data[$this->userIdField];
         }
 
-        $game = $this->redis()->get("game:{$gameId}");
+        $game = Redis::get("game:{$gameId}");
 
         return in_array($userId, $game['users'], true);
     }

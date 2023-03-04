@@ -6,16 +6,14 @@ use App\Enums\InteractionActions;
 use App\Enums\Interactions;
 use App\Enums\Roles;
 use App\Enums\States;
+use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
-use App\Traits\InteractsWithRedis;
 use Illuminate\Support\Facades\Date;
 use Tests\TestCase;
 
 class GameInteractionControllerTest extends TestCase
 {
-    use InteractsWithRedis;
-
     private array $game;
 
     private array $secondGame;
@@ -42,7 +40,7 @@ class GameInteractionControllerTest extends TestCase
             ->assertOk();
 
         $interactionId = $res->json('interaction')['id'];
-        $interactions = $this->redis()->get("game:{$this->game['id']}:interactions");
+        $interactions = Redis::get("game:{$this->game['id']}:interactions");
 
         $this->assertSame([
             'gameId' => $this->game['id'],
@@ -63,7 +61,7 @@ class GameInteractionControllerTest extends TestCase
 
         $interactionId = $res->json('interaction')['id'];
 
-        $this->assertNotEmpty($this->redis()->get("game:{$this->game['id']}:interactions"));
+        $this->assertNotEmpty(Redis::get("game:{$this->game['id']}:interactions"));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
@@ -73,7 +71,7 @@ class GameInteractionControllerTest extends TestCase
             ])
             ->assertNoContent();
 
-        $this->assertEmpty($this->redis()->get("game:{$this->game['id']}:interactions"));
+        $this->assertEmpty(Redis::get("game:{$this->game['id']}:interactions"));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
@@ -151,9 +149,9 @@ class GameInteractionControllerTest extends TestCase
     {
         $gameId = $this->game['id'];
 
-        $this->redis()->set(
+        Redis::set(
             "game:$gameId",
-            array_merge($this->redis()->get("game:$gameId"), ['dead_users' => [$this->user->id]])
+            array_merge(Redis::get("game:$gameId"), ['dead_users' => [$this->user->id]])
         );
 
         $res = $this
@@ -284,7 +282,7 @@ class GameInteractionControllerTest extends TestCase
             'is_started' => true,
         ]);
 
-        $this->redis()->set("game:{$this->game['id']}:members", [
+        Redis::set("game:{$this->game['id']}:members", [
             ['user_id' => $this->user['id'], 'user_info' => $this->user],
             ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
             ['user_id' => 'superWerewolf', 'user_info' => []],
@@ -294,17 +292,17 @@ class GameInteractionControllerTest extends TestCase
             ['user_id' => 'superAngel', 'user_info' => []],
         ]);
 
-        $this->redis()->set("game:{$this->game['id']}", $additionnalKeys);
+        Redis::set("game:{$this->game['id']}", $additionnalKeys);
 
-        $this->redis()->set("game:{$this->secondGame['id']}", array_merge($this->redis()->get("game:{$this->secondGame['id']}")), ['is_started' => true]);
+        Redis::set("game:{$this->secondGame['id']}", array_merge(Redis::get("game:{$this->secondGame['id']}")), ['is_started' => true]);
 
-        $this->redis()->set("game:{$this->game['id']}:state", [
+        Redis::set("game:{$this->game['id']}:state", [
             'status' => States::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
             'counterDuration' => States::Vote->duration(),
         ]);
 
-        $this->redis()->set("game:{$this->secondGame['id']}:state", [
+        Redis::set("game:{$this->secondGame['id']}:state", [
             'status' => States::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
             'counterDuration' => States::Vote->duration(),

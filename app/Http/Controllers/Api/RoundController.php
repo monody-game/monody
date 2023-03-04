@@ -5,14 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Enums\Roles;
 use App\Enums\Rounds;
 use App\Enums\States;
+use App\Facades\Redis;
 use App\Http\Controllers\Controller;
-use App\Traits\InteractsWithRedis;
 use Illuminate\Http\JsonResponse;
 
 class RoundController extends Controller
 {
-    use InteractsWithRedis;
-
     public function all(?string $gameId = null): JsonResponse
     {
         $rounds = [];
@@ -40,9 +38,9 @@ class RoundController extends Controller
 
         $round = $round->stateify();
 
-        if ($gameId !== null && $this->redis()->exists("game:$gameId")) {
-            $game = $this->redis()->get("game:$gameId");
-            $gameState = $this->redis()->get("game:$gameId:state");
+        if ($gameId !== null && Redis::exists("game:$gameId")) {
+            $game = Redis::get("game:$gameId");
+            $gameState = Redis::get("game:$gameId:state");
             $roles = array_keys($game['roles']);
 
             $roles = array_map(function ($role) {
