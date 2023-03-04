@@ -6,20 +6,20 @@ use App\Enums\States;
 use App\Enums\Teams;
 use App\Events\ChatLock;
 use App\Events\GameKill;
+use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\SendMessageRequest;
 use App\Models\User;
 use App\Services\ChatService;
 use App\Traits\GameHelperTrait;
-use App\Traits\InteractsWithRedis;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class GameChatController extends Controller
 {
-    use GameHelperTrait, MemberHelperTrait, InteractsWithRedis;
+    use GameHelperTrait, MemberHelperTrait;
 
     public function __construct(
         private readonly ChatService $service
@@ -50,8 +50,8 @@ class GameChatController extends Controller
     public function death(GameIdRequest $request): JsonResponse
     {
         $gameId = $request->validated('gameId');
-        $game = $this->redis()->get("game:$gameId");
-        $deaths = $this->redis()->get("game:$gameId:deaths") ?? [];
+        $game = Redis::get("game:$gameId");
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
         foreach ($deaths as $death) {
             $infected = array_key_exists('infected', $game) && $game['infected'] === $death['user'];
@@ -64,7 +64,7 @@ class GameChatController extends Controller
             ]);
         }
 
-        $this->redis()->set("game:$gameId:deaths", []);
+        Redis::set("game:$gameId:deaths", []);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

@@ -2,48 +2,46 @@
 
 namespace Tests\Unit\Facades;
 
-use App\Traits\InteractsWithRedis;
+use App\Facades\Redis;
 use Tests\TestCase;
 
 class RedisMockFacadeTest extends TestCase
 {
-    use InteractsWithRedis;
-
     public function testSettingValue()
     {
-        $this->redis()->set('test', ['test']);
-        $this->assertSame(['test'], $this->redis()->get('test'));
-        $this->assertSame(['test'], json_decode($this->redis()->data['test']));
+        Redis::set('test', ['test']);
+        $this->assertSame(['test'], Redis::get('test'));
+        $this->assertSame(['test'], json_decode(Redis::data()['test']));
     }
 
     public function testExists()
     {
-        $this->assertFalse($this->redis()->exists('anotherKey'));
-        $this->redis()->set('anotherKey', 'value');
-        $this->assertTrue($this->redis()->exists('anotherKey'));
+        $this->assertFalse(Redis::exists('anotherKey'));
+        Redis::set('anotherKey', 'value');
+        $this->assertTrue(Redis::exists('anotherKey'));
     }
 
     public function testDeletingAKey()
     {
-        $this->assertFalse($this->redis()->exists('thisKeyWillBeDeleted'));
-        $this->redis()->set('thisKeyWillBeDeleted', 'value');
-        $this->assertTrue($this->redis()->exists('thisKeyWillBeDeleted'));
-        $this->redis()->del('thisKeyWillBeDeleted');
-        $this->assertFalse($this->redis()->exists('thisKeyWillBeDeleted'));
+        $this->assertFalse(Redis::exists('thisKeyWillBeDeleted'));
+        Redis::set('thisKeyWillBeDeleted', 'value');
+        $this->assertTrue(Redis::exists('thisKeyWillBeDeleted'));
+        Redis::del('thisKeyWillBeDeleted');
+        $this->assertFalse(Redis::exists('thisKeyWillBeDeleted'));
     }
 
     public function testScanningKeys()
     {
         $cursor = 0;
-        $this->redis()->set('key:1', true);
-        $this->redis()->set('key:2', true);
-        $this->redis()->set('key:3', true);
-        $this->redis()->set('key:4', true);
-        $this->redis()->set('key:5', true);
-        $this->redis()->set('hidden:key:1', true);
-        $this->redis()->set('hidden:key:2', true);
+        Redis::set('key:1', true);
+        Redis::set('key:2', true);
+        Redis::set('key:3', true);
+        Redis::set('key:4', true);
+        Redis::set('key:5', true);
+        Redis::set('hidden:key:1', true);
+        Redis::set('hidden:key:2', true);
 
-        $result = $this->redis()->scan($cursor, ['MATCH' => 'key:*', 'COUNT' => 2]);
+        $result = Redis::scan($cursor, ['MATCH' => 'key:*', 'COUNT' => 2]);
 
         $this->assertSame([
             0,
@@ -53,7 +51,7 @@ class RedisMockFacadeTest extends TestCase
             ],
         ], $result);
 
-        $result = $this->redis()->scan($cursor, ['MATCH' => 'key:*', 'COUNT' => 10]);
+        $result = Redis::scan($cursor, ['MATCH' => 'key:*', 'COUNT' => 10]);
 
         $this->assertSame([
             0,

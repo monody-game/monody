@@ -8,8 +8,8 @@ Broadcast::channel('home', function () {
 });
 
 Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
-    $game = $this->redis()->get("game:$gameId");
-    $members = $this->redis()->get("game:$gameId:members") ?? [];
+    $game = Redis::get("game:$gameId");
+    $members = Redis::get("game:$gameId:members") ?? [];
     $member = array_filter($members, fn ($member) => $member['user_id'] === $user->id);
 
     if ($game === null || ($game['is_started'] && count($member) >= 1)) {
@@ -23,7 +23,7 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
     if (isset($game['users']) && !in_array($user->id, $game['users'], true)) {
         $game['users'][] = $user->id;
 
-        $this->redis()->set('game:' . $gameId, $game);
+        Redis::set('game:' . $gameId, $game);
     }
 
     return [

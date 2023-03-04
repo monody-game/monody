@@ -13,8 +13,8 @@ class VoteAction implements ActionInterface
     use MemberHelperTrait, RegisterHelperTrait;
 
     public function __construct(
-        private readonly VoteService $service)
-    {
+        private readonly VoteService $service
+    ) {
     }
 
     public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool

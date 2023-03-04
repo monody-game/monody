@@ -2,12 +2,10 @@
 
 namespace App\Enums;
 
-use App\Traits\InteractsWithRedis;
+use App\Facades\Redis;
 
 enum States: int
 {
-    use InteractsWithRedis;
-
     case Waiting = 0;
     case Starting = 1;
     case Roles = 9;
@@ -144,7 +142,7 @@ enum States: int
     public function hasActionsLeft(string $gameId): bool
     {
         $role = Roles::fromName($this->stringify());
-        $usedActions = $this->redis()->get("game:$gameId:interactions:usedActions") ?? [];
+        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
         $result = true;
 
         if ($role === null) {

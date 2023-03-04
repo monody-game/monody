@@ -4,20 +4,16 @@ namespace Tests\Unit\Http\Controllers\Api;
 
 use App\Enums\Roles;
 use App\Enums\Teams;
+use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
-use App\Traits\InteractsWithRedis;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class RoleControllerTest extends TestCase
 {
-    use RefreshDatabase, InteractsWithRedis;
-
-    private User $user;
-
-    private User $secondUser;
+    use RefreshDatabase;
 
     private array $game;
 
@@ -87,7 +83,7 @@ class RoleControllerTest extends TestCase
 
     public function testAssigningRoles()
     {
-        $assigned = $this->redis()->get("game:{$this->game['id']}")['assigned_roles'];
+        $assigned = Redis::get("game:{$this->game['id']}")['assigned_roles'];
         $this->assertEmpty($assigned);
 
         $this
@@ -95,7 +91,7 @@ class RoleControllerTest extends TestCase
             ->post('/api/roles/assign', ['gameId' => $this->game['id']])
             ->assertOk();
 
-        $game = $this->redis()->get("game:{$this->game['id']}");
+        $game = Redis::get("game:{$this->game['id']}");
 
         $this->assertCount(2, $game['assigned_roles']);
         $this->assertCount(1, $game['werewolves']);
@@ -104,16 +100,16 @@ class RoleControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        [$this->user, $this->secondUser] = User::factory(2)->make();
+        [$user, $secondUser] = User::factory(2)->make();
 
         $this->game = $this
-            ->actingAs($this->user, 'api')
+            ->actingAs($user, 'api')
             ->put('/api/game', ['roles' => [1, 2]])
             ->json('game');
 
-        $this->redis()->set("game:{$this->game['id']}:members", [
-            ['user_id' => $this->user['id'], 'user_info' => $this->user],
-            ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
+        Redis::set("game:{$this->game['id']}:members", [
+            ['user_id' => $user['id'], 'user_info' => $user],
+            ['user_id' => $secondUser['id'], 'user_info' => $secondUser],
         ]);
     }
 }

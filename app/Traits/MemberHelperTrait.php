@@ -5,24 +5,23 @@ namespace App\Traits;
 use App\Enums\Roles;
 use App\Enums\States;
 use App\Enums\Teams;
+use App\Facades\Redis;
 use function array_key_exists;
 use function count;
 use Exception;
 
 trait MemberHelperTrait
 {
-    use InteractsWithRedis;
-
     /**
      * Return json parsed members of the given game.
      */
     public function getMembers(string $gameId): array
     {
-        if (!$this->redis()->exists("game:$gameId:members")) {
+        if (!Redis::exists("game:$gameId:members")) {
             return [];
         }
 
-        return $this->redis()->get("game:$gameId:members");
+        return Redis::get("game:$gameId:members");
     }
 
     /**
@@ -48,7 +47,7 @@ trait MemberHelperTrait
 
     public function hasMember(string $userId, string $gameId): bool
     {
-        if (!$this->redis()->exists("game:$gameId:members")) {
+        if (!Redis::exists("game:$gameId:members")) {
             return false;
         }
 
@@ -57,7 +56,7 @@ trait MemberHelperTrait
 
     public function alive(string $userId, string $gameId): bool
     {
-        $game = $this->redis()->get("game:$gameId");
+        $game = Redis::get("game:$gameId");
 
         if (array_key_exists('dead_users', $game) && in_array($userId, $game['dead_users'], true)) {
             return false;
@@ -71,9 +70,9 @@ trait MemberHelperTrait
      */
     public function getUserIdByRole(Roles $role, string $gameId): array
     {
-        $game = $this->redis()->get("game:$gameId");
+        $game = Redis::get("game:$gameId");
 
-        $deaths = $this->redis()->get("game:$gameId:deaths") ?? [];
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
         $ids = array_keys($game['assigned_roles'], $role->value, true);
         $users = [];
 
@@ -88,7 +87,7 @@ trait MemberHelperTrait
 
     public function getRoleByUserId(string $userId, string $gameId): Roles
     {
-        $game = $this->redis()->get("game:$gameId");
+        $game = Redis::get("game:$gameId");
 
         return Roles::from($game['assigned_roles'][$userId]);
     }
@@ -111,13 +110,13 @@ trait MemberHelperTrait
 
     public function kill(string $userId, string $gameId, string $context): bool
     {
-        $game = $this->redis()->get("game:$gameId");
+        $game = Redis::get("game:$gameId");
 
         if (!in_array($userId, $game['users'], true)) {
             return false;
         }
 
-        $usedActions = $this->redis()->get("game:$gameId:interactions:usedActions") ?? [];
+        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
 
         if (
             $context === States::Werewolf->stringify() &&
@@ -125,18 +124,18 @@ trait MemberHelperTrait
             !in_array(Roles::Elder->name(), $usedActions, true)
         ) {
             $usedActions[] = Roles::Elder->name();
-            $this->redis()->set("game:$gameId:interactions:usedActions", $usedActions);
+            Redis::set("game:$gameId:interactions:usedActions", $usedActions);
 
             return true;
         }
 
         $game['dead_users'][] = $userId;
 
-        $deaths = $this->redis()->get("game:$gameId:deaths") ?? [];
+        $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
-        $this->redis()->set("game:$gameId", $game);
+        Redis::set("game:$gameId", $game);
 
-        $this->redis()->set("game:$gameId:deaths", [...$deaths, [
+        Redis::set("game:$gameId:deaths", [...$deaths, [
             'user' => $userId,
             'context' => $context,
         ]]);

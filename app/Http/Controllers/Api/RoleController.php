@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\Roles;
 use App\Enums\Teams;
 use App\Events\WerewolvesList;
+use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GameIdRequest;
 use App\Traits\GameHelperTrait;
@@ -72,7 +73,7 @@ class RoleController extends Controller
         $game['assigned_roles'] = $assigned;
         $game['werewolves'] = $werewolves;
 
-        $this->redis()->set("game:{$gameId}", $game);
+        Redis::set("game:{$gameId}", $game);
 
         broadcast(
             new WerewolvesList(

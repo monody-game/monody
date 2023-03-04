@@ -7,6 +7,7 @@ use App\Enums\Teams;
 use App\Events\GameEnd;
 use App\Events\GameLoose;
 use App\Events\GameWin;
+use App\Facades\Redis;
 use App\Models\GameOutcome;
 use App\Models\Statistic;
 use App\Models\User;
@@ -41,9 +42,9 @@ class EndGameService
         broadcast(new GameWin($payload, true, $winners));
         broadcast(new GameLoose($payload, true, $loosers));
 
-        $game = $this->redis()->get("game:$gameId");
+        $game = Redis::get("game:$gameId");
         $game['ended'] = true;
-        $this->redis()->set("game:$gameId", $game);
+        Redis::set("game:$gameId", $game);
 
         foreach ([...$winners, ...$loosers] as $userId) {
             $win = in_array($userId, $winners, true);

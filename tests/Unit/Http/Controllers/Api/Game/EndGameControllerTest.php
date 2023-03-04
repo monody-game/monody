@@ -7,18 +7,16 @@ use App\Enums\Teams;
 use App\Events\GameEnd;
 use App\Events\GameLoose;
 use App\Events\GameWin;
+use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use App\Notifications\ExpEarned;
-use App\Traits\InteractsWithRedis;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class EndGameControllerTest extends TestCase
 {
-    use InteractsWithRedis;
-
     private User $user;
 
     private User $secondUser;
@@ -34,9 +32,9 @@ class EndGameControllerTest extends TestCase
             ])
             ->assertForbidden();
 
-        $this->redis()->set(
+        Redis::set(
             "game:{$this->game['id']}",
-            array_merge($this->redis()->get("game:{$this->game['id']}"), ['dead_users' => [$this->user->id]])
+            array_merge(Redis::get("game:{$this->game['id']}"), ['dead_users' => [$this->user->id]])
         );
 
         $this
@@ -52,7 +50,7 @@ class EndGameControllerTest extends TestCase
         Event::fake();
         Notification::fake();
 
-        $this->redis()->set("game:{$this->game['id']}:members", [
+        Redis::set("game:{$this->game['id']}:members", [
             ['user_id' => $this->user['id'], 'user_info' => array_merge($this->user->toArray(), ['is_dead' => true])],
             ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
         ]);
@@ -68,7 +66,7 @@ class EndGameControllerTest extends TestCase
             ])
             ->assertNoContent();
 
-        $game = $this->redis()->get("game:$gameId");
+        $game = Redis::get("game:$gameId");
         $this->assertTrue($game['ended']);
 
         Notification::assertSentTo($villager, ExpEarned::class, function ($notification) use ($villager, $werewolf) {
@@ -151,7 +149,7 @@ class EndGameControllerTest extends TestCase
             ],
         ];
 
-        $this->redis()->set("game:$gameId", array_merge($this->redis()->get("game:$gameId"), $additionnalKeys));
+        Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), $additionnalKeys));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
@@ -160,7 +158,7 @@ class EndGameControllerTest extends TestCase
             ])
             ->assertForbidden();
 
-        $this->redis()->set("game:$gameId", array_merge($this->redis()->get("game:$gameId"), ['dead_users' => [$this->user->id]]));
+        Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), ['dead_users' => [$this->user->id]]));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
@@ -176,7 +174,7 @@ class EndGameControllerTest extends TestCase
             ])
             ->assertNoContent();
 
-        $game = $this->redis()->get("game:$gameId");
+        $game = Redis::get("game:$gameId");
         $this->assertTrue($game['ended']);
 
         Event::assertDispatched(function (GameEnd $event) use ($gameId) {
@@ -242,6 +240,6 @@ class EndGameControllerTest extends TestCase
             ],
         ];
 
-        $this->redis()->set("game:{$this->game['id']}", array_merge($this->redis()->get("game:{$this->game['id']}"), $additionnalKeys));
+        Redis::set("game:{$this->game['id']}", array_merge(Redis::get("game:{$this->game['id']}"), $additionnalKeys));
     }
 }

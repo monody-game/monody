@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use App\Contracts\RedisInterface;
-use App\Contracts\RedisMock;
+use App\Facades\Redis;
+use App\Services\RedisMock;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
@@ -16,7 +16,11 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        app()->singleton(RedisInterface::class, RedisMock::class);
+        app()->singleton(RedisMock::class, function () {
+            return new RedisMock();
+        });
+
+        Redis::swap(app()->make(RedisMock::class));
 
         Artisan::call('migrate', ['-vvv' => true]);
         Artisan::call('db:seed', ['-vvv' => true]);
