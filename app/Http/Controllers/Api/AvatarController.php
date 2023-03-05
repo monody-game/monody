@@ -34,9 +34,9 @@ class AvatarController extends Controller
             Storage::delete("avatars/$path");
         }
 
-        Storage::put("avatars/$path", $result);
+        Storage::put("avatars/{$user->id}.png", $result);
 
-        $user->avatar = str_replace('storage', 'assets', Storage::url("$path"));
+        $user->avatar = str_replace('storage', 'assets', Storage::url("avatars/{$user->id}.png"));
         $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
