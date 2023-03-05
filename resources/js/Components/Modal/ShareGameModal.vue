@@ -1,7 +1,13 @@
 <template>
   <BaseModal class="share-page__background">
-    <header>
+    <header class="share-page__header">
       <h3>Partagez votre partie !</h3>
+      <svg
+        class="popup__close"
+        @click="store.close()"
+      >
+        <use href="/sprite.svg#cross" />
+      </svg>
     </header>
     <div class="share-page__wrapper">
       <div class="share-page__container">
@@ -42,12 +48,14 @@
 
 <script setup>
 import { computed } from "vue";
-import { useStore as useAlertStore } from "../../stores/alerts.js";
-import BaseModal from "./BaseModal.vue";
 import { useRoute } from "vue-router";
+import { useStore as useAlertStore } from "../../stores/alerts.js";
+import { useStore } from "../../stores/modals/modal.js";
+import BaseModal from "./BaseModal.vue";
 
-const alertStore = useAlertStore();
 const route = useRoute();
+const store = useStore();
+const alertStore = useAlertStore();
 
 const gameId = route.params.id;
 const link = window.location.origin + "/game/" + gameId;

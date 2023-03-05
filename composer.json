@@ -7,7 +7,7 @@
         "php": "^8.2",
         "ext-exif": "*",
         "ext-fileinfo": "*",
-        "ext-gd": "*",
+        "ext-imagick": "*",
         "ext-json": "*",
         "ext-pdo": "*",
         "intervention/image": "^2.7",
