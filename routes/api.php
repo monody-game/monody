@@ -72,6 +72,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::get('/user', 'UserController@user')->name('verification.notice');
     Route::patch('/user', 'UserController@update');
+    Route::get('/user/share', 'ShareController@index');
 
     Route::put('/game', 'Game\GameController@new');
     Route::post('/game/check', 'Game\GameController@check');

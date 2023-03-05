@@ -11,6 +11,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "intervention/image": "^2.7",
+        "intervention/imagecache": "^2.6",
         "laravel/framework": "^10",
         "laravel/sanctum": "^3.2",
         "league/glide-laravel": "^1.0",

@@ -14,7 +14,7 @@ class AvatarGeneratorTest extends TestCase
     public function testGeneratingAvatar()
     {
         Storage::fake();
-        Storage::putFileAs('avatars', base_path('tests/Helpers/avatars/1.png'), "{$this->user->id}.png");
+        Storage::putFileAs('avatars', base_path('tests/Helpers/avatars/1.png'), 'default.png');
         Storage::putFileAs('levels', base_path('tests/Helpers/levels/100.png'), '100.png');
 
         $image = $this->generator->generate($this->user);
