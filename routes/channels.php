@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Facades\Redis;
 use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('home', function () {
