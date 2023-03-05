@@ -25,6 +25,9 @@ class UserTableSeed extends Seeder
             'created_at' => Carbon::now(),
         ]);
 
+		$user->avatar = "/assets/avatars/{$user->id}.png";
+		$user->save();
+
         $stat = new Statistic();
         $stat->user_id = $user->id;
         $stat->save();
