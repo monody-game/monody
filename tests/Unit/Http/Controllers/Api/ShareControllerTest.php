@@ -33,7 +33,7 @@ class ShareControllerTest extends TestCase
         parent::setUp();
 
         Storage::fake();
-        Storage::putFileAs('profiles', new File(storage_path('app/public/profiles/template.png')), 'template.png');
+        Storage::putFileAs('profiles', new File(storage_path('app/public/profiles/template-light.png')), 'template-light.png');
         Storage::putFileAs('avatars', new File(storage_path('app/public/avatars/default.png')), 'default.png');
     }
 }
