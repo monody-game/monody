@@ -111,7 +111,7 @@ class ShareController extends Controller
         return $circle->circle($width - 1, $width / 2, $height / 2, fn (AbstractShape $shape) => $shape->background('fff'));
     }
 
-    private function initColors(string $theme)
+    private function initColors(string $theme): void
     {
         if ($theme === 'dark') {
             $this->color = self::LIGHT_BG;
