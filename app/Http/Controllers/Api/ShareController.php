@@ -17,27 +17,33 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ShareController extends Controller
 {
-	const DARK_BG = '0f1127';
-	const DARK_ACCENT = '142868';
-	const DARK_BORDER = 'rgba(15, 17, 39, .25)';
-	const LIGHT_BG = 'fffcf1';
-	const LIGHT_ACCENT = 'fff5cf';
-	const LIGHT_BORDER = 'rgba(255, 252, 241, .25)';
+    const DARK_BG = '0f1127';
 
-	private string $color = self::DARK_BG;
-	private string $border = self::DARK_BORDER;
-	private string $accent = self::LIGHT_ACCENT;
+    const DARK_ACCENT = '142868';
 
-    public function index(Request $request, ExpService $expService, Server $glide, string $theme = "light"): JsonResponse
+    const DARK_BORDER = 'rgba(15, 17, 39, .25)';
+
+    const LIGHT_BG = 'fffcf1';
+
+    const LIGHT_ACCENT = 'fff5cf';
+
+    const LIGHT_BORDER = 'rgba(255, 252, 241, .25)';
+
+    private string $color = self::DARK_BG;
+
+    private string $border = self::DARK_BORDER;
+
+    private string $accent = self::LIGHT_ACCENT;
+
+    public function index(Request $request, ExpService $expService, Server $glide, string $theme = 'light'): JsonResponse
     {
-		if(!in_array($theme, ['dark', 'light'])) {
-			return new JsonResponse([
-				'message' => '"Theme" parameter value must be either "light" (default) or "dark"'
-			], Response::HTTP_BAD_REQUEST);
-		}
+        if (!in_array($theme, ['dark', 'light'], true)) {
+            return new JsonResponse([
+                'message' => '"Theme" parameter value must be either "light" (default) or "dark"',
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
-		$this->initColors($theme);
-
+        $this->initColors($theme);
 
         /** @var User $user route is protected by api auth guard */
         $user = $request->user();
@@ -50,10 +56,12 @@ class ShareController extends Controller
             $avatar->trim('top-left');
             $avatar->save(Storage::path("profiles/{$user->id}-avatar.temp.png"));
 
-            Storage::delete("profiles/{$user->id}-avatar.temp.png");
-
             return $avatar;
         });
+
+        if (Storage::exists("profiles/{$user->id}-avatar.temp.png")) {
+            Storage::delete("profiles/{$user->id}-avatar.temp.png");
+        }
 
         Image::cache(function ($image) use ($user, $expService, $avatar, $avatarPath, $glide, $theme) {
             $glide->deleteCache(str_replace('avatars', 'profiles', $avatarPath));
@@ -76,17 +84,17 @@ class ShareController extends Controller
 
             $profile->text($elo, 3190, 630 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
 
+            // Progress bar container
             $profile->rectangle(1570, 970, 1570 + 2055, 970 + 240, fn (AbstractShape $shape) => $shape->border(10, $this->border));
 
-            $progressLength = ($exp * (1580 + 2040)) / $neededExp;
+            $progressLength = ($exp * 100) / $neededExp;
 
-            if ($progressLength === 0) {
-                $progressLength = 1580;
-            }
+            // Progress bar
+            $profile->rectangle(1575, 975, 1575 + (2045 * $progressLength / 100), 965 + 240, fn (AbstractShape $shape) => $shape->background($this->accent));
 
-            $profile->rectangle(1575, 975, $progressLength, 965 + 240, fn (AbstractShape $shape) => $shape->background($this->accent));
+            $expText = $exp . '/' . $neededExp;
 
-            $profile->text($exp . '/' . $neededExp, 2477, 1015 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
+            $profile->text($expText, 2630 - (((mb_strlen($expText) - 1) * 65) + 49) / 2, 1015 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
 
             $image->widen(1280);
 
@@ -103,12 +111,12 @@ class ShareController extends Controller
         return $circle->circle($width - 1, $width / 2, $height / 2, fn (AbstractShape $shape) => $shape->background('fff'));
     }
 
-	private function initColors(string $theme)
-	{
-		if($theme === 'dark') {
-			$this->color = self::LIGHT_BG;
-			$this->border = self::LIGHT_BORDER;
-			$this->accent = self::DARK_ACCENT;
-		}
-	}
+    private function initColors(string $theme)
+    {
+        if ($theme === 'dark') {
+            $this->color = self::LIGHT_BG;
+            $this->border = self::LIGHT_BORDER;
+            $this->accent = self::DARK_ACCENT;
+        }
+    }
 }

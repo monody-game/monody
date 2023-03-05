@@ -26,6 +26,7 @@ class ShareControllerTest extends TestCase
             ->assertOk();
 
         Storage::assertExists("profiles/{$user->id}.png");
+        Storage::assertMissing("profiles/{$user->id}-avatar.temp.png");
     }
 
     protected function setUp(): void
