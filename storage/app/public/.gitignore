@@ -1,5 +1,6 @@
 .cache
 !avatars
+!avatars/default.png
 !.gitignore
 !profiles
 !profiles/template*
