@@ -2,7 +2,7 @@
 !avatars
 !.gitignore
 !profiles
-!profiles/template.png
+!profiles/template*
 !roles
 !roles/default.png
 !roles/simple_villager.png
