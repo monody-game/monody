@@ -1,6 +1,8 @@
 .cache
 !avatars
 !.gitignore
+!profiles
+!profiles/template.png
 !roles
 !roles/default.png
 !roles/simple_villager.png
