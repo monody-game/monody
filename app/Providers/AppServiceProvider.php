@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
                 'cache' => $filesystem->getDriver(),
                 'cache_path_prefix' => '.cache',
                 'base_url' => 'img',
+                'driver' => 'imagick',
             ]);
         });
     }
