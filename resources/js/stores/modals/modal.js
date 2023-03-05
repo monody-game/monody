@@ -5,7 +5,8 @@ import { useStore as useGameShareStore } from "./share-game-modal.js";
 import { useStore as usePopupStore } from "./popup.js";
 import { useStore as useRoleAssignationStore } from "./role-assignation.js";
 import { useStore as useActivityConfirmationModalStore } from "./activity-confirmation-modal.js";
-import { useStore as useGameDetailsModal } from "./game-details.js";
+import { useStore as useGameDetailsModalStore } from "./game-details.js";
+import { useStore as useShareProfleStore } from "./share-profile-modal.js";
 
 export const useStore = defineStore("modal", {
 	state: () => {
@@ -29,7 +30,9 @@ export const useStore = defineStore("modal", {
 			case "activity-confirmation-modal":
 				return useActivityConfirmationModalStore();
 			case "game-details":
-				return useGameDetailsModal();
+				return useGameDetailsModalStore();
+			case "share-profile":
+				return useShareProfleStore();
 			}
 		}
 	},

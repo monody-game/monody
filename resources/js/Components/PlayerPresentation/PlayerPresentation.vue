@@ -35,7 +35,7 @@
         <svg @click="modalStore.open('profile-modal')">
           <use href="/sprite.svg#wheel" />
         </svg>
-        <svg @click="soon()">
+        <svg @click="modalStore.open('share-profile')">
           <use href="/sprite.svg#share" />
         </svg>
       </div>

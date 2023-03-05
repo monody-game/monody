@@ -59,9 +59,11 @@
       <Transition name="modal">
         <GameCreationModal v-if="store.isOpenned" />
       </Transition>
-
       <Transition name="modal">
         <ProfileModal v-if="profileModalStore.isOpenned" />
+      </Transition>
+      <Transition name="modal">
+        <ShareProfileModal v-if="shareProfileModalStore.isOpenned" />
       </Transition>
       <Footer />
     </div>
@@ -74,18 +76,21 @@ import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useStore } from "../stores/modals/game-creation-modal.js";
 import { useStore as useModalStore } from "../stores/modals/modal.js";
 import { useStore as useProfileModalStore } from "../stores/modals/profile-modal.js";
+import { useStore as useShareProfileModalStore } from "../stores/modals/share-profile-modal.js";
 import AuthService from "../services/AuthService.js";
 import Footer from "../Components/FooterComponent.vue";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
 import GamePresentation from "../Components/GamePresentation.vue";
 import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentation.vue";
 import ProfileModal from "../Components/Modal/ProfileModal.vue";
+import ShareProfileModal from "../Components/Modal/ShareProfileModal.vue";
 
 const games = ref([]);
 const roles = ref([]);
 const store = useStore();
 const router = useRouter();
 const profileModalStore = useProfileModalStore();
+const shareProfileModalStore = useShareProfileModalStore();
 
 onBeforeRouteLeave(() => {
 	window.Echo.leave("home");
