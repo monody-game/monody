@@ -15,9 +15,15 @@ class BadgeTableSeed extends Seeder
     public function run(): void
     {
         $moon = User::where('username', 'moon250')->get()->first();
-        $badge = new Badge();
+
+		$badge = new Badge();
         $badge->user_id = $moon->id;
         $badge->badge_id = Badges::Beta;
         $badge->save();
+
+		$badge = new Badge();
+		$badge->user_id = $moon->id;
+		$badge->badge_id = Badges::Owner;
+		$badge->save();
     }
 }
