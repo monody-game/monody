@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Badges;
 use App\Enums\Roles;
 use App\Enums\Teams;
 use App\Events\GameEnd;
@@ -20,7 +21,8 @@ class EndGameService
     use MemberHelperTrait, GameHelperTrait, InteractsWithRedis;
 
     public function __construct(
-        private readonly ExpService $expService
+        private readonly ExpService $expService,
+        private readonly BadgeService $badgeService,
     ) {
     }
 
@@ -54,6 +56,10 @@ class EndGameService
             $user = User::where('id', $userId)->first();
 
             if ($win) {
+                if ($this->badgeService->canAccess($user, Badges::Wins)) {
+                    $this->badgeService->add($user, Badges::Wins);
+                }
+
                 $this->expService->add(50, $user);
                 $stat->win_streak++;
 
@@ -61,6 +67,10 @@ class EndGameService
                     $stat->longest_streak = $stat->win_streak;
                 }
             } else {
+                if ($this->badgeService->canAccess($user, Badges::Losses)) {
+                    $this->badgeService->add($user, Badges::Losses);
+                }
+
                 $this->expService->add(20, $user);
                 $stat->win_streak = 0;
             }
