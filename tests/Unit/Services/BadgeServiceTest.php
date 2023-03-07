@@ -4,6 +4,7 @@ namespace Tests\Unit\Services;
 
 use App\Enums\Badges;
 use App\Models\Badge;
+use App\Models\GameOutcome;
 use App\Models\User;
 use App\Services\BadgeService;
 use Illuminate\Support\Carbon;
@@ -73,7 +74,7 @@ class BadgeServiceTest extends TestCase
     {
         $service = new BadgeService();
         $user = User::factory()->create();
-        $badges = collect([]);
+        $badges = collect();
 
         for ($i = 1; $i < Badges::Wins->maxLevel(); $i++) {
             $badges[] = $badge = new Badge([
@@ -104,5 +105,23 @@ class BadgeServiceTest extends TestCase
         ];
 
         $this->assertSame($badges->toArray(), $service->get($user));
+    }
+
+    public function testDetectingIfUserCanHaveABadge()
+    {
+        $service = new BadgeService();
+        $user = User::factory()->create();
+
+        GameOutcome::factory(15)->create([
+            'user_id' => $user->id,
+            'win' => true,
+        ]);
+
+        $this->assertTrue($service->canAccess($user, Badges::Wins));
+        $this->assertFalse($service->canAccess($user, Badges::Losses));
+
+        $service->add($user, Badges::Wins);
+
+        $this->assertFalse($service->canAccess($user, Badges::Wins));
     }
 }
