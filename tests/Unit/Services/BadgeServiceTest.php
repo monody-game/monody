@@ -6,8 +6,10 @@ use App\Enums\Badges;
 use App\Models\Badge;
 use App\Models\GameOutcome;
 use App\Models\User;
+use App\Notifications\BadgeGranted;
 use App\Services\BadgeService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class BadgeServiceTest extends TestCase
@@ -53,12 +55,18 @@ class BadgeServiceTest extends TestCase
 
     public function testAddingBadge()
     {
+        Notification::fake();
+
         $service = new BadgeService();
         $user = User::factory()->create();
 
         $this->assertSame([], $service->get($user));
 
         $service->add($user, Badges::Owner);
+
+        Notification::assertSentTo($user, BadgeGranted::class, function ($notification) {
+            return $notification->payload['badge'] === Badges::Owner;
+        });
 
         $this->assertSame([
             [
