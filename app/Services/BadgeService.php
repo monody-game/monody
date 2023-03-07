@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\Badges;
 use App\Models\Badge;
 use App\Models\User;
+use App\Notifications\BadgeGranted;
 
 class BadgeService
 {
@@ -66,6 +67,11 @@ class BadgeService
         $model->badge_id = $badge->value;
         $model->level = $level;
         $model->save();
+
+        $user->notify(new BadgeGranted([
+            'badge' => $badge,
+            'level' => $level,
+        ]));
     }
 
     public function canAccess(User $user, Badges $badge): bool

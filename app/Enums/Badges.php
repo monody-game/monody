@@ -4,7 +4,6 @@ namespace App\Enums;
 
 use App\Models\GameOutcome;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 
 enum Badges: int
 {
