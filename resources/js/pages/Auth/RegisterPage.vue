@@ -79,7 +79,7 @@
               S'inscrire
             </button>
           </div>
-        </form><!--
+        </form>
         <div class="auth-page__lock">
           <div class="auth-page__locked-popup">
             <div
@@ -111,7 +111,7 @@
               </p>
             </div>
           </div>
-        </div>-->
+        </div>
       </div>
     </div>
   </div>
