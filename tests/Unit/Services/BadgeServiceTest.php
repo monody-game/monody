@@ -72,7 +72,7 @@ class BadgeServiceTest extends TestCase
             [
                 'badge' => Badges::Owner,
                 'user_id' => $user->id,
-                'level' => 0,
+                'level' => -1,
                 'obtained_at' => Carbon::now()->toDateString() . ' ' . Carbon::now()->toTimeString(),
             ],
         ], $service->get($user));

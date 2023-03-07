@@ -58,8 +58,8 @@ class BadgeService
             $level = $hasBadge->count() + 1;
         }
 
-        if ($badge->maxLevel() === 0) {
-            $level = 0;
+        if ($badge->maxLevel() === -1) {
+            $level = -1;
         }
 
         $model = new Badge();
