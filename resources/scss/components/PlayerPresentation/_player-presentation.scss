@@ -1,3 +1,15 @@
+@use "../../tools/functions.scss" as *;
+
+.player-presentation__badges {
+	position: absolute;
+	top: space(1);
+	right: space(2);
+
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+}
+
 .player-presentation__container {
 	display: grid;
 	place-items: center;
@@ -103,3 +115,16 @@
 		width: 32px;
 	}
 }
+
+@media screen and (max-width: 960px) {
+	.player-presentation__badges {
+		right: space(1);
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.player-presentation__badges {
+		right: space(2);
+	}
+}
+

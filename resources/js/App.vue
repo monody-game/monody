@@ -25,6 +25,17 @@ const popupStore = useStore();
 const userStore = useUserStore();
 const alertStore = useAlertStore();
 
+const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: dark)");
+
+colorSchemeMedia.addEventListener("change", () => {
+	if (colorSchemeMedia === false || colorSchemeMedia.matches === false) {
+		userStore.theme = "light";
+		return;
+	}
+
+	userStore.theme = "dark";
+});
+
 watch(userStore, () => subscribeToChannel());
 
 const subscribeToChannel = () => {
