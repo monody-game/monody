@@ -51,7 +51,7 @@ class BadgeService
      */
     public function add(User $user, Badges $badge, int $level = 1): void
     {
-        $hasBadge = Badge::where('user_id', $user->id)->where('badge_id', $badge->value)->get();
+        $hasBadge = Badge::getUserBadge($user, $badge);
 
         if ($hasBadge->count() > 0 && $badge->maxLevel() <= $hasBadge->count() + 1) {
             $level = $hasBadge->count() + 1;
@@ -66,5 +66,17 @@ class BadgeService
         $model->badge_id = $badge->value;
         $model->level = $level;
         $model->save();
+    }
+
+    public function canAccess(User $user, Badges $badge): bool
+    {
+        $level = 1;
+        $record = Badge::getUserBadge($user, $badge)->first();
+
+        if ($record) {
+            $level = $record->level + 1;
+        }
+
+        return $badge->requirementMet($user, $level);
     }
 }
