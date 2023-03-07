@@ -91,7 +91,7 @@ class ExpServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->service = new ExpService();
+        $this->service = app()->make(ExpService::class);
 
         parent::setUp();
     }
