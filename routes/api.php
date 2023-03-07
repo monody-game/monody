@@ -36,6 +36,7 @@ Route::get('/interactions/actions/{gameId}/{interactionId}', 'Game\GameActionsCo
 
 Route::group(['middleware' => OptionalAuthentication::class], function () {
     Route::get('/stats/{userId?}', 'StatisticsController@index');
+    Route::get('/badges/{userId?}', 'BadgeController@get');
 });
 
 Route::group(['middleware' => RestrictToLocalNetwork::class], function () {

@@ -8,9 +8,9 @@ use App\Models\User;
 enum Badges: int
 {
     // One-level badges
-    case Graphist = 0;
+    case Owner = 0;
     case Beta = 1;
-    case Owner = 2;
+    case Graphist = 2;
 
     // Other badges
     case Wins = 3;
@@ -18,10 +18,36 @@ enum Badges: int
     case Level = 5;
     case Rank = 6;
 
+    public function stringify(): string
+    {
+        return match ($this) {
+            self::Graphist => 'Graphiste',
+            self::Beta => 'Beta-testeur',
+            self::Owner => 'L\'Originel',
+            self::Wins => 'Gagnant inarrêtable',
+            self::Losses => 'Perdant inépuisable',
+            self::Level => 'Haut classé',
+            self::Rank => 'Fou de l\'ELO'
+        };
+    }
+
+    public function describe(): string
+    {
+        return match ($this) {
+            self::Graphist => 'Graphiste de Monody',
+            self::Beta => 'A participé à la beta de Monody',
+            self::Owner => 'Créateur de Monody !',
+            self::Wins => 'A gagné de nombreuses fois',
+            self::Losses => 'A perdu de nombreuses fois',
+            self::Level => 'A gravi de nombreux niveaux',
+            self::Rank => "S'est classé en ELO"
+        };
+    }
+
     public function maxLevel(): int
     {
         return match ($this) {
-            default => 0,
+            default => -1,
             self::Wins, self::Losses, self::Level, self::Rank => 5
         };
     }
