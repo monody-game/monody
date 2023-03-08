@@ -44,6 +44,17 @@ enum Badges: int
         };
     }
 
+    public function description(): ?string
+    {
+        return match ($this) {
+            default => null,
+            self::Wins => 'Remportez la victoire de nombreuses fois afin de débloquer ce badge.',
+            self::Losses => 'Perdez de nombreuses fois afin de déloquer ce badge.',
+            self::Level => 'Acquérez de nombreux niveaux afin de débloquer ce badge.',
+            self::Rank => 'Atteignez les sommets des classements ELO afin de débloquer ce badge !'
+        };
+    }
+
     public function maxLevel(): int
     {
         return match ($this) {

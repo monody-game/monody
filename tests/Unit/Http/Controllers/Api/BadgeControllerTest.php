@@ -31,7 +31,8 @@ class BadgeControllerTest extends TestCase
         $expected[2] = [
             'id' => Badges::Wins->value,
             'display_name' => Badges::Wins->stringify(),
-            'description' => Badges::Wins->describe(),
+            'explanation' => Badges::Wins->describe(),
+            'description' => Badges::Wins->description(),
             'owned' => true,
             'max_level' => Badges::Wins->maxLevel(),
             'current_level' => 1,
@@ -41,7 +42,8 @@ class BadgeControllerTest extends TestCase
         $expected[4] = [
             'id' => Badges::Level->value,
             'display_name' => Badges::Level->stringify(),
-            'description' => Badges::Level->describe(),
+            'explanation' => Badges::Level->describe(),
+            'description' => Badges::Level->description(),
             'owned' => true,
             'max_level' => Badges::Level->maxLevel(),
             'current_level' => 4,
@@ -70,7 +72,8 @@ class BadgeControllerTest extends TestCase
             $this->badges[] = [
                 'id' => $badge->value,
                 'display_name' => $badge->stringify(),
-                'description' => $badge->describe(),
+                'explanation' => $badge->describe(),
+                'description' => $badge->description(),
                 'owned' => false,
                 'max_level' => $badge->maxLevel(),
                 'current_level' => 0,
