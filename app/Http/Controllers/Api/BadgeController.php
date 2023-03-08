@@ -28,7 +28,8 @@ class BadgeController extends Controller
             $list[$badge->value] = [
                 'id' => $badge->value,
                 'display_name' => $badge->stringify(),
-                'description' => $badge->describe(),
+                'explanation' => $badge->describe(),
+                'description' => $badge->description(),
                 'owned' => false,
                 'max_level' => $badge->maxLevel(),
                 'current_level' => 0,
