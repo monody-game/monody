@@ -7,16 +7,29 @@ use App\Models\User;
 
 enum Badges: int
 {
-    // One-level badges
-    case Owner = 0;
-    case Beta = 1;
-    case Graphist = 2;
-
     // Other badges
     case Wins = 3;
     case Losses = 4;
     case Level = 5;
     case Rank = 6;
+
+    // One-level badges
+    case Owner = 0;
+    case Beta = 1;
+    case Graphist = 2;
+
+    public function name(): string
+    {
+        return match ($this) {
+            self::Graphist => 'graphist',
+            self::Beta => 'beta',
+            self::Owner => 'owner',
+            self::Wins => 'win',
+            self::Losses => 'loose',
+            self::Level => 'lvl',
+            self::Rank => 'rank'
+        };
+    }
 
     public function stringify(): string
     {
