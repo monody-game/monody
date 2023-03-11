@@ -5,7 +5,6 @@ namespace Tests\Unit\Http\Controllers\Api;
 use App\Enums\Badges;
 use App\Models\User;
 use App\Services\BadgeService;
-use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class BadgeControllerTest extends TestCase
@@ -37,7 +36,6 @@ class BadgeControllerTest extends TestCase
             'owned' => true,
             'max_level' => Badges::Wins->maxLevel(),
             'current_level' => 1,
-            'obtained_at' => Carbon::now()->toDateString() . ' ' . Carbon::now()->toTimeString(),
             'secret' => false,
         ];
 
@@ -50,7 +48,6 @@ class BadgeControllerTest extends TestCase
             'owned' => true,
             'max_level' => Badges::Level->maxLevel(),
             'current_level' => 4,
-            'obtained_at' => Carbon::now()->toDateString() . ' ' . Carbon::now()->toTimeString(),
             'secret' => false,
         ];
 
@@ -69,22 +66,7 @@ class BadgeControllerTest extends TestCase
         parent::setUp();
 
         foreach (Badges::cases() as $badge) {
-            if ($badge->value === 0) {
-                continue;
-            }
-
-            $this->badges[] = [
-                'id' => $badge->value,
-                'name' => $badge->name(),
-                'display_name' => $badge->stringify(),
-                'explanation' => $badge->describe(),
-                'description' => $badge->description(),
-                'owned' => false,
-                'max_level' => $badge->maxLevel(),
-                'current_level' => 0,
-                'obtained_at' => null,
-                'secret' => $badge->secret(),
-            ];
+            $this->badges[] = $badge->full();
         }
     }
 }

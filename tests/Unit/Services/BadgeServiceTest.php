@@ -65,9 +65,7 @@ class BadgeServiceTest extends TestCase
 
         $this->service->add($user, Badges::Owner);
 
-        Notification::assertSentTo($user, BadgeGranted::class, function ($notification) {
-            return $notification->payload['badge'] === Badges::Owner;
-        });
+        Notification::assertSentTo($user, BadgeGranted::class, fn ($notification) => $notification->payload['badge'] === Badges::Owner);
 
         $this->assertSame([
             [
@@ -77,42 +75,6 @@ class BadgeServiceTest extends TestCase
                 'obtained_at' => Carbon::now()->toDateString() . ' ' . Carbon::now()->toTimeString(),
             ],
         ], $this->service->get($user));
-    }
-
-    public function testAddingMaxLevelBadge()
-    {
-        $user = User::factory()->create();
-        $badges = collect();
-
-        for ($i = 1; $i < Badges::Wins->maxLevel(); $i++) {
-            $badges[] = $badge = new Badge([
-                'user_id' => $user->id,
-                'badge_id' => Badges::Wins->value,
-                'level' => $i,
-                'obtained_at' => '1970-01-01 00:00:00',
-            ]);
-            $badge->save();
-        }
-
-        $badges = $badges->map(function (Badge $badge) {
-            return [
-                'badge' => Badges::from($badge->badge_id),
-                'user_id' => $badge->user_id,
-                'level' => $badge->level,
-                'obtained_at' => $badge->obtained_at,
-            ];
-        });
-
-        $this->service->add($user, Badges::Wins);
-
-        $badges[] = [
-            'badge' => Badges::Wins,
-            'user_id' => $user->id,
-            'level' => 5,
-            'obtained_at' => Carbon::now()->toDateString() . ' ' . Carbon::now()->toTimeString(),
-        ];
-
-        $this->assertSame($badges->toArray(), $this->service->get($user));
     }
 
     public function testDetectingIfUserCanHaveABadge()

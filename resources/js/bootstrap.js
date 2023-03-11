@@ -12,7 +12,7 @@ window.Echo = new Echo({
 });
 
 const textStyles = [
-	"font-family: Sen",
+	"font-family: Sen, Montserrat, sans-serif",
 	"font-size: 1.75em"
 ].join(";");
 
@@ -27,7 +27,7 @@ console.log("%c %c Monody",
 	].join(";"),
 	[
 		"font-size: 6em",
-		"font-family: Sen",
+		"font-family: Sen, Montserrat, sans-serif",
 		"font-weight: bold"
 	].join(";")
 );
