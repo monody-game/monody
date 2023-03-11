@@ -25,6 +25,10 @@ class ExpService
      */
     public function add(int $quantity, User $user): void
     {
+        if ($quantity === 0) {
+            return;
+        }
+
         $exp = Exp::firstOrCreate(['user_id' => $user->id]);
         $nextLevel = $this->nextLevelExp($user->level);
         $hasLeveledUp = false;
