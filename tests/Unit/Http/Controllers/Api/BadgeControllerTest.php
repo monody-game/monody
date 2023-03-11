@@ -23,7 +23,7 @@ class BadgeControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $service = new BadgeService();
+        $service = app()->make(BadgeService::class);
         $service->add($user, Badges::Wins);
         $service->add($user, Badges::Level, 4);
 

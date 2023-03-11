@@ -56,7 +56,7 @@ class EndGameService
             $user = User::where('id', $userId)->first();
 
             if ($win) {
-                if ($this->badgeService->canAccess($user, Badges::Wins)) {
+                if (BadgeService::canAccess($user, Badges::Wins)) {
                     $this->badgeService->add($user, Badges::Wins);
                 }
 
@@ -67,7 +67,7 @@ class EndGameService
                     $stat->longest_streak = $stat->win_streak;
                 }
             } else {
-                if ($this->badgeService->canAccess($user, Badges::Losses)) {
+                if (BadgeService::canAccess($user, Badges::Losses)) {
                     $this->badgeService->add($user, Badges::Losses);
                 }
 
