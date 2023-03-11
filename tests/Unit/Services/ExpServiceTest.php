@@ -89,9 +89,19 @@ class ExpServiceTest extends TestCase
         $this->assertSame(3, $user->level);
     }
 
+    public function testAddingZeroExp(): void
+    {
+        Notification::fake();
+
+        $user = User::factory(['level' => 2])->create();
+
+        $this->service->add(0, $user);
+        Notification::assertNothingSent();
+    }
+
     public function setUp(): void
     {
-        $this->service = new ExpService();
+        $this->service = app()->make(ExpService::class);
 
         parent::setUp();
     }

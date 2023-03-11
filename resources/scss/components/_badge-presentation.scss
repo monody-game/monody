@@ -1,0 +1,123 @@
+.badges-modal__page {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+	place-items: center;
+	gap: space(2);
+	row-gap: space(4);
+
+	width: 100%;
+	margin: space(4);
+}
+
+.badge-presentation__wrapper[data-owned="true"], .badge-presentation__wrapper[data-owned="true"] > div {
+	background-color: var(--accent-primary);
+}
+
+@media (prefers-color-scheme: dark) {
+	.badge-presentation__wrapper[data-owned="true"], .badge-presentation__wrapper[data-owned="true"] > div {
+		background-color: var(--primary-hover);
+	}
+}
+
+.badge-presentation__wrapper {
+	height: 80px;
+	width: 80px;
+
+	display: grid;
+	place-items: center;
+	border: var(--border-secondary) 6px solid;
+	border-radius: 24px;
+
+	position: relative;
+
+	img {
+		height: 55px;
+		aspect-ratio: 1 / 1;
+	}
+
+	p {
+		font-size: 40px;
+		font-weight: bold;
+		color: var(--border-secondary);
+	}
+}
+
+.badge-presentation__level {
+	position: absolute;
+	bottom: -16px;
+
+	background-color: var(--primary);
+	border: var(--border-secondary) 2px solid;
+	border-radius: 16px;
+
+	display: flex;
+	gap: space(.5);
+	padding: space(.3) space(.5);
+
+	span {
+		display: block;
+		height: 12px;
+		width: 12px;
+		border-radius: 50%;
+
+		border: var(--border-secondary) 2px solid;
+		background-color: var(--primary);
+	}
+
+	span[data-filled="true"] {
+		background-color: var(--accent-primary);
+		border: var(--border-secondary) 3.5px solid;
+	}
+}
+
+.badge-presentation__description {
+	display: grid;
+	gap: space(2);
+	place-items: center;
+
+	width: max-content;
+	max-width: 350px;
+
+	position: absolute;
+	top: 70px;
+	z-index: 10;
+
+	border: var(--border-secondary) 3px solid;
+	border-radius: 4px;
+	background-color: var(--primary);
+
+	padding: space(2);
+
+	p {
+		font-size: inherit;
+		font-weight: inherit;
+		color: inherit;
+	}
+}
+
+.badge-presentation__description-levels {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: space(1);
+
+	img {
+		height: 48px;
+		width: 48px;
+	}
+
+	div {
+		display: grid;
+		place-items: center;
+
+		height: 40px;
+		width: 40px;
+
+		font-size: 24px;
+		font-weight: bold;
+		color: var(--border-secondary);
+
+		border: var(--border-secondary) 4px solid;
+		border-radius: 14px;
+	}
+}

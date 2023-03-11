@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Badges;
 use App\Models\Exp;
 use App\Models\User;
 use App\Notifications\ExpEarned;
@@ -19,6 +20,10 @@ class ExpService
      */
     public function add(int $quantity, User $user): void
     {
+        if ($quantity === 0) {
+            return;
+        }
+
         $exp = Exp::firstOrCreate(['user_id' => $user->id]);
         $nextLevel = $this->nextLevelExp($user->level);
         $hasLeveledUp = false;
@@ -42,6 +47,11 @@ class ExpService
                 'level' => $user->level,
                 'exp_needed' => $this->nextLevelExp($user->level),
             ]));
+
+            if (BadgeService::canAccess($user, Badges::Level)) {
+                $service = new BadgeService($this);
+                $service->add($user, Badges::Level);
+            }
         }
 
         $exp->save();
@@ -52,7 +62,7 @@ class ExpService
     /**
      * Return the exp needed to get to the level passed in parameter
      *
-     * @example nextLevelExp(2) // Returns the exp needed to pass from level 1 to level 2
+     * @example nextLevelExp(2) // Returns the exp needed to pass from level 2 to level 3
      */
     public function nextLevelExp(int $level): int
     {
