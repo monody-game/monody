@@ -16,6 +16,7 @@ import { watch } from "vue";
 import { useStore } from "./stores/modals/popup.js";
 import { useStore as useUserStore } from "./stores/user.js";
 import { useStore as useAlertStore } from "./stores/alerts.js";
+import { useStore as useBadgesStore } from "./stores/modals/badges";
 import DebugBar from "./Components/DebugBar.vue";
 import AlertList from "./Components/Alerts/AlertList.vue";
 import PopupComponent from "./Components/Alerts/PopupComponent.vue";
@@ -24,6 +25,7 @@ import confetti from "canvas-confetti";
 const popupStore = useStore();
 const userStore = useUserStore();
 const alertStore = useAlertStore();
+const badgeStore = useBadgesStore();
 
 const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -65,6 +67,22 @@ const subscribeToChannel = () => {
 						title: "Bravo !",
 						content: `Vous venez de passer niveau ${userStore.level} ! Continuez ainsi !`,
 						note: "Accumulez de l'expérience en jouant sur Monody !"
+					}
+				});
+
+				if (window.matchMedia("(prefers-reduced-motion: reduce)") === false || window.matchMedia("(prefers-reduced-motion: reduce)").matches === false) {
+					startParty();
+				}
+				break;
+			case "badge.granted":
+				console.log(notification);
+				badgeStore.badges = [];
+
+				popupStore.setPopup({
+					level: {
+						title: "Bravo !",
+						content: `Vous venez de faire passer le badge ${notification.data.badge.display_name} au niveau ${notification.data.level} !`,
+						note: "Il existe des badges cachés sur Monody !"
 					}
 				});
 

@@ -116,4 +116,20 @@ enum Badges: int
             self::Level => $user->level >= $this->steps()[$level - 1],
         };
     }
+
+    public function full(): array
+    {
+        return [
+            'id' => $this->value,
+            'name' => $this->name(),
+            'display_name' => $this->stringify(),
+            'explanation' => $this->describe(),
+            'description' => $this->description(),
+            'owned' => false,
+            'max_level' => $this->maxLevel(),
+            'current_level' => 0,
+            'obtained_at' => null,
+            'secret' => $this->secret(),
+        ];
+    }
 }

@@ -67,11 +67,12 @@ readonly class BadgeService
             $level = -1;
         }
 
-        $model = new Badge();
-        $model->user_id = $user->id;
-        $model->badge_id = $badge->value;
-        $model->level = $level;
-        $model->save();
+        Badge::updateOrCreate([
+            'user_id' => $user->id,
+            'badge_id' => $badge->value,
+        ], [
+            'level' => $level,
+        ]);
 
         $this->expService->add($badge->gainedExp($level), $user);
 

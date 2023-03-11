@@ -22,7 +22,7 @@ class BadgeGranted extends Notification
     public function toBroadcast(): BroadcastMessage
     {
         return new BroadcastMessage([
-            'badge' => $this->payload['badge'],
+            'badge' => $this->payload['badge']->full(),
             'level' => $this->payload['level'],
         ]);
     }

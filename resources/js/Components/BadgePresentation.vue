@@ -37,8 +37,6 @@ const props = defineProps({
 	}
 });
 
-console.log(props.badge);
-
 const name = computed(() => {
 	if (props.badge.current_level > 0) {
 		return `${props.badge.name}_${props.badge.current_level}.png`;
