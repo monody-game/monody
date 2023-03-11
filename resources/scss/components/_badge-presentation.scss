@@ -1,12 +1,15 @@
 .badges-modal__page {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 	place-items: center;
 	gap: space(2);
 
 	width: 100%;
-
 	margin: space(4);
+}
+
+.badge-presentation__wrapper[data-owned="true"], .badge-presentation__wrapper[data-owned="true"] > div {
+	background-color: var(--accent-primary);
 }
 
 .badge-presentation__wrapper {
@@ -18,14 +21,44 @@
 	border: var(--border-secondary) 6px solid;
 	border-radius: 24px;
 
-	& img {
+	position: relative;
+
+	img {
 		height: 55px;
 		aspect-ratio: 1 / 1;
 	}
 
-	& p {
+	p {
 		font-size: 40px;
 		font-weight: bold;
 		color: var(--border-secondary);
+	}
+}
+
+.badge-presentation__level {
+	position: absolute;
+	bottom: -12px;
+
+	background-color: var(--primary);
+	border: var(--border-secondary) 2px solid;
+	border-radius: 16px;
+
+	display: flex;
+	gap: space(.5);
+	padding: space(.3) space(.5);
+
+	span {
+		display: block;
+		height: 12px;
+		width: 12px;
+		border-radius: 50%;
+
+		border: var(--border-secondary) 2px solid;
+		background-color: var(--primary);
+	}
+
+	span[data-filled="true"] {
+		background-color: var(--accent-primary);
+		border: var(--border-secondary) 3.5px solid;
 	}
 }
