@@ -8,7 +8,8 @@ export const useStore = defineStore("user", {
 		avatar: "",
 		level: 0,
 		exp: 0,
-		exp_needed: 0
+		exp_needed: 0,
+		theme: "dark"
 	}),
 	actions: {
 		setUser(payload) {

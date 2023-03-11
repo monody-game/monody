@@ -20,7 +20,7 @@
 		"dotenv-expand": "^10.0.0",
 		"laravel-echo": "^1.15.0",
 		"node-fetch": "^3.2.10",
-		"pinia": "^2.0.29",
+		"pinia": "^2.0.33",
 		"redis": "^4.6.5",
 		"socket.io": "^4.5.2",
 		"socket.io-client": "^4.5.2",

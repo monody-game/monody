@@ -1,6 +1,12 @@
 <template>
   <div class="player-presentation__container">
     <div class="player-presentation__main">
+      <svg
+        class="player-presentation__badges"
+        @click="openBadges"
+      >
+        <use :href="'/sprite.svg#badges_' + store.theme " />
+      </svg>
       <div class="pill pill-light player-presentation__exp">
         {{ store.exp }}/{{ store.exp_needed }}
       </div>
@@ -45,18 +51,14 @@
 
 <script setup>
 import { useStore } from "../../stores/user.js";
-import { useStore as useAlertStore } from "../../stores/alerts.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import ProgressBar from "./ExpProgressBar.vue";
 import UserStatistics from "./UserStatistics.vue";
 
 const store = useStore();
 const modalStore = useModalStore();
-const alertStore = useAlertStore();
 
-const soon = () => {
-	alertStore.addAlerts({
-		"info": "Un jour, peut-être ..."
-	});
+const openBadges = () => {
+	modalStore.open("badges");
 };
 </script>
