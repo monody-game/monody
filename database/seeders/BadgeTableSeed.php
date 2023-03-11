@@ -26,10 +26,10 @@ class BadgeTableSeed extends Seeder
         $badge->badge_id = Badges::Owner;
         $badge->save();
 
-		$badge = new Badge();
-		$badge->user_id = $moon->id;
-		$badge->badge_id = Badges::Wins;
-		$badge->level = 3;
-		$badge->save();
+        $badge = new Badge();
+        $badge->user_id = $moon->id;
+        $badge->badge_id = Badges::Wins;
+        $badge->level = 3;
+        $badge->save();
     }
 }
