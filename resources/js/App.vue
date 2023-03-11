@@ -27,6 +27,10 @@ const alertStore = useAlertStore();
 
 const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: dark)");
 
+if (colorSchemeMedia === false || colorSchemeMedia.matches === false) {
+	userStore.theme = "light";
+}
+
 colorSchemeMedia.addEventListener("change", () => {
 	if (colorSchemeMedia === false || colorSchemeMedia.matches === false) {
 		userStore.theme = "light";
