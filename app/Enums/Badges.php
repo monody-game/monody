@@ -31,6 +31,14 @@ enum Badges: int
         };
     }
 
+    public function secret(): bool
+    {
+        return match ($this) {
+            self::Owner, self::Beta, self::Graphist => true,
+            default => false,
+        };
+    }
+
     public function stringify(): string
     {
         return match ($this) {

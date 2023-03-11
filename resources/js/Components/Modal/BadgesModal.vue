@@ -40,7 +40,7 @@ const store = useStore();
 const modalStore = useModalStore();
 
 const badges = computed(() => {
-	return [...store.badges].sort((a, b) => b.owned - a.owned);
+	return [...store.badges].sort((a, b) => b.owned - a.owned).filter(badge => !(badge.owned === false && badge.secret === true));
 });
 
 if (store.badges.length === 0) {

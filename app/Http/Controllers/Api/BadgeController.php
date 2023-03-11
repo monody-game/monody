@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Badge;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class BadgeController extends Controller
 {
@@ -20,6 +21,7 @@ class BadgeController extends Controller
         }
 
         $badges = collect(Badges::cases());
+        /** @var Collection<int, Badges> $badges */
         $badges = $badges->filter(fn ($badge) => $badge !== Badges::Owner);
 
         $list = [];
@@ -35,6 +37,7 @@ class BadgeController extends Controller
                 'max_level' => $badge->maxLevel(),
                 'current_level' => 0,
                 'obtained_at' => null,
+                'secret' => $badge->secret(),
             ];
         }
 
