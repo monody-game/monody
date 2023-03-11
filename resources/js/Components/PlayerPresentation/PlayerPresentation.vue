@@ -1,7 +1,10 @@
 <template>
   <div class="player-presentation__container">
     <div class="player-presentation__main">
-      <svg class="player-presentation__badges">
+      <svg
+        class="player-presentation__badges"
+        @click="openBadges"
+      >
         <use :href="'/sprite.svg#badges_' + store.theme " />
       </svg>
       <div class="pill pill-light player-presentation__exp">
@@ -54,4 +57,8 @@ import UserStatistics from "./UserStatistics.vue";
 
 const store = useStore();
 const modalStore = useModalStore();
+
+const openBadges = () => {
+	modalStore.open("badges");
+};
 </script>
