@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
             $table->tinyInteger('badge_id', false, true);
-            $table->tinyInteger('level', false, true)->default(1);
+            $table->tinyInteger('level', false, true)->default(0);
             $table->timestamp('obtained_at')->useCurrent();
         });
     }
