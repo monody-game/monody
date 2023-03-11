@@ -10,11 +10,6 @@ use App\Notifications\LevelUp;
 
 class ExpService
 {
-    public function __construct(
-        private readonly BadgeService $badgeService,
-    ) {
-    }
-
     /**
      * @var float Exponent used for the exp formula
      */
@@ -53,8 +48,9 @@ class ExpService
                 'exp_needed' => $this->nextLevelExp($user->level),
             ]));
 
-            if ($this->badgeService->canAccess($user, Badges::Level)) {
-                $this->badgeService->add($user, Badges::Level);
+            if (BadgeService::canAccess($user, Badges::Level)) {
+                $service = new BadgeService($this);
+                $service->add($user, Badges::Level);
             }
         }
 

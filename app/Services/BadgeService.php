@@ -7,8 +7,13 @@ use App\Models\Badge;
 use App\Models\User;
 use App\Notifications\BadgeGranted;
 
-class BadgeService
+readonly class BadgeService
 {
+    public function __construct(
+        private ExpService $expService
+    ) {
+    }
+
     /**
      * Retrieve user's badges
      *
@@ -68,13 +73,15 @@ class BadgeService
         $model->level = $level;
         $model->save();
 
+        $this->expService->add($badge->gainedExp($level), $user);
+
         $user->notify(new BadgeGranted([
             'badge' => $badge,
             'level' => $level,
         ]));
     }
 
-    public function canAccess(User $user, Badges $badge): bool
+    public static function canAccess(User $user, Badges $badge): bool
     {
         $level = 1;
         $record = Badge::getUserBadge($user, $badge)->first();

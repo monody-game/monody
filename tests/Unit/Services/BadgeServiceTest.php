@@ -4,6 +4,7 @@ namespace Tests\Unit\Services;
 
 use App\Enums\Badges;
 use App\Models\Badge;
+use App\Models\Exp;
 use App\Models\GameOutcome;
 use App\Models\User;
 use App\Notifications\BadgeGranted;
@@ -14,12 +15,13 @@ use Tests\TestCase;
 
 class BadgeServiceTest extends TestCase
 {
+    private BadgeService $service;
+
     public function testGettingUserBadges()
     {
-        $service = new BadgeService();
         $user = User::factory()->create();
 
-        $this->assertSame([], $service->get($user));
+        $this->assertSame([], $this->service->get($user));
 
         $badge = new Badge([
             'user_id' => $user->id,
@@ -50,19 +52,18 @@ class BadgeServiceTest extends TestCase
                 'level' => 4,
                 'obtained_at' => '1970-01-01 00:00:00',
             ],
-        ], $service->get($user));
+        ], $this->service->get($user));
     }
 
     public function testAddingBadge()
     {
         Notification::fake();
 
-        $service = new BadgeService();
         $user = User::factory()->create();
 
-        $this->assertSame([], $service->get($user));
+        $this->assertSame([], $this->service->get($user));
 
-        $service->add($user, Badges::Owner);
+        $this->service->add($user, Badges::Owner);
 
         Notification::assertSentTo($user, BadgeGranted::class, function ($notification) {
             return $notification->payload['badge'] === Badges::Owner;
@@ -75,12 +76,11 @@ class BadgeServiceTest extends TestCase
                 'level' => -1,
                 'obtained_at' => Carbon::now()->toDateString() . ' ' . Carbon::now()->toTimeString(),
             ],
-        ], $service->get($user));
+        ], $this->service->get($user));
     }
 
     public function testAddingMaxLevelBadge()
     {
-        $service = new BadgeService();
         $user = User::factory()->create();
         $badges = collect();
 
@@ -103,7 +103,7 @@ class BadgeServiceTest extends TestCase
             ];
         });
 
-        $service->add($user, Badges::Wins);
+        $this->service->add($user, Badges::Wins);
 
         $badges[] = [
             'badge' => Badges::Wins,
@@ -112,12 +112,11 @@ class BadgeServiceTest extends TestCase
             'obtained_at' => Carbon::now()->toDateString() . ' ' . Carbon::now()->toTimeString(),
         ];
 
-        $this->assertSame($badges->toArray(), $service->get($user));
+        $this->assertSame($badges->toArray(), $this->service->get($user));
     }
 
     public function testDetectingIfUserCanHaveABadge()
     {
-        $service = new BadgeService();
         $user = User::factory()->create();
 
         GameOutcome::factory(15)->create([
@@ -125,11 +124,30 @@ class BadgeServiceTest extends TestCase
             'win' => true,
         ]);
 
-        $this->assertTrue($service->canAccess($user, Badges::Wins));
-        $this->assertFalse($service->canAccess($user, Badges::Losses));
+        $this->assertTrue(BadgeService::canAccess($user, Badges::Wins));
+        $this->assertFalse(BadgeService::canAccess($user, Badges::Losses));
 
-        $service->add($user, Badges::Wins);
+        $this->service->add($user, Badges::Wins);
 
-        $this->assertFalse($service->canAccess($user, Badges::Wins));
+        $this->assertFalse(BadgeService::canAccess($user, Badges::Wins));
+    }
+
+    public function testGrantingBadgeMakeUserGainExp()
+    {
+        $user = User::factory([
+            'level' => 10,
+        ])->create();
+
+        $this->assertNull(Exp::where('user_id', $user->id)->first());
+
+        $this->service->add($user, Badges::Wins, 3);
+
+        $this->assertSame(Badges::Wins->gainedExp(3), Exp::where('user_id', $user->id)->first()->exp);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->service = app()->make(BadgeService::class);
     }
 }

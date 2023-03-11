@@ -71,6 +71,15 @@ enum Badges: int
         };
     }
 
+    public function gainedExp(int $level): int
+    {
+        return match ($this) {
+            self::Wins => [50, 75, 100, 200, 500][$level - 1],
+            self::Losses => [25, 35, 50, 100, 250][$level - 1],
+            default => 0
+        };
+    }
+
     public function requirementMet(User $user, int $level): bool
     {
         $outcomes = collect();
