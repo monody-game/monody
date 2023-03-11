@@ -55,3 +55,8 @@
 .modal-leave-to {
 	opacity: 0;
 }
+
+.modal__buttons-right {
+	flex: 1;
+	justify-content: flex-end;
+}

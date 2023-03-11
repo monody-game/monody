@@ -11,18 +11,18 @@
       />
     </div>
     <div class="modal__buttons">
-      <button
-        class="btn medium"
-        @click="close"
-      >
-        Annuler
-      </button>
+      <!--      <button
+			class="btn medium"
+			@click="close"
+		>
+			Annuler
+		</button>-->
       <div class="modal__buttons-right">
         <button
           class="btn medium"
-          @click="finish"
+          @click="close"
         >
-          Valider
+          Fermer
         </button>
       </div>
     </div>
