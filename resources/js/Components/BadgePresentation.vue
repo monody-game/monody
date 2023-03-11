@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="badge"
     class="badge-presentation__wrapper"
     :data-owned="props.badge.owned"
   >
@@ -21,14 +22,45 @@
         :data-filled="n <= props.badge.current_level"
       />
     </div>
+    <div
+      v-if="props.badge.owned"
+      ref="description"
+      class="badge-presentation__description"
+    >
+      <h4>{{ props.badge.display_name }}</h4>
+      <div
+        v-if="props.badge.max_level > 0"
+        class="badge-presentation__description-levels"
+      >
+        <template v-for="n in props.badge.max_level">
+          <img
+            v-if="n <= props.badge.current_level"
+            :key="n"
+            :src="`/assets/badges/${store.theme}/${props.badge.name}_${n}.png`"
+            :alt="props.badge.display_name"
+          >
+          <div
+            v-else
+            :key="-n"
+          >
+            ?
+          </div>
+        </template>
+      </div>
+      <p v-if="props.badge.description !== null">
+        {{ props.badge.description }}
+      </p>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { computed, onMounted, ref } from "vue";
 import { useStore } from "../stores/user.js";
-import { computed } from "vue";
 
 const store = useStore();
+const description = ref(null);
+const badge = ref(null);
 
 const props = defineProps({
 	badge: {
@@ -43,5 +75,17 @@ const name = computed(() => {
 	}
 
 	return `${props.badge.name}.png`;
+});
+
+onMounted(() => {
+	if (props.badge.owned === true) {
+		badge.value.addEventListener("pointerenter", () => {
+			description.value.style.display = "grid";
+		});
+
+		badge.value.addEventListener("pointerleave", () => {
+			description.value.style.display = "none";
+		});
+	}
 });
 </script>
