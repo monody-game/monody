@@ -1,5 +1,8 @@
 <template>
-  <div class="badge-presentation__wrapper">
+  <div
+    class="badge-presentation__wrapper"
+    :data-owned="props.badge.owned"
+  >
     <img
       v-if="props.badge.owned"
       :src="`/assets/badges/${store.theme}/${name}`"
@@ -8,6 +11,16 @@
     <p v-else>
       ?
     </p>
+    <div
+      v-if="props.badge.max_level > 0"
+      class="badge-presentation__level"
+    >
+      <span
+        v-for="n in props.badge.max_level"
+        :key="n"
+        :data-filled="n <= props.badge.current_level"
+      />
+    </div>
   </div>
 </template>
 
@@ -23,6 +36,8 @@ const props = defineProps({
 		required: true
 	}
 });
+
+console.log(props.badge);
 
 const name = computed(() => {
 	if (props.badge.current_level > 0) {
