@@ -38,6 +38,7 @@ class BadgeControllerTest extends TestCase
             'max_level' => Badges::Wins->maxLevel(),
             'current_level' => 1,
             'obtained_at' => Carbon::now()->toDateString() . ' ' . Carbon::now()->toTimeString(),
+            'secret' => false,
         ];
 
         $expected[2] = [
@@ -50,6 +51,7 @@ class BadgeControllerTest extends TestCase
             'max_level' => Badges::Level->maxLevel(),
             'current_level' => 4,
             'obtained_at' => Carbon::now()->toDateString() . ' ' . Carbon::now()->toTimeString(),
+            'secret' => false,
         ];
 
         $this
@@ -81,6 +83,7 @@ class BadgeControllerTest extends TestCase
                 'max_level' => $badge->maxLevel(),
                 'current_level' => 0,
                 'obtained_at' => null,
+                'secret' => $badge->secret(),
             ];
         }
     }
