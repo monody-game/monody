@@ -28,8 +28,9 @@ class BadgeControllerTest extends TestCase
         $service->add($user, Badges::Level, 4);
 
         $expected = [...$this->badges];
-        $expected[2] = [
+        $expected[0] = [
             'id' => Badges::Wins->value,
+            'name' => Badges::Wins->name(),
             'display_name' => Badges::Wins->stringify(),
             'explanation' => Badges::Wins->describe(),
             'description' => Badges::Wins->description(),
@@ -39,8 +40,9 @@ class BadgeControllerTest extends TestCase
             'obtained_at' => Carbon::now()->toDateString() . ' ' . Carbon::now()->toTimeString(),
         ];
 
-        $expected[4] = [
+        $expected[2] = [
             'id' => Badges::Level->value,
+            'name' => Badges::Level->name(),
             'display_name' => Badges::Level->stringify(),
             'explanation' => Badges::Level->describe(),
             'description' => Badges::Level->description(),
@@ -71,6 +73,7 @@ class BadgeControllerTest extends TestCase
 
             $this->badges[] = [
                 'id' => $badge->value,
+                'name' => $badge->name(),
                 'display_name' => $badge->stringify(),
                 'explanation' => $badge->describe(),
                 'description' => $badge->description(),

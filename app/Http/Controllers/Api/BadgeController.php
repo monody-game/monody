@@ -27,6 +27,7 @@ class BadgeController extends Controller
         foreach ($badges as $badge) {
             $list[$badge->value] = [
                 'id' => $badge->value,
+                'name' => $badge->name(),
                 'display_name' => $badge->stringify(),
                 'explanation' => $badge->describe(),
                 'description' => $badge->description(),
