@@ -48,8 +48,9 @@
         type="email"
         name="email"
         label="Email"
+        :required="false"
         error="Veuillez rentrer un email valide"
-        :errored="email.match(/^([a-z.0-9]+)@([a-z]+)\.([a-z]+)$/gm) === null"
+        :errored="email !== null && email !== '' && (email ?? '').match(/^([a-z.0-9]+)@([a-z]+)\.([a-z]+)$/gm) === null"
         :value="userStore.email"
         @model="newEmail => email = newEmail"
       />
