@@ -20,7 +20,7 @@ class ExpController extends Controller
 
         return new JsonResponse([
             'user_id' => $exp->user_id,
-            'exp' => $exp->exp,
+            'exp' => $exp->exp ?? 0,
             'next_level' => $service->nextLevelExp($user->level),
         ]);
     }
