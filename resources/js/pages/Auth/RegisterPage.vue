@@ -81,7 +81,7 @@
             </button>
           </div>
         </form>
-        <!--        <div class="auth-page__lock">
+        <div class="auth-page__lock">
           <div class="auth-page__locked-popup">
             <div
               class="popup__wrapper"
@@ -112,7 +112,7 @@
               </p>
             </div>
           </div>
-        </div>-->
+        </div>
       </div>
     </div>
   </div>
