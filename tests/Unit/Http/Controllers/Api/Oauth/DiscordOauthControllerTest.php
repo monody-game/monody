@@ -19,7 +19,7 @@ class DiscordOauthControllerTest extends TestCase
 
         $this
             ->actingAs($this->user, 'api')
-			->withoutMiddleware(VerifiedEmailNeeded::class)
+            ->withoutMiddleware(VerifiedEmailNeeded::class)
             ->post('/api/oauth/unlink/discord')
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
@@ -45,7 +45,7 @@ class DiscordOauthControllerTest extends TestCase
     {
         $this
             ->actingAs($this->user, 'api')
-			->withoutMiddleware(VerifiedEmailNeeded::class)
+            ->withoutMiddleware(VerifiedEmailNeeded::class)
             ->get('/api/oauth/link/discord')
             ->assertRedirect();
     }
