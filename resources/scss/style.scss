@@ -117,7 +117,8 @@ body {
 	--discord-color: #5865F2;
 	--share-color: #505860;
 
-	--secondary-disabled: #0f112750;
+	--primary-disabled: #0f112750;
+	--secondary-disabled: #fffcf150;
 
 	--background-image: url("../../public/images/monody_day.png");
 	--alt-background: var(--primary);
@@ -139,8 +140,6 @@ body {
 		--border-primary: var(--border-dark);
 		--border-secondary: var(--border-light);
 		--border-danger: #FC000050;
-
-		--secondary-disabled: #FFFCF150;
 
 		--background-image: url("../../public/images/monody_night.png");
 		--alt-background: var(--primary-hover);

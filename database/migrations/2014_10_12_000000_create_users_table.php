@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->smallInteger('level', false, true)->default(0);
             $table->string('current_game')->nullable();
             $table->string('discord_id')->nullable();
+            $table->timestamp('discord_linked_at')->nullable();
             $table->string('discord_token')->nullable();
             $table->string('discord_refresh_token')->nullable();
             $table->timestamps();

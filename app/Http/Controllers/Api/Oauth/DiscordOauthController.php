@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
@@ -21,6 +22,27 @@ final class DiscordOauthController extends Controller
     public function link(): RedirectResponse
     {
         return $this->generateProvider('discord', ['identify', 'email', 'role_connections.write'])->redirect();
+    }
+
+    public function user(Request $request): JsonResponse
+    {
+        /** @var User $user Route is protected by auth guard */
+        $user = $request->user();
+
+        if ($user->discord_id === null || $user->discord_token === null) {
+            return (new JsonResponse([], Response::HTTP_UNAUTHORIZED))
+                ->withMessage('You need to link your discord account first');
+        }
+
+        /** @var AbstractProvider $driver */
+        $driver = Socialite::driver('discord');
+        $user = $driver->userFromToken($user->discord_token);
+
+        return new JsonResponse([
+            'id' => $user->getId(),
+            'username' => $user->getNickname(),
+            'avatar' => $user->getAvatar(),
+        ]);
     }
 
     public function check(Request $request): RedirectResponse|JsonResponse
@@ -49,6 +71,9 @@ final class DiscordOauthController extends Controller
         ]);
 
         $user->avatar = '/images/avatar/default.png' === $user->avatar && $discordUser->getAvatar() !== null ? $discordUser->getAvatar() : $user->avatar;
+        $user->discord_linked_at = Carbon::now();
+
+        $user->save();
 
         /** @var \Illuminate\Http\Client\Response $res */
         $res = Http::withToken($discordUser->accessTokenResponseBody['access_token'])
@@ -102,6 +127,7 @@ final class DiscordOauthController extends Controller
         $user->discord_id = null;
         $user->discord_token = null;
         $user->discord_refresh_token = null;
+        $user->discord_linked_at = null;
         $user->save();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);

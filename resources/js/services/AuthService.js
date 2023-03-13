@@ -30,7 +30,8 @@ export default class AuthService {
 			avatar: data.avatar,
 			level: data.level,
 			exp: data.exp,
-			exp_needed: data.next_level
+			exp_needed: data.next_level,
+			discord_linked_at: data.discord_linked_at
 		});
 
 		return true;

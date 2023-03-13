@@ -47,7 +47,7 @@
       <InputComponent
         type="email"
         name="email"
-        :label="`Email ${userStore.email_verified_at === null ? '(Non vérifié)' : `(Vérifié le ${formattedDate})`}`"
+        :label="`Email ${userStore.email_verified_at === null ? '(Non vérifiée)' : `(Vérifiée le ${formattedDate})`}`"
         :required="false"
         error="Veuillez rentrer un email valide"
         :errored="email !== null && email !== '' && (email ?? '').match(/^([a-z.0-9]+)@([a-z]+)\.([a-z]+)$/gm) === null"
@@ -56,18 +56,33 @@
       />
       <div class="profile-modal__connections">
         <label for="connections">Connexions</label>
-        <div class="profile-modal__connections-discord">
+        <div
+          class="profile-modal__connections-discord"
+          :title="userStore.email_verified_at === null ? 'Vous devez posséder une email vérifiée' : ''"
+        >
           <div class="profile-modal__connections-side-group">
             <svg>
               <use href="/sprite.svg#discord" />
             </svg>
-            <p>Compte discord: N/A (n/a)</p>
+            <p>
+              Compte discord: <span class="bold">{{ userStore.discord_linked_at === null ? "Déconnecté" : `Connecté (${discordUsername})` }}</span>
+            </p>
           </div>
-          <button
+          <a
+            v-if="userStore.discord_linked_at === null"
             class="btn medium"
-            @click="soon"
+            :class="userStore.email_verified_at === null ? 'disabled' : ''"
+            href="/api/oauth/link/discord"
           >
             Connecter
+          </a>
+          <button
+            v-else
+            class="btn medium"
+            :disabled="userStore.email_verified_at === null"
+            @click="unlink"
+          >
+            Déconnecter
           </button>
         </div>
       </div>
@@ -110,6 +125,18 @@ const email = ref(userStore.email);
 const usernameErrors = ref({});
 const hasUploaded = ref(false);
 
+const discordInfos = async () => {
+	const res = await window.JSONFetch("/oauth/user/discord");
+
+	return res.data;
+};
+
+const discordUsername = ref("n/a");
+
+if (userStore.discord_linked_at !== null) {
+	discordUsername.value = (await discordInfos()).username;
+}
+
 const formattedDate = computed(() => {
 	return new Date(userStore.email_verified_at).toLocaleDateString("fr-FR");
 });
@@ -121,7 +148,7 @@ const addFile = () => {
 };
 
 nextTick(() => {
-	hasUploaded.value = avatarInput.value.files.length > 0;
+	hasUploaded.value = avatarInput.value?.files.length > 0;
 });
 
 watch(username, (newUsername) => {
@@ -203,9 +230,18 @@ const updateProfile = async () => {
 	modalStore.close();
 };
 
-const soon = () => {
-	alertStore.addAlerts({
-		info: "Un jour, peut-être ..."
-	});
+const unlink = async () => {
+	const res = await window.JSONFetch("/oauth/unlink/discord");
+
+	if (res.ok()) {
+		userStore.discord_linked_at = null;
+		alertStore.addAlerts({
+			success: "Compte Discord déconnecté avec succès !"
+		});
+	} else {
+		alertStore.addAlerts({
+			error: "Une erreur inattendue est survenue en déconnectant votre compte Discord"
+		});
+	}
 };
 </script>
