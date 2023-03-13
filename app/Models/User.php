@@ -36,6 +36,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'password',
         'current_game',
         'discord_id',
+        'discord_linked_at',
         'discord_token',
         'discord_refresh_token',
     ];
@@ -48,6 +49,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     protected $hidden = [
         'password',
         'remember_token',
+        'discord_id',
         'discord_token',
         'discord_refresh_token',
     ];

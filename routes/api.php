@@ -13,11 +13,14 @@ Route::post('/auth/password/validate', 'Auth\PasswordController@token');
 
 Route::get('/game/list', 'Game\GameController@list');
 
-Route::group(['middleware' => VerifiedEmailNeeded::class], function () {
+Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
+//Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
+
+Route::group(['middleware' => ['auth:api', VerifiedEmailNeeded::class]], function () {
     Route::get('/oauth/link/discord', 'Oauth\DiscordOauthController@link');
+    Route::get('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
+    Route::get('/oauth/user/discord', 'Oauth\DiscordOauthController@user');
     //Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
-    Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
-    //Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
 });
 
 Route::get('/roles/', 'RoleController@all');

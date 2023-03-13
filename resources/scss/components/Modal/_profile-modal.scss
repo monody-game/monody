@@ -36,13 +36,23 @@
 	color: var(--light-background);
 	background-color: var(--discord-color);
 
-	button {
+	button, a {
 		background-color: var(--light-background);
 		color: var(--dark-background);
+		text-align: center;
 	}
 
-	button:hover {
+	button:not(:disabled):hover,
+	a:not(.disabled):hover {
 		background-color: var(--light-background-hover) !important;
+		color: var(--dark-background);
+		text-decoration: none;
+	}
+
+	button:disabled,
+	a.disabled {
+		background-color: var(--light-background-hover) !important;
+		color: var(--primary-disabled);
 	}
 
 	svg {
