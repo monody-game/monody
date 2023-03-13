@@ -26,6 +26,7 @@ export default class AuthService {
 			id: data.id,
 			username: data.username,
 			email: data.email,
+			email_verified_at: data.email_verified_at,
 			avatar: data.avatar,
 			level: data.level,
 			exp: data.exp,
