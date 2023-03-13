@@ -10,7 +10,7 @@
 	"scripts": {
 		"dev": "vite --host",
 		"build": "vite build",
-		"serve": "nodemon -L --watch /var/www/websockets /var/www/websockets/index.js"
+		"serve": "nodemon -L --watch /var/www/websockets /var/www/websockets/websockets.js"
 	},
 	"dependencies": {
 		"@grafikart/spinning-dots-element": "latest",
