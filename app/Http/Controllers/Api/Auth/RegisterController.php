@@ -39,8 +39,8 @@ class RegisterController extends Controller
                 ->withPopup(
                     AlertType::Info,
                     "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
-                    "Il peut s'écouler quelques minutes avant de recevoir le mail. Si vous ne le recevez pas, cliquez sur ",
-                    route('verification.send'),
+                    "Il peut s'écouler quelques minutes avant de recevoir le mail. Si vous ne le recevez pas, cliquez ",
+                    route('verification.send', [], false),
                     'ici pour renvoyer le lien.'
                 );
         }

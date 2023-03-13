@@ -29,13 +29,13 @@
       v-if="store.note !== ''"
       class="popup__note"
     >
-      Note : {{ store.note }} <router-link
+      Note : {{ store.note }} <a
         v-if="store.link"
-        :to="store.link"
+        :href="store.link"
         @click="store.close()"
       >
         {{ store.link_text }}
-      </router-link>
+      </a>
     </p>
   </BaseModal>
 </template>
