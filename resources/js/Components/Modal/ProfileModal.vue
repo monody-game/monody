@@ -47,7 +47,7 @@
       <InputComponent
         type="email"
         name="email"
-        label="Email"
+        :label="`Email ${userStore.email_verified_at === null ? '(Non vérifié)' : `(Vérifié le ${formattedDate})`}`"
         :required="false"
         error="Veuillez rentrer un email valide"
         :errored="email !== null && email !== '' && (email ?? '').match(/^([a-z.0-9]+)@([a-z]+)\.([a-z]+)$/gm) === null"
@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { useStore } from "../../stores/user.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import { useStore as useAlertStore } from "../../stores/alerts.js";
@@ -109,6 +109,10 @@ const username = ref(userStore.username);
 const email = ref(userStore.email);
 const usernameErrors = ref({});
 const hasUploaded = ref(false);
+
+const formattedDate = computed(() => {
+	return new Date(userStore.email_verified_at).toLocaleDateString("fr-FR");
+});
 
 const addFile = () => {
 	if (avatarInput.value.files.length > 0) {

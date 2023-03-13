@@ -5,6 +5,7 @@ export const useStore = defineStore("user", {
 		id: 0,
 		username: "",
 		email: "",
+		email_verified_at: null,
 		avatar: "",
 		level: 0,
 		exp: 0,
@@ -16,6 +17,7 @@ export const useStore = defineStore("user", {
 			this.id = payload.id;
 			this.username = payload.username;
 			this.email = payload.email;
+			this.email_verified_at = payload.email_verified_at;
 			this.avatar = payload.avatar;
 			this.level = payload.level;
 			this.exp = payload.exp;
@@ -28,6 +30,7 @@ export const useStore = defineStore("user", {
 				id: this.id,
 				username: this.username,
 				email: this.email,
+				email_verified_at: this.email_verified_at,
 				avatar: this.avatar,
 				level: this.level,
 				exp: this.exp,

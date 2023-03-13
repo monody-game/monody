@@ -48,7 +48,6 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     protected $hidden = [
         'password',
         'remember_token',
-        'email_verified_at',
         'discord_token',
         'discord_refresh_token',
     ];
