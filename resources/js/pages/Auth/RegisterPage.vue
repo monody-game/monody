@@ -42,6 +42,7 @@
             type="email"
             label="Email"
             name="email"
+            :required="false"
             :errored="errors.email.errored"
             :error="errors.email.text"
             @model="newEmail => email = newEmail"
@@ -73,14 +74,14 @@
             <button
               class="btn large"
               type="submit"
-              :disabled="username === '' || email === '' || password === '' || password_confirmation === ''"
+              :disabled="username === '' || password === '' || password_confirmation === ''"
               @click="register"
             >
               S'inscrire
             </button>
           </div>
         </form>
-        <div class="auth-page__lock">
+        <!--        <div class="auth-page__lock">
           <div class="auth-page__locked-popup">
             <div
               class="popup__wrapper"
@@ -111,7 +112,7 @@
               </p>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
@@ -178,7 +179,7 @@ watch(password, (newPassword) => {
 });
 
 watch(email, (newEmail) => {
-	if (newEmail.match(/^([a-z.0-9]+)@([a-z]+)\.([a-z]+)$/gm) === null) {
+	if (newEmail !== "" && newEmail.match(/^([a-z.0-9]+)@([a-z]+)\.([a-z]+)$/gm) === null) {
 		errors.value.email.errored = true;
 		errors.value.email.text = "Veuillez rentrer un email valide";
 	} else {
@@ -190,13 +191,19 @@ watch(email, (newEmail) => {
 const register = async function() {
 	if (checkInput()) {
 		loading.value = true;
+		const payload = {
+			username: username.value,
+			password: password.value,
+			password_confirmation: password_confirmation.value,
+		};
+
+		if (email.value !== "") {
+			payload.email = email.value;
+		}
+
 		const res = await window
-			.JSONFetch("/auth/register", "POST", {
-				username: username.value,
-				email: email.value,
-				password: password.value,
-				password_confirmation: password_confirmation.value,
-			});
+			.JSONFetch("/auth/register", "POST", payload);
+
 		loading.value = false;
 
 		if (res.status === 422) {
@@ -224,11 +231,11 @@ const register = async function() {
 
 const checkInput = function () {
 	errors.value.username.errored = errors.value.username.errored || username.value === "";
-	errors.value.email.errored = errors.value.email.errored || email.value === "";
+	errors.value.email.errored = errors.value.email.errored && email.value !== "";
 	errors.value.password.errored = errors.value.password.errored || password.value === "";
 	errors.value.password_confirmation.errored = errors.value.password_confirmation.errored || password_confirmation.value === "";
 
-	if (username.value === "" || email.value === "" || password.value === "" || password_confirmation.value === "") {
+	if (username.value === "" || password.value === "" || password_confirmation.value === "") {
 		errors.value.text = "Merci de remplir tous les champs";
 		loading.value = false;
 		return false;

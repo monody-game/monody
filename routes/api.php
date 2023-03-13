@@ -42,8 +42,8 @@ Route::group(['middleware' => OptionalAuthentication::class], function () {
     Route::get('/badges/{userId?}', 'BadgeController@get');
 });
 
-Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/auth/register', 'Auth\RegisterController@register');
+Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/roles/assign', 'RoleController@assign');
 
     Route::delete('/game', 'Game\GameController@delete');

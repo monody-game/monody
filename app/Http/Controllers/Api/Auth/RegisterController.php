@@ -31,15 +31,20 @@ class RegisterController extends Controller
         $stats->user_id = $user->id;
         $stats->save();
 
-        return (new JsonResponse(null, Response::HTTP_CREATED))
-                ->withAlert(AlertType::Success, 'Votre compte a bien été créé')
+        $response = (new JsonResponse(null, Response::HTTP_CREATED))
+            ->withAlert(AlertType::Success, 'Votre compte a bien été créé');
+
+        if ($request->has('email')) {
+            $response = $response
                 ->withPopup(
                     AlertType::Info,
                     "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
                     "Il peut s'écouler quelques minutes avant de recevoir le mail. Si vous ne le recevez pas, cliquez sur ",
                     route('verification.send'),
                     'ici pour renvoyer le lien.'
-                )
-                ->withCookie($cookie);
+                );
+        }
+
+        return $response->withCookie($cookie);
     }
 }

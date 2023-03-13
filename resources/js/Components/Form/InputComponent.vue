@@ -17,6 +17,10 @@
       >
         Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody). Veillez à rentrer une adresse mail valide, vous devrez la vérifier.
       </NoticeComponent>
+      <span
+        v-if="props.required"
+        title="Ce champs est requis"
+      >*</span>
     </label>
     <input
       :id="props.name"
@@ -73,6 +77,11 @@ const props = defineProps({
 		required: false
 	},
 	note: {
+		default: true,
+		type: Boolean,
+		required: false
+	},
+	required: {
 		default: true,
 		type: Boolean,
 		required: false
