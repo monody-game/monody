@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Oauth;
 
+use App\Http\Middleware\VerifiedEmailNeeded;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -18,6 +19,7 @@ class DiscordOauthControllerTest extends TestCase
 
         $this
             ->actingAs($this->user, 'api')
+			->withoutMiddleware(VerifiedEmailNeeded::class)
             ->post('/api/oauth/unlink/discord')
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
@@ -43,6 +45,7 @@ class DiscordOauthControllerTest extends TestCase
     {
         $this
             ->actingAs($this->user, 'api')
+			->withoutMiddleware(VerifiedEmailNeeded::class)
             ->get('/api/oauth/link/discord')
             ->assertRedirect();
     }
