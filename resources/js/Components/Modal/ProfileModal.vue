@@ -232,7 +232,7 @@ const updateProfile = async () => {
 
 const unlink = async () => {
 	const res = await window.JSONFetch("/oauth/unlink/discord");
-	console.log(res);
+
 	if (res.ok === true) {
 		userStore.discord_linked_at = null;
 		alertStore.addAlerts({
