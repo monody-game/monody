@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
+use App\Enums\GameType;
 use App\Enums\Role;
 use App\Enums\State;
 use App\Facades\Redis;
@@ -28,14 +29,18 @@ class GameControllerTest extends TestCase
 
     public function testCreatingGame()
     {
-        $res = $this->actingAs($this->user, 'api')->put('/api/game', [
-            'users' => [],
-            'roles' => [
-                1, 1, 2,
-            ],
-        ]);
-
-        $game = Redis::get("game:{$res->json('game')['id']}");
+        $res = $this
+            ->actingAs($this->user, 'api')
+            ->put('/api/game', [
+                'users' => [],
+                'roles' => [
+                    1, 1, 2,
+                ],
+            ])
+            ->assertJson([
+                'game' => $this->game,
+            ])
+            ->json('game');
 
         $this->assertSame(
             [
@@ -44,14 +49,15 @@ class GameControllerTest extends TestCase
                 'round' => 0,
                 'startTimestamp' => Carbon::now()->timestamp,
             ],
-            Redis::get("game:{$res->json('game')['id']}:state")
+            Redis::get("game:{$res['id']}:state")
         );
-        $this->assertSame(sort($this->game), sort($game));
+
+        $this->game = ['id' => $res['id'], ...$this->game];
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
-                'gameId' => $res->json('game')['id'],
+                'gameId' => $res['id'],
             ]);
     }
 
@@ -377,14 +383,19 @@ class GameControllerTest extends TestCase
         $this->user = User::factory()->create();
         $this->secondUser = User::factory()->create();
         $this->game = [
-            'owner' => $this->user->id,
             'users' => [$this->user->id],
             'roles' => [
                 1 => 2,
                 2 => 1,
             ],
             'assigned_roles' => [],
+            'owner' => [
+                'id' => $this->user->id,
+                'username' => $this->user->username,
+                'avatar' => $this->user->avatar,
+            ],
             'is_started' => false,
+            'type' => GameType::NORMAL->value,
         ];
     }
 }
