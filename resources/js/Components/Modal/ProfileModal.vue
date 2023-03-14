@@ -232,8 +232,8 @@ const updateProfile = async () => {
 
 const unlink = async () => {
 	const res = await window.JSONFetch("/oauth/unlink/discord");
-
-	if (res.ok()) {
+	console.log(res);
+	if (res.ok === true) {
 		userStore.discord_linked_at = null;
 		alertStore.addAlerts({
 			success: "Compte Discord déconnecté avec succès !"
