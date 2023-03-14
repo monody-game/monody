@@ -26,6 +26,7 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 	if (response.status === 204) {
 		res.data = {};
 		res.status = response.status;
+		res.ok = true;
 
 		return res;
 	}
