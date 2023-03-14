@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
-use App\Enums\States;
-use App\Enums\Teams;
+use App\Enums\State;
+use App\Enums\Team;
 use App\Events\ChatLock;
 use App\Events\MessageSended;
 use App\Facades\Redis;
@@ -77,7 +77,7 @@ class GameChatControllerTest extends TestCase
         $gameId = $this->game['id'];
         $user = $this->user;
         $state = Redis::get("game:{$gameId}:state");
-        $state['status'] = States::Werewolf->value;
+        $state['status'] = State::Werewolf->value;
         Redis::set("game:$gameId:state", $state);
 
         $this
@@ -155,7 +155,7 @@ class GameChatControllerTest extends TestCase
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/game/chat/lock', [
                 'gameId' => $game['id'],
-                'team' => Teams::Werewolves->value,
+                'team' => Team::Werewolves->value,
             ])
             ->assertNoContent();
 

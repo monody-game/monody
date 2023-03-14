@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\States;
+use App\Enums\State;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 
@@ -10,7 +10,7 @@ class StateController extends Controller
 {
     public function get(int $state): JsonResponse
     {
-        $stateDetails = States::from($state);
+        $stateDetails = State::from($state);
 
         return new JsonResponse([
             'state' => $state,
@@ -24,7 +24,7 @@ class StateController extends Controller
 
     public function message(int $state): JsonResponse
     {
-        $message = States::from($state)->message();
+        $message = State::from($state)->message();
 
         if ($message === null) {
             return (new JsonResponse([], 404))

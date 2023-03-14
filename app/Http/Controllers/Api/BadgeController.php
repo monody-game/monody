@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\Badges;
+use App\Enums\Badge;
 use App\Http\Controllers\Controller;
-use App\Models\Badge;
+use App\Models\UserBadge as BadgeModel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -16,10 +16,10 @@ class BadgeController extends Controller
 
         if ($request->user() !== null || $userId !== null) {
             $user = $request->user()->id ?? $userId;
-            $userBadges = Badge::select('id', 'level', 'badge_id', 'obtained_at')->where('user_id', $user)->get();
+            $userBadges = BadgeModel::select('id', 'level', 'badge_id', 'obtained_at')->where('user_id', $user)->get();
         }
 
-        $badges = collect(Badges::cases());
+        $badges = collect(Badge::cases());
 
         $list = [];
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\Roles;
+use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Models\GameOutcome;
 use App\Models\Statistic;
@@ -46,7 +46,7 @@ class StatisticsController extends Controller
             $role = $highestPossession->search($highestPossessionOccurences);
 
             $stats['most_possessed_role'] = [
-                'role' => Roles::from($role),
+                'role' => Role::from($role),
                 'occurences' => $highestPossessionOccurences,
             ];
         }
@@ -59,7 +59,7 @@ class StatisticsController extends Controller
             $role = $highestWinRole->search($highestWinRoleOccurences);
 
             $stats['highest_win_role'] = [
-                'role' => Roles::from($role),
+                'role' => Role::from($role),
                 'occurences' => $highestWinRoleOccurences,
             ];
         }

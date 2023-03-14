@@ -5,7 +5,7 @@ namespace App\Enums;
 use App\Models\GameOutcome;
 use App\Models\User;
 
-enum Badges: int
+enum Badge: int
 {
     // Other badges
     case Wins = 3;

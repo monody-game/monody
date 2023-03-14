@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\AlertType;
-use App\Enums\States;
-use App\Enums\Teams;
+use App\Enums\State;
+use App\Enums\Team;
 use App\Events\GameListUpdate;
 use App\Events\WerewolvesList;
 use App\Facades\Redis;
@@ -114,8 +114,8 @@ class GameController extends Controller
 
         Redis::set("game:$id", $data);
         Redis::set("game:$id:state", [
-            'status' => States::Waiting,
-            'counterDuration' => States::Waiting->duration(),
+            'status' => State::Waiting,
+            'counterDuration' => State::Waiting->duration(),
             'round' => 0,
             'startTimestamp' => Carbon::now()->timestamp,
         ]);
@@ -150,7 +150,7 @@ class GameController extends Controller
         $user->current_game = $gameId;
         $user->save();
 
-        $werewolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
+        $werewolves = $this->getUsersByTeam(Team::Werewolves, $gameId);
 
         broadcast(
             new WerewolvesList(

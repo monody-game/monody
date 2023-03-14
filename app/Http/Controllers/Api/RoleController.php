@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\Roles;
-use App\Enums\Teams;
+use App\Enums\Role;
+use App\Enums\Team;
 use App\Events\WerewolvesList;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
@@ -19,20 +19,20 @@ class RoleController extends Controller
 
     public function all(): JsonResponse
     {
-        return new JsonResponse(['roles' => Roles::all()]);
+        return new JsonResponse(['roles' => Role::all()]);
     }
 
     public function game(string $gameId): JsonResponse
     {
         $game = $this->getGame($gameId);
-        $roles = array_map(fn ($role) => Roles::from($role)->full(), array_keys($game['roles']));
+        $roles = array_map(fn ($role) => Role::from($role)->full(), array_keys($game['roles']));
 
         return new JsonResponse($roles);
     }
 
     public function get(int $id): JsonResponse
     {
-        $role = Roles::tryFrom($id);
+        $role = Role::tryFrom($id);
 
         if ($role !== null) {
             return new JsonResponse(['role' => $role->full()]);
@@ -44,7 +44,7 @@ class RoleController extends Controller
 
     public function group(int $group): JsonResponse
     {
-        $roles = Teams::from($group)->roles();
+        $roles = Team::from($group)->roles();
 
         return new JsonResponse(['roles' => $roles]);
     }
@@ -64,7 +64,7 @@ class RoleController extends Controller
                 $member = $this->pickMember($members, $assigned);
                 $assigned[$member] = $role;
 
-                if (in_array(Roles::from($role), Teams::Werewolves->roles(), true)) {
+                if (in_array(Role::from($role), Team::Werewolves->roles(), true)) {
                     $werewolves[] = $member;
                 }
             }

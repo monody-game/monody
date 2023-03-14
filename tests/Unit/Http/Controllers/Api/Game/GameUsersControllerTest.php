@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
-use App\Enums\Roles;
+use App\Enums\Role;
 use App\Facades\Redis;
 use App\Models\User;
 use Tests\TestCase;
@@ -39,7 +39,7 @@ class GameUsersControllerTest extends TestCase
             ->assertOk()
             ->json();
 
-        $this->assertSame(Roles::from(1)->full(), $response);
+        $this->assertSame(Role::from(1)->full(), $response);
     }
 
     protected function setUp(): void

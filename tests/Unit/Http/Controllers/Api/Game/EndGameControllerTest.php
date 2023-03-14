@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
-use App\Enums\Roles;
-use App\Enums\Teams;
+use App\Enums\Role;
+use App\Enums\Team;
 use App\Events\GameEnd;
 use App\Events\GameLoose;
 use App\Events\GameWin;
@@ -94,9 +94,9 @@ class EndGameControllerTest extends TestCase
             return ((array) $event)['payload'] === [
                 'gameId' => $gameId,
                 'winners' => [
-                    $werewolf->id => Roles::Werewolf->full(),
+                    $werewolf->id => Role::Werewolf->full(),
                 ],
-                'winningTeam' => Teams::Werewolves,
+                'winningTeam' => Team::Werewolves,
             ];
         });
 
@@ -130,7 +130,7 @@ class EndGameControllerTest extends TestCase
         $game = $this
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
-                'roles' => [Roles::WhiteWerewolf->value, Roles::Werewolf->value],
+                'roles' => [Role::WhiteWerewolf->value, Role::Werewolf->value],
                 'users' => [$this->secondUser->id],
             ])
             ->json('game');
@@ -139,8 +139,8 @@ class EndGameControllerTest extends TestCase
 
         $additionnalKeys = [
             'assigned_roles' => [
-                $this->secondUser->id => Roles::WhiteWerewolf->value,
-                $this->user->id => Roles::Werewolf->value,
+                $this->secondUser->id => Role::WhiteWerewolf->value,
+                $this->user->id => Role::Werewolf->value,
             ],
             'is_started' => true,
             'werewolves' => [
@@ -181,9 +181,9 @@ class EndGameControllerTest extends TestCase
             return ((array) $event)['payload'] === [
                 'gameId' => $gameId,
                 'winners' => [
-                    $this->secondUser->id => Roles::WhiteWerewolf->full(),
+                    $this->secondUser->id => Role::WhiteWerewolf->full(),
                 ],
-                'winningTeam' => Teams::Loners,
+                'winningTeam' => Team::Loners,
             ];
         });
 

@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Enums\Badges;
+use App\Enums\Badge;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
@@ -12,7 +12,7 @@ class BadgeGranted extends Notification
     use Queueable;
 
     /**
-     * @param  array{badge: Badges, level: int}  $payload
+     * @param  array{badge: Badge, level: int}  $payload
      */
     public function __construct(
         public array $payload

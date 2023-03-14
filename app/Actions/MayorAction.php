@@ -2,7 +2,7 @@
 
 namespace App\Actions;
 
-use App\Enums\InteractionActions;
+use App\Enums\InteractionAction;
 use App\Events\InteractionUpdate;
 use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
@@ -22,14 +22,14 @@ class MayorAction implements ActionInterface
         return false;
     }
 
-    public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
+    public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
         $gameId = $this->getGameId($userId);
 
         return $this->alive($targetId, $gameId);
     }
 
-    public function call(string $targetId, InteractionActions $action, string $emitterId): mixed
+    public function call(string $targetId, InteractionAction $action, string $emitterId): mixed
     {
         return $this->service->vote($targetId, $this->getGameId($targetId), $emitterId);
     }
@@ -39,7 +39,7 @@ class MayorAction implements ActionInterface
         $gameId = $this->getGameId($userId);
         broadcast(new InteractionUpdate([
             'gameId' => $gameId,
-            'type' => InteractionActions::Vote->value,
+            'type' => InteractionAction::Vote->value,
             'votedPlayers' => $this->service::getVotes($gameId),
         ]));
     }

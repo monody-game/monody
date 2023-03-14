@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum Roles: int
+enum Role: int
 {
     // Werewolves
     case Werewolf = 1;
@@ -34,7 +34,7 @@ enum Roles: int
         };
     }
 
-    public static function fromName(string $name): ?Roles
+    public static function fromName(string $name): ?Role
     {
         return match ($name) {
             'werewolf' => self::Werewolf,
@@ -83,16 +83,16 @@ enum Roles: int
     }
 
     /**
-     * @return InteractionActions[]
+     * @return InteractionAction[]
      */
     public function getActions(): array
     {
         return match ($this) {
-            self::Psychic => [InteractionActions::Spectate],
-            self::Witch => [InteractionActions::WitchSkip, InteractionActions::KillPotion, InteractionActions::RevivePotion],
-            self::Werewolf => [InteractionActions::Kill],
-            self::InfectedWerewolf => [InteractionActions::Infect, InteractionActions::InfectedSkip],
-            self::WhiteWerewolf => [InteractionActions::BetrayalKill],
+            self::Psychic => [InteractionAction::Spectate],
+            self::Witch => [InteractionAction::WitchSkip, InteractionAction::KillPotion, InteractionAction::RevivePotion],
+            self::Werewolf => [InteractionAction::Kill],
+            self::InfectedWerewolf => [InteractionAction::Infect, InteractionAction::InfectedSkip],
+            self::WhiteWerewolf => [InteractionAction::BetrayalKill],
             default => [],
         };
     }
@@ -102,7 +102,7 @@ enum Roles: int
      */
     public function full(): array
     {
-        $role = Roles::from($this->value);
+        $role = Role::from($this->value);
         $image = file_exists(storage_path("app/public/roles/{$role->name()}.png")) ? "/assets/roles/{$role->name()}.png" : '/assets/roles/default.png';
 
         return [
@@ -112,7 +112,7 @@ enum Roles: int
             'image' => $image,
             'limit' => $role->limit(),
             'weight' => $role->weight(),
-            'team' => Teams::role($role)->full(),
+            'team' => Team::role($role)->full(),
         ];
     }
 
@@ -120,7 +120,7 @@ enum Roles: int
     {
         $roles = [];
 
-        foreach (Roles::cases() as $role) {
+        foreach (Role::cases() as $role) {
             $roles[] = $role->full();
         }
 

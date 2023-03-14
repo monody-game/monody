@@ -11,9 +11,9 @@ use App\Actions\VoteAction;
 use App\Actions\WerewolvesAction;
 use App\Actions\WhiteWerewolfAction;
 use App\Actions\WitchAction;
-use App\Enums\InteractionActions;
-use App\Enums\Interactions;
-use App\Enums\States;
+use App\Enums\Interaction;
+use App\Enums\InteractionAction;
+use App\Enums\State;
 use App\Events\TimeSkip;
 use App\Facades\Redis;
 use App\Traits\RegisterHelperTrait;
@@ -40,10 +40,10 @@ class InteractionService
      * Create and start an interaction with the given parameters
      *
      * @param  string  $gameId The id of the game
-     * @param  Interactions  $type The type of the interaction (vote, ...)
+     * @param  Interaction  $type The type of the interaction (vote, ...)
      * @param  array|string  $authorizedCallers The authorized users to use the interaction (by default it is everyone)
      */
-    public function create(string $gameId, Interactions $type, array|string $authorizedCallers = '*'): array
+    public function create(string $gameId, Interaction $type, array|string $authorizedCallers = '*'): array
     {
         $key = "game:$gameId:interactions";
         /** @var string $callers */
@@ -129,7 +129,7 @@ class InteractionService
     /**
      * @param  string  $id Interaction id
      */
-    public function call(InteractionActions $action, string $id, string $emitterId, string $targetId): mixed
+    public function call(InteractionAction $action, string $id, string $emitterId, string $targetId): mixed
     {
         $gameId = $this->getCurrentUserGameActivity($emitterId);
         $interaction = $this->getInteraction($gameId, $id);
@@ -139,7 +139,7 @@ class InteractionService
             return self::INVALID_ACTION_ON_INTERACTION;
         }
 
-        $service = $this->getService(Interactions::from($type));
+        $service = $this->getService(Interaction::from($type));
 
         if (
             !$service->canInteract($action, $emitterId, $targetId) ||
@@ -162,7 +162,7 @@ class InteractionService
         }
 
         $state = Redis::get("game:$gameId:state");
-        $state = States::from($state['status']);
+        $state = State::from($state['status']);
 
         $skipDuration = $state->getTimeSkip();
 
@@ -194,14 +194,14 @@ class InteractionService
             return true;
         }
 
-        if (in_array($interaction['type'], [Interactions::Vote->value, Interactions::Mayor->value, Interactions::Werewolves->value], true)) {
+        if (in_array($interaction['type'], [Interaction::Vote->value, Interaction::Mayor->value, Interaction::Werewolves->value], true)) {
             return $this->voteService->hasMajorityVoted($game, $interaction['type']);
         }
 
         return false;
     }
 
-    public function status(string $gameId, Interactions $type): mixed
+    public function status(string $gameId, Interaction $type): mixed
     {
         $service = $this->getService($type);
 
@@ -218,21 +218,21 @@ class InteractionService
         return array_key_exists('skipped', $status) && $status['skipped'] === true;
     }
 
-    private function getService(Interactions|string $type): ActionInterface
+    private function getService(Interaction|string $type): ActionInterface
     {
         if (is_string($type)) {
-            $type = Interactions::from($type);
+            $type = Interaction::from($type);
         }
 
         return match ($type) {
-            Interactions::Vote => app(VoteAction::class),
-            Interactions::Witch => new WitchAction,
-            Interactions::Psychic => new PsychicAction,
-            Interactions::Werewolves => app(WerewolvesAction::class),
-            Interactions::InfectedWerewolf => new InfectedWerewolfAction,
-            Interactions::WhiteWerewolf => app(WhiteWerewolfAction::class),
-            Interactions::Mayor => app(MayorAction::class),
-            Interactions::Angel => app(AngelAction::class)
+            Interaction::Vote => app(VoteAction::class),
+            Interaction::Witch => new WitchAction,
+            Interaction::Psychic => new PsychicAction,
+            Interaction::Werewolves => app(WerewolvesAction::class),
+            Interaction::InfectedWerewolf => new InfectedWerewolfAction,
+            Interaction::WhiteWerewolf => app(WhiteWerewolfAction::class),
+            Interaction::Mayor => app(MayorAction::class),
+            Interaction::Angel => app(AngelAction::class)
         };
     }
 }
