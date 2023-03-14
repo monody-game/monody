@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Traits;
 
-use App\Enums\Roles;
-use App\Enums\Teams;
+use App\Enums\Role;
+use App\Enums\Team;
 use App\Facades\Redis;
 use App\Models\User;
 use App\Traits\MemberHelperTrait;
@@ -58,7 +58,7 @@ class MemberHelperTraitTest extends TestCase
         $this->assertSame([
             $this->user['id'],
             $this->secondUser['id'],
-        ], $this->getUsersByTeam(Teams::Werewolves, $this->game['id']));
+        ], $this->getUsersByTeam(Team::Werewolves, $this->game['id']));
     }
 
     protected function setUp(): void
@@ -96,15 +96,15 @@ class MemberHelperTraitTest extends TestCase
         $this->game = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [Roles::InfectedWerewolf->value, Roles::Werewolf->value],
+                'roles' => [Role::InfectedWerewolf->value, Role::Werewolf->value],
                 'users' => [$this->secondUser['id']],
             ])
             ->json('game');
 
         Redis::set("game:{$this->game['id']}", array_merge($this->game, [
             'assigned_roles' => [
-                $this->user['id'] => Roles::InfectedWerewolf->value,
-                $this->secondUser['id'] => Roles::Werewolf->value,
+                $this->user['id'] => Role::InfectedWerewolf->value,
+                $this->secondUser['id'] => Role::Werewolf->value,
             ],
         ]));
 

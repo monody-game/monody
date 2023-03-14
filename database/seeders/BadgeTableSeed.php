@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Badges;
-use App\Models\Badge;
+use App\Enums\Badge;
 use App\Models\User;
+use App\Models\UserBadge;
 use Illuminate\Database\Seeder;
 
 class BadgeTableSeed extends Seeder
@@ -16,19 +16,19 @@ class BadgeTableSeed extends Seeder
     {
         $moon = User::where('username', 'moon250')->get()->first();
 
-        $badge = new Badge();
+        $badge = new UserBadge();
         $badge->user_id = $moon->id;
-        $badge->badge_id = Badges::Beta;
+        $badge->badge_id = Badge::Beta;
         $badge->save();
 
-        $badge = new Badge();
+        $badge = new UserBadge();
         $badge->user_id = $moon->id;
-        $badge->badge_id = Badges::Owner;
+        $badge->badge_id = Badge::Owner;
         $badge->save();
 
-        $badge = new Badge();
+        $badge = new UserBadge();
         $badge->user_id = $moon->id;
-        $badge->badge_id = Badges::Wins;
+        $badge->badge_id = Badge::Wins;
         $badge->level = 3;
         $badge->save();
     }

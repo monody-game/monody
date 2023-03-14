@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
-use App\Enums\Roles;
-use App\Enums\States;
-use App\Enums\Teams;
+use App\Enums\Role;
+use App\Enums\State;
+use App\Enums\Team;
 use App\Facades\Redis;
 use function array_key_exists;
 use function count;
@@ -68,7 +68,7 @@ trait MemberHelperTrait
     /**
      * @return string[]
      */
-    public function getUserIdByRole(Roles $role, string $gameId): array
+    public function getUserIdByRole(Role $role, string $gameId): array
     {
         $game = Redis::get("game:$gameId");
 
@@ -85,14 +85,14 @@ trait MemberHelperTrait
         return $users;
     }
 
-    public function getRoleByUserId(string $userId, string $gameId): Roles
+    public function getRoleByUserId(string $userId, string $gameId): Role
     {
         $game = Redis::get("game:$gameId");
 
-        return Roles::from($game['assigned_roles'][$userId]);
+        return Role::from($game['assigned_roles'][$userId]);
     }
 
-    public function getUsersByTeam(Teams $team, string $gameId): array
+    public function getUsersByTeam(Team $team, string $gameId): array
     {
         $roles = $team->roles();
         $members = [];
@@ -119,11 +119,11 @@ trait MemberHelperTrait
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
 
         if (
-            $context === States::Werewolf->stringify() &&
-            $this->getRoleByUserId($userId, $gameId) === Roles::Elder &&
-            !in_array(Roles::Elder->name(), $usedActions, true)
+            $context === State::Werewolf->stringify() &&
+            $this->getRoleByUserId($userId, $gameId) === Role::Elder &&
+            !in_array(Role::Elder->name(), $usedActions, true)
         ) {
-            $usedActions[] = Roles::Elder->name();
+            $usedActions[] = Role::Elder->name();
             Redis::set("game:$gameId:interactions:usedActions", $usedActions);
 
             return true;
@@ -145,6 +145,6 @@ trait MemberHelperTrait
 
     public function isWerewolf(string $userId, string $gameId): bool
     {
-        return in_array($userId, $this->getUsersByTeam(Teams::Werewolves, $gameId), true);
+        return in_array($userId, $this->getUsersByTeam(Team::Werewolves, $gameId), true);
     }
 }

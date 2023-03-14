@@ -2,9 +2,9 @@
 
 namespace App\Actions;
 
-use App\Enums\InteractionActions;
-use App\Enums\Roles;
-use App\Enums\States;
+use App\Enums\InteractionAction;
+use App\Enums\Role;
+use App\Enums\State;
 use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
@@ -13,30 +13,30 @@ class WitchAction implements ActionInterface
 {
     use MemberHelperTrait, RegisterHelperTrait;
 
-    public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
+    public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
         $gameId = $this->getGameId($userId);
 
         $actionCondition = match ($action) {
-            InteractionActions::KillPotion => $this->alive($targetId, $gameId),
+            InteractionAction::KillPotion => $this->alive($targetId, $gameId),
             default => true,
         };
 
         $role = $this->getRole($userId);
 
-        return $role === Roles::Witch && $actionCondition;
+        return $role === Role::Witch && $actionCondition;
     }
 
-    public function call(string $targetId, InteractionActions $action, string $emitterId): null
+    public function call(string $targetId, InteractionAction $action, string $emitterId): null
     {
         $gameId = $this->getGameId($targetId);
         switch ($action) {
-            case InteractionActions::WitchSkip:
+            case InteractionAction::WitchSkip:
                 break;
-            case InteractionActions::KillPotion:
+            case InteractionAction::KillPotion:
                 $this->killPotion($targetId);
                 break;
-            case InteractionActions::RevivePotion:
+            case InteractionAction::RevivePotion:
                 $this->revivePotion($targetId);
                 break;
         }
@@ -46,7 +46,7 @@ class WitchAction implements ActionInterface
         return null;
     }
 
-    private function setUsed(InteractionActions $action, string $gameId): void
+    private function setUsed(InteractionAction $action, string $gameId): void
     {
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
         $usedActions[] = $action->value;
@@ -58,11 +58,11 @@ class WitchAction implements ActionInterface
     {
         $gameId = $this->getGameId($targetId);
 
-        if ($this->isUsed(InteractionActions::KillPotion, $gameId)) {
+        if ($this->isUsed(InteractionAction::KillPotion, $gameId)) {
             return;
         }
 
-        $this->kill($targetId, $gameId, States::Witch->stringify());
+        $this->kill($targetId, $gameId, State::Witch->stringify());
     }
 
     private function revivePotion(string $targetId): void
@@ -70,7 +70,7 @@ class WitchAction implements ActionInterface
         $gameId = $this->getGameId($targetId);
         $game = Redis::get("game:$gameId");
 
-        if ($this->isUsed(InteractionActions::RevivePotion, $gameId)) {
+        if ($this->isUsed(InteractionAction::RevivePotion, $gameId)) {
             return;
         }
 
@@ -88,7 +88,7 @@ class WitchAction implements ActionInterface
         Redis::set("game:$gameId:deaths", $deaths);
     }
 
-    private function getRole(string $userId): Roles
+    private function getRole(string $userId): Role
     {
         return $this->getRoleByUserId($userId, $this->getGameId($userId));
     }
@@ -118,7 +118,7 @@ class WitchAction implements ActionInterface
         return array_map(fn ($death) => $death['user'], $deaths);
     }
 
-    private function isUsed(InteractionActions $action, string $gameId): bool
+    private function isUsed(InteractionAction $action, string $gameId): bool
     {
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
 

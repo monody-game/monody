@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
-use App\Enums\Roles;
-use App\Enums\States;
+use App\Enums\Role;
+use App\Enums\State;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
@@ -39,8 +39,8 @@ class GameControllerTest extends TestCase
 
         $this->assertSame(
             [
-                'status' => States::Waiting->value,
-                'counterDuration' => States::Waiting->duration(),
+                'status' => State::Waiting->value,
+                'counterDuration' => State::Waiting->duration(),
                 'round' => 0,
                 'startTimestamp' => Carbon::now()->timestamp,
             ],
@@ -314,10 +314,10 @@ class GameControllerTest extends TestCase
         $res = $this->actingAs($this->user, 'api')->put('/api/game', [
             'users' => [],
             'roles' => [
-                Roles::Werewolf->value,
-                Roles::WhiteWerewolf->value,
-                Roles::Werewolf->value,
-                Roles::Witch->value,
+                Role::Werewolf->value,
+                Role::WhiteWerewolf->value,
+                Role::Werewolf->value,
+                Role::Witch->value,
             ],
         ])->json('game');
 
@@ -335,15 +335,15 @@ class GameControllerTest extends TestCase
                         'elo' => 'N/A',
                     ],
                     'roles' => [
-                        Roles::Werewolf->value => 2,
-                        Roles::WhiteWerewolf->value => 1,
-                        Roles::Witch->value => 1,
+                        Role::Werewolf->value => 2,
+                        Role::WhiteWerewolf->value => 1,
+                        Role::Witch->value => 1,
                     ],
                     'dead_users' => [],
                     'voted_users' => [],
                     'state' => [
-                        'status' => States::Waiting->value,
-                        'counterDuration' => States::Waiting->duration(),
+                        'status' => State::Waiting->value,
+                        'counterDuration' => State::Waiting->duration(),
                         'round' => 0,
                     ],
                     'current_interactions' => [],
@@ -362,7 +362,7 @@ class GameControllerTest extends TestCase
             ->actingAs($this->user)
             ->put('/api/game', [
                 'roles' => [
-                    Roles::Witch->value, Roles::Witch->value, Roles::Werewolf->value,
+                    Role::Witch->value, Role::Witch->value, Role::Werewolf->value,
                 ],
             ])
             ->assertUnprocessable();

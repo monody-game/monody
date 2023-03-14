@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\InteractionActions;
+use App\Enums\InteractionAction;
 use App\Rules\GameExistsRule;
 use App\Rules\InGameRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -16,7 +16,7 @@ class InteractionRequest extends FormRequest
             'id' => ['uuid', 'required'],
             'targetId' => ['exists:users,id', new InGameRule(null)],
             'gameId' => ['string', app(GameExistsRule::class), 'required'],
-            'action' => [new Enum(InteractionActions::class), 'required'],
+            'action' => [new Enum(InteractionAction::class), 'required'],
         ];
     }
 }

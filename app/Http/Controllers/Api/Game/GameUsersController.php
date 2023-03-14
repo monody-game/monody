@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Game;
 
-use App\Enums\Roles;
+use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRoleRequest;
 use App\Traits\GameHelperTrait;
@@ -29,7 +29,7 @@ class GameUsersController extends Controller
         $game = $this->getGame($gameId);
 
         $userRole = $game['assigned_roles'][$request->validated('id')];
-        $role = Roles::from($userRole)->full();
+        $role = Role::from($userRole)->full();
 
         return new JsonResponse($role);
     }

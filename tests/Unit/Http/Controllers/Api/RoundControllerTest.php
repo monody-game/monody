@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Http\Controllers\Api;
 
-use App\Enums\Roles;
-use App\Enums\Rounds;
-use App\Enums\States;
+use App\Enums\Role;
+use App\Enums\Round;
+use App\Enums\State;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -24,7 +24,7 @@ class RoundControllerTest extends TestCase
 
     public function testGettingAllRounds()
     {
-        $rounds = Rounds::cases();
+        $rounds = Round::cases();
         $rounds = array_map(function ($round) {
             $states = $round->stateify();
 
@@ -51,7 +51,7 @@ class RoundControllerTest extends TestCase
                 'raw_name' => $state->stringify(),
                 'duration' => $state->duration(),
             ];
-        }, Rounds::FirstRound->stateify());
+        }, Round::FirstRound->stateify());
 
         $this
             ->get('/api/round/1')
@@ -80,9 +80,9 @@ class RoundControllerTest extends TestCase
                 $this->loopRound,
                 [
                     [
-                        'duration' => States::End->duration(),
-                        'identifier' => States::End->value,
-                        'raw_name' => States::End->stringify(),
+                        'duration' => State::End->duration(),
+                        'identifier' => State::End->value,
+                        'raw_name' => State::End->stringify(),
                     ],
                 ],
             ]);
@@ -95,24 +95,24 @@ class RoundControllerTest extends TestCase
             ->assertOk()
             ->assertExactJson([
                 [
-                    'identifier' => States::Night->value,
-                    'raw_name' => States::Night->stringify(),
-                    'duration' => States::Night->duration(),
+                    'identifier' => State::Night->value,
+                    'raw_name' => State::Night->stringify(),
+                    'duration' => State::Night->duration(),
                 ],
                 [
-                    'identifier' => States::Werewolf->value,
-                    'raw_name' => States::Werewolf->stringify(),
-                    'duration' => States::Werewolf->duration(),
+                    'identifier' => State::Werewolf->value,
+                    'raw_name' => State::Werewolf->stringify(),
+                    'duration' => State::Werewolf->duration(),
                 ],
                 [
-                    'identifier' => States::Day->value,
-                    'raw_name' => States::Day->stringify(),
-                    'duration' => States::Day->duration(),
+                    'identifier' => State::Day->value,
+                    'raw_name' => State::Day->stringify(),
+                    'duration' => State::Day->duration(),
                 ],
                 [
-                    'identifier' => States::Mayor->value,
-                    'raw_name' => States::Mayor->stringify(),
-                    'duration' => States::Mayor->duration(),
+                    'identifier' => State::Mayor->value,
+                    'raw_name' => State::Mayor->stringify(),
+                    'duration' => State::Mayor->duration(),
                 ],
             ]);
     }
@@ -124,29 +124,29 @@ class RoundControllerTest extends TestCase
             ->assertOk()
             ->assertExactJson([
                 [
-                    'identifier' => States::Night->value,
-                    'raw_name' => States::Night->stringify(),
-                    'duration' => States::Night->duration(),
+                    'identifier' => State::Night->value,
+                    'raw_name' => State::Night->stringify(),
+                    'duration' => State::Night->duration(),
                 ],
                 [
-                    'identifier' => States::Werewolf->value,
-                    'raw_name' => States::Werewolf->stringify(),
-                    'duration' => States::Werewolf->duration(),
+                    'identifier' => State::Werewolf->value,
+                    'raw_name' => State::Werewolf->stringify(),
+                    'duration' => State::Werewolf->duration(),
                 ],
                 [
-                    'identifier' => States::InfectedWerewolf->value,
-                    'raw_name' => States::InfectedWerewolf->stringify(),
-                    'duration' => States::InfectedWerewolf->duration(),
+                    'identifier' => State::InfectedWerewolf->value,
+                    'raw_name' => State::InfectedWerewolf->stringify(),
+                    'duration' => State::InfectedWerewolf->duration(),
                 ],
                 [
-                    'identifier' => States::Day->value,
-                    'raw_name' => States::Day->stringify(),
-                    'duration' => States::Day->duration(),
+                    'identifier' => State::Day->value,
+                    'raw_name' => State::Day->stringify(),
+                    'duration' => State::Day->duration(),
                 ],
                 [
-                    'identifier' => States::Mayor->value,
-                    'raw_name' => States::Mayor->stringify(),
-                    'duration' => States::Mayor->duration(),
+                    'identifier' => State::Mayor->value,
+                    'raw_name' => State::Mayor->stringify(),
+                    'duration' => State::Mayor->duration(),
                 ],
             ]);
     }
@@ -160,80 +160,80 @@ class RoundControllerTest extends TestCase
         $this->game = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [Roles::Werewolf->value, Roles::Werewolf->value, Roles::Psychic->value],
+                'roles' => [Role::Werewolf->value, Role::Werewolf->value, Role::Psychic->value],
             ])
             ->json('game');
 
         $this->secondGame = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [Roles::Werewolf->value, Roles::SimpleVillager->value],
+                'roles' => [Role::Werewolf->value, Role::SimpleVillager->value],
             ])
             ->json('game');
 
         $this->thirdGame = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [Roles::SimpleVillager->value, Roles::InfectedWerewolf->value],
+                'roles' => [Role::SimpleVillager->value, Role::InfectedWerewolf->value],
             ])
             ->json('game');
 
         $this->loopRound = [
             [
-                'identifier' => States::Night->value,
-                'raw_name' => States::Night->stringify(),
-                'duration' => States::Night->duration(),
+                'identifier' => State::Night->value,
+                'raw_name' => State::Night->stringify(),
+                'duration' => State::Night->duration(),
             ],
             [
-                'identifier' => States::Psychic->value,
-                'raw_name' => States::Psychic->stringify(),
-                'duration' => States::Psychic->duration(),
+                'identifier' => State::Psychic->value,
+                'raw_name' => State::Psychic->stringify(),
+                'duration' => State::Psychic->duration(),
             ],
             [
-                'identifier' => States::Werewolf->value,
-                'raw_name' => States::Werewolf->stringify(),
-                'duration' => States::Werewolf->duration(),
+                'identifier' => State::Werewolf->value,
+                'raw_name' => State::Werewolf->stringify(),
+                'duration' => State::Werewolf->duration(),
             ],
             [
-                'identifier' => States::Day->value,
-                'raw_name' => States::Day->stringify(),
-                'duration' => States::Day->duration(),
+                'identifier' => State::Day->value,
+                'raw_name' => State::Day->stringify(),
+                'duration' => State::Day->duration(),
             ],
         ];
 
         $this->secondRound = [
             ...$this->loopRound,
             [
-                'identifier' => States::Mayor->value,
-                'raw_name' => States::Mayor->stringify(),
-                'duration' => States::Mayor->duration(),
+                'identifier' => State::Mayor->value,
+                'raw_name' => State::Mayor->stringify(),
+                'duration' => State::Mayor->duration(),
             ],
         ];
 
         $this->loopRound = [
             ...$this->loopRound,
             [
-                'identifier' => States::Vote->value,
-                'raw_name' => States::Vote->stringify(),
-                'duration' => States::Vote->duration(),
+                'identifier' => State::Vote->value,
+                'raw_name' => State::Vote->stringify(),
+                'duration' => State::Vote->duration(),
             ],
         ];
 
         $this->firstRound = [
             [
-                'identifier' => States::Waiting->value,
-                'raw_name' => States::Waiting->stringify(),
-                'duration' => States::Waiting->duration(),
+                'identifier' => State::Waiting->value,
+                'raw_name' => State::Waiting->stringify(),
+                'duration' => State::Waiting->duration(),
             ],
             [
-                'identifier' => States::Starting->value,
-                'raw_name' => States::Starting->stringify(),
-                'duration' => States::Starting->duration(),
+                'identifier' => State::Starting->value,
+                'raw_name' => State::Starting->stringify(),
+                'duration' => State::Starting->duration(),
             ],
             [
-                'identifier' => States::Roles->value,
-                'raw_name' => States::Roles->stringify(),
-                'duration' => States::Roles->duration(),
+                'identifier' => State::Roles->value,
+                'raw_name' => State::Roles->stringify(),
+                'duration' => State::Roles->duration(),
             ],
             ...$this->loopRound,
         ];

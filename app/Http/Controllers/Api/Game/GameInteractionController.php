@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api\Game;
 
-use App\Enums\InteractionActions;
-use App\Enums\Interactions;
-use App\Enums\Roles;
-use App\Enums\Teams;
+use App\Enums\Interaction;
+use App\Enums\InteractionAction;
+use App\Enums\Role;
+use App\Enums\Team;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CloseInteractionRequest;
@@ -28,7 +28,7 @@ class GameInteractionController extends Controller
     public function create(CreateInteractionRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $type = Interactions::from($validated['type']);
+        $type = Interaction::from($validated['type']);
         $gameId = $validated['gameId'];
 
         $interaction = $this->service->create(
@@ -75,7 +75,7 @@ class GameInteractionController extends Controller
                 ->withMessage('You are not alive.');
         }
 
-        $action = InteractionActions::from($action);
+        $action = InteractionAction::from($action);
         $result = $this->service->call($action, $id, $userId, $targetId);
 
         return match ($result) {
@@ -101,15 +101,15 @@ class GameInteractionController extends Controller
         return new JsonResponse($this->service->status($request->validated('gameId'), $request->validated('type')));
     }
 
-    private function getAuthorizedMembersByType(Interactions $type, string $gameId): string|array
+    private function getAuthorizedMembersByType(Interaction $type, string $gameId): string|array
     {
         return match ($type) {
-            Interactions::Witch => $this->getUserIdByRole(Roles::Witch, $gameId),
-            Interactions::Psychic => $this->getUserIdByRole(Roles::Psychic, $gameId),
-            Interactions::Werewolves => $this->getUsersByTeam(Teams::Werewolves, $gameId),
-            Interactions::InfectedWerewolf => $this->getUserIdByRole(Roles::InfectedWerewolf, $gameId),
-            Interactions::WhiteWerewolf => $this->getUserIdByRole(Roles::WhiteWerewolf, $gameId),
-            Interactions::Angel => $this->getUserIdByRole(Roles::Angel, $gameId),
+            Interaction::Witch => $this->getUserIdByRole(Role::Witch, $gameId),
+            Interaction::Psychic => $this->getUserIdByRole(Role::Psychic, $gameId),
+            Interaction::Werewolves => $this->getUsersByTeam(Team::Werewolves, $gameId),
+            Interaction::InfectedWerewolf => $this->getUserIdByRole(Role::InfectedWerewolf, $gameId),
+            Interaction::WhiteWerewolf => $this->getUserIdByRole(Role::WhiteWerewolf, $gameId),
+            Interaction::Angel => $this->getUserIdByRole(Role::Angel, $gameId),
             default => '*'
         };
     }

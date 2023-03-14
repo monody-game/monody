@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum InteractionActions: string
+enum InteractionAction: string
 {
     // Vote
     case Vote = 'vote';

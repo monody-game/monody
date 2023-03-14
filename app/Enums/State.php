@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use App\Facades\Redis;
 
-enum States: int
+enum State: int
 {
     case Waiting = 0;
     case Starting = 1;
@@ -33,11 +33,11 @@ enum States: int
             self::Starting => 'starting',
             self::Roles => 'roles',
             self::Night => 'night',
-            self::Psychic => Roles::Psychic->name(),
-            self::Werewolf => Roles::Werewolf->name(),
-            self::InfectedWerewolf => Roles::InfectedWerewolf->name(),
-            self::WhiteWerewolf => Roles::WhiteWerewolf->name(),
-            self::Witch => Roles::Witch->name(),
+            self::Psychic => Role::Psychic->name(),
+            self::Werewolf => Role::Werewolf->name(),
+            self::InfectedWerewolf => Role::InfectedWerewolf->name(),
+            self::WhiteWerewolf => Role::WhiteWerewolf->name(),
+            self::Witch => Role::Witch->name(),
             self::Day => 'day',
             self::Mayor => 'mayor',
             self::Vote => 'vote',
@@ -141,7 +141,7 @@ enum States: int
 
     public function hasActionsLeft(string $gameId): bool
     {
-        $role = Roles::fromName($this->stringify());
+        $role = Role::fromName($this->stringify());
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
         $result = true;
 

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api;
 
-use App\Enums\Badges;
+use App\Enums\Badge;
 use App\Models\User;
 use App\Services\BadgeService;
 use Tests\TestCase;
@@ -23,30 +23,30 @@ class BadgeControllerTest extends TestCase
         $user = User::factory()->create();
 
         $service = app()->make(BadgeService::class);
-        $service->add($user, Badges::Wins);
-        $service->add($user, Badges::Level, 4);
+        $service->add($user, Badge::Wins);
+        $service->add($user, Badge::Level, 4);
 
         $expected = [...$this->badges];
         $expected[0] = [
-            'id' => Badges::Wins->value,
-            'name' => Badges::Wins->name(),
-            'display_name' => Badges::Wins->stringify(),
-            'explanation' => Badges::Wins->describe(),
-            'description' => Badges::Wins->description(),
+            'id' => Badge::Wins->value,
+            'name' => Badge::Wins->name(),
+            'display_name' => Badge::Wins->stringify(),
+            'explanation' => Badge::Wins->describe(),
+            'description' => Badge::Wins->description(),
             'owned' => true,
-            'max_level' => Badges::Wins->maxLevel(),
+            'max_level' => Badge::Wins->maxLevel(),
             'current_level' => 1,
             'secret' => false,
         ];
 
         $expected[2] = [
-            'id' => Badges::Level->value,
-            'name' => Badges::Level->name(),
-            'display_name' => Badges::Level->stringify(),
-            'explanation' => Badges::Level->describe(),
-            'description' => Badges::Level->description(),
+            'id' => Badge::Level->value,
+            'name' => Badge::Level->name(),
+            'display_name' => Badge::Level->stringify(),
+            'explanation' => Badge::Level->describe(),
+            'description' => Badge::Level->description(),
             'owned' => true,
-            'max_level' => Badges::Level->maxLevel(),
+            'max_level' => Badge::Level->maxLevel(),
             'current_level' => 4,
             'secret' => false,
         ];
@@ -65,7 +65,7 @@ class BadgeControllerTest extends TestCase
     {
         parent::setUp();
 
-        foreach (Badges::cases() as $badge) {
+        foreach (Badge::cases() as $badge) {
             $this->badges[] = $badge->full();
         }
     }
