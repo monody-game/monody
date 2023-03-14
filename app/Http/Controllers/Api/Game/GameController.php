@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\AlertType;
+use App\Enums\GameType;
 use App\Enums\State;
 use App\Enums\Team;
 use App\Events\GameListUpdate;
@@ -105,6 +106,7 @@ class GameController extends Controller
         $data['dead_users'] = [];
         $id = Str::random(12);
         $data['id'] = $id;
+        $data['type'] = $request->get('type') !== null ? $request->get('type') : GameType::NORMAL;
 
         if (!array_search($data['owner'], $data['users'], true)) {
             $user->current_game = $id;
