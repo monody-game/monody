@@ -64,7 +64,7 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/game/end', 'Game\EndGameController@index');
 
     Route::get('/user/discord/{discordId}', 'UserController@discord');
-    Route::get('/user/discord/share/{theme?}', 'ShareController@discord');
+    Route::get('/user/discord/{discordId}/share/{theme?}', 'ShareController@discord');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {

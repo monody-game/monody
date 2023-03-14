@@ -344,7 +344,7 @@ class GameControllerTest extends TestCase
                     'state' => [
                         'status' => States::Waiting->value,
                         'counterDuration' => States::Waiting->duration(),
-                        'round' => 0
+                        'round' => 0,
                     ],
                     'current_interactions' => [],
                 ],

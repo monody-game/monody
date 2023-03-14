@@ -61,7 +61,7 @@ class ShareController extends Controller
 
         $user = User::where('discord_id', $discordId)->get();
 
-        if (!$user->first()) {
+        if ($user->first() === null) {
             return new JsonResponse([], Response::HTTP_UNAUTHORIZED);
         }
 
