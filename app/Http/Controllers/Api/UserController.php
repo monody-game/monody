@@ -8,6 +8,7 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -42,6 +43,18 @@ class UserController extends Controller
                     route('verification.send', [], false),
                     'ici pour renvoyer le lien.'
                 );
+        }
+
+        return new JsonResponse($user);
+    }
+
+    public function discord(string $discordId): JsonResponse
+    {
+        $user = User::where('discord_id', $discordId)->get();
+
+        if (!$user->first()) {
+            return (new JsonResponse([], Response::HTTP_UNAUTHORIZED))
+                    ->withMessage('You need to link your discord account first');
         }
 
         return new JsonResponse($user);
