@@ -35,7 +35,7 @@ class ShareController extends Controller
 
     private string $accent = self::LIGHT_ACCENT;
 
-    public function index(Request $request, ExpService $expService, Server $glide, string $theme = 'light'): JsonResponse
+    public function index(Request $request, Server $glide, ExpService $expService, string $theme = 'light'): JsonResponse
     {
         if (!in_array($theme, ['dark', 'light'], true)) {
             return new JsonResponse([
@@ -43,10 +43,37 @@ class ShareController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        /** @var User $user Route protected by auth guard */
+        $user = $request->user();
+
+        $this->generateProfileCanvas($user, $theme, $glide, $expService);
+
+        return new JsonResponse();
+    }
+
+    public function discord(string $discordId, Server $glide, ExpService $expService, string $theme = 'light'): JsonResponse
+    {
+        if (!in_array($theme, ['dark', 'light'], true)) {
+            return new JsonResponse([
+                'message' => '"Theme" parameter value must be either "light" (default) or "dark"',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $user = User::where('discord_id', $discordId)->get();
+
+        if (!$user->first()) {
+            return new JsonResponse([], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $this->generateProfileCanvas($user->first(), $theme, $glide, $expService);
+
+        return new JsonResponse();
+    }
+
+    private function generateProfileCanvas(User $user, string $theme, Server $glide, ExpService $expService): void
+    {
         $this->initColors($theme);
 
-        /** @var User $user route is protected by api auth guard */
-        $user = $request->user();
         $avatarPath = str_replace('/assets/', '', $user->avatar);
 
         $avatar = Image::cache(function ($image) use ($avatarPath, $user) {
@@ -79,9 +106,7 @@ class ShareController extends Controller
             $profile->insert($avatar, 'top-left', 160, 160);
 
             $profile->text($user->username, 1570, 160 + 190, fn (AbstractFont $font) => $font->file($senBold)->size(200)->color($this->color));
-
             $profile->text($user->level, 2340, 630 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
-
             $profile->text($elo, 3190, 630 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
 
             // Progress bar container
@@ -96,15 +121,13 @@ class ShareController extends Controller
 
             $profile->text($expText, 2630 - (((mb_strlen($expText) - 1) * 65) + 49) / 2, 1015 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
 
-            $image->widen(1280);
+            $profile->widen(1280);
 
             $profile->save(Storage::path("profiles/{$user->id}.png"));
         });
-
-        return new JsonResponse();
     }
 
-    public function createCircleMask(int $width, int $height): \Intervention\Image\Image
+    private function createCircleMask(int $width, int $height): \Intervention\Image\Image
     {
         $circle = Image::canvas($width, $height);
 
