@@ -11,7 +11,7 @@ class Controller extends BaseController
     use AuthorizesRequests;
     use ValidatesRequests;
 
-    private function fromLocalNetwork(): bool
+    public function fromLocalNetwork(): bool
     {
         $request = request();
 

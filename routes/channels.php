@@ -29,7 +29,7 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
 
     return [
         'id' => $user->id,
-		'discord_id' => $user->discord_id,
+        'discord_id' => $user->discord_id,
         'username' => $user->username,
         'avatar' => $user->avatar,
         'level' => $user->level,
