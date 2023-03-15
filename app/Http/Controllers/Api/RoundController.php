@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\Roles;
-use App\Enums\Rounds;
-use App\Enums\States;
+use App\Enums\Role;
+use App\Enums\Round;
+use App\Enums\State;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +15,7 @@ class RoundController extends Controller
     {
         $rounds = [];
 
-        foreach (Rounds::cases() as $round) {
+        foreach (Round::cases() as $round) {
             $rounds[] = $this->getRound($round->value, $gameId);
         }
 
@@ -29,11 +29,11 @@ class RoundController extends Controller
 
     private function getRound(int $round, ?string $gameId = null): array
     {
-        $round = Rounds::tryFrom($round);
+        $round = Round::tryFrom($round);
         $removedStates = [];
 
         if ($round === null) {
-            $round = Rounds::LoopRound;
+            $round = Round::LoopRound;
         }
 
         $round = $round->stateify();
@@ -44,7 +44,7 @@ class RoundController extends Controller
             $roles = array_keys($game['roles']);
 
             $roles = array_map(function ($role) {
-                return Roles::from($role)->name();
+                return Role::from($role)->name();
             }, $roles);
 
             foreach ($round as $key => $state) {
@@ -71,7 +71,7 @@ class RoundController extends Controller
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
                 }
 
-                if ($state === States::WhiteWerewolf && ($gameState['round'] % 2 === 0 || $gameState['round'] === 0)) {
+                if ($state === State::WhiteWerewolf && ($gameState['round'] % 2 === 0 || $gameState['round'] === 0)) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
                 }
             }

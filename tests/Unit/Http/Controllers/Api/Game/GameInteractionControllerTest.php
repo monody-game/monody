@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
-use App\Enums\InteractionActions;
-use App\Enums\Interactions;
-use App\Enums\Roles;
-use App\Enums\States;
+use App\Enums\Interaction;
+use App\Enums\InteractionAction;
+use App\Enums\Role;
+use App\Enums\State;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
@@ -28,13 +28,13 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'type' => Interactions::Vote->value,
+                'type' => Interaction::Vote->value,
             ])
             ->assertJson([
                 'interaction' => [
                     'gameId' => $this->game['id'],
                     'authorizedCallers' => '*',
-                    'type' => Interactions::Vote->value,
+                    'type' => Interaction::Vote->value,
                 ],
             ])
             ->assertOk();
@@ -46,7 +46,7 @@ class GameInteractionControllerTest extends TestCase
             'gameId' => $this->game['id'],
             'id' => $interactionId,
             'authorizedCallers' => '*',
-            'type' => Interactions::Vote->value,
+            'type' => Interaction::Vote->value,
         ], $interactions[0]);
     }
 
@@ -56,7 +56,7 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'type' => Interactions::Vote->value,
+                'type' => Interaction::Vote->value,
             ]);
 
         $interactionId = $res->json('interaction')['id'];
@@ -93,17 +93,17 @@ class GameInteractionControllerTest extends TestCase
     public function testGettingCorrectCallAuthorization()
     {
         $expectedAuthorized = [
-            Interactions::Vote->name => '*',
-            Interactions::Mayor->name => '*',
-            Interactions::Witch->name => json_encode(['superWitch']),
-            Interactions::Psychic->name => json_encode([$this->user->id]),
-            Interactions::Werewolves->name => json_encode(['whiteWerewolf', 'superSickWerewolf', $this->secondUser->id, 'superWerewolf']),
-            Interactions::InfectedWerewolf->name => json_encode(['superSickWerewolf']),
-            Interactions::WhiteWerewolf->name => json_encode(['whiteWerewolf']),
-            Interactions::Angel->name => json_encode(['superAngel']),
+            Interaction::Vote->name => '*',
+            Interaction::Mayor->name => '*',
+            Interaction::Witch->name => json_encode(['superWitch']),
+            Interaction::Psychic->name => json_encode([$this->user->id]),
+            Interaction::Werewolves->name => json_encode(['whiteWerewolf', 'superSickWerewolf', $this->secondUser->id, 'superWerewolf']),
+            Interaction::InfectedWerewolf->name => json_encode(['superSickWerewolf']),
+            Interaction::WhiteWerewolf->name => json_encode(['whiteWerewolf']),
+            Interaction::Angel->name => json_encode(['superAngel']),
         ];
 
-        foreach (Interactions::cases() as $interaction) {
+        foreach (Interaction::cases() as $interaction) {
             $this
                 ->withoutMiddleware(RestrictToLocalNetwork::class)
                 ->post('/api/interactions', [
@@ -124,7 +124,7 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'type' => Interactions::Psychic->value,
+                'type' => Interaction::Psychic->value,
             ])
             ->assertOk()
             ->json('interaction');
@@ -135,13 +135,13 @@ class GameInteractionControllerTest extends TestCase
                 'gameId' => $this->game['id'],
                 'id' => $res['id'],
                 'targetId' => $this->secondUser->id,
-                'action' => InteractionActions::Spectate->value,
+                'action' => InteractionAction::Spectate->value,
             ])
             ->assertOk()
             ->assertExactJson([
                 'id' => $res['id'],
-                'action' => InteractionActions::Spectate->value,
-                'response' => Roles::Werewolf->value,
+                'action' => InteractionAction::Spectate->value,
+                'response' => Role::Werewolf->value,
             ]);
     }
 
@@ -158,7 +158,7 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $gameId,
-                'type' => Interactions::Psychic->value,
+                'type' => Interaction::Psychic->value,
             ])
             ->assertOk()
             ->json('interaction');
@@ -169,7 +169,7 @@ class GameInteractionControllerTest extends TestCase
                 'gameId' => $gameId,
                 'id' => $res['id'],
                 'targetId' => $this->secondUser->id,
-                'action' => InteractionActions::Spectate->value,
+                'action' => InteractionAction::Spectate->value,
             ])
             ->assertForbidden();
     }
@@ -180,7 +180,7 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'type' => Interactions::Psychic->value,
+                'type' => Interaction::Psychic->value,
             ])
             ->assertOk()
             ->json('interaction');
@@ -191,7 +191,7 @@ class GameInteractionControllerTest extends TestCase
                 'gameId' => $this->game['id'],
                 'id' => $res['id'],
                 'targetId' => $this->user->id,
-                'action' => InteractionActions::Spectate->value,
+                'action' => InteractionAction::Spectate->value,
             ])
             ->assertForbidden();
     }
@@ -201,7 +201,7 @@ class GameInteractionControllerTest extends TestCase
         $this
             ->get('/api/interactions/actions')
             ->assertOk()
-            ->assertExactJson(Interactions::getActions());
+            ->assertExactJson(Interaction::getActions());
     }
 
     public function testGettingActionsForOneInteraction()
@@ -210,13 +210,13 @@ class GameInteractionControllerTest extends TestCase
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'type' => Interactions::Witch->value,
+                'type' => Interaction::Witch->value,
             ])
             ->assertJson([
                 'interaction' => [
                     'gameId' => $this->game['id'],
                     'authorizedCallers' => json_encode(['superWitch']),
-                    'type' => Interactions::Witch->value,
+                    'type' => Interaction::Witch->value,
                 ],
             ])
             ->assertOk()
@@ -227,9 +227,9 @@ class GameInteractionControllerTest extends TestCase
             ->assertOk()
             ->assertExactJson([
                 'actions' => [
-                    InteractionActions::KillPotion,
-                    InteractionActions::RevivePotion,
-                    InteractionActions::WitchSkip,
+                    InteractionAction::KillPotion,
+                    InteractionAction::RevivePotion,
+                    InteractionAction::WitchSkip,
                 ],
             ]);
     }
@@ -262,13 +262,13 @@ class GameInteractionControllerTest extends TestCase
 
         $additionnalKeys = array_merge($this->game, [
             'assigned_roles' => [
-                $this->secondUser->id => Roles::Werewolf,
-                'superWerewolf' => Roles::Werewolf,
-                $this->user->id => Roles::Psychic,
-                'superWitch' => Roles::Witch,
-                'superSickWerewolf' => Roles::InfectedWerewolf,
-                'whiteWerewolf' => Roles::WhiteWerewolf,
-                'superAngel' => Roles::Angel,
+                $this->secondUser->id => Role::Werewolf,
+                'superWerewolf' => Role::Werewolf,
+                $this->user->id => Role::Psychic,
+                'superWitch' => Role::Witch,
+                'superSickWerewolf' => Role::InfectedWerewolf,
+                'whiteWerewolf' => Role::WhiteWerewolf,
+                'superAngel' => Role::Angel,
             ],
             'users' => [
                 $this->user->id,
@@ -297,15 +297,15 @@ class GameInteractionControllerTest extends TestCase
         Redis::set("game:{$this->secondGame['id']}", array_merge(Redis::get("game:{$this->secondGame['id']}")), ['is_started' => true]);
 
         Redis::set("game:{$this->game['id']}:state", [
-            'status' => States::Vote->value,
+            'status' => State::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
-            'counterDuration' => States::Vote->duration(),
+            'counterDuration' => State::Vote->duration(),
         ]);
 
         Redis::set("game:{$this->secondGame['id']}:state", [
-            'status' => States::Vote->value,
+            'status' => State::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
-            'counterDuration' => States::Vote->duration(),
+            'counterDuration' => State::Vote->duration(),
         ]);
     }
 }

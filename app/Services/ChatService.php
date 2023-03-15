@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Enums\Roles;
-use App\Enums\Teams;
+use App\Enums\Role;
+use App\Enums\Team;
 use App\Events\MessageSended;
 use App\Facades\Redis;
 use App\Models\Message;
@@ -61,12 +61,12 @@ class ChatService
         $message->set('type', 'werewolf');
 
         broadcast(new MessageSended($message, true, [
-            ...$this->getUsersByTeam(Teams::Werewolves, $data['gameId']),
+            ...$this->getUsersByTeam(Team::Werewolves, $data['gameId']),
             ...$game['dead_users'],
         ]));
 
         /** @var array{}|string[] $littleGirl */
-        $littleGirl = $this->getUserIdByRole(Roles::LittleGirl, $data['gameId']);
+        $littleGirl = $this->getUserIdByRole(Role::LittleGirl, $data['gameId']);
 
         if ($littleGirl !== []) {
             $message->set('author', [

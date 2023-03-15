@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\Teams;
+use App\Enums\Team;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 
@@ -10,14 +10,14 @@ class TeamController extends Controller
 {
     public function all(): JsonResponse
     {
-        $teams = Teams::all();
+        $teams = Team::all();
 
         return new JsonResponse(['teams' => $teams]);
     }
 
     public function get(int $id): JsonResponse
     {
-        $team = Teams::from($id);
+        $team = Team::from($id);
 
         return new JsonResponse(['team' => $team->full()]);
     }

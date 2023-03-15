@@ -2,8 +2,9 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
-use App\Enums\Roles;
-use App\Enums\States;
+use App\Enums\GameType;
+use App\Enums\Role;
+use App\Enums\State;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
@@ -28,30 +29,35 @@ class GameControllerTest extends TestCase
 
     public function testCreatingGame()
     {
-        $res = $this->actingAs($this->user, 'api')->put('/api/game', [
-            'users' => [],
-            'roles' => [
-                1, 1, 2,
-            ],
-        ]);
-
-        $game = Redis::get("game:{$res->json('game')['id']}");
+        $res = $this
+            ->actingAs($this->user, 'api')
+            ->put('/api/game', [
+                'users' => [],
+                'roles' => [
+                    1, 1, 2,
+                ],
+            ])
+            ->assertJson([
+                'game' => $this->game,
+            ])
+            ->json('game');
 
         $this->assertSame(
             [
-                'status' => States::Waiting->value,
-                'counterDuration' => States::Waiting->duration(),
+                'status' => State::Waiting->value,
+                'counterDuration' => State::Waiting->duration(),
                 'round' => 0,
                 'startTimestamp' => Carbon::now()->timestamp,
             ],
-            Redis::get("game:{$res->json('game')['id']}:state")
+            Redis::get("game:{$res['id']}:state")
         );
-        $this->assertSame(sort($this->game), sort($game));
+
+        $this->game = ['id' => $res['id'], ...$this->game];
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
-                'gameId' => $res->json('game')['id'],
+                'gameId' => $res['id'],
             ]);
     }
 
@@ -96,6 +102,26 @@ class GameControllerTest extends TestCase
             ->assertExactJson([
                 'games' => [],
             ]);
+    }
+
+    public function testListingGamesByType()
+    {
+        $vocal = GameType::VOCAL->value;
+
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1]]);
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1], 'type' => $vocal]);
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1], 'type' => $vocal]);
+
+        $res = $this
+            ->get("/api/game/list/$vocal")
+            ->json('games');
+
+        $fullList = $this
+            ->get('/api/game/list')
+            ->json('games');
+
+        $this->assertCount(2, $res);
+        $this->assertCount(3, $fullList);
     }
 
     public function testIgnoringStartedAndInvalidGames()
@@ -314,10 +340,10 @@ class GameControllerTest extends TestCase
         $res = $this->actingAs($this->user, 'api')->put('/api/game', [
             'users' => [],
             'roles' => [
-                Roles::Werewolf->value,
-                Roles::WhiteWerewolf->value,
-                Roles::Werewolf->value,
-                Roles::Witch->value,
+                Role::Werewolf->value,
+                Role::WhiteWerewolf->value,
+                Role::Werewolf->value,
+                Role::Witch->value,
             ],
         ])->json('game');
 
@@ -335,15 +361,15 @@ class GameControllerTest extends TestCase
                         'elo' => 'N/A',
                     ],
                     'roles' => [
-                        Roles::Werewolf->value => 2,
-                        Roles::WhiteWerewolf->value => 1,
-                        Roles::Witch->value => 1,
+                        Role::Werewolf->value => 2,
+                        Role::WhiteWerewolf->value => 1,
+                        Role::Witch->value => 1,
                     ],
                     'dead_users' => [],
                     'voted_users' => [],
                     'state' => [
-                        'status' => States::Waiting->value,
-                        'counterDuration' => States::Waiting->duration(),
+                        'status' => State::Waiting->value,
+                        'counterDuration' => State::Waiting->duration(),
                         'round' => 0,
                     ],
                     'current_interactions' => [],
@@ -362,7 +388,7 @@ class GameControllerTest extends TestCase
             ->actingAs($this->user)
             ->put('/api/game', [
                 'roles' => [
-                    Roles::Witch->value, Roles::Witch->value, Roles::Werewolf->value,
+                    Role::Witch->value, Role::Witch->value, Role::Werewolf->value,
                 ],
             ])
             ->assertUnprocessable();
@@ -377,14 +403,19 @@ class GameControllerTest extends TestCase
         $this->user = User::factory()->create();
         $this->secondUser = User::factory()->create();
         $this->game = [
-            'owner' => $this->user->id,
             'users' => [$this->user->id],
             'roles' => [
                 1 => 2,
                 2 => 1,
             ],
             'assigned_roles' => [],
+            'owner' => [
+                'id' => $this->user->id,
+                'username' => $this->user->username,
+                'avatar' => $this->user->avatar,
+            ],
             'is_started' => false,
+            'type' => GameType::NORMAL->value,
         ];
     }
 }

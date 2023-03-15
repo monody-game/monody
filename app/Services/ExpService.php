@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\Badges;
+use App\Enums\Badge;
 use App\Models\Exp;
 use App\Models\User;
 use App\Notifications\ExpEarned;
@@ -48,9 +48,9 @@ class ExpService
                 'exp_needed' => $this->nextLevelExp($user->level),
             ]));
 
-            if (BadgeService::canAccess($user, Badges::Level)) {
+            if (BadgeService::canAccess($user, Badge::Level)) {
                 $service = new BadgeService($this);
-                $service->add($user, Badges::Level);
+                $service->add($user, Badge::Level);
             }
         }
 

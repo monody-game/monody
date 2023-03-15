@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Enums\Badges;
-use App\Enums\Roles;
-use App\Enums\Teams;
+use App\Enums\Badge;
+use App\Enums\Role;
+use App\Enums\Team;
 use App\Events\GameEnd;
 use App\Events\GameLoose;
 use App\Events\GameWin;
@@ -56,8 +56,8 @@ class EndGameService
             $user = User::where('id', $userId)->first();
 
             if ($win) {
-                if (BadgeService::canAccess($user, Badges::Wins)) {
-                    $this->badgeService->add($user, Badges::Wins);
+                if (BadgeService::canAccess($user, Badge::Wins)) {
+                    $this->badgeService->add($user, Badge::Wins);
                 }
 
                 $this->expService->add(50, $user);
@@ -67,8 +67,8 @@ class EndGameService
                     $stat->longest_streak = $stat->win_streak;
                 }
             } else {
-                if (BadgeService::canAccess($user, Badges::Losses)) {
-                    $this->badgeService->add($user, Badges::Losses);
+                if (BadgeService::canAccess($user, Badge::Losses)) {
+                    $this->badgeService->add($user, Badge::Losses);
                 }
 
                 $this->expService->add(20, $user);
@@ -89,33 +89,33 @@ class EndGameService
         }
     }
 
-    private function getWinningTeam(string $gameId): Teams
+    private function getWinningTeam(string $gameId): Team
     {
-        $werewolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
+        $werewolves = $this->getUsersByTeam(Team::Werewolves, $gameId);
 
         if ($werewolves === []) {
-            return Teams::Villagers;
+            return Team::Villagers;
         }
 
         if (
-            $werewolves === $this->getUserIdByRole(Roles::WhiteWerewolf, $gameId)
+            $werewolves === $this->getUserIdByRole(Role::WhiteWerewolf, $gameId)
         ) {
-            return Teams::Loners;
+            return Team::Loners;
         }
 
-        return Teams::Werewolves;
+        return Team::Werewolves;
     }
 
     public function enoughTeamPlayersToContinue(string $gameId): bool
     {
         $game = $this->getGame($gameId);
-        $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
+        $villagers = $this->getUsersByTeam(Team::Villagers, $gameId);
         $werewolves = array_filter($game['werewolves'], fn ($werewolf) => $this->alive($werewolf, $gameId));
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
         $whiteWerewolf = false;
 
-        if (in_array(Roles::WhiteWerewolf->value, array_keys($game['roles']), true)) {
-            $whiteWerewolf = !in_array($this->getUserIdByRole(Roles::WhiteWerewolf, $gameId)[0], $game['dead_users'], true) && count($werewolves) > 1;
+        if (in_array(Role::WhiteWerewolf->value, array_keys($game['roles']), true)) {
+            $whiteWerewolf = !in_array($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], $game['dead_users'], true) && count($werewolves) > 1;
         }
 
         return ($villagers !== [] && $werewolves !== []) || $whiteWerewolf;
@@ -124,7 +124,7 @@ class EndGameService
     private function getWinningUsers(string $gameId): array
     {
         $game = $this->getGame($gameId);
-        $villagers = $this->getUsersByTeam(Teams::Villagers, $gameId);
+        $villagers = $this->getUsersByTeam(Team::Villagers, $gameId);
         $werewolves = array_filter($game['werewolves'], fn ($werewolf) => $this->alive($werewolf, $gameId));
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
 

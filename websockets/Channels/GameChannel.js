@@ -73,7 +73,7 @@ export class GameChannel {
 		if (members.length === count && game.is_started === false) {
 			await this.gameService.startGame(channel, game, members, socket);
 
-			const list = await fetch(`${process.env.API_URL}/game/list`, {
+			const list = await fetch(`${process.env.API_URL}/game/list/*`, {
 				method: "GET",
 			});
 
@@ -133,7 +133,7 @@ export class GameChannel {
 
 	async onJoin(socket, channel, member) {
 		socket.broadcast.to(channel).emit("presence:joining", channel, member);
-		const list = await fetch(`${process.env.API_URL}/game/list`, {
+		const list = await fetch(`${process.env.API_URL}/game/list/*`, {
 			method: "GET",
 		});
 
@@ -150,7 +150,7 @@ export class GameChannel {
 
 	async onLeave(channel, member) {
 		this.io.to(channel).emit("presence:leaving", channel, member);
-		const list = await fetch(`${process.env.API_URL}/game/list`, {
+		const list = await fetch(`${process.env.API_URL}/game/list/*`, {
 			method: "GET",
 		});
 
@@ -165,7 +165,7 @@ export class GameChannel {
 			body: Body.make({ gameId: id })
 		});
 
-		const list = await fetch(`${process.env.API_URL}/game/list`, {
+		const list = await fetch(`${process.env.API_URL}/game/list/*`, {
 			method: "GET",
 		});
 

@@ -2,8 +2,8 @@
 
 namespace App\Actions;
 
-use App\Enums\InteractionActions;
-use App\Enums\Roles;
+use App\Enums\InteractionAction;
+use App\Enums\Role;
 use App\Events\InteractionUpdate;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
@@ -12,21 +12,21 @@ class PsychicAction implements ActionInterface
 {
     use MemberHelperTrait, RegisterHelperTrait;
 
-    public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
+    public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
         $role = $this->getRole($userId);
 
-        return $role === Roles::Psychic && $this->alive($targetId, $this->getCurrentUserGameActivity($userId));
+        return $role === Role::Psychic && $this->alive($targetId, $this->getCurrentUserGameActivity($userId));
     }
 
-    public function call(string $targetId, InteractionActions $action, string $emitterId): int
+    public function call(string $targetId, InteractionAction $action, string $emitterId): int
     {
         $role = $this->getRole($targetId);
 
         return $role->value;
     }
 
-    private function getRole(string $userId): Roles
+    private function getRole(string $userId): Role
     {
         return $this->getRoleByUserId($userId, $this->getCurrentUserGameActivity($userId));
     }
@@ -37,7 +37,7 @@ class PsychicAction implements ActionInterface
 
         broadcast(new InteractionUpdate([
             'gameId' => $gameId,
-            'type' => InteractionActions::Spectate->value,
+            'type' => InteractionAction::Spectate->value,
             'target',
         ], true, [$userId]));
     }

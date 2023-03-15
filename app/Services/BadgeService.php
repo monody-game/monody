@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Enums\Badges;
-use App\Models\Badge;
+use App\Enums\Badge;
 use App\Models\User;
+use App\Models\UserBadge;
 use App\Notifications\BadgeGranted;
 
 readonly class BadgeService
@@ -34,15 +34,15 @@ readonly class BadgeService
      * 		],
      * ]
      *
-     * @return array<int, array{badge: Badges, user_id: string, level: int, obtained_at: string}>
+     * @return array<int, array{badge: Badge, user_id: string, level: int, obtained_at: string}>
      */
     public function get(User $user): array
     {
-        $badges = Badge::where('user_id', $user->id)->get();
+        $badges = UserBadge::where('user_id', $user->id)->get();
 
-        $badges = $badges->map(function (Badge $badge) {
+        $badges = $badges->map(function (UserBadge $badge) {
             return [
-                'badge' => Badges::from($badge->badge_id),
+                'badge' => Badge::from($badge->badge_id),
                 'user_id' => $badge->user_id,
                 'level' => $badge->level,
                 'obtained_at' => $badge->obtained_at,
@@ -55,9 +55,9 @@ readonly class BadgeService
     /**
      * Grant a badge to an user with automatic level determination
      */
-    public function add(User $user, Badges $badge, int $level = 1): void
+    public function add(User $user, Badge $badge, int $level = 1): void
     {
-        $hasBadge = Badge::getUserBadge($user, $badge);
+        $hasBadge = UserBadge::getUserBadge($user, $badge);
 
         if ($hasBadge->count() > 0 && $badge->maxLevel() <= $hasBadge->count() + 1) {
             $level = $hasBadge->count() + 1;
@@ -67,7 +67,7 @@ readonly class BadgeService
             $level = -1;
         }
 
-        Badge::updateOrCreate([
+        UserBadge::updateOrCreate([
             'user_id' => $user->id,
             'badge_id' => $badge->value,
         ], [
@@ -82,10 +82,10 @@ readonly class BadgeService
         ]));
     }
 
-    public static function canAccess(User $user, Badges $badge): bool
+    public static function canAccess(User $user, Badge $badge): bool
     {
         $level = 1;
-        $record = Badge::getUserBadge($user, $badge)->first();
+        $record = UserBadge::getUserBadge($user, $badge)->first();
 
         if ($record) {
             $level = $record->level + 1;
