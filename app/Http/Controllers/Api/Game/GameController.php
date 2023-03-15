@@ -46,7 +46,7 @@ class GameController extends Controller
             ->withAlert(AlertType::Error, "La partie demandée n'existe pas (ou plus) ...");
     }
 
-    public function list(): JsonResponse
+    public function list(?int $type = null): JsonResponse
     {
         $games = $this->getGames();
         $list = [];
@@ -67,6 +67,10 @@ class GameController extends Controller
             }
 
             if ($gameData['is_started']) {
+                continue;
+            }
+
+            if ($type && $gameData['type'] !== GameType::from($type)->value) {
                 continue;
             }
 

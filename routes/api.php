@@ -11,7 +11,7 @@ Route::post('/auth/login', 'Auth\LoginController@login');
 Route::post('/auth/password/reset', 'Auth\PasswordController@reset');
 Route::post('/auth/password/validate', 'Auth\PasswordController@token');
 
-Route::get('/game/list', 'Game\GameController@list');
+Route::get('/game/list/{type?}', 'Game\GameController@list');
 
 Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
 //Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');

@@ -104,6 +104,26 @@ class GameControllerTest extends TestCase
             ]);
     }
 
+    public function testListingGamesByType()
+    {
+        $vocal = GameType::VOCAL->value;
+
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1]]);
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1], 'type' => $vocal]);
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1], 'type' => $vocal]);
+
+        $res = $this
+            ->get("/api/game/list/$vocal")
+            ->json('games');
+
+        $fullList = $this
+            ->get('/api/game/list')
+            ->json('games');
+
+        $this->assertCount(2, $res);
+        $this->assertCount(3, $fullList);
+    }
+
     public function testIgnoringStartedAndInvalidGames()
     {
         $res = $this->actingAs($this->user, 'api')
