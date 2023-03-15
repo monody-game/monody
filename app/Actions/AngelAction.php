@@ -2,8 +2,8 @@
 
 namespace App\Actions;
 
-use App\Enums\InteractionActions;
-use App\Enums\Roles;
+use App\Enums\InteractionAction;
+use App\Enums\Role;
 use App\Facades\Redis;
 use App\Services\EndGameService;
 use App\Traits\MemberHelperTrait;
@@ -23,12 +23,12 @@ class AngelAction implements ActionInterface
         return false;
     }
 
-    public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
+    public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
         return false;
     }
 
-    public function call(string $targetId, InteractionActions $action, string $emitterId): bool
+    public function call(string $targetId, InteractionAction $action, string $emitterId): bool
     {
         $gameId = $this->getGameId($emitterId);
         $game = Redis::get("game:$gameId");
@@ -46,7 +46,7 @@ class AngelAction implements ActionInterface
     public function additionnalData(string $gameId): string
     {
         $game = Redis::get("game:$gameId");
-        $users = array_filter($game['users'], fn ($user) => $user !== $this->getUserIdByRole(Roles::Angel, $gameId)[0]);
+        $users = array_filter($game['users'], fn ($user) => $user !== $this->getUserIdByRole(Role::Angel, $gameId)[0]);
         /** @var int<5, max> $count */
         $count = count($users);
 
@@ -66,7 +66,7 @@ class AngelAction implements ActionInterface
         $game = Redis::get("game:$gameId");
 
         if (in_array($game['angel_target'], $game['dead_users'], true)) {
-            $this->service->end($gameId, $this->getUserIdByRole(Roles::Angel, $gameId));
+            $this->service->end($gameId, $this->getUserIdByRole(Role::Angel, $gameId));
         }
     }
 
@@ -82,7 +82,7 @@ class AngelAction implements ActionInterface
     {
         $game = Redis::get("game:$gameId");
 
-        if (in_array($game['angel_target'], $game['dead_users'], true) && !in_array($this->getUserIdByRole(Roles::Angel, $gameId)[0], $game['dead_users'], true)) {
+        if (in_array($game['angel_target'], $game['dead_users'], true) && !in_array($this->getUserIdByRole(Role::Angel, $gameId)[0], $game['dead_users'], true)) {
             return true;
         }
 

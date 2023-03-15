@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api;
 
-use App\Enums\Teams;
+use App\Enums\Team;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -19,7 +19,7 @@ class TeamControllerTest extends TestCase
 
     public function testRetrievingOneTeam(): void
     {
-        $id = Teams::Villagers->value;
+        $id = Team::Villagers->value;
 
         $this
             ->actingAs($this->user, 'api')
@@ -28,8 +28,8 @@ class TeamControllerTest extends TestCase
             ->assertExactJson([
                 'team' => [
                     'id' => $id,
-                    'name' => Teams::Villagers->name(),
-                    'display_name' => Teams::Villagers->stringify(),
+                    'name' => Team::Villagers->name(),
+                    'display_name' => Team::Villagers->stringify(),
                 ],
             ]);
     }

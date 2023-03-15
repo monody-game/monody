@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum Teams: int
+enum Team: int
 {
     case Villagers = 1;
     case Werewolves = 2;
@@ -11,24 +11,24 @@ enum Teams: int
     public function roles(): array
     {
         return match ($this) {
-            self::Villagers => [Roles::SimpleVillager, Roles::Psychic, Roles::Witch, Roles::LittleGirl, Roles::Elder],
-            self::Werewolves => [Roles::Werewolf, Roles::InfectedWerewolf, Roles::WhiteWerewolf],
-            self::Loners => [Roles::WhiteWerewolf, Roles::Angel]
+            self::Villagers => [Role::SimpleVillager, Role::Psychic, Role::Witch, Role::LittleGirl, Role::Elder],
+            self::Werewolves => [Role::Werewolf, Role::InfectedWerewolf, Role::WhiteWerewolf],
+            self::Loners => [Role::WhiteWerewolf, Role::Angel]
         };
     }
 
-    public static function role(Roles $role): self
+    public static function role(Role $role): self
     {
         return match ($role) {
-            Roles::Werewolf, Roles::InfectedWerewolf => self::Werewolves,
-            Roles::SimpleVillager, Roles::Psychic, Roles::Witch, Roles::LittleGirl, Roles::Elder => self::Villagers,
-            Roles::WhiteWerewolf, Roles::Angel => self::Loners
+            Role::Werewolf, Role::InfectedWerewolf => self::Werewolves,
+            Role::SimpleVillager, Role::Psychic, Role::Witch, Role::LittleGirl, Role::Elder => self::Villagers,
+            Role::WhiteWerewolf, Role::Angel => self::Loners
         };
     }
 
     public function full(): array
     {
-        $team = Teams::from($this->value);
+        $team = Team::from($this->value);
 
         return [
             'id' => $team->value,
@@ -59,7 +59,7 @@ enum Teams: int
     {
         $teams = [];
 
-        foreach (Teams::cases() as $team) {
+        foreach (Team::cases() as $team) {
             $teams[] = [
                 'id' => $team,
                 'name' => $team->name(),

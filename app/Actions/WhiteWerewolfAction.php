@@ -2,9 +2,9 @@
 
 namespace App\Actions;
 
-use App\Enums\InteractionActions;
-use App\Enums\Roles;
-use App\Enums\States;
+use App\Enums\InteractionAction;
+use App\Enums\Role;
+use App\Enums\State;
 use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
@@ -23,16 +23,16 @@ class WhiteWerewolfAction implements ActionInterface
         return false;
     }
 
-    public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
+    public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
         $gameId = $this->getGameId($userId);
 
-        return $this->getUserIdByRole(Roles::WhiteWerewolf, $gameId)[0] === $userId && $this->alive($targetId, $gameId);
+        return $this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0] === $userId && $this->alive($targetId, $gameId);
     }
 
-    public function call(string $targetId, InteractionActions $action, string $emitterId): bool
+    public function call(string $targetId, InteractionAction $action, string $emitterId): bool
     {
-        return $this->service->kill($targetId, $this->getGameId($targetId), States::WhiteWerewolf->stringify());
+        return $this->service->kill($targetId, $this->getGameId($targetId), State::WhiteWerewolf->stringify());
     }
 
     public function updateClients(string $userId): void

@@ -2,14 +2,14 @@
 
 namespace Http\Controllers\Api;
 
-use App\Enums\States;
+use App\Enums\State;
 use Tests\TestCase;
 
 class StateControllerTest extends TestCase
 {
     public function testGettingDetailsOnAState()
     {
-        $state = States::from(1);
+        $state = State::from(1);
         $this
             ->get('/api/state/1')
             ->assertOk()

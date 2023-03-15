@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\AlertType;
-use App\Enums\States;
-use App\Enums\Teams;
+use App\Enums\GameType;
+use App\Enums\State;
+use App\Enums\Team;
 use App\Events\GameListUpdate;
 use App\Events\WerewolvesList;
 use App\Facades\Redis;
@@ -45,7 +46,7 @@ class GameController extends Controller
             ->withAlert(AlertType::Error, "La partie demandée n'existe pas (ou plus) ...");
     }
 
-    public function list(): JsonResponse
+    public function list(?string $type = null): JsonResponse
     {
         $games = $this->getGames();
         $list = [];
@@ -66,6 +67,14 @@ class GameController extends Controller
             }
 
             if ($gameData['is_started']) {
+                continue;
+            }
+
+            if ($this->fromLocalNetwork() && $gameData['type'] !== (int) $type && $type !== '*') {
+                continue;
+            }
+
+            if ($type !== null && $gameData['type'] !== (int) $type && $type !== '*') {
                 continue;
             }
 
@@ -105,6 +114,7 @@ class GameController extends Controller
         $data['dead_users'] = [];
         $id = Str::random(12);
         $data['id'] = $id;
+        $data['type'] = $request->get('type') !== null ? $request->get('type') : GameType::NORMAL;
 
         if (!array_search($data['owner'], $data['users'], true)) {
             $user->current_game = $id;
@@ -114,8 +124,8 @@ class GameController extends Controller
 
         Redis::set("game:$id", $data);
         Redis::set("game:$id:state", [
-            'status' => States::Waiting,
-            'counterDuration' => States::Waiting->duration(),
+            'status' => State::Waiting,
+            'counterDuration' => State::Waiting->duration(),
             'round' => 0,
             'startTimestamp' => Carbon::now()->timestamp,
         ]);
@@ -150,7 +160,7 @@ class GameController extends Controller
         $user->current_game = $gameId;
         $user->save();
 
-        $werewolves = $this->getUsersByTeam(Teams::Werewolves, $gameId);
+        $werewolves = $this->getUsersByTeam(Team::Werewolves, $gameId);
 
         broadcast(
             new WerewolvesList(

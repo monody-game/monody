@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api;
 
-use App\Enums\Roles;
+use App\Enums\Role;
 use App\Models\GameOutcome;
 use App\Models\Statistic;
 use App\Models\User;
@@ -37,7 +37,7 @@ class StatisticsControllerTest extends TestCase
 
         $outcome = new GameOutcome();
         $outcome->user_id = $user->id;
-        $outcome->role_id = Roles::Psychic;
+        $outcome->role_id = Role::Psychic;
         $outcome->win = true;
         $outcome->save();
 
@@ -51,11 +51,11 @@ class StatisticsControllerTest extends TestCase
                 'wins' => 1,
                 'losses' => 0,
                 'highest_win_role' => [
-                    'role' => Roles::Psychic,
+                    'role' => Role::Psychic,
                     'occurences' => 1,
                 ],
                 'most_possessed_role' => [
-                    'role' => Roles::Psychic,
+                    'role' => Role::Psychic,
                     'occurences' => 1,
                 ],
             ]);
@@ -69,11 +69,11 @@ class StatisticsControllerTest extends TestCase
         $stats->user_id = $user->id;
         $stats->save();
 
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Roles::SimpleVillager, 'win' => true]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Roles::Witch, 'win' => true]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Roles::Witch, 'win' => false]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Roles::Witch, 'win' => false]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Roles::SimpleVillager, 'win' => true]);
+        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::SimpleVillager, 'win' => true]);
+        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch, 'win' => true]);
+        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch, 'win' => false]);
+        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch, 'win' => false]);
+        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::SimpleVillager, 'win' => true]);
 
         $this
             ->actingAs($user, 'api')
@@ -85,11 +85,11 @@ class StatisticsControllerTest extends TestCase
                 'wins' => 3,
                 'losses' => 2,
                 'highest_win_role' => [
-                    'role' => Roles::SimpleVillager,
+                    'role' => Role::SimpleVillager,
                     'occurences' => 2,
                 ],
                 'most_possessed_role' => [
-                    'role' => Roles::Witch,
+                    'role' => Role::Witch,
                     'occurences' => 3,
                 ],
             ]);

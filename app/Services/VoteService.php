@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\Teams;
+use App\Enums\Team;
 use App\Events\GameKill;
 use App\Events\MayorElected;
 use App\Facades\Redis;
@@ -155,7 +155,7 @@ class VoteService
         $allowedVoters = count($game['users']) - count($game['dead_users']);
 
         if ($context === 'werewolves') {
-            $allowedVoters = count(self::getUsersByTeam(Teams::Werewolves, $game['id']));
+            $allowedVoters = count(self::getUsersByTeam(Team::Werewolves, $game['id']));
         }
 
         if (!$majority) {

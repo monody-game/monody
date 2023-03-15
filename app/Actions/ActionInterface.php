@@ -2,7 +2,7 @@
 
 namespace App\Actions;
 
-use App\Enums\InteractionActions;
+use App\Enums\InteractionAction;
 
 interface ActionInterface
 {
@@ -14,21 +14,21 @@ interface ActionInterface
     /**
      * Indicate if the user $userId can use the action $action on the target
      *
-     * @param  InteractionActions  $action The action that the user want to use
+     * @param  InteractionAction  $action The action that the user want to use
      * @param  string  $userId The action emitter
      * @param  string  $targetId The action target
      */
-    public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool;
+    public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool;
 
     /**
      * Call the action
      *
      * @param  string  $targetId The target to call the action on
-     * @param  InteractionActions  $action The action to call
+     * @param  InteractionAction  $action The action to call
      * @param  string  $emitterId The user that used the action
      * @return mixed Result of the action, or void
      */
-    public function call(string $targetId, InteractionActions $action, string $emitterId): mixed;
+    public function call(string $targetId, InteractionAction $action, string $emitterId): mixed;
 
     /**
      * Update clients with data edited after the action (voted players for example)

@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use App\Enums\Badges;
+use App\Enums\Badge;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class Badge extends Model
+class UserBadge extends Model
 {
     protected $table = 'badges';
 
@@ -15,9 +15,9 @@ class Badge extends Model
     public $timestamps = false;
 
     /**
-     * @return Collection<int, Badge>
+     * @return Collection<int, UserBadge>
      */
-    public static function getUserBadge(User $user, Badges $badge): Collection
+    public static function getUserBadge(User $user, Badge $badge): Collection
     {
         return self::where('user_id', $user->id)->where('badge_id', $badge->value)->get();
     }

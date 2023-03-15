@@ -2,9 +2,9 @@
 
 namespace Http\Controllers\Api\Game;
 
-use App\Enums\InteractionActions;
-use App\Enums\Interactions;
-use App\Enums\Roles;
+use App\Enums\Interaction;
+use App\Enums\InteractionAction;
+use App\Enums\Role;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
@@ -19,7 +19,7 @@ class GameActionsControllerTest extends TestCase
         $this
             ->get('/api/interactions/actions')
             ->assertOk()
-            ->assertExactJson(Interactions::getActions());
+            ->assertExactJson(Interaction::getActions());
     }
 
     public function testGettingActionsForPsychicInteraction()
@@ -28,7 +28,7 @@ class GameActionsControllerTest extends TestCase
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'type' => Interactions::Psychic->value,
+                'type' => Interaction::Psychic->value,
             ])
             ->json('interaction');
 
@@ -36,7 +36,7 @@ class GameActionsControllerTest extends TestCase
             ->get("/api/interactions/actions/{$this->game['id']}/{$interaction['id']}")
             ->assertExactJson([
                 'actions' => [
-                    InteractionActions::Spectate,
+                    InteractionAction::Spectate,
                 ],
             ]);
     }
@@ -47,7 +47,7 @@ class GameActionsControllerTest extends TestCase
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/interactions', [
                 'gameId' => $this->game['id'],
-                'type' => Interactions::Witch->value,
+                'type' => Interaction::Witch->value,
             ])
             ->json('interaction');
 
@@ -55,20 +55,20 @@ class GameActionsControllerTest extends TestCase
             ->get("/api/interactions/actions/{$this->game['id']}/{$interaction['id']}")
             ->assertExactJson([
                 'actions' => [
-                    InteractionActions::KillPotion,
-                    InteractionActions::RevivePotion,
-                    InteractionActions::WitchSkip,
+                    InteractionAction::KillPotion,
+                    InteractionAction::RevivePotion,
+                    InteractionAction::WitchSkip,
                 ],
             ]);
 
-        Redis::set("game:{$this->game['id']}:interactions:usedActions", [InteractionActions::RevivePotion->value]);
+        Redis::set("game:{$this->game['id']}:interactions:usedActions", [InteractionAction::RevivePotion->value]);
 
         $this
             ->get("/api/interactions/actions/{$this->game['id']}/{$interaction['id']}")
             ->assertExactJson([
                 'actions' => [
-                    InteractionActions::KillPotion,
-                    InteractionActions::WitchSkip,
+                    InteractionAction::KillPotion,
+                    InteractionAction::WitchSkip,
                 ],
             ]);
     }
@@ -83,9 +83,9 @@ class GameActionsControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => User::factory(2)->make()->toArray(),
                 'roles' => [
-                    Roles::Witch->value,
-                    Roles::Psychic->value,
-                    Roles::Werewolf->value,
+                    Role::Witch->value,
+                    Role::Psychic->value,
+                    Role::Werewolf->value,
                 ],
             ])->json('game');
 

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Game;
 
-use App\Enums\States;
-use App\Enums\Teams;
+use App\Enums\State;
+use App\Enums\Team;
 use App\Events\ChatLock;
 use App\Events\GameKill;
 use App\Facades\Redis;
@@ -34,9 +34,9 @@ class GameChatController extends Controller
         $user = $request->user();
         $state = $this->getState($gameId)['status'];
 
-        if ($state === States::Werewolf->value && $this->isWerewolf($user['id'], $gameId)) {
+        if ($state === State::Werewolf->value && $this->isWerewolf($user['id'], $gameId)) {
             $this->service->werewolf($request->validated(), $user);
-        } elseif ($state === States::Werewolf->value && !$this->isWerewolf($user['id'], $gameId)) {
+        } elseif ($state === State::Werewolf->value && !$this->isWerewolf($user['id'], $gameId)) {
             return new JsonResponse([], Response::HTTP_FORBIDDEN);
         } elseif (!$this->alive($user->id, $gameId)) {
             $this->service->private($request->validated('content'), $user, 'dead', $gameId, $game['dead_users']);
@@ -78,7 +78,7 @@ class GameChatController extends Controller
         } elseif ($request->has('team')) {
             $recipients = [];
 
-            foreach (Teams::from($request->get('team'))->roles() as $role) {
+            foreach (Team::from($request->get('team'))->roles() as $role) {
                 $users = $this->getUserIdByRole($role, $gameId);
 
                 if ($users === []) {

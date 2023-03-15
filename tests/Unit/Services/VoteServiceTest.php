@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Services;
 
-use App\Enums\States;
+use App\Enums\State;
 use App\Events\GameKill;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
@@ -268,9 +268,9 @@ class VoteServiceTest extends TestCase
             ])->getContent(), true)['game'];
 
         Redis::set("game:{$this->game['id']}:state", [
-            'status' => States::Vote->value,
+            'status' => State::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
-            'counterDuration' => States::Vote->duration(),
+            'counterDuration' => State::Vote->duration(),
         ]);
 
         $this->secondGame = json_decode($this
@@ -281,9 +281,9 @@ class VoteServiceTest extends TestCase
             ])->getContent(), true)['game'];
 
         Redis::set("game:{$this->secondGame['id']}:state", [
-            'status' => States::Vote->value,
+            'status' => State::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
-            'counterDuration' => States::Vote->duration(),
+            'counterDuration' => State::Vote->duration(),
         ]);
 
         $this->thirdGame = $this
@@ -294,9 +294,9 @@ class VoteServiceTest extends TestCase
             ])->json('game');
 
         Redis::set("game:{$this->thirdGame['id']}:state", [
-            'status' => States::Vote->value,
+            'status' => State::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
-            'counterDuration' => States::Vote->duration(),
+            'counterDuration' => State::Vote->duration(),
         ]);
     }
 }

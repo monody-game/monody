@@ -2,9 +2,9 @@
 
 namespace App\Actions;
 
-use App\Enums\InteractionActions;
-use App\Enums\States;
-use App\Enums\Teams;
+use App\Enums\InteractionAction;
+use App\Enums\State;
+use App\Enums\Team;
 use App\Events\InteractionUpdate;
 use App\Facades\Redis;
 use App\Services\VoteService;
@@ -20,14 +20,14 @@ class WerewolvesAction implements ActionInterface
     ) {
     }
 
-    public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
+    public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
         $gameId = $this->getGameId($userId);
 
-        return in_array($userId, $this->getUsersByTeam(Teams::Werewolves, $gameId), true) && $this->alive($targetId, $gameId);
+        return in_array($userId, $this->getUsersByTeam(Team::Werewolves, $gameId), true) && $this->alive($targetId, $gameId);
     }
 
-    public function call(string $targetId, InteractionActions $action, string $emitterId): mixed
+    public function call(string $targetId, InteractionAction $action, string $emitterId): mixed
     {
         return $this->service->vote($targetId, $this->getGameId($targetId));
     }
@@ -44,14 +44,14 @@ class WerewolvesAction implements ActionInterface
 
         broadcast(new InteractionUpdate([
             'gameId' => $gameId,
-            'type' => InteractionActions::Kill->value,
+            'type' => InteractionAction::Kill->value,
             'votedPlayers' => $this->service::getVotes($gameId),
-        ], true, [...$this->getUsersByTeam(Teams::Werewolves, $gameId), ...$game['dead_users']]));
+        ], true, [...$this->getUsersByTeam(Team::Werewolves, $gameId), ...$game['dead_users']]));
     }
 
     public function close(string $gameId): void
     {
-        $this->service->afterVote($gameId, States::Werewolf->stringify());
+        $this->service->afterVote($gameId, State::Werewolf->stringify());
     }
 
     public function isSingleUse(): bool

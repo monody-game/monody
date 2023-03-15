@@ -2,8 +2,8 @@
 
 namespace App\Actions;
 
-use App\Enums\InteractionActions;
-use App\Enums\Roles;
+use App\Enums\InteractionAction;
+use App\Enums\Role;
 use App\Events\WerewolvesList;
 use App\Facades\Redis;
 use App\Services\ChatService;
@@ -19,12 +19,12 @@ class InfectedWerewolfAction implements ActionInterface
         return true;
     }
 
-    public function canInteract(InteractionActions $action, string $userId, string $targetId = ''): bool
+    public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
         $gameId = $this->getGameId($userId);
         $actionCondition = true;
 
-        if ($action === InteractionActions::Infect) {
+        if ($action === InteractionAction::Infect) {
             $target = $this->getMember($targetId, $gameId);
 
             if (!$target) {
@@ -44,21 +44,21 @@ class InfectedWerewolfAction implements ActionInterface
 
         $role = $this->getRole($userId);
 
-        return $role === Roles::InfectedWerewolf && $actionCondition;
+        return $role === Role::InfectedWerewolf && $actionCondition;
     }
 
-    public function call(string $targetId, InteractionActions $action, string $emitterId): null
+    public function call(string $targetId, InteractionAction $action, string $emitterId): null
     {
         $gameId = $this->getGameId($targetId);
         switch ($action) {
-            case InteractionActions::InfectedSkip:
+            case InteractionAction::InfectedSkip:
                 return null;
-            case InteractionActions::Infect:
+            case InteractionAction::Infect:
                 $this->infection($targetId);
                 break;
         }
 
-        $this->setUsed(InteractionActions::Infect, $gameId);
+        $this->setUsed(InteractionAction::Infect, $gameId);
 
         return null;
     }
@@ -69,7 +69,7 @@ class InfectedWerewolfAction implements ActionInterface
         $game = Redis::get("game:$gameId");
         $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
-        if ($this->isUsed(InteractionActions::Infect, $gameId)) {
+        if ($this->isUsed(InteractionAction::Infect, $gameId)) {
             return;
         }
 
@@ -122,12 +122,12 @@ class InfectedWerewolfAction implements ActionInterface
         return $this->getCurrentUserGameActivity($userId);
     }
 
-    private function getRole(string $userId): Roles
+    private function getRole(string $userId): Role
     {
         return $this->getRoleByUserId($userId, $this->getGameId($userId));
     }
 
-    private function setUsed(InteractionActions $action, string $gameId): void
+    private function setUsed(InteractionAction $action, string $gameId): void
     {
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
         $usedActions[] = $action->value;
@@ -135,7 +135,7 @@ class InfectedWerewolfAction implements ActionInterface
         Redis::set("game:$gameId:interactions:usedActions", $usedActions);
     }
 
-    private function isUsed(InteractionActions $action, string $gameId): bool
+    private function isUsed(InteractionAction $action, string $gameId): bool
     {
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
 

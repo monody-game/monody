@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Http\Controllers\Api;
 
-use App\Enums\Roles;
-use App\Enums\Teams;
+use App\Enums\Role;
+use App\Enums\Team;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
@@ -30,8 +30,8 @@ class RoleControllerTest extends TestCase
             ->getJson("/api/roles/game/{$this->game['id']}")
             ->assertOk()
             ->assertJson([
-                Roles::Werewolf->full(),
-                Roles::SimpleVillager->full(),
+                Role::Werewolf->full(),
+                Role::SimpleVillager->full(),
             ]);
     }
 
@@ -46,9 +46,9 @@ class RoleControllerTest extends TestCase
                 'limit' => null,
                 'weight' => 2,
                 'team' => [
-                    'id' => Teams::Werewolves->value,
-                    'name' => Teams::Werewolves->name(),
-                    'display_name' => Teams::Werewolves->stringify(),
+                    'id' => Team::Werewolves->value,
+                    'name' => Team::Werewolves->name(),
+                    'display_name' => Team::Werewolves->stringify(),
                 ],
             ],
         ]);
