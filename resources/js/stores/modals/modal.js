@@ -47,10 +47,15 @@ export const useStore = defineStore("modal", {
 			if (this.opennedModal !== "popup") {
 				this.opennedModal = "popup";
 			}
+
+			if (document.body.classList.contains("overflow-hidden")) {
+				document.body.classList.remove("overflow-hidden");
+			}
 		},
 		open(type) {
 			this.getModalStore(type).isOpenned = true;
 			this.opennedModal = type;
+			document.body.classList.add("overflow-hidden");
 		}
 	}
 });
