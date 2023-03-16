@@ -5,19 +5,24 @@
         v-for="message in store.messages"
         :key="message.content + message.timestamp"
       >
+        <InAndOutMessage
+          v-if="message.type === 'inandout_alert'"
+          :username="message.author"
+          :join="message.content"
+        />
         <TimeSeparator
-          v-if="message.type === 'time_separator'"
+          v-else-if="message.type === 'time_separator'"
           :message="message.content"
         />
+        <ChatMessage
+          v-else-if="message.type === 'message' && message.type === 'werewolf' && message.type === 'dead'"
+          :message="message"
+        />
         <ChatAlert
-          v-else-if="message.type !== 'message' && message.type !== 'werewolf' && message.type !== 'dead'"
+          v-else
           :message="message.content"
           :type="message.type"
           :actions="message.actionList"
-        />
-        <ChatMessage
-          v-else
-          :message="message"
         />
       </template>
     </div>
@@ -63,6 +68,7 @@ import { send } from "../../services/sendMessage.js";
 import ChatAlert from "./ChatAlert.vue";
 import ChatMessage from "./ChatMessage.vue";
 import TimeSeparator from "./TimeSeparator.vue";
+import InAndOutMessage from "./InAndOutMessage.vue";
 
 const content = ref("");
 const input = ref(null);

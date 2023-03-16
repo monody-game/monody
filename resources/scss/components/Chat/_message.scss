@@ -145,3 +145,32 @@
 		margin-bottom: space(1);
 	}
 }
+
+.innout__message {
+	margin-bottom: space(2);
+}
+
+.innout__message p {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+
+	.bold {
+		margin-left: space(1);
+	}
+
+	 & svg {
+		 height: 24px;
+		 width: 24px;
+	 }
+}
+
+.day .innout__message {
+	color: var(--dark-background);
+	opacity: 50%;
+}
+
+.night .innout__message {
+	color: var(--light-background);
+	opacity: 50%;
+}

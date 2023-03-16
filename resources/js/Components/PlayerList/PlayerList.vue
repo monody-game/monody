@@ -20,17 +20,19 @@
 </template>
 
 <script setup>
-import GamePlayer from "./GamePlayer.vue";
-import LogoSpinner from "../Spinners/LogoSpinner.vue";
-import { useStore } from "../../stores/game.js";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from "../../stores/game.js";
+import { useStore as useChatStore } from "../../stores/chat.js";
+import LogoSpinner from "../Spinners/LogoSpinner.vue";
+import GamePlayer from "./GamePlayer.vue";
 
 const playerList = ref([]);
 const playerListNode = ref(null);
 const loading = ref(false);
 const gameStore = useStore();
 const route = useRoute();
+const chatStore = useChatStore();
 
 window.Echo.join(`game.${route.params.id}`)
 	.here((users) => {
@@ -39,9 +41,11 @@ window.Echo.join(`game.${route.params.id}`)
 		});
 	})
 	.joining((user) => {
+		chatStore.send(true, "inandout_alert", user.username);
 		addUser(user);
 	})
 	.leaving((user) => {
+		chatStore.send(false, "inandout_alert", user.username);
 		removeUser(user);
 	});
 
