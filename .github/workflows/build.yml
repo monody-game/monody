@@ -1,0 +1,22 @@
+name: 'Typescript Build'
+
+on: [ push ]
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 💻 Check out repository code
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Build ts code
+        run: yarn tsbuild
+
+      - name: ⬇️ Commit and push changes
+        run: |
+          git config --global user.name "🤖 Github actions"
+          git config --glboal user.email "***REMOVED***"
+
+          git add -A
+          git commit -m "build: build websockets server's typescript code"
+          git push
