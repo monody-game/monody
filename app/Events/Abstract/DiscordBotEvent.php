@@ -6,8 +6,10 @@ use Illuminate\Broadcasting\Channel;
 
 abstract class DiscordBotEvent
 {
+	public static string $channel = 'bot.private';
+
     public function broadcastOn(): Channel
     {
-        return new Channel('bot.private');
+        return new Channel(self::$channel);
     }
 }
