@@ -2,13 +2,15 @@ import { client } from "./Connection.js";
 import { log } from "../Logger.js";
 
 export class RedisSubscriber {
+	private sub: typeof client
+
 	constructor() {
 		this.sub = client.duplicate();
 
 		this.sub.connect();
 	}
 
-	async subscribe(callback) {
+	async subscribe(callback: Function) {
 		await this.sub.pSubscribe("*", async (message, channel) => {
 			if (process.env.APP_DEBUG) {
 				log("Api emitted an event !");

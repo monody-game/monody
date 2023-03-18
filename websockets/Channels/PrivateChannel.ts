@@ -1,39 +1,31 @@
 import fetch from "../Helpers/fetch.js";
-import Body from "../Helpers/Body.js";
 import { error, log, warn } from "../Logger.js";
+import {Socket} from "socket.io";
+import {DataPayload} from "../IoServer";
 
 export class PrivateChannel {
-	authenticate(socket, data) {
-		const options = {
-			form: { channel_name: data.channel },
-		};
-
+	authenticate(socket: Socket, data: DataPayload) {
 		if (process.env.APP_DEBUG) {
 			log(`Sending auth request to: "${process.env.APP_URL}"`);
 		}
 
-		return this.serverRequest(socket, options);
+		return this.serverRequest(socket, {
+			form: { channel_name: data.channel },
+		});
 	}
 
-	async serverRequest(socket, options) {
+	async serverRequest(socket: Socket, options: {[key: string]: any}) {
 		let response;
 
-		const params = Body.make({
-			channel_name: options.form.channel_name
-		});
+		const params = {
+			channel_name: options.form.channel_name,
+			socket_id: socket.id
+		};
 
 		if (process.env.APP_ENV === "local") {
-			response = await fetch("https://web/broadcasting/auth", {
-				method: "POST",
-				body: params,
-				headers: options
-			}, socket);
+			response = await fetch("https://web/broadcasting/auth", "POST", params, socket);
 		} else {
-			response = await fetch(`${process.env.APP_URL}/broadcasting/auth`, {
-				method: "POST",
-				body: params,
-				headers: options
-			}, socket);
+			response = await fetch(`${process.env.APP_URL}/broadcasting/auth`, "POST", params,socket);
 		}
 
 		const status = response.status;

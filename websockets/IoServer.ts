@@ -1,20 +1,46 @@
-import { Server } from "socket.io";
+import { readFileSync } from "node:fs";
+import { createSecureServer, Http2SecureServer } from "node:http2";
+import { EventEmitter } from "node:events";
+import {Server, Socket} from "socket.io";
 import { RedisSubscriber } from "./Redis/RedisSubscriber.js";
 import { Channel } from "./Channels/Channel.js";
-import { createSecureServer } from "node:http2";
-import { readFileSync } from "node:fs";
 import { GameService } from "./Services/GameService.js";
 import { gameId } from "./Helpers/Functions.js";
 import { handle } from "./PrivateEventHandler.js";
-import { EventEmitter } from "node:events";
 import { info, success, warn, blank } from "./Logger.js";
 
+type EventPayload = {
+	data: {
+		recipients?: string[]
+		private?: boolean
+		volatile?: boolean
+		payload: object|string
+	}
+	event: string
+	socket: string
+}
+
+type DataPayload = {
+	channel: string
+	auth: {
+		headers: {
+			[key: string]: string
+		}
+	}
+}
+
 export class IoServer {
+	private readonly httpServer: Http2SecureServer;
+	private readonly server: Server;
+	private subscriber: RedisSubscriber;
+	private readonly emitter: EventEmitter;
+	private channel: Channel;
+
 	constructor() {
 		this.httpServer = createSecureServer({
 			allowHTTP1: true,
-			cert: readFileSync(process.env.CERT_PATH),
-			key: readFileSync(process.env.CERT_PRIVATE_KEY_PATH),
+			cert: readFileSync(process.env.CERT_PATH as string),
+			key: readFileSync(process.env.CERT_PRIVATE_KEY_PATH as string),
 		});
 		this.server = new Server(this.httpServer, {
 			cors: {
@@ -44,7 +70,7 @@ export class IoServer {
 
 	async listen() {
 		info("Waiting for events to broadcast ...");
-		await this.subscriber.subscribe(async (channel, message) => {
+		await this.subscriber.subscribe(async (channel: string, message: EventPayload) => {
 			if (channel === "ws.private") {
 				await handle(this.emitter, message);
 				return;
@@ -58,23 +84,26 @@ export class IoServer {
 
 			const members = await GameService.getMembers(gameId(channel));
 
-			for (let caller of message.data.recipients) {
-				caller = members.find(member => member.user_id === caller);
-				if (caller) {
-					this.server.to(caller.socketId).emit(message.event, channel, { data: { payload: message.data.payload } });
+			if(!message.data.recipients) return;
+
+			for (const caller of message.data.recipients) {
+				const member = members.find(member => member.user_id === caller);
+
+				if (member && member.socketId) {
+					this.server.to(member.socketId).emit(message.event, channel, { data: { payload: message.data.payload } });
 				}
 			}
 		});
 	}
 
-	find(id) {
-		return this.server.sockets.sockets[id];
+	find(id: string) {
+		return this.server.sockets.sockets.get(id);
 	}
 
-	broadcast(channel, message) {
+	broadcast(channel: string, message: EventPayload) {
 		if (message.data.volatile) {
 			if (message.socket && this.find(message.socket)) {
-				this.find(message.socket).to(channel).broadcast.volatile.emit(message.event, channel, message.data);
+				this.find(message.socket)?.to(channel).volatile.emit(message.event, channel, message.data);
 			} else {
 				this.server.to(channel).volatile.emit(message.event, channel, message);
 			}
@@ -82,7 +111,7 @@ export class IoServer {
 		}
 
 		if (message.socket && this.find(message.socket)) {
-			this.find(message.socket).to(channel).broadcast.emit(message.event, channel, message.data);
+			this.find(message.socket)?.to(channel).emit(message.event, channel, message.data);
 		} else {
 			this.server.to(channel).emit(message.event, channel, message);
 		}
@@ -91,7 +120,7 @@ export class IoServer {
 	onConnect() {
 		info("Setting up join / leave hooks");
 		info("Listening to ping event ...");
-		this.server.on("connection", (socket) => {
+		this.server.on("connection", (socket: Socket) => {
 			this.onSubscribe(socket);
 			this.onUnsubscribe(socket);
 			this.onDisconnecting(socket);
@@ -102,19 +131,19 @@ export class IoServer {
 		});
 	}
 
-	onSubscribe(socket) {
-		socket.on("subscribe", async (data) => {
+	onSubscribe(socket: Socket) {
+		socket.on("subscribe", async (data: DataPayload) => {
 			await this.channel.join(socket, data);
 		});
 	}
 
-	onUnsubscribe(socket) {
-		socket.on("unsubscribe", async (data) => {
+	onUnsubscribe(socket: Socket) {
+		socket.on("unsubscribe", async (data: DataPayload) => {
 			await this.channel.leave(socket, data.channel, "unsubscribed");
 		});
 	}
 
-	onDisconnecting(socket) {
+	onDisconnecting(socket: Socket) {
 		socket.on("disconnecting", (reason) => {
 			socket.rooms.forEach(async (room) => {
 				if (room !== socket.id) {
@@ -124,3 +153,5 @@ export class IoServer {
 		});
 	}
 }
+
+export { DataPayload }

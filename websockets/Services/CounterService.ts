@@ -2,17 +2,22 @@ import { StateManager } from "./StateManager.js";
 import { gameId } from "../Helpers/Functions.js";
 import { error, log, warn } from "../Logger.js";
 import { GameService } from "./GameService.js";
+import {Server, Socket} from "socket.io";
+import {EventEmitter} from "node:events";
 
 export class CounterService {
-	counterId = [];
+	private counterId: {[key: string]: number} = {};
+	private readonly io: Server;
+	private emitter: EventEmitter;
+	private manager: StateManager;
 
-	constructor(io, emitter) {
+	constructor(io: Server, emitter: EventEmitter) {
 		this.io = io;
 		this.emitter = emitter;
 		this.manager = new StateManager(this.io, emitter);
 	}
 
-	async cycle(channel, socket, duration = null) {
+	async cycle(channel: string, socket: Socket, duration: number|null = null) {
 		this.clearListeners();
 
 		const id = gameId(channel);
@@ -32,13 +37,13 @@ export class CounterService {
 		this.emitter.on("time.skip", async (data) => {
 			const state = await this.manager.getState(data.gameId);
 
-			if (state.skipped && state.skipped === "true") return;
+			if (state.skipped) return;
 
 			clearTimeout(this.counterId[data.gameId]);
 
 			log(`Skipping time in game ${data.gameId}, in state ${state.status} to time ${data.to}`);
 
-			this.manager.setState({
+			await this.manager.setState({
 				status: state.status,
 				startTimestamp: Date.now(),
 				counterDuration: data.to,
@@ -56,10 +61,11 @@ export class CounterService {
 			clearTimeout(this.counterId[gameId]);
 		});
 
-		this.counterId[id] = counterId[Symbol.toPrimitive]();
+		const timeoutId = counterId[Symbol.toPrimitive]()
+		this.counterId[id] = timeoutId;
 
 		try {
-			await this.manager.nextState(channel, this.counterId[id], socket);
+			await this.manager.nextState(channel, timeoutId);
 		} catch (e) {
 			clearTimeout(this.counterId[id]);
 			error(`Error happenned during counter cycle in game ${id}:`);
@@ -71,8 +77,8 @@ export class CounterService {
 		const listeners = [...this.emitter.listeners("time.skip"), ...this.emitter.listeners("time.halt")];
 
 		for (const listener of listeners) {
-			this.emitter.off("time.skip", listener);
-			this.emitter.off("time.halt", listener);
+			this.emitter.off("time.skip", (...args) => listener(...args));
+			this.emitter.off("time.halt", (...args) => listener(...args));
 		}
 	}
 }
