@@ -17,6 +17,21 @@ jobs:
       - name: 💻 Check out repository code
         uses: actions/checkout@v3
 
+      - name: 📖 Install deps
+        run: yarn
+
+      - name: ⚙️ Build ts code
+        run: yarn tsbuild
+
+      - name: ⬇️ Commit and push changes
+        run: |
+          git config --global user.name "🤖 Github actions"
+          git config --global user.email "tsbuild@monody.fr"
+
+          git add -A
+          git commit -m "build: build websockets server's typescript code"
+          git push
+
       - name: 🔢 Extract version name
         shell: bash
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
