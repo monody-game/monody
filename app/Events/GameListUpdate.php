@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Events\Abstract\DiscordBotEvent;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -26,9 +27,12 @@ class GameListUpdate implements ShouldBroadcastNow
     /**
      * Get the channels the event should broadcast on.
      */
-    public function broadcastOn(): Channel
-    {
-        return new Channel('home');
+    public function broadcastOn(): array
+	{
+        return [
+			new Channel('home'),
+			new Channel(DiscordBotEvent::$channel)
+		];
     }
 
     public function broadcastAs(): string
