@@ -36,9 +36,11 @@ jobs:
         shell: bash
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         id: extract_tag
+        if: ${{ always() }}
 
       - name: ⬆️ Deploying
         uses: appleboy/ssh-action@master
+        if: ${{ always() }}
         env:
           APP_VERSION: ${{ steps.extract_tag.outputs.tag }}
         with:
