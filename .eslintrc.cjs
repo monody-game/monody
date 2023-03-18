@@ -4,13 +4,12 @@ module.exports = {
 		"plugin:vue/vue3-recommended"
 	],
 	env: {
-		"node": true,
 		"es6": true
 	},
 	parserOptions: {
 		"ecmaVersion": 2022
 	},
-	ignorePatterns: ["public/*"],
+	ignorePatterns: ["public/*", "websockets/*"],
 	rules: {
 		"vue/require-default-prop": 0,
 		"quotes": ["error", "double"],

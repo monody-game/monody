@@ -75,7 +75,6 @@ const subscribeToChannel = () => {
 				}
 				break;
 			case "badge.granted":
-				console.log(notification);
 				badgeStore.badges = [];
 
 				popupStore.setPopup({
