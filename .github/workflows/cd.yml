@@ -30,8 +30,8 @@ jobs:
           git config --global user.email "tsbuild@monody.fr"
 
           git add -A
-          git commit --amend &>
-          git push &>
+          git commit --amend
+          git push
 
       - name: 🔢 Extract version name
         shell: bash
