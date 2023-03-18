@@ -24,23 +24,22 @@ jobs:
         run: yarn tsbuild
 
       - name: ⬇️ Commit and push changes
+        continue-on-error: true
         run: |
           git config --global user.name "🤖 Github actions"
           git config --global user.email "tsbuild@monody.fr"
 
           git add -A
-          git commit -m "build: build websockets server's typescript code"
-          git push
+          git commit --amend &>
+          git push &>
 
       - name: 🔢 Extract version name
         shell: bash
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
         id: extract_tag
-        if: ${{ always() }}
 
       - name: ⬆️ Deploying
         uses: appleboy/ssh-action@master
-        if: ${{ always() }}
         env:
           APP_VERSION: ${{ steps.extract_tag.outputs.tag }}
         with:
