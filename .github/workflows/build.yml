@@ -18,7 +18,7 @@ jobs:
       - name: ⬇️ Commit and push changes
         run: |
           git config --global user.name "🤖 Github actions"
-          git config --glboal user.email "mooneupho@gmail.com"
+          git config --global user.email "mooneupho@gmail.com"
 
           git add -A
           git commit -m "build: build websockets server's typescript code"
