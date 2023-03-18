@@ -4,15 +4,36 @@ import { join, dirname } from "node:path";
 import { readdirSync } from "node:fs";
 import { GameService } from "./GameService.js";
 import { error, log } from "../Logger.js";
+import {Server} from "socket.io";
 
-export default async function getRounds(gameId = 0) {
+type StateIdentifier = number
+
+type Hook = {
+	identifier: StateIdentifier
+	before?: (io: Server, channel: string) => Promise<boolean>
+	after?: (io: Server, channel: string) => Promise<boolean>
+}
+
+type ApiState = {
+	identifier: StateIdentifier
+	raw_name: string
+	duration: number
+}
+
+type HookedState = Hook & ApiState
+
+type Round = HookedState[];
+
+type RoundList = Round[]
+
+export {Round, Hook, StateIdentifier, RoundList, HookedState}
+
+export async function getRounds(gameId = ""): Promise<RoundList|[]> {
 	if (!await GameService.exists(gameId)) {
-		return;
+		return [];
 	}
 
-	const apiRounds = await fetch(`${process.env.API_URL}/rounds/${gameId}`, {
-		"method": "GET"
-	});
+	const apiRounds = await fetch(`${process.env.API_URL}/rounds/${gameId}`);
 
 	const __dirname = dirname(fileURLToPath(import.meta.url));
 	const directory = join(__dirname, "../Hooks");
@@ -22,15 +43,15 @@ export default async function getRounds(gameId = 0) {
 	const rounds = [];
 
 	for (let file of files) {
-		file = await import(directory + "/" + file);
-		file = file.default;
-		hooks[file.identifier] = file;
-		hookedStates.push(file.identifier);
+		const imported = await import(directory + "/" + file);
+		const hook: Hook = imported.default
+		hooks[hook.identifier] = hook;
+		hookedStates.push(hook.identifier);
 	}
 
 	try {
 		for (const round of apiRounds.json) {
-			const roundStates = [];
+			const roundStates: Round = [];
 			for (let state of round) {
 				if (hookedStates.includes(state.identifier)) {
 					state = { ...state, ...hooks[state.identifier] };

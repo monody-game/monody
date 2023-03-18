@@ -1,23 +1,20 @@
 import fetch from "../Helpers/fetch.js";
 import { GameService } from "./GameService.js";
 import { client } from "../Redis/Connection.js";
-import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
 import { error, log, success, warn } from "../Logger.js";
+import {Server} from "socket.io";
 
 export class InteractionService {
-	static async openInteraction(io, channel, type) {
+	static async openInteraction(io: Server, channel: string, type: string) {
 		const id = gameId(channel);
-		const params = Body.make({
+		const res = await fetch(`${process.env.API_URL}/interactions`, "POST", {
 			gameId: id,
 			type
 		});
-		const res = await fetch(`${process.env.API_URL}/interactions`, { method: "POST", body: params });
 
 		try {
 			const interaction = res.json.interaction;
-
-			console.log(res);
 
 			const interactionId = interaction.id;
 			let callers = interaction.authorizedCallers;
@@ -49,16 +46,16 @@ export class InteractionService {
 		}
 	}
 
-	static async closeInteraction(io, channel, type) {
+	static async closeInteraction(io: Server, channel: string, type: string) {
 		const id = gameId(channel);
 
-		const interactions = JSON.parse(await client.get(`game:${id}:interactions`));
+		const interactions = JSON.parse(await client.get(`game:${id}:interactions`) as string);
 
-		if (interactions === []) {
+		if (interactions.length === 0) {
 			return;
 		}
 
-		const interaction = interactions.find(interactionListItem => interactionListItem.type === type);
+		const interaction = interactions.find((interactionListItem: {type: string}) => interactionListItem.type === type);
 
 		if (!interaction) {
 			warn(`Unable to find interaction with type ${type} on game ${id}, aborting.`);
@@ -68,12 +65,10 @@ export class InteractionService {
 		const interactionId = interaction.id;
 		let callers = interaction.authorizedCallers;
 
-		const params = Body.make({
+		await fetch(`${process.env.API_URL}/interactions`, "DELETE", {
 			gameId: id,
 			id: interactionId
 		});
-
-		await fetch(`${process.env.API_URL}/interactions`, { method: "DELETE", body: params });
 
 		log(`Closing ${type} interaction with id ${interactionId} in game ${id}.`);
 

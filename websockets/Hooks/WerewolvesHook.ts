@@ -1,34 +1,28 @@
 import { InteractionService } from "../Services/InteractionService.js";
 import fetch from "../Helpers/fetch.js";
-import Body from "../Helpers/Body.js";
 import { gameId } from "../Helpers/Functions.js";
+import {Server} from "socket.io";
 
 const baseURL = `${process.env.API_URL}/game`;
 
 export default {
 	identifier: 3,
-	async before(io, channel) {
+	async before(io: Server, channel: string) {
 		await InteractionService.openInteraction(io, channel, "werewolves");
 
-		await fetch(`${baseURL}/chat/lock`, {
-			method: "POST",
-			body: Body.make({
-				gameId: gameId(channel),
-				team: "2"
-			})
+		await fetch(`${baseURL}/chat/lock`, "POST", {
+			gameId: gameId(channel),
+			team: "2"
 		});
 
 		return false;
 	},
-	async after(io, channel) {
+	async after(io: Server, channel: string) {
 		await InteractionService.closeInteraction(io, channel, "werewolves");
 
-		await fetch(`${baseURL}/chat/lock`, {
-			method: "POST",
-			body: Body.make({
-				gameId: gameId(channel),
-				team: "2"
-			})
+		await fetch(`${baseURL}/chat/lock`, "POST", {
+			gameId: gameId(channel),
+			team: "2"
 		});
 
 		return false;

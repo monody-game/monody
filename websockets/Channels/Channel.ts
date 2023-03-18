@@ -1,19 +1,21 @@
 import { GameChannel } from "./GameChannel.js";
 import { PrivateChannel } from "./PrivateChannel.js";
 import { error, log } from "../Logger.js";
+import {Server, Socket} from "socket.io";
+import {EventEmitter} from "node:events";
+import {DataPayload} from "../IoServer";
 
 export class Channel {
-	privateChannels = ["private-*", "presence-*"];
+	private privateChannels = ["private-*", "presence-*"];
+	private private: PrivateChannel
+	private presence: GameChannel
 
-	clientEvents = ["client-*"];
-
-	constructor(io, emitter) {
+	constructor(io: Server, emitter: EventEmitter) {
 		this.private = new PrivateChannel();
 		this.presence = new GameChannel(io, emitter);
-		this.io = io;
 	}
 
-	async join(socket, data) {
+	async join(socket: Socket, data: DataPayload) {
 		if (data.channel) {
 			if (this.isInChannel(socket, data.channel)) return;
 			if (this.isPrivate(data.channel)) {
@@ -25,21 +27,19 @@ export class Channel {
 		}
 	}
 
-	async leave(socket, channel, reason) {
-		if (channel) {
-			if (this.isPresence(channel)) {
-				await this.presence.leave(socket, channel);
-			}
+	async leave(socket: Socket, channel: string, reason: string) {
+		if (this.isPresence(channel)) {
+			await this.presence.leave(socket, channel);
+		}
 
-			socket.leave(channel);
+		socket.leave(channel);
 
-			if (process.env.APP_DEBUG) {
-				log(`${socket.id} left channel: ${channel} (${reason})`);
-			}
+		if (process.env.APP_DEBUG) {
+			log(`${socket.id} left channel: ${channel} (${reason})`);
 		}
 	}
 
-	isPrivate(channel) {
+	isPrivate(channel: string): boolean {
 		let isPrivate = false;
 
 		this.privateChannels.forEach(privateChannel => {
@@ -50,7 +50,7 @@ export class Channel {
 		return isPrivate;
 	}
 
-	async joinPrivate(socket, data) {
+	async joinPrivate(socket: Socket, data: DataPayload) {
 		try {
 			const res = JSON.parse(await this.private.authenticate(socket, data));
 			socket.join(data.channel);
@@ -78,28 +78,17 @@ export class Channel {
 		}
 	}
 
-	isPresence(channel) {
+	isPresence(channel: string) {
 		return channel.lastIndexOf("presence-", 0) === 0;
 	}
 
-	onJoin(socket, channel) {
+	onJoin(socket: Socket, channel: string) {
 		if (process.env.APP_DEBUG) {
 			log(`${socket.id} joined channel: ${channel}`);
 		}
 	}
 
-	isClientEvent(event) {
-		let isClientEvent = false;
-
-		this.clientEvents.forEach(clientEvent => {
-			const regex = new RegExp(clientEvent.replace("*", ".*"));
-			if (regex.test(event)) isClientEvent = true;
-		});
-
-		return isClientEvent;
-	}
-
-	isInChannel(socket, channel) {
+	isInChannel(socket: Socket, channel: string) {
 		return socket.rooms.has(channel);
 	}
 }

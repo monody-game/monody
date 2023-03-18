@@ -1,28 +1,30 @@
 import chalk from "chalk";
-import fs from "node:fs";
-import path from "node:path";
+import { appendFileSync } from "node:fs";
+import { join } from "node:path";
 
 chalk.level = 3;
 
-const log = (...data) => {
+type LogData = (object | string | unknown)[]
+
+const log = (...data: LogData) => {
 	if (process.env.APP_DEBUG) {
 		dataLog(data, "LOG");
 	}
 };
 
-const success = (...data) => {
+const success = (...data: LogData) => {
 	dataLog(data, "SUCCESS");
 };
 
-const info = (...data) => {
+const info = (...data: LogData) => {
 	dataLog(data, "INFO");
 };
 
-const warn = (...data) => {
+const warn = (...data: LogData) => {
 	dataLog(data, "WARN");
 };
 
-const error = (...data) => {
+const error = (...data: LogData) => {
 	dataLog(data, "ERROR");
 };
 
@@ -33,7 +35,7 @@ const blank = (n = 1) => {
 	}
 };
 
-const dataLog = (data, level) => {
+const dataLog = (data: LogData, level: string) => {
 	for (const fragment of data) {
 		const message = chalk.gray(`${date()} | ${getLeveLColor(level).replace("%s", level)} -`);
 
@@ -48,9 +50,9 @@ const dataLog = (data, level) => {
 	}
 };
 
-const fileLog = (message) => {
-	const logFile = path.join("./", "storage", "logs", "ws.log");
-	fs.appendFileSync(logFile, message + "\n");
+const fileLog = (message: string) => {
+	const logFile = join("./", "storage", "logs", "ws.log");
+	appendFileSync(logFile, message + "\n");
 };
 
 const date = () => {
@@ -58,18 +60,20 @@ const date = () => {
 	return `${String(dateObject.getDate()).padStart(2, "0")}/${String(dateObject.getMonth() + 1).padStart(2, "0")}/${dateObject.getFullYear()} ${dateObject.getHours()}:${String(dateObject.getMinutes()).padStart(2, "0")}:${String(dateObject.getSeconds()).padStart(2, "0")}`;
 };
 
-const getLeveLColor = (level) => {
+const getLeveLColor = (level: string): string => {
 	switch (level) {
-	case "LOG":
-		return chalk.cyan("%s");
-	case "SUCCESS":
-		return chalk.green("%s");
-	case "INFO":
-		return chalk.blue("%s");
-	case "WARN":
-		return chalk.yellow("%s");
-	case "ERROR":
-		return chalk.red("%s");
+		case "LOG":
+			return chalk.cyan("%s");
+		case "SUCCESS":
+			return chalk.green("%s");
+		case "INFO":
+			return chalk.blue("%s");
+		case "WARN":
+			return chalk.yellow("%s");
+		case "ERROR":
+			return chalk.red("%s");
+		default:
+			return chalk.white("%s")
 	}
 };
 
