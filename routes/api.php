@@ -45,28 +45,6 @@ Route::group(['middleware' => OptionalAuthentication::class], function () {
     Route::get('/badges/{userId?}', 'BadgeController@get');
 });
 
-Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
-    Route::post('/auth/register', 'Auth\RegisterController@register');
-    Route::post('/roles/assign', 'RoleController@assign');
-
-    Route::delete('/game', 'Game\GameController@delete');
-    Route::get('/game/{gameId}', 'Game\GameController@data');
-    Route::post('/game/join', 'Game\GameController@join');
-    Route::post('/game/leave', 'Game\GameController@leave');
-
-    Route::post('/interactions', 'Game\GameInteractionController@create');
-    Route::delete('/interactions', 'Game\GameInteractionController@close');
-
-    Route::post('/game/message/deaths', 'Game\GameChatController@death');
-    Route::post('/game/chat/lock', 'Game\GameChatController@lock');
-
-    Route::post('/game/end/check', 'Game\EndGameController@check');
-    Route::post('/game/end', 'Game\EndGameController@index');
-
-    Route::get('/user/discord/{discordId}', 'UserController@discord');
-    Route::get('/user/discord/{discordId}/share/{theme?}', 'ShareController@discord');
-});
-
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/interactions/use', 'Game\GameInteractionController@interact');
     Route::post('/interactions/status', 'Game\GameInteractionController@status');
@@ -82,10 +60,11 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::get('/user', 'UserController@user')->name('verification.notice');
     Route::patch('/user', 'UserController@update');
-    Route::get('/user/share/{theme?}', 'ShareController@index');
+    Route::get('/user/share/{theme?}', 'ShareProfileController@index');
 
     Route::put('/game', 'Game\GameController@new');
     Route::post('/game/check', 'Game\GameController@check');
+	Route::get('/game/share', 'Game\GameSharingController@index');
 
     Route::get('/game/{id}/users', 'Game\GameUsersController@list');
     Route::get('/game/user/{id}/role', 'Game\GameUsersController@role');
@@ -101,4 +80,26 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/email/notify', 'Auth\VerifyEmailController@notice')
         ->middleware(['throttle:6,1'])
         ->name('verification.send');
+});
+
+Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
+	Route::post('/auth/register', 'Auth\RegisterController@register');
+	Route::post('/roles/assign', 'RoleController@assign');
+
+	Route::delete('/game', 'Game\GameController@delete');
+	Route::get('/game/{gameId}', 'Game\GameController@data');
+	Route::post('/game/join', 'Game\GameController@join');
+	Route::post('/game/leave', 'Game\GameController@leave');
+
+	Route::post('/interactions', 'Game\GameInteractionController@create');
+	Route::delete('/interactions', 'Game\GameInteractionController@close');
+
+	Route::post('/game/message/deaths', 'Game\GameChatController@death');
+	Route::post('/game/chat/lock', 'Game\GameChatController@lock');
+
+	Route::post('/game/end/check', 'Game\EndGameController@check');
+	Route::post('/game/end', 'Game\EndGameController@index');
+
+	Route::get('/user/discord/{discordId}', 'UserController@discord');
+	Route::get('/user/discord/{discordId}/share/{theme?}', 'ShareProfileController@discord');
 });
