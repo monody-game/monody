@@ -83,7 +83,7 @@ class EndGameService
             $outcome->win = $win;
             $outcome->save();
 
-            if ($userId === $game['owner']) {
+            if ($userId === $game['owner']['id']) {
                 $this->expService->add(20, $user->refresh());
             }
         }

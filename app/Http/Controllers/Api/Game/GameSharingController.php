@@ -18,8 +18,8 @@ class GameSharingController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-		/** @var User $user endpoint guarded by api guard */
-		$user = $request->user();
+        /** @var User $user endpoint guarded by api guard */
+        $user = $request->user();
 
         $gameId = $this->getCurrentUserGameActivity($user->id);
         $sharedGames = Redis::get('bot:game:shared') ?? [];
