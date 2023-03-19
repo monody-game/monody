@@ -28,6 +28,9 @@ export class GameService {
         await client.set("game:" + id, JSON.stringify(data));
     }
     async startGame(channel, game, socket) {
+        const shared = JSON.parse(await client.get("bot:game:shared") ?? "{}");
+        delete shared[game.id];
+        await client.set("bot:game:shared", JSON.stringify(shared));
         game.is_started = true;
         const id = gameId(channel);
         await this.setGame(id, game);
