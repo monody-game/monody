@@ -3,6 +3,7 @@
 @import "tools/functions";
 @import "fonts/fonts";
 @import "typo";
+@import "utils";
 
 // Pages
 @import "./pages/game-page";
@@ -71,10 +72,6 @@ body {
 	@media screen and (max-width: 600px) {
 		overflow: auto;
 	}
-}
-
-.overflow-hidden {
-	overflow: hidden;
 }
 
 :root {
