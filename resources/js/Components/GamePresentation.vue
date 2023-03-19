@@ -32,6 +32,12 @@
         </div>
       </div>
     </div>
+    <svg
+      v-if="props.game.type === 1"
+      title="Cette partie se déroule en vocal"
+    >
+      <use href="/sprite.svg#vocal" />
+    </svg>
     <p>{{ props.game.users.length }} / {{ getUserCount() }}</p>
   </router-link>
 </template>
