@@ -71,10 +71,10 @@ const share = async () => {
 	if (res.ok) {
 		alertStore.addAlerts({ success: "Votre partie a été partagée sur discord !" });
 	} else {
-		alertStore.addAlerts({ warn: "Une erreur est survenue..." });
+		alertStore.addAlerts({ warn: "Une erreur est survenue... La partie a-t-elle déjà été partagée ?" });
 	}
 
-	// store.close();
+	store.close();
 };
 
 const twitterLink = computed(() => {

@@ -122,6 +122,12 @@ class GameController extends Controller
             $data['users'] = array_merge($data['users'], [$data['owner']]);
         }
 
+        $data['owner'] = [
+            'id' => $user->id,
+            'username' => $user->username,
+            'avatar' => $user->avatar,
+        ];
+
         Redis::set("game:$id", $data);
         Redis::set("game:$id:state", [
             'status' => State::Waiting,
@@ -130,12 +136,6 @@ class GameController extends Controller
             'startTimestamp' => Carbon::now()->timestamp,
         ]);
         Redis::set("game:$id:votes", []);
-
-        $data['owner'] = [
-            'id' => $user->id,
-            'username' => $user->username,
-            'avatar' => $user->avatar,
-        ];
 
         broadcast(new GameListUpdate($this->list()->getData(true)['games']));
 
@@ -198,7 +198,7 @@ class GameController extends Controller
 
         $game = Redis::get("game:$gameId");
         /** @var User $owner */
-        $owner = User::where('id', $game['owner'])->first();
+        $owner = User::where('id', $game['owner']['id'])->first();
         $votes = Redis::get("game:$gameId:votes");
         $state = Redis::get("game:$gameId:state");
         $interactions = Redis::get("game:$gameId:interactions") ?? [];
