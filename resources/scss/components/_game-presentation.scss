@@ -36,6 +36,12 @@
 		outline-width: 3px;
 		text-decoration: none;
 	}
+
+	& svg {
+		height: 24px;
+		width: 24px;
+		margin-right: space(3);
+	}
 }
 
 .game-show__role {
@@ -64,6 +70,6 @@
 .game-show__center {
 	display: flex;
 	flex-direction: column;
-	flex: 2;
+	flex: 1;
 }
 
