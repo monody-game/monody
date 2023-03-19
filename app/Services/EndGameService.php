@@ -89,7 +89,7 @@ class EndGameService
             }
         }
 
-		broadcast(new ClearSharedGames);
+        broadcast(new ClearSharedGames);
     }
 
     private function getWinningTeam(string $gameId): Team
