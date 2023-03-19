@@ -1,25 +1,24 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Bot;
 
-use App\Events\Abstract\WebsocketsServerEvent;
+use App\Events\Abstract\DiscordBotEvent;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TimeSkip extends WebsocketsServerEvent implements ShouldBroadcastNow
+class GameShare extends DiscordBotEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
-        public string $gameId,
-        public int $to
+        public array $payload
     ) {
     }
 
     public function broadcastAs(): string
     {
-        return 'time.skip';
+        return 'game.share';
     }
 }

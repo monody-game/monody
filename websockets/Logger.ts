@@ -5,6 +5,7 @@ import { join } from "node:path";
 chalk.level = 3;
 
 type LogData = (object | string | unknown)[]
+type LogLevel = "LOG" | "SUCCESS" | "INFO" | "WARN" | "ERROR"
 
 const log = (...data: LogData) => {
 	if (process.env.APP_DEBUG) {
@@ -35,24 +36,26 @@ const blank = (n = 1) => {
 	}
 };
 
-const dataLog = (data: LogData, level: string) => {
+const dataLog = (data: LogData, level: LogLevel) => {
 	for (const fragment of data) {
 		const message = chalk.gray(`${date()} | ${getLeveLColor(level).replace("%s", level)} -`);
 
 		if (typeof fragment === "string") {
 			console.log(message + " " + chalk.white(fragment));
-			fileLog(`${date()} | ${level} - ` + fragment);
+			fileLog(`${date()} | ${level} - ` + fragment, level);
 			return;
 		}
 
 		console.log(message + " ", fragment);
-		fileLog(`${date()} | ${level} - % NON STRING DATA FRAGMENT % ` + fragment);
+		fileLog(`${date()} | ${level} - % NON STRING DATA FRAGMENT % ` + fragment, level);
 	}
 };
 
-const fileLog = (message: string) => {
-	const logFile = join("./", "storage", "logs", "ws.log");
-	appendFileSync(logFile, message + "\n");
+const fileLog = (message: string, level?: LogLevel) => {
+	if(level && ['ERROR', 'WARN', 'LOG'].includes(level)) {
+		const logFile = join("./", "storage", "logs", "ws.log");
+		appendFileSync(logFile, message + "\n");
+	}
 };
 
 const date = () => {

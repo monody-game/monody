@@ -15,7 +15,7 @@ use Intervention\Image\Facades\Image;
 use League\Glide\Server;
 use Symfony\Component\HttpFoundation\Response;
 
-class ShareController extends Controller
+class ShareProfileController extends Controller
 {
     const DARK_BG = '0f1127';
 

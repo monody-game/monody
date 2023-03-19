@@ -71,6 +71,8 @@ export class IoServer {
 	async listen() {
 		info("Waiting for events to broadcast ...");
 		await this.subscriber.subscribe(async (channel: string, message: EventPayload) => {
+			if (channel === "bot.private") return;
+
 			if (channel === "ws.private") {
 				await handle(this.emitter, message);
 				return;
