@@ -6,6 +6,7 @@ use App\Enums\AlertType;
 use App\Enums\GameType;
 use App\Enums\State;
 use App\Enums\Team;
+use App\Events\Bot\ClearSharedGames;
 use App\Events\GameListUpdate;
 use App\Events\WerewolvesList;
 use App\Facades\Redis;
@@ -122,6 +123,12 @@ class GameController extends Controller
             $data['users'] = array_merge($data['users'], [$data['owner']]);
         }
 
+        $data['owner'] = [
+            'id' => $user->id,
+            'username' => $user->username,
+            'avatar' => $user->avatar,
+        ];
+
         Redis::set("game:$id", $data);
         Redis::set("game:$id:state", [
             'status' => State::Waiting,
@@ -130,12 +137,6 @@ class GameController extends Controller
             'startTimestamp' => Carbon::now()->timestamp,
         ]);
         Redis::set("game:$id:votes", []);
-
-        $data['owner'] = [
-            'id' => $user->id,
-            'username' => $user->username,
-            'avatar' => $user->avatar,
-        ];
 
         broadcast(new GameListUpdate($this->list()->getData(true)['games']));
 
@@ -173,6 +174,8 @@ class GameController extends Controller
             )
         );
 
+		broadcast(new ClearSharedGames);
+
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 
@@ -198,7 +201,7 @@ class GameController extends Controller
 
         $game = Redis::get("game:$gameId");
         /** @var User $owner */
-        $owner = User::where('id', $game['owner'])->first();
+        $owner = User::where('id', $game['owner']['id'])->first();
         $votes = Redis::get("game:$gameId:votes");
         $state = Redis::get("game:$gameId:state");
         $interactions = Redis::get("game:$gameId:interactions") ?? [];

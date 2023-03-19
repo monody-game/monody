@@ -30,16 +30,18 @@ const dataLog = (data, level) => {
         const message = chalk.gray(`${date()} | ${getLeveLColor(level).replace("%s", level)} -`);
         if (typeof fragment === "string") {
             console.log(message + " " + chalk.white(fragment));
-            fileLog(`${date()} | ${level} - ` + fragment);
+            fileLog(`${date()} | ${level} - ` + fragment, level);
             return;
         }
         console.log(message + " ", fragment);
-        fileLog(`${date()} | ${level} - % NON STRING DATA FRAGMENT % ` + fragment);
+        fileLog(`${date()} | ${level} - % NON STRING DATA FRAGMENT % ` + fragment, level);
     }
 };
-const fileLog = (message) => {
-    const logFile = join("./", "storage", "logs", "ws.log");
-    appendFileSync(logFile, message + "\n");
+const fileLog = (message, level) => {
+    if (level && ['ERROR', 'WARN', 'LOG'].includes(level)) {
+        const logFile = join("./", "storage", "logs", "ws.log");
+        appendFileSync(logFile, message + "\n");
+    }
 };
 const date = () => {
     const dateObject = new Date();

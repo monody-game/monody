@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\Badge;
 use App\Enums\Role;
 use App\Enums\Team;
+use App\Events\Bot\ClearSharedGames;
 use App\Events\GameEnd;
 use App\Events\GameLoose;
 use App\Events\GameWin;
@@ -83,10 +84,12 @@ class EndGameService
             $outcome->win = $win;
             $outcome->save();
 
-            if ($userId === $game['owner']) {
+            if ($userId === $game['owner']['id']) {
                 $this->expService->add(20, $user->refresh());
             }
         }
+
+		broadcast(new ClearSharedGames);
     }
 
     private function getWinningTeam(string $gameId): Team

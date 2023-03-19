@@ -27,11 +27,14 @@
 <script setup></script>
 
 <style scoped>
+* {
+	color: white !important;
+}
+
 div {
 	height: 100svh;
 	display: grid;
 	place-items: center;
-	color: var(--secondary);
 }
 
 svg {
@@ -45,7 +48,7 @@ main {
 }
 
 a {
-	color: var(--secondary);
+	color: white;
 	text-decoration: underline;
 	cursor: pointer;
 }
@@ -64,6 +67,6 @@ aside {
 	flex-direction: column;
 	gap: 8px;
 	padding-inline: 32px;
-	border-left: var(--secondary) 2px solid;
+	border-left: white 2px solid;
 }
 </style>

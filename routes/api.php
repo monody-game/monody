@@ -45,6 +45,43 @@ Route::group(['middleware' => OptionalAuthentication::class], function () {
     Route::get('/badges/{userId?}', 'BadgeController@get');
 });
 
+Route::group(['middleware' => ['auth:api']], function () {
+    Route::post('/interactions/use', 'Game\GameInteractionController@interact');
+    Route::post('/interactions/status', 'Game\GameInteractionController@status');
+
+    Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
+    Route::post('/oauth/unlink/google', 'Oauth\GoogleOauthController@unlink');
+
+    Route::get('/avatars/generate', 'AvatarController@generate');
+    Route::post('/avatars', 'AvatarController@upload');
+    Route::delete('/avatars', 'AvatarController@delete');
+
+    Route::post('/auth/logout', 'Auth\LoginController@logout');
+
+    Route::get('/user', 'UserController@user')->name('verification.notice');
+    Route::patch('/user', 'UserController@update');
+    Route::get('/user/share/{theme?}', 'ShareProfileController@index');
+
+    Route::put('/game', 'Game\GameController@new');
+    Route::post('/game/check', 'Game\GameController@check');
+    Route::get('/game/share', 'Game\GameSharingController@index');
+
+    Route::get('/game/{id}/users', 'Game\GameUsersController@list');
+    Route::get('/game/user/{id}/role', 'Game\GameUsersController@role');
+
+    Route::post('/game/message/send', 'Game\GameChatController@send');
+
+    Route::get('/exp/get', 'ExpController@get');
+
+    Route::get('/email/verify/{id}/{hash}', "Auth\VerifyEmailController@verify")
+        ->middleware(['signed'])
+        ->name('verification.verify');
+
+    Route::get('/email/notify', 'Auth\VerifyEmailController@notice')
+        ->middleware(['throttle:6,1'])
+        ->name('verification.send');
+});
+
 Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/auth/register', 'Auth\RegisterController@register');
     Route::post('/roles/assign', 'RoleController@assign');
@@ -64,41 +101,5 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/game/end', 'Game\EndGameController@index');
 
     Route::get('/user/discord/{discordId}', 'UserController@discord');
-    Route::get('/user/discord/{discordId}/share/{theme?}', 'ShareController@discord');
-});
-
-Route::group(['middleware' => ['auth:api']], function () {
-    Route::post('/interactions/use', 'Game\GameInteractionController@interact');
-    Route::post('/interactions/status', 'Game\GameInteractionController@status');
-
-    Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
-    Route::post('/oauth/unlink/google', 'Oauth\GoogleOauthController@unlink');
-
-    Route::get('/avatars/generate', 'AvatarController@generate');
-    Route::post('/avatars', 'AvatarController@upload');
-    Route::delete('/avatars', 'AvatarController@delete');
-
-    Route::post('/auth/logout', 'Auth\LoginController@logout');
-
-    Route::get('/user', 'UserController@user')->name('verification.notice');
-    Route::patch('/user', 'UserController@update');
-    Route::get('/user/share/{theme?}', 'ShareController@index');
-
-    Route::put('/game', 'Game\GameController@new');
-    Route::post('/game/check', 'Game\GameController@check');
-
-    Route::get('/game/{id}/users', 'Game\GameUsersController@list');
-    Route::get('/game/user/{id}/role', 'Game\GameUsersController@role');
-
-    Route::post('/game/message/send', 'Game\GameChatController@send');
-
-    Route::get('/exp/get', 'ExpController@get');
-
-    Route::get('/email/verify/{id}/{hash}', "Auth\VerifyEmailController@verify")
-        ->middleware(['signed'])
-        ->name('verification.verify');
-
-    Route::get('/email/notify', 'Auth\VerifyEmailController@notice')
-        ->middleware(['throttle:6,1'])
-        ->name('verification.send');
+    Route::get('/user/discord/{discordId}/share/{theme?}', 'ShareProfileController@discord');
 });
