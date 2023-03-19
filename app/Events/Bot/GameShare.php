@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Bot;
 
 use App\Events\Abstract\DiscordBotEvent;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -8,7 +8,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class GameShare extends DiscordBotEvent implements ShouldBroadcastNow
+class GameShare extends DiscordBotEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

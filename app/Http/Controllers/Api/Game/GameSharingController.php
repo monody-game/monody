@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Game;
 
-use App\Events\GameShare;
+use App\Events\Bot\GameShare;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Models\User;

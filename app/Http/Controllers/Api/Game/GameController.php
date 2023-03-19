@@ -6,6 +6,7 @@ use App\Enums\AlertType;
 use App\Enums\GameType;
 use App\Enums\State;
 use App\Enums\Team;
+use App\Events\Bot\ClearSharedGames;
 use App\Events\GameListUpdate;
 use App\Events\WerewolvesList;
 use App\Facades\Redis;
@@ -172,6 +173,8 @@ class GameController extends Controller
                 [...$werewolves, ...$game['dead_users']]
             )
         );
+
+		broadcast(new ClearSharedGames);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
