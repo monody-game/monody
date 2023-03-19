@@ -44,13 +44,14 @@ const round = ref(0);
 const icon = ref("");
 const time = ref(0);
 const totalTime = ref(0);
-const counterId = ref(null);
+const counterId = ref(0);
 const counterIcon = ref(null);
 const status = ref(0);
 const sound = new Audio("../sounds/bip.mp3");
 const roundText = ref("");
 const chatStore = useChatStore();
 const modalStore = useModalStore();
+const halt = ref(false);
 
 const getState = async function(toRetrieveState = null) {
 	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
@@ -83,6 +84,7 @@ window.Echo.join(`game.${route.params.id}`)
 
 onBeforeRouteLeave(() => {
 	clearInterval(counterId.value);
+	halt.value = true;
 });
 
 const setData = async function (data) {
@@ -128,6 +130,11 @@ const decount = function () {
 	}
 
 	counterId.value = window.setInterval(() => {
+		if (halt.value === true) {
+			clearInterval(counterId.value);
+			return;
+		}
+
 		time.value = time.value - 1;
 		soundManagement();
 		updateCircle();
