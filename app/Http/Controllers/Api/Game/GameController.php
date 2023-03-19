@@ -174,7 +174,7 @@ class GameController extends Controller
             )
         );
 
-		broadcast(new ClearSharedGames);
+        broadcast(new ClearSharedGames);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
