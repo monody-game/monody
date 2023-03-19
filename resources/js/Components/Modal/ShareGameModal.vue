@@ -24,7 +24,7 @@
         <a
           class="share-page__social-discord"
           href="#"
-          @click.prevent="soon()"
+          @click.prevent="share()"
         >
           <svg>
             <use href="/sprite.svg#discord" />
@@ -65,8 +65,16 @@ const copyLink = () => {
 	alertStore.addAlerts({ "info": "Le lien a été copié dans le presse-papiers" });
 };
 
-const soon = () => {
-	alertStore.addAlerts({ "info": "Un jour, peut-être ..." });
+const share = async () => {
+	const res = await window.JSONFetch("/game/share");
+
+	if (res.ok) {
+		alertStore.addAlerts({ success: "Votre partie a été partagée sur discord !" });
+	} else {
+		alertStore.addAlerts({ warn: "Une erreur est survenue..." });
+	}
+
+	// store.close();
 };
 
 const twitterLink = computed(() => {

@@ -6,7 +6,7 @@ use Illuminate\Broadcasting\Channel;
 
 abstract class WebsocketsServerEvent
 {
-	public static string $channel = "ws.private";
+    public static string $channel = 'ws.private';
 
     public function broadcastOn(): Channel
     {

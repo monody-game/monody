@@ -28,11 +28,11 @@ class GameListUpdate implements ShouldBroadcastNow
      * Get the channels the event should broadcast on.
      */
     public function broadcastOn(): array
-	{
+    {
         return [
-			new Channel('home'),
-			new Channel(DiscordBotEvent::$channel)
-		];
+            new Channel('home'),
+            new Channel(DiscordBotEvent::$channel),
+        ];
     }
 
     public function broadcastAs(): string
