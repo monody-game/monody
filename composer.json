@@ -22,7 +22,6 @@
 	"require-dev": {
         "fakerphp/faker": "^1.20",
         "laravel/pint": "^1.2",
-        "m6web/redis-mock": "^5.4",
         "mockery/mockery": "^1.5",
         "nunomaduro/collision": "^7.0",
         "nunomaduro/larastan": "^2.2",

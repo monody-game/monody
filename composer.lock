@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d5ba678af023ec0b9fba99ed2ea230d1",
+    "content-hash": "4e7e235dbe3f387dcabbdc3fd0412c0c",
     "packages": [
         {
             "name": "brick/math",
@@ -6459,55 +6459,6 @@
                 "source": "https://github.com/laravel/pint"
             },
             "time": "2023-02-21T15:44:57+00:00"
-        },
-        {
-            "name": "m6web/redis-mock",
-            "version": "v5.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/BedrockStreaming/RedisMock.git",
-                "reference": "db379bd929ee24d3e20c27ca184d73467a693cc8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/BedrockStreaming/RedisMock/zipball/db379bd929ee24d3e20c27ca184d73467a693cc8",
-                "reference": "db379bd929ee24d3e20c27ca184d73467a693cc8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.0"
-            },
-            "require-dev": {
-                "atoum/atoum": "~3.4||~4.0",
-                "predis/predis": "~1.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "M6Web\\Component\\RedisMock": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "M6Web",
-                    "email": "opensource@m6web.fr",
-                    "homepage": "http://tech.m6web.fr/"
-                }
-            ],
-            "description": "Library providing a PHP mock for Redis",
-            "keywords": [
-                "mock",
-                "redis"
-            ],
-            "support": {
-                "issues": "https://github.com/BedrockStreaming/RedisMock/issues",
-                "source": "https://github.com/BedrockStreaming/RedisMock/tree/v5.5.0"
-            },
-            "time": "2023-03-12T18:16:47+00:00"
         },
         {
             "name": "mockery/mockery",
