@@ -3,11 +3,16 @@
 namespace App\Events\Abstract;
 
 use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 
 abstract class DiscordBotEvent implements ShouldBroadcastNow
 {
     public static string $channel = 'bot.private';
+
+    use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function broadcastOn(): Channel
     {
