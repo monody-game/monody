@@ -7,6 +7,7 @@ use App\Enums\GameType;
 use App\Enums\State;
 use App\Enums\Team;
 use App\Events\Bot\ClearGameInvitations;
+use App\Events\Bot\ClearVocalChannels;
 use App\Events\Bot\CreateVocalChannel;
 use App\Events\GameListUpdate;
 use App\Events\WerewolvesList;
@@ -173,6 +174,10 @@ class GameController extends Controller
         unset($shared[$gameId]);
         Redis::set('bot:game:shared', $shared);
         broadcast(new ClearGameInvitations);
+
+		$game = Redis::get("game:$gameId");
+
+		broadcast(new ClearVocalChannels(['channel_id' => $game['discord']['voice_channel']]));
 
         $this->clearRedisKeys($gameId);
 
