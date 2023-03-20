@@ -52,6 +52,9 @@
     <Transition name="modal">
       <GameDetailsModal v-if="modalStore.opennedModal === 'game-details'" />
     </Transition>
+    <Transition name="modal">
+      <GameVocalInvitation v-if="store.type === 1" />
+    </Transition>
   </div>
 </template>
 
@@ -74,6 +77,7 @@ import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import ShareGameModal from "../../Components/Modal/ShareGameModal.vue";
 import ActivityConfirmationModal from "../../Components/Modal/ActivityConfirmationModal.vue";
 import GameDetailsModal from "../../Components/Modal/GameDetailsModal.vue";
+import GameVocalInvitation from "../../Components/Modal/GameVocalInvitation.vue";
 
 const route = useRoute();
 const store = useStore();
@@ -116,6 +120,8 @@ window.Echo.join(`game.${gameId}`)
 		store.voted_users = e.voted_users;
 		store.dead_users = e.dead_users;
 		store.roles = roles;
+		store.discord = e.discord;
+		store.type = e.type;
 
 		if (e.current_interactions.length > 0) {
 			store.currentInteractionId = e.current_interactions[0].id;

@@ -61,7 +61,6 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const store = useStore();
 const popupStore = usePopupStore();
 const userStore = useUserStore();
 
@@ -74,12 +73,6 @@ const getUserCount = function () {
 };
 
 const openGame = async function () {
-	store.roles = props.roles.filter(role => {
-		return Object.keys(props.game.roles).includes(role.id.toString());
-	});
-
-	store.owner = props.game.owner;
-
 	if (props.game.type === 1) {
 		popupStore.setPopup({
 			warn: {

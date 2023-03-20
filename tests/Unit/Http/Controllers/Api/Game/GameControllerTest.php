@@ -348,8 +348,7 @@ class GameControllerTest extends TestCase
         ])->json('game');
 
         $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->get("/api/game/{$res['id']}")
+            ->get("/api/game/data/{$res['id']}")
             ->assertJson([
                 'game' => [
                     'id' => $res['id'],
