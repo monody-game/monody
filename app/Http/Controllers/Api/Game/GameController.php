@@ -125,7 +125,7 @@ class GameController extends Controller
         $data['type'] = $request->get('type') ?: GameType::NORMAL;
 
         if ($data['type'] === GameType::VOCAL->value) {
-			$size = array_reduce($data['roles'], fn ($previous, $role) => $previous + $role, 0);
+            $size = array_reduce($data['roles'], fn ($previous, $role) => $previous + $role, 0);
 
             broadcast(new CreateVocalChannel(
                 [
@@ -134,7 +134,7 @@ class GameController extends Controller
                         'username' => $user->username,
                         'discord_id' => $user->discord_id,
                     ],
-					'size' => $size
+                    'size' => $size,
                 ]
             ));
         }
@@ -168,6 +168,11 @@ class GameController extends Controller
     public function delete(GameIdRequest $request): JsonResponse
     {
         $gameId = $request->validated('gameId');
+
+        $shared = Redis::get('bot:game:shared') ?? [];
+        unset($shared[$gameId]);
+        Redis::set('bot:game:shared', $shared);
+        broadcast(new ClearSharedGames);
 
         $this->clearRedisKeys($gameId);
 
@@ -211,8 +216,6 @@ class GameController extends Controller
         $user = User::find($request->post('userId'));
         $user->current_game = null;
         $user->save();
-
-		broadcast(new ClearSharedGames);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
