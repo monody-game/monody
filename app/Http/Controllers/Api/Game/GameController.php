@@ -7,6 +7,7 @@ use App\Enums\GameType;
 use App\Enums\State;
 use App\Enums\Team;
 use App\Events\Bot\ClearSharedGames;
+use App\Events\Bot\CreateVocalChannel;
 use App\Events\GameListUpdate;
 use App\Events\WerewolvesList;
 use App\Facades\Redis;
@@ -107,6 +108,12 @@ class GameController extends Controller
         /** @var User $user */
         $user = $request->user();
 
+        if ($request->get('type') === GameType::VOCAL && $user->discord_id === null) {
+            return new JsonResponse([
+                'message' => 'You must link your Discord account to Monody in order to create a vocal game.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         $data['users'] = array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
@@ -115,7 +122,19 @@ class GameController extends Controller
         $data['dead_users'] = [];
         $id = Str::random(12);
         $data['id'] = $id;
-        $data['type'] = $request->get('type') !== null ? $request->get('type') : GameType::NORMAL;
+        $data['type'] = $request->get('type') ?: GameType::NORMAL;
+
+        if ($data['type'] === GameType::VOCAL) {
+            broadcast(new CreateVocalChannel(
+                [
+                    'game_id' => $id,
+                    'owner' => [
+                        'username' => $user->username,
+                        'discord_id' => $user->discord_id,
+                    ],
+                ]
+            ));
+        }
 
         if (!array_search($data['owner'], $data['users'], true)) {
             $user->current_game = $id;
