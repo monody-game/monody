@@ -123,6 +123,7 @@ export class GameChannel {
         this.io.to("home").volatile.emit("game-list.update", "home", {
             data: list.json
         });
+        this.io.to('bot.private').volatile.emit('game.share.clear', 'bot.private');
         log(`Deleting game with id: ${id}`);
     }
     async onSubscribed(socket, channel, members) {

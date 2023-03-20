@@ -154,6 +154,8 @@ export class GameChannel {
 			data: list.json
 		});
 
+		this.io.to('bot.private').volatile.emit('game.share.clear', 'bot.private')
+
 		log(`Deleting game with id: ${id}`);
 	}
 
