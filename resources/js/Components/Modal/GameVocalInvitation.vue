@@ -25,11 +25,11 @@
               d="M21.025 5V4C21.025 2.88 20.05 2 19 2C17.95 2 17 2.88 17 4V5C16.4477 5 16 5.44772 16 6V9C16 9.55228 16.4477 10 17 10H19H21C21.5523 10 22 9.55228 22 9V5.975C22 5.43652 21.5635 5 21.025 5ZM20 5H18V4C18 3.42857 18.4667 3 19 3C19.5333 3 20 3.42857 20 4V5Z"
             />
           </svg>
-          Partie de {{ store.owner.username }}
+          Partie de {{ gameStore.owner.username }}
         </a>
       </p>
       <p class="popup__note">
-        Note: ce popup ce fermera tout seul une fois le salon rejoint
+        Note: ce popup se fermera tout seul une fois le salon rejoint
       </p>
     </div>
   </BaseModal>
@@ -37,9 +37,18 @@
 
 <script setup>
 import { computed } from "vue";
-import { useStore } from "../../stores/game.js";
+import { useStore as useGameStore } from "../../stores/game.js";
 import BaseModal from "./BaseModal.vue";
+import { useStore } from "../../stores/modals/vocal-invitation-store.js";
+import { useRoute } from "vue-router";
 
 const store = useStore();
-const voiceChannelLink = computed(() => `https://discord.com/channels/${store.discord.guild}/${store.discord.voice_channel}`);
+const gameStore = useGameStore();
+const gameId = useRoute().params.id;
+const voiceChannelLink = computed(() => `https://discord.com/channels/${gameStore.discord.guild}/${gameStore.discord.voice_channel}`);
+
+window.Echo.join(`game.${gameId}`)
+	.listen(".voice-notice.close", () => {
+		store.close();
+	});
 </script>

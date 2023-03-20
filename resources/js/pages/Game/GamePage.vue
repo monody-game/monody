@@ -53,7 +53,7 @@
       <GameDetailsModal v-if="modalStore.opennedModal === 'game-details'" />
     </Transition>
     <Transition name="modal">
-      <GameVocalInvitation v-if="store.type === 1" />
+      <GameVocalInvitation v-if="store.type === 1 && vocalInvitationStore.isOpenned === true" />
     </Transition>
   </div>
 </template>
@@ -68,6 +68,7 @@ import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useShareModalStore } from "../../stores/modals/share-game-modal.js";
 import { useStore as useActivityConfirmationModalStore } from "../../stores/modals/activity-confirmation-modal.js";
+import { useStore as useVocalInvitationStore } from "../../stores/modals/vocal-invitation-store.js";
 import { useStore as useChatStore } from "../../stores/chat.js";
 import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 import GameCounter from "../../Components/GameCounter.vue";
@@ -89,6 +90,7 @@ const userStore = useUserStore();
 const assignationPopupStore = useAssignationPopupStore();
 const modalStore = useModalStore();
 const activityConfirmationModalStore = useActivityConfirmationModalStore();
+const vocalInvitationStore = useVocalInvitationStore();
 
 const gameId = route.params.id;
 const loading = ref(false);
