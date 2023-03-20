@@ -6,17 +6,13 @@ use App\Events\Abstract\DiscordBotEvent;
 
 class ClearVocalChannels extends DiscordBotEvent
 {
-	/**
-	 * @param array{game_id: string} $payload
-	 */
-	public function __construct(
-		public array $payload
-	)
-	{
-	}
+    protected string $event = 'game.vocal.clear';
 
-	public function broadcastAs(): string
-    {
-        return 'game.vocal.clear';
+    /**
+     * @param  array{game_id: string}  $payload
+     */
+    public function __construct(
+        public array $payload
+    ) {
     }
 }

@@ -12,10 +12,17 @@ abstract class DiscordBotEvent implements ShouldBroadcastNow
 {
     public static string $channel = 'bot.private';
 
+    protected string $event;
+
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function broadcastOn(): Channel
     {
         return new Channel(self::$channel);
+    }
+
+    public function broadcastAs(): string
+    {
+        return $this->event;
     }
 }
