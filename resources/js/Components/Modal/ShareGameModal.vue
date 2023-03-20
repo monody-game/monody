@@ -69,7 +69,7 @@ const share = async () => {
 	const res = await window.JSONFetch("/game/share");
 
 	if (res.ok) {
-		alertStore.addAlerts({ success: "Votre partie a été partagée sur discord !" });
+		alertStore.addAlerts({ success: "Votre partie a été partagée sur Discord !" });
 	} else {
 		alertStore.addAlerts({ warn: "Une erreur est survenue... La partie a-t-elle déjà été partagée ?" });
 	}
