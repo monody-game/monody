@@ -175,9 +175,9 @@ class GameController extends Controller
         Redis::set('bot:game:shared', $shared);
         broadcast(new ClearGameInvitations);
 
-		$game = Redis::get("game:$gameId");
+        $game = Redis::get("game:$gameId");
 
-		broadcast(new ClearVocalChannels(['channel_id' => $game['discord']['voice_channel']]));
+        broadcast(new ClearVocalChannels(['channel_id' => $game['discord']['voice_channel']]));
 
         $this->clearRedisKeys($gameId);
 
