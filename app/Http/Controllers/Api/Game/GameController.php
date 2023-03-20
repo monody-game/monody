@@ -124,7 +124,7 @@ class GameController extends Controller
         $data['id'] = $id;
         $data['type'] = $request->get('type') ?: GameType::NORMAL;
 
-        if ($data['type'] === GameType::VOCAL) {
+        if ($data['type'] === GameType::VOCAL->value) {
             broadcast(new CreateVocalChannel(
                 [
                     'game_id' => $id,
