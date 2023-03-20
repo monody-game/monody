@@ -212,6 +212,8 @@ class GameController extends Controller
         $user->current_game = null;
         $user->save();
 
+		broadcast(new ClearSharedGames);
+
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 
