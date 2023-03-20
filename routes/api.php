@@ -12,6 +12,7 @@ Route::post('/auth/password/reset', 'Auth\PasswordController@reset');
 Route::post('/auth/password/validate', 'Auth\PasswordController@token');
 
 Route::get('/game/list/{type?}', 'Game\GameController@list');
+Route::get('/game/data/{gameId}', 'Game\GameController@data');
 
 Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
 //Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
@@ -87,7 +88,6 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/roles/assign', 'RoleController@assign');
 
     Route::delete('/game', 'Game\GameController@delete');
-    Route::get('/game/{gameId}', 'Game\GameController@data');
     Route::post('/game/join', 'Game\GameController@join');
     Route::post('/game/leave', 'Game\GameController@leave');
 

@@ -107,7 +107,7 @@ export class GameChannel {
         this.io.to("home").volatile.emit("game-list.update", "home", {
             data: list.json
         });
-        const gameData = await fetch(`${process.env.API_URL}/game/${gameId(channel)}`);
+        const gameData = await fetch(`${process.env.API_URL}/game/data/${gameId(channel)}`);
         this.io.to(member.socketId).emit("game.data", channel, { data: { payload: gameData.json.game } });
     }
     async onLeave(channel, member) {

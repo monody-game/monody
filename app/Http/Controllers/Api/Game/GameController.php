@@ -233,7 +233,7 @@ class GameController extends Controller
         $state = Redis::get("game:$gameId:state");
         $interactions = Redis::get("game:$gameId:interactions") ?? [];
 
-        return new JsonResponse([
+        $payload = [
             'game' => [
                 'id' => $gameId,
                 'owner' => [
@@ -248,8 +248,15 @@ class GameController extends Controller
                 'voted_users' => $votes,
                 'state' => $state,
                 'current_interactions' => $interactions,
+                'type' => $game['type'],
             ],
-        ]);
+        ];
+
+        if ($game['type'] === GameType::VOCAL->value) {
+            $payload['game']['discord'] = $game['discord'];
+        }
+
+        return new JsonResponse($payload);
     }
 
     /**

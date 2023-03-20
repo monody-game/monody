@@ -15,7 +15,12 @@ export const useStore = defineStore("game", {
 			voted_users: {},
 			mayor: "",
 			werewolves: [],
-			angel_target: ""
+			angel_target: "",
+			type: 0,
+			discord: {
+				guild: "",
+				voice_channel: "",
+			},
 		};
 	},
 	actions: {
@@ -30,7 +35,7 @@ export const useStore = defineStore("game", {
 				};
 				this.playerList[index] = player;
 			}
-		},
+		}
 	},
 	getters: {
 		getPlayerByID: (state) => (playerID) => {

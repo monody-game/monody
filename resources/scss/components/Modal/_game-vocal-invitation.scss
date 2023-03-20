@@ -1,0 +1,29 @@
+.game-vocal__invitation {
+	margin-top: space(2);
+
+	p a {
+		display: flex;
+		align-items: center;
+		gap: space(1);
+
+		cursor: pointer;
+		width: max-content;
+		transition: all .2s;
+
+		color: #0f112780;
+		border: var(--border-secondary) 2px solid;
+		border-radius: 4px;
+
+		margin-top: space(2);
+		padding: space(1) space(2);
+
+		@media screen and (prefers-color-scheme: dark) {
+			color: #fffcf180;
+		}
+	}
+
+	p a:hover {
+		background-color: var(--primary-hover);
+		text-decoration: none;
+	}
+}

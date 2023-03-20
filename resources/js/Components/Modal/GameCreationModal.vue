@@ -40,8 +40,6 @@ import { ref } from "vue";
 const store = useStore();
 const router = useRouter();
 const gameId = ref("");
-const gameStore = useGameStore();
-const userStore = useUserStore();
 const modalStore = useModalStore();
 
 const notEnoughSelectedRoles = function () {
@@ -69,13 +67,9 @@ const finish = async function() {
 		roles: store.selectedRoles
 	});
 
-	store.gameId = res.data.game.id;
 	gameId.value = res.data.game.id;
 
 	if (store.gameId !== 0) {
-		gameStore.roles = store.roles.filter(role => store.selectedRoles.includes(role.id));
-		gameStore.owner = userStore.getUser;
-
 		modalStore.close();
 		store.$reset();
 		localStorage.setItem("show_share", true);
