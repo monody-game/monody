@@ -125,6 +125,8 @@ class GameController extends Controller
         $data['type'] = $request->get('type') ?: GameType::NORMAL;
 
         if ($data['type'] === GameType::VOCAL->value) {
+			$size = array_reduce($data['roles'], fn ($previous, $role) => $previous + $role, 0);
+
             broadcast(new CreateVocalChannel(
                 [
                     'game_id' => $id,
@@ -132,6 +134,7 @@ class GameController extends Controller
                         'username' => $user->username,
                         'discord_id' => $user->discord_id,
                     ],
+					'size' => $size
                 ]
             ));
         }
