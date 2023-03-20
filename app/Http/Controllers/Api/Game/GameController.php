@@ -6,7 +6,7 @@ use App\Enums\AlertType;
 use App\Enums\GameType;
 use App\Enums\State;
 use App\Enums\Team;
-use App\Events\Bot\ClearSharedGames;
+use App\Events\Bot\ClearGameInvitations;
 use App\Events\Bot\CreateVocalChannel;
 use App\Events\GameListUpdate;
 use App\Events\WerewolvesList;
@@ -172,7 +172,7 @@ class GameController extends Controller
         $shared = Redis::get('bot:game:shared') ?? [];
         unset($shared[$gameId]);
         Redis::set('bot:game:shared', $shared);
-        broadcast(new ClearSharedGames);
+        broadcast(new ClearGameInvitations);
 
         $this->clearRedisKeys($gameId);
 
@@ -201,7 +201,7 @@ class GameController extends Controller
             )
         );
 
-        broadcast(new ClearSharedGames);
+        broadcast(new ClearGameInvitations);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
