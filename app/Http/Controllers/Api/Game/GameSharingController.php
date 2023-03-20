@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Game;
 
-use App\Events\Bot\GameShare;
+use App\Events\Bot\CreateGameInvitation;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -31,7 +31,7 @@ class GameSharingController extends Controller
 
         $game = $this->getGame($gameId);
 
-        broadcast(new GameShare($game));
+        broadcast(new CreateGameInvitation($game));
 
         return (new JsonResponse())
                 ->withMessage('Game successfully shared');

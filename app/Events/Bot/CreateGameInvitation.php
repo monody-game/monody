@@ -4,7 +4,7 @@ namespace App\Events\Bot;
 
 use App\Events\Abstract\DiscordBotEvent;
 
-class GameShare extends DiscordBotEvent
+class CreateGameInvitation extends DiscordBotEvent
 {
     public function __construct(
         public array $payload
@@ -13,6 +13,6 @@ class GameShare extends DiscordBotEvent
 
     public function broadcastAs(): string
     {
-        return 'game.share';
+        return 'game.invite';
     }
 }
