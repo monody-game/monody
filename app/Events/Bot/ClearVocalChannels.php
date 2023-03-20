@@ -9,7 +9,7 @@ class ClearVocalChannels extends DiscordBotEvent
     protected string $event = 'game.vocal.clear';
 
     /**
-     * @param  array{game_id: string}  $payload
+     * @param  array{channel_id: string}  $payload
      */
     public function __construct(
         public array $payload
