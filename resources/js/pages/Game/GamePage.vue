@@ -170,6 +170,7 @@ window.Echo.join(`game.${gameId}`)
 
 const leave = () => {
 	window.Echo.leave(`game.${gameId}`);
+	vocalInvitationStore.$reset();
 	store.$reset();
 };
 
