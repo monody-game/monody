@@ -96,7 +96,7 @@ export class StateManager {
         const currentUsedRound = rounds[toUseRound];
         const currentUsedState = currentUsedRound[stateIndex];
         let duration = currentUsedState.duration;
-        await this.handleBefore(currentRoundObject, stateIndex, channel);
+        halt = await this.handleBefore(currentRoundObject, stateIndex, channel);
         if (halt) {
             const lastRound = rounds.at(-1);
             const endState = lastRound[0];

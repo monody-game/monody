@@ -84,8 +84,8 @@ enum State: int
             self::Waiting, self::End => -1,
             self::Starting, self::Night => 10,
             self::Day => 60,
-            self::Roles, self::InfectedWerewolf, self::WhiteWerewolf => 10,
-            self::Mayor, self::Vote, self::Werewolf, self::Psychic, self::Witch => 10,
+            self::Roles, self::InfectedWerewolf, self::WhiteWerewolf => 30,
+            self::Mayor, self::Vote, self::Werewolf, self::Psychic, self::Witch => 90,
         };
     }
 
