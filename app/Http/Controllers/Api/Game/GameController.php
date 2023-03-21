@@ -218,7 +218,7 @@ class GameController extends Controller
         if ($game['type'] === GameType::VOCAL->value) {
             broadcast(new UpdateVoiceChannelPermissions([
                 'game_id' => $gameId,
-                'discord_id' => $user->discord_id,
+                'discord_id' => $user->discord_id ?? '',
             ]));
         }
 
