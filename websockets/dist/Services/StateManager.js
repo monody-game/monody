@@ -146,7 +146,6 @@ export class StateManager {
     }
     async handleAfter(isLast, currentRoundObject, stateIndex, channel) {
         let halt = false;
-        console.log(currentRoundObject, stateIndex, isLast);
         if (!currentRoundObject[stateIndex - 1] && !currentRoundObject.at(-1)) {
             return halt;
         }

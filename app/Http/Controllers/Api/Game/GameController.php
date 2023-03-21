@@ -7,8 +7,9 @@ use App\Enums\GameType;
 use App\Enums\State;
 use App\Enums\Team;
 use App\Events\Bot\ClearGameInvitations;
-use App\Events\Bot\ClearVocalChannels;
-use App\Events\Bot\CreateVocalChannel;
+use App\Events\Bot\ClearVoiceChannels;
+use App\Events\Bot\CreateVoiceChannel;
+use App\Events\Bot\UpdateVoiceChannelPermissions;
 use App\Events\GameListUpdate;
 use App\Events\WerewolvesList;
 use App\Facades\Redis;
@@ -128,7 +129,7 @@ class GameController extends Controller
         if ($data['type'] === GameType::VOCAL->value) {
             $size = array_reduce($data['roles'], fn ($previous, $role) => $previous + $role, 0);
 
-            broadcast(new CreateVocalChannel(
+            broadcast(new CreateVoiceChannel(
                 [
                     'game_id' => $id,
                     'owner' => [
@@ -177,7 +178,13 @@ class GameController extends Controller
 
         $game = Redis::get("game:$gameId");
 
-        broadcast(new ClearVocalChannels(['channel_id' => $game['discord']['voice_channel']]));
+        if ($game['type'] === GameType::VOCAL->value) {
+            $discordData = Redis::get("game:$gameId:discord");
+            broadcast(new ClearVoiceChannels([
+                'channel_id' => $discordData['voice_channel'],
+                'game_id' => $gameId,
+            ]));
+        }
 
         $this->clearRedisKeys($gameId);
 
@@ -207,6 +214,13 @@ class GameController extends Controller
         );
 
         broadcast(new ClearGameInvitations);
+
+        if ($game['type'] === GameType::VOCAL->value) {
+            broadcast(new UpdateVoiceChannelPermissions([
+                'game_id' => $gameId,
+                'discord_id' => $user->discord_id,
+            ]));
+        }
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
@@ -258,7 +272,7 @@ class GameController extends Controller
         ];
 
         if ($game['type'] === GameType::VOCAL->value) {
-            $payload['game']['discord'] = $game['discord'];
+            $payload['game']['discord'] = Redis::get("game:$gameId:discord");
         }
 
         return new JsonResponse($payload);

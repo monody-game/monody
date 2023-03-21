@@ -17,7 +17,7 @@ export class CounterService {
 		this.manager = new StateManager(this.io, emitter);
 	}
 
-	async cycle(channel: string, socket: Socket, duration: number|null = null) {
+	async cycle(channel: string, socket: Socket|Server, duration: number|null = null) {
 		this.clearListeners();
 
 		const id = gameId(channel);

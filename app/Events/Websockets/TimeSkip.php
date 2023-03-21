@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Websockets;
 
 use App\Events\Abstract\WebsocketsServerEvent;
 

@@ -14,6 +14,9 @@ export class GameService {
         this.emitter = emitter;
         this.stateManager = new StateManager(io, emitter);
         this.counterService = new CounterService(io, emitter);
+        this.emitter.on('game.start', async (data) => {
+            await this.startGame(`presence-game.${data.game.id}`, data.game, io);
+        });
     }
     static async getGame(id) {
         return JSON.parse(await client.get("game:" + id));
