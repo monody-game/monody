@@ -27,6 +27,10 @@ export class GameService {
 		this.emitter = emitter;
 		this.stateManager = new StateManager(io, emitter);
 		this.counterService = new CounterService(io, emitter);
+
+		this.emitter.on('game.start', async (data) => {
+			await this.startGame(`presence-game.${data.game.id}`, data.game, io)
+		})
 	}
 
 	static async getGame(id: string) {
@@ -45,7 +49,7 @@ export class GameService {
 		await client.set("game:" + id, JSON.stringify(data));
 	}
 
-	async startGame(channel: string, game: {[key: string]: boolean|object|string}, socket: Socket) {
+	async startGame(channel: string, game: {[key: string]: boolean|object|string}, socket: Socket|Server) {
 		const shared = JSON.parse(await client.get("bot:game:shared") ?? "{}");
 		delete shared[game.id as string]
 		await client.set("bot:game:shared", JSON.stringify(shared));

@@ -54,7 +54,12 @@ export class GameChannel {
         const count = await this.gameService.getRolesCount(id);
         const game = await GameService.getGame(id);
         if (members.length === count && game.is_started === false) {
-            await this.gameService.startGame(channel, game, socket);
+            const canStart = await fetch(`${process.env.API_URL}/game/start/check`, 'POST', {
+                gameId: game.id
+            });
+            if (canStart.ok) {
+                await this.gameService.startGame(channel, game, socket);
+            }
             const list = await fetch(`${process.env.API_URL}/game/list/*`, "GET");
             this.io.to("home").volatile.emit("game-list.update", "home", {
                 data: list.json

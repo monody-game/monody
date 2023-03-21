@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\Role;
 use App\Events\CloseVoiceChannelNotice;
+use App\Events\Websockets\GameStart;
+use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserJoinedVocalChannelRequest;
 use App\Http\Requests\UserRoleRequest;
@@ -28,7 +30,18 @@ class GameUsersController extends Controller
             return new JsonResponse([], Response::HTTP_BAD_REQUEST);
         }
 
+        $discordData = Redis::get("game:$gameId:discord");
+        $discordData['members'][$request->validated('discord_id')] = $user->id;
+
+        Redis::set("game:$gameId:discord", $discordData);
+
         broadcast(new CloseVoiceChannelNotice($gameId, true, [$user->id]));
+
+        $game = Redis::get("game:$gameId");
+
+        if (StartGameController::isFull($game) && StartGameController::allUsersJoinedVoiceChannel($game)) {
+            broadcast(new GameStart($game));
+        }
 
         return new JsonResponse();
     }

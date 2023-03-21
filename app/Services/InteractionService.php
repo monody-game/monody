@@ -14,7 +14,7 @@ use App\Actions\WitchAction;
 use App\Enums\Interaction;
 use App\Enums\InteractionAction;
 use App\Enums\State;
-use App\Events\TimeSkip;
+use App\Events\Websockets\TimeSkip;
 use App\Facades\Redis;
 use App\Traits\RegisterHelperTrait;
 use Illuminate\Support\Facades\Date;
