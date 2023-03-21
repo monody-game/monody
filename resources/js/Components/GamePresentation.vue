@@ -1,8 +1,9 @@
 <template>
-  <router-link
-    :to="{ name: 'game', params: { id: props.game.id } }"
+  <div
     class="game-show__container"
-    @click="setGame()"
+    :class="userStore.discord_linked_at === null && props.game.type === 1 ? 'game-show__container-disabled' : ''"
+    :title="userStore.discord_linked_at === null && props.game.type === 1 ? 'Vous devez lier votre compte Discord à Monody pour rejoindre cette partie' : ''"
+    @click="openGame()"
   >
     <img
       :alt="props.game.owner.username + '\'s avatar'"
@@ -32,12 +33,21 @@
         </div>
       </div>
     </div>
+    <svg
+      v-if="props.game.type === 1"
+      title="Cette partie se déroule en vocal"
+    >
+      <use href="/sprite.svg#vocal" />
+    </svg>
     <p>{{ props.game.users.length }} / {{ getUserCount() }}</p>
-  </router-link>
+  </div>
 </template>
 
 <script setup>
 import { useStore } from "../stores/game.js";
+import { useStore as usePopupStore } from "../stores/modals/popup.js";
+import { useStore as useUserStore } from "../stores/user.js";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
 	game: {
@@ -49,7 +59,10 @@ const props = defineProps({
 		required: true
 	}
 });
-const store = useStore();
+
+const router = useRouter();
+const popupStore = usePopupStore();
+const userStore = useUserStore();
 
 const getUserCount = function () {
 	let total = 0;
@@ -59,11 +72,20 @@ const getUserCount = function () {
 	return total;
 };
 
-const setGame = async function () {
-	store.roles = props.roles.filter(role => {
-		return Object.keys(props.game.roles).includes(role.id.toString());
-	});
+const openGame = async function () {
+	if (props.game.type === 1) {
+		popupStore.setPopup({
+			warn: {
+				content: "Cette partie est une partie vocale. Vous devrez rejoindre un salon vocal sur Discord, continuer ?",
+				note: "Si oui, ",
+				link: { name: "game", params: { id: props.game.id } },
+				link_text: "cliquez ici."
+			}
+		});
 
-	store.owner = props.game.owner;
+		return;
+	}
+
+	await router.push({ name: "game", params: { id: props.game.id } });
 };
 </script>

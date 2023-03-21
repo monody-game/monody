@@ -58,10 +58,7 @@ export class CounterService {
         }
     }
     clearListeners() {
-        const listeners = [...this.emitter.listeners("time.skip"), ...this.emitter.listeners("time.halt")];
-        for (const listener of listeners) {
-            this.emitter.off("time.skip", (...args) => listener(...args));
-            this.emitter.off("time.halt", (...args) => listener(...args));
-        }
+        this.emitter.removeAllListeners("time.halt");
+        this.emitter.removeAllListeners("time.skip");
     }
 }

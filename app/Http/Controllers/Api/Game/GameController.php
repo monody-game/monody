@@ -6,7 +6,10 @@ use App\Enums\AlertType;
 use App\Enums\GameType;
 use App\Enums\State;
 use App\Enums\Team;
-use App\Events\Bot\ClearSharedGames;
+use App\Events\Bot\ClearGameInvitations;
+use App\Events\Bot\ClearVoiceChannels;
+use App\Events\Bot\CreateVoiceChannel;
+use App\Events\Bot\UpdateVoiceChannelPermissions;
 use App\Events\GameListUpdate;
 use App\Events\WerewolvesList;
 use App\Facades\Redis;
@@ -107,6 +110,12 @@ class GameController extends Controller
         /** @var User $user */
         $user = $request->user();
 
+        if ($request->get('type') === GameType::VOCAL && $user->discord_id === null) {
+            return new JsonResponse([
+                'message' => 'You must link your Discord account to Monody in order to create a vocal game.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         $data['users'] = array_key_exists('users', $data) ? $data['users'] : [];
         $data['roles'] = array_count_values($data['roles']);
         $data['assigned_roles'] = [];
@@ -115,7 +124,22 @@ class GameController extends Controller
         $data['dead_users'] = [];
         $id = Str::random(12);
         $data['id'] = $id;
-        $data['type'] = $request->get('type') !== null ? $request->get('type') : GameType::NORMAL;
+        $data['type'] = $request->get('type') ?: GameType::NORMAL;
+
+        if ($data['type'] === GameType::VOCAL->value) {
+            $size = array_reduce($data['roles'], fn ($previous, $role) => $previous + $role, 0);
+
+            broadcast(new CreateVoiceChannel(
+                [
+                    'game_id' => $id,
+                    'owner' => [
+                        'username' => $user->username,
+                        'discord_id' => $user->discord_id,
+                    ],
+                    'size' => $size,
+                ]
+            ));
+        }
 
         if (!array_search($data['owner'], $data['users'], true)) {
             $user->current_game = $id;
@@ -147,6 +171,21 @@ class GameController extends Controller
     {
         $gameId = $request->validated('gameId');
 
+        $shared = Redis::get('bot:game:shared') ?? [];
+        unset($shared[$gameId]);
+        Redis::set('bot:game:shared', $shared);
+        broadcast(new ClearGameInvitations);
+
+        $game = Redis::get("game:$gameId");
+
+        if ($game['type'] === GameType::VOCAL->value) {
+            $discordData = Redis::get("game:$gameId:discord");
+            broadcast(new ClearVoiceChannels([
+                'channel_id' => $discordData['voice_channel'],
+                'game_id' => $gameId,
+            ]));
+        }
+
         $this->clearRedisKeys($gameId);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
@@ -174,7 +213,14 @@ class GameController extends Controller
             )
         );
 
-        broadcast(new ClearSharedGames);
+        broadcast(new ClearGameInvitations);
+
+        if ($game['type'] === GameType::VOCAL->value) {
+            broadcast(new UpdateVoiceChannelPermissions([
+                'game_id' => $gameId,
+                'discord_id' => $user->discord_id ?? '',
+            ]));
+        }
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
@@ -206,7 +252,7 @@ class GameController extends Controller
         $state = Redis::get("game:$gameId:state");
         $interactions = Redis::get("game:$gameId:interactions") ?? [];
 
-        return new JsonResponse([
+        $payload = [
             'game' => [
                 'id' => $gameId,
                 'owner' => [
@@ -221,8 +267,15 @@ class GameController extends Controller
                 'voted_users' => $votes,
                 'state' => $state,
                 'current_interactions' => $interactions,
+                'type' => $game['type'],
             ],
-        ]);
+        ];
+
+        if ($game['type'] === GameType::VOCAL->value) {
+            $payload['game']['discord'] = Redis::get("game:$gameId:discord");
+        }
+
+        return new JsonResponse($payload);
     }
 
     /**

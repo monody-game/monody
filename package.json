@@ -30,7 +30,7 @@
 		"vue-router": "^4.1.2"
 	},
 	"devDependencies": {
-		"@types/node": "^18.15.3",
+		"@types/node": "^18.15.5",
 		"@vitejs/plugin-vue": "^4.1.0",
 		"autoprefixer": "^10.4.14",
 		"eslint": "^8.36.0",
@@ -40,7 +40,7 @@
 		"sass": "^1.59.3",
 		"tsc-watch": "^6.0.0",
 		"typescript": "^5.0.2",
-		"vite": "^4.2.0",
+		"vite": "^4.2.1",
 		"vite-plugin-manifest-sri": "^0.1.0",
 		"vue-template-compiler": "^2.7.5"
 	},

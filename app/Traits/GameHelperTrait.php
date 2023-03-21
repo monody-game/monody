@@ -25,5 +25,6 @@ trait GameHelperTrait
         Redis::del("game:$gameId:interactions");
         Redis::del("game:$gameId:interactions:usedActions");
         Redis::del("game:$gameId:deaths");
+        Redis::del("game:$gameId:discord");
     }
 }

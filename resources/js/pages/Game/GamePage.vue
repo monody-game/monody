@@ -52,6 +52,9 @@
     <Transition name="modal">
       <GameDetailsModal v-if="modalStore.opennedModal === 'game-details'" />
     </Transition>
+    <Transition name="modal">
+      <GameVocalInvitation v-if="store.type === 1 && vocalInvitationStore.isOpenned === true" />
+    </Transition>
   </div>
 </template>
 
@@ -65,6 +68,7 @@ import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useShareModalStore } from "../../stores/modals/share-game-modal.js";
 import { useStore as useActivityConfirmationModalStore } from "../../stores/modals/activity-confirmation-modal.js";
+import { useStore as useVocalInvitationStore } from "../../stores/modals/vocal-invitation-store.js";
 import { useStore as useChatStore } from "../../stores/chat.js";
 import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 import GameCounter from "../../Components/GameCounter.vue";
@@ -74,6 +78,7 @@ import LogoSpinner from "../../Components/Spinners/LogoSpinner.vue";
 import ShareGameModal from "../../Components/Modal/ShareGameModal.vue";
 import ActivityConfirmationModal from "../../Components/Modal/ActivityConfirmationModal.vue";
 import GameDetailsModal from "../../Components/Modal/GameDetailsModal.vue";
+import GameVocalInvitation from "../../Components/Modal/GameVocalInvitation.vue";
 
 const route = useRoute();
 const store = useStore();
@@ -85,6 +90,7 @@ const userStore = useUserStore();
 const assignationPopupStore = useAssignationPopupStore();
 const modalStore = useModalStore();
 const activityConfirmationModalStore = useActivityConfirmationModalStore();
+const vocalInvitationStore = useVocalInvitationStore();
 
 const gameId = route.params.id;
 const loading = ref(false);
@@ -116,6 +122,8 @@ window.Echo.join(`game.${gameId}`)
 		store.voted_users = e.voted_users;
 		store.dead_users = e.dead_users;
 		store.roles = roles;
+		store.discord = e.discord;
+		store.type = e.type;
 
 		if (e.current_interactions.length > 0) {
 			store.currentInteractionId = e.current_interactions[0].id;
@@ -162,6 +170,7 @@ window.Echo.join(`game.${gameId}`)
 
 const leave = () => {
 	window.Echo.leave(`game.${gameId}`);
+	vocalInvitationStore.$reset();
 	store.$reset();
 };
 

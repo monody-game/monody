@@ -54,7 +54,12 @@ export class GameChannel {
         const count = await this.gameService.getRolesCount(id);
         const game = await GameService.getGame(id);
         if (members.length === count && game.is_started === false) {
-            await this.gameService.startGame(channel, game, socket);
+            const canStart = await fetch(`${process.env.API_URL}/game/start/check`, 'POST', {
+                gameId: game.id
+            });
+            if (canStart.ok) {
+                await this.gameService.startGame(channel, game, socket);
+            }
             const list = await fetch(`${process.env.API_URL}/game/list/*`, "GET");
             this.io.to("home").volatile.emit("game-list.update", "home", {
                 data: list.json
@@ -107,7 +112,7 @@ export class GameChannel {
         this.io.to("home").volatile.emit("game-list.update", "home", {
             data: list.json
         });
-        const gameData = await fetch(`${process.env.API_URL}/game/${gameId(channel)}`);
+        const gameData = await fetch(`${process.env.API_URL}/game/data/${gameId(channel)}`);
         this.io.to(member.socketId).emit("game.data", channel, { data: { payload: gameData.json.game } });
     }
     async onLeave(channel, member) {
@@ -123,6 +128,7 @@ export class GameChannel {
         this.io.to("home").volatile.emit("game-list.update", "home", {
             data: list.json
         });
+        this.io.to('bot.private').volatile.emit('game.share.clear', 'bot.private');
         log(`Deleting game with id: ${id}`);
     }
     async onSubscribed(socket, channel, members) {

@@ -52,6 +52,8 @@
 
 	button:disabled,
 	a.disabled {
+		cursor: not-allowed;
+		text-decoration: none;
 		background-color: var(--light-background-hover) !important;
 		color: var(--primary-disabled);
 	}
