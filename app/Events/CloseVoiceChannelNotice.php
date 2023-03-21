@@ -2,24 +2,30 @@
 
 namespace App\Events;
 
-use App\Events\Abstract\WebsocketsServerEvent;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TimeSkip extends WebsocketsServerEvent implements ShouldBroadcastNow
+class CloseVoiceChannelNotice implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
         public string $gameId,
-        public int $to
+        public bool $private = true,
+        public array $recipients = []
     ) {
+    }
+
+    public function broadcastOn(): PresenceChannel
+    {
+        return new PresenceChannel("game.$this->gameId");
     }
 
     public function broadcastAs(): string
     {
-        return 'time.skip';
+        return 'voice-notice.close';
     }
 }

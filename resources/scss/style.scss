@@ -3,6 +3,7 @@
 @import "tools/functions";
 @import "fonts/fonts";
 @import "typo";
+@import "utils";
 
 // Pages
 @import "./pages/game-page";
@@ -27,6 +28,7 @@
 @import "./components/Modal/popup";
 @import "./components/Modal/game-details";
 @import "./components/Modal/share-profile";
+@import "./components/Modal/game-vocal-invitation";
 
 // - Game player list
 @import "./components/PlayerList/player";
@@ -71,10 +73,6 @@ body {
 	@media screen and (max-width: 600px) {
 		overflow: auto;
 	}
-}
-
-.overflow-hidden {
-	overflow: hidden;
 }
 
 :root {

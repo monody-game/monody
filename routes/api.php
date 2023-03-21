@@ -12,6 +12,7 @@ Route::post('/auth/password/reset', 'Auth\PasswordController@reset');
 Route::post('/auth/password/validate', 'Auth\PasswordController@token');
 
 Route::get('/game/list/{type?}', 'Game\GameController@list');
+Route::get('/game/data/{gameId}', 'Game\GameController@data');
 
 Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
 //Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
@@ -87,7 +88,6 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/roles/assign', 'RoleController@assign');
 
     Route::delete('/game', 'Game\GameController@delete');
-    Route::get('/game/{gameId}', 'Game\GameController@data');
     Route::post('/game/join', 'Game\GameController@join');
     Route::post('/game/leave', 'Game\GameController@leave');
 
@@ -97,8 +97,11 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/game/message/deaths', 'Game\GameChatController@death');
     Route::post('/game/chat/lock', 'Game\GameChatController@lock');
 
+    Route::post('/game/start/check', 'Game\StartGameController@check');
     Route::post('/game/end/check', 'Game\EndGameController@check');
     Route::post('/game/end', 'Game\EndGameController@index');
+
+    Route::post('/game/vocal/joined', 'Game\GameUsersController@joined');
 
     Route::get('/user/discord/{discordId}', 'UserController@discord');
     Route::get('/user/discord/{discordId}/share/{theme?}', 'ShareProfileController@discord');

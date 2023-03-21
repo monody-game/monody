@@ -30,7 +30,7 @@ jobs:
           git config --global user.email "tsbuild@monody.fr"
 
           git add -A
-          git commit --amend
+          git commit --amend --reuse-message=HEAD --reset-author
           git push
 
       - name: 🔢 Extract version name

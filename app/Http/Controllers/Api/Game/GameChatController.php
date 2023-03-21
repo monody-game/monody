@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Enums\GameType;
 use App\Enums\State;
 use App\Enums\Team;
+use App\Events\Bot\TogglePlayersVoice;
 use App\Events\ChatLock;
 use App\Events\GameKill;
 use App\Facades\Redis;
@@ -91,6 +93,13 @@ class GameChatController extends Controller
             broadcast(new ChatLock($gameId, true, $recipients));
         } else {
             broadcast(new ChatLock($gameId));
+            $game = Redis::get("game:$gameId");
+
+            if ($game['type'] === GameType::VOCAL->value) {
+                broadcast(new TogglePlayersVoice([
+                    'game_id' => $game['id'],
+                ]));
+            }
         }
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);

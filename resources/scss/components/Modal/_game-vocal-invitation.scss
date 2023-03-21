@@ -1,0 +1,25 @@
+.game-vocal__invitation {
+	margin-top: space(2);
+
+	p a {
+		display: flex;
+		align-items: center;
+		gap: space(1);
+
+		cursor: pointer;
+		width: max-content;
+		transition: all .2s;
+
+		background-color: var(--discord-color);
+		color: var(--light-background);
+		border-radius: 4px;
+
+		margin-top: space(2);
+		padding: space(1) space(3);
+	}
+
+	p a:hover {
+		background-color: darken(#5865F2, 3%);
+		text-decoration: none;
+	}
+}
