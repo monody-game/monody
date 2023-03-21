@@ -16,6 +16,10 @@ class StartGameController extends Controller
         $gameId = $request->validated('gameId');
         $game = Redis::get("game:$gameId");
 
+        if ($game['is_started'] === true) {
+            return new JsonResponse(['message' => 'You cannot start an already started game.'], Response::HTTP_FORBIDDEN);
+        }
+
         if ($game['type'] === GameType::NORMAL->value && $this->isFull($game)) {
             return new JsonResponse([], Response::HTTP_NO_CONTENT);
         }

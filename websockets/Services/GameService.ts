@@ -28,6 +28,8 @@ export class GameService {
 		this.stateManager = new StateManager(io, emitter);
 		this.counterService = new CounterService(io, emitter);
 
+		this.emitter.removeAllListeners("game.start");
+
 		this.emitter.on('game.start', async (data) => {
 			await this.startGame(`presence-game.${data.game.id}`, data.game, io)
 		})
