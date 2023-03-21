@@ -10,20 +10,16 @@
 		width: max-content;
 		transition: all .2s;
 
-		color: #0f112780;
-		border: var(--border-secondary) 2px solid;
+		background-color: var(--discord-color);
+		color: var(--light-background);
 		border-radius: 4px;
 
 		margin-top: space(2);
-		padding: space(1) space(2);
-
-		@media screen and (prefers-color-scheme: dark) {
-			color: #fffcf180;
-		}
+		padding: space(1) space(3);
 	}
 
 	p a:hover {
-		background-color: var(--primary-hover);
+		background-color: darken(#5865F2, 3%);
 		text-decoration: none;
 	}
 }
