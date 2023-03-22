@@ -20,6 +20,7 @@
         "spatie/laravel-ignition": "^2.0"
     },
 	"require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.13",
         "fakerphp/faker": "^1.20",
         "laravel/pint": "^1.2",
         "mockery/mockery": "^1.5",
@@ -53,6 +54,11 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
+		"post-update-cmd": [
+			"Illuminate\\Foundation\\ComposerScripts::postUpdate",
+			"@php artisan ide-helper:generate",
+			"@php artisan ide-helper:meta"
+		],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
