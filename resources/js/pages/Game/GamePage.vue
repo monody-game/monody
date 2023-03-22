@@ -112,7 +112,7 @@ window.Echo.join(`game.${gameId}`)
 		if (Object.keys(e.roles) !== roles.map(role => role.id) || roles.length === 0) {
 			roles = [];
 			for (const role in e.roles) {
-				const res = await window.JSONFetch(`/roles/get/${role}`, "GET");
+				const res = await window.JSONFetch(`/roles/get/${role}`);
 				const rolePayload = res.data.role;
 				rolePayload.count = e.roles[role];
 				roles.push(rolePayload);
@@ -122,14 +122,21 @@ window.Echo.join(`game.${gameId}`)
 		store.voted_users = e.voted_users;
 		store.dead_users = e.dead_users;
 		store.roles = roles;
-		store.discord = e.discord;
 		store.type = e.type;
+
+		if (e.type === 1 && e.discord === null) {
+			const res = await window.JSONFetch(`/game/${gameId}/discord`);
+			store.discord = res.data.content;
+		} else {
+			store.discord = e.discord;
+		}
 
 		if (e.current_interactions.length > 0) {
 			store.currentInteractionId = e.current_interactions[0].id;
 		}
 	})
 	.listen(".game.role-assign", async (role_id) => {
+		console.log(role_id);
 		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
 		const role = res.data.role;
 		store.setRole(userStore.id, role);

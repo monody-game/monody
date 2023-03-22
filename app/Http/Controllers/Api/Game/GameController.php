@@ -278,6 +278,12 @@ class GameController extends Controller
         return new JsonResponse($payload);
     }
 
+	public function discord(string $gameId): JsonResponse
+	{
+		return (new JsonResponse())
+			->withContent(Redis::get("game:$gameId:discord"));
+	}
+
     /**
      * @return array{}|string[]
      */

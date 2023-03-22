@@ -7,7 +7,8 @@ export const useStore = defineStore("game-creation-modal", {
 			selectedRoles: [],
 			roles: [],
 			teams: [],
-			gameId: null
+			gameId: null,
+			type: 0
 		};
 	},
 	getters: {
@@ -39,6 +40,7 @@ export const useStore = defineStore("game-creation-modal", {
 			this.isOpenned = false;
 			this.selectedRoles = [];
 			this.gameId = null;
+			this.type = 0;
 			this.roles.map(role => role.count = 0);
 
 			document.documentElement.style.removeProperty(
