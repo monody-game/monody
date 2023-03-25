@@ -6,6 +6,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+	.footer__main p {
+		color: var(--light-background);
+	}
 }
 
 .home-page__main {
