@@ -73,6 +73,7 @@
   &::after {
     display: inline-block;
     content: "";
+		transition: border-top-color .4s;
     border-top: 4px solid #fff;
     width: 30vw;
 		max-width: 220px;
