@@ -7,9 +7,21 @@
 	margin-bottom: space(1);
 	color: var(--secondary);
 
+	& div {
+		display: flex;
+		gap: space(1);
+	}
+
 	& a, a svg {
 		color: inherit;
 		height: 24px;
 		width: 24px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.footer__main {
+		flex-direction: column;
+		height: auto;
 	}
 }
