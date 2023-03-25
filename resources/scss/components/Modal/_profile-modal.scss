@@ -82,7 +82,8 @@
 	display: grid;
 	place-items: center;
 
-	transition: background-color .2s, opacity .2s;
+	outline: var(--border-secondary) 2px solid;
+	border-radius: 50%;
 
 	input {
 		display: none;
@@ -92,6 +93,7 @@
 		cursor: pointer;
 		display: grid;
 		place-items: center;
+		transition: background-color .2s, opacity .2s;
 
 		position: absolute;
 		inset: 0;
@@ -136,7 +138,6 @@
 }
 
 .profile-modal__avatar-group label svg {
-	transition: background-color .2s, opacity .2s;
 	height: 40px;
 	width: 40px;
 }
