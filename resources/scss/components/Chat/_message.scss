@@ -1,7 +1,7 @@
 @use "../../tools/functions" as *;
 
 .message__main {
-	color: #000;
+	color: var(--dark-background);
 
 	display: flex;
 	gap: space(1);
@@ -14,6 +14,10 @@
 	border-radius: 2px;
 }
 
+.night .message__main {
+	color: var(--light-background);
+}
+
 .alert-message__content {
 	display: flex;
 	align-items: center;
@@ -22,7 +26,7 @@
 
 .alert__main {
 	@extend .message__main;
-	color: #fff;
+	color: var(--light-background);
 	padding: space(2);
 	gap: space(2);
 }
