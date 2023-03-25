@@ -15,7 +15,7 @@
           :message="message.content"
         />
         <ChatMessage
-          v-else-if="message.type === 'message' && message.type === 'werewolf' && message.type === 'dead'"
+          v-else-if="message.type === 'message' || message.type === 'werewolf' || message.type === 'dead'"
           :message="message"
         />
         <ChatAlert
@@ -96,6 +96,7 @@ onBeforeRouteLeave(() => {
 
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
+		console.log(e);
 		const payload = e.data.payload;
 		store.send(payload.content, payload.type, payload.author);
 	})

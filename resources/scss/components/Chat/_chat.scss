@@ -28,14 +28,14 @@
   }
 
   & > p {
-    color: #000;
+    color: var(--dark-background);
   }
 }
 
 .chat__submit-form {
   height: 60px;
   display: flex;
-  border-top: solid 1px rgba(var(--unchanged-color), 6%);
+  border-top: solid 2px rgba(var(--unchanged-color), 10%);
   justify-content: space-between;
   background: var(--chat-send-background);
 
@@ -59,6 +59,10 @@
   }
 }
 
+.night .chat__submit-form input {
+	color: var(--light-background);
+}
+
 .locked {
   cursor: not-allowed;
 }
@@ -73,9 +77,10 @@
   width: 100px;
   background: inherit;
   border: none;
-  border-left: solid 1px rgba(var(--unchanged-color), 6%);
+  border-left: solid 2px rgba(var(--unchanged-color), 10%);
   cursor: pointer;
-	color: rgba(var(--unchanged-color), 40%);
+	color: rgba(var(--unchanged-color), 60%);
+	transition: all .2s;
 
   &.locked {
     cursor: not-allowed;
@@ -85,10 +90,9 @@
 		font-size: .8rem;
 	}
 
-  &:hover .chat__submit-icon use symbol path {
-    transition: fill 0.4s;
-
-    fill: rgba(var(--unchanged-color), 40%);
+  &:hover {
+		background-color: var(--secondary-hover);
+    color: rgba(var(--unchanged-color), 80%);
   }
 }
 
