@@ -20,6 +20,8 @@
 
   position: sticky;
   z-index: 5000;
+	overflow-y: auto;
+	overflow-x: hidden;
 
 	display: flex;
   flex-direction: column;
