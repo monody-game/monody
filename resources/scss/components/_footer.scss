@@ -2,11 +2,14 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	gap: space(1);
 	height: 32px;
 	margin-bottom: space(1);
+	color: var(--secondary);
 
-	& p {
-		font-size: 16px;
-		color: var(--secondary);
+	& a, a svg {
+		color: inherit;
+		height: 24px;
+		width: 24px;
 	}
 }
