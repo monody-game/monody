@@ -22,7 +22,7 @@ export async function getRounds(gameId = "") {
         hookedStates.push(hook.identifier);
     }
     try {
-        for (const round of apiRounds.json) {
+        for (const round of apiRounds.json.data.rounds) {
             const roundStates = [];
             for (let state of round) {
                 if (hookedStates.includes(state.identifier)) {

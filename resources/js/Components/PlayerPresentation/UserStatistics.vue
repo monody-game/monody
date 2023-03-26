@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-const apiStats = (await window.JSONFetch("/stats")).data;
+const apiStats = (await window.JSONFetch("/stats")).data.statistics;
 
 const stats = {
 	wins: "N/A",

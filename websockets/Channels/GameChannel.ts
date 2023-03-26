@@ -139,7 +139,7 @@ export class GameChannel {
 
 		const gameData = await fetch(`${process.env.API_URL}/game/data/${gameId(channel)}`);
 
-		this.io.to(member.socketId).emit("game.data", channel, { data: { payload: gameData.json.game } });
+		this.io.to(member.socketId).emit("game.data", channel, { data: { payload: gameData.json.data.game } });
 	}
 
 	async onLeave(channel: string, member: Member) {

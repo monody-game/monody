@@ -5,11 +5,12 @@ namespace App\Http\Middleware;
 use App\Enums\Status;
 use App\Http\Responses\JsonApiResponse;
 use Closure;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class RestrictToLocalNetwork
 {
-    public function handle(Request $request, Closure $next): JsonApiResponse|bool
+    public function handle(Request $request, Closure $next): JsonResponse|JsonApiResponse|bool
     {
         if (
             $request->hasHeader('X-Network-Key') &&

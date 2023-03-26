@@ -56,7 +56,7 @@ const halt = ref(false);
 const getState = async function(toRetrieveState = null) {
 	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
 	const state = await window.JSONFetch(`/state/${parameter}`, "GET");
-	return state.data;
+	return state.data.state;
 };
 
 onMounted(() =>	updateCircle());
