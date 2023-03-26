@@ -8,7 +8,7 @@ use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class ShareControllerTest extends TestCase
+class ShareProfileControllerTest extends TestCase
 {
     public function testSharingProfile()
     {
@@ -23,7 +23,7 @@ class ShareControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->get('/api/user/share')
-            ->assertOk();
+            ->assertNoContent();
 
         Storage::assertExists("profiles/{$user->id}.png");
         Storage::assertMissing("profiles/{$user->id}-avatar.temp.png");

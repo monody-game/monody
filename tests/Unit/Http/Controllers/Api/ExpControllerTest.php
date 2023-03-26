@@ -22,7 +22,7 @@ class ExpControllerTest extends TestCase
         $this
             ->actingAs($user, 'api')
             ->get('/api/exp/get')
-            ->assertJson([
+            ->assertJsonPath('data.exp', [
                 'user_id' => $user->id,
                 'exp' => 15,
                 'next_level' => 32,
@@ -37,9 +37,10 @@ class ExpControllerTest extends TestCase
 
         $response = $this->actingAs($user, 'api')->getJson('/api/exp/get');
         $response
-            ->assertJson([
+            ->assertJsonPath('data.exp', [
                 'user_id' => $user->id,
                 'exp' => 0,
+                'next_level' => 10,
             ]);
 
         $created = Exp::select('*')->where('user_id', $user->id)->get()->first();

@@ -37,10 +37,8 @@ class GameControllerTest extends TestCase
                     1, 1, 2,
                 ],
             ])
-            ->assertJson([
-                'game' => $this->game,
-            ])
-            ->json('game');
+            ->assertJson(['data' => ['game' => $this->game]])
+            ->json('data.game');
 
         $this->assertSame(
             [
@@ -71,12 +69,12 @@ class GameControllerTest extends TestCase
                 ],
             ])
             ->assertOk()
-            ->json('game');
+            ->json('data.game');
 
         $list = $this->actingAs($this->user, 'api')
             ->get('/api/game/list')
             ->assertOk()
-            ->json('games');
+            ->json('data.games');
 
         $this->assertCount(1, $list);
 
@@ -91,7 +89,7 @@ class GameControllerTest extends TestCase
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
-                'gameId' => $res['id'],
+                'data' => ['gameId' => $res['id']],
             ]);
     }
 
@@ -99,8 +97,8 @@ class GameControllerTest extends TestCase
     {
         $this->actingAs($this->user, 'api')
             ->get('/api/game/list')
-            ->assertExactJson([
-                'games' => [],
+            ->assertJson([
+                'data' => ['games' => []],
             ]);
     }
 
@@ -114,11 +112,11 @@ class GameControllerTest extends TestCase
 
         $res = $this
             ->get("/api/game/list/$vocal")
-            ->json('games');
+            ->json('data.games');
 
         $fullList = $this
             ->get('/api/game/list')
-            ->json('games');
+            ->json('data.games');
 
         $this->assertCount(2, $res);
         $this->assertCount(3, $fullList);
@@ -132,7 +130,7 @@ class GameControllerTest extends TestCase
                 'roles' => [
                     1, 1, 2,
                 ],
-            ])->json('game');
+            ])->json('data.game');
         Redis::set('game:1234', '');
         Redis::set('game:5678', '{}');
 
@@ -140,8 +138,8 @@ class GameControllerTest extends TestCase
 
         $this->actingAs($this->user, 'api')
             ->get('/api/game/list')
-            ->assertExactJson([
-                'games' => [],
+            ->assertJson([
+                'data' => ['games' => []],
             ]);
 
         Redis::del('game:1234', 'game:5678');
@@ -160,7 +158,7 @@ class GameControllerTest extends TestCase
                 'roles' => [
                     1, 1, 2,
                 ],
-            ])->json('game');
+            ])->json('data.game');
 
         $this->assertSame([
             'id' => $this->user->id,
@@ -171,14 +169,6 @@ class GameControllerTest extends TestCase
 
     public function testDeleteGameWithWrongRequest()
     {
-        $this->actingAs($this->user, 'api')
-            ->put('/api/game', [
-                'users' => [],
-                'roles' => [
-                    1, 1, 2,
-                ],
-            ]);
-
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game')
@@ -193,7 +183,7 @@ class GameControllerTest extends TestCase
                 'roles' => [
                     1, 1, 2,
                 ],
-            ])->json('game');
+            ])->json('data.game');
 
         $this->assertTrue(Redis::exists("game:{$game['id']}"));
         $this->assertTrue(Redis::exists("game:{$game['id']}:state"));
@@ -215,16 +205,8 @@ class GameControllerTest extends TestCase
     public function testCheckGameWithWrongRequest()
     {
         $this->actingAs($this->user, 'api')
-            ->put('/api/game', [
-                'users' => [],
-                'roles' => [
-                    1, 1, 2,
-                ],
-            ]);
-
-        $this->actingAs($this->user, 'api')
             ->post('/api/game/check')
-            ->assertStatus(Response::HTTP_BAD_REQUEST);
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function testCheckingUnexistingGame()
@@ -245,7 +227,7 @@ class GameControllerTest extends TestCase
                     1, 1, 2,
                 ],
             ])
-            ->json('game');
+            ->json('data.game');
 
         $this->actingAs($this->user, 'api')
             ->post('/api/game/check', [
@@ -260,7 +242,7 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [1, 3],
-            ])->json('game');
+            ])->json('data.game');
 
         $this->user->refresh();
 
@@ -274,7 +256,7 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [1, 3],
-            ])->json('game');
+            ])->json('data.game');
 
         $gameId = $game['id'];
 
@@ -298,7 +280,7 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [1, 3],
-            ])->json('game');
+            ])->json('data.game');
 
         $gameId = $game['id'];
 
@@ -345,33 +327,35 @@ class GameControllerTest extends TestCase
                 Role::Werewolf->value,
                 Role::Witch->value,
             ],
-        ])->json('game');
+        ])->json('data.game');
 
         $this
             ->get("/api/game/data/{$res['id']}")
             ->assertJson([
-                'game' => [
-                    'id' => $res['id'],
-                    'owner' => [
-                        'id' => $this->user->id,
-                        'username' => $this->user->username,
-                        'avatar' => $this->user->avatar,
-                        'level' => $this->user->level,
-                        'elo' => 'N/A',
+                'data' => [
+                    'game' => [
+                        'id' => $res['id'],
+                        'owner' => [
+                            'id' => $this->user->id,
+                            'username' => $this->user->username,
+                            'avatar' => $this->user->avatar,
+                            'level' => $this->user->level,
+                            'elo' => 'N/A',
+                        ],
+                        'roles' => [
+                            Role::Werewolf->value => 2,
+                            Role::WhiteWerewolf->value => 1,
+                            Role::Witch->value => 1,
+                        ],
+                        'dead_users' => [],
+                        'voted_users' => [],
+                        'state' => [
+                            'status' => State::Waiting->value,
+                            'counterDuration' => State::Waiting->duration(),
+                            'round' => 0,
+                        ],
+                        'current_interactions' => [],
                     ],
-                    'roles' => [
-                        Role::Werewolf->value => 2,
-                        Role::WhiteWerewolf->value => 1,
-                        Role::Witch->value => 1,
-                    ],
-                    'dead_users' => [],
-                    'voted_users' => [],
-                    'state' => [
-                        'status' => State::Waiting->value,
-                        'counterDuration' => State::Waiting->duration(),
-                        'round' => 0,
-                    ],
-                    'current_interactions' => [],
                 ],
             ]);
 
@@ -396,8 +380,6 @@ class GameControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        Redis::flushDb();
 
         $this->user = User::factory()->create();
         $this->secondUser = User::factory()->create();

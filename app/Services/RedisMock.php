@@ -42,13 +42,15 @@ class RedisMock
         return array_key_exists($key, $this->data);
     }
 
-    public function del(string $key): void
+    public function del(string ...$keys): void
     {
-        if (!array_key_exists($key, $this->data)) {
-            return;
-        }
+        foreach ($keys as $key) {
+            if (!array_key_exists($key, $this->data)) {
+                continue;
+            }
 
-        unset($this->data[$key]);
+            unset($this->data[$key]);
+        }
     }
 
     public function scan(int &$cursor, array $options): array
@@ -71,10 +73,5 @@ class RedisMock
                 fn ($key) => fnmatch($pattern, $key)
             ),
         ];
-    }
-
-    public function flushDb(): void
-    {
-        $this->data = [];
     }
 }

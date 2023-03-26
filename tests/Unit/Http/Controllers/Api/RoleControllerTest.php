@@ -19,7 +19,7 @@ class RoleControllerTest extends TestCase
 
     public function testGetAllRoles(): void
     {
-        $response = $this->getJson('/api/roles')->json('roles');
+        $response = $this->getJson('/api/roles')->json('data.roles');
 
         $this->assertTrue(count($response) > 1);
     }
@@ -30,28 +30,34 @@ class RoleControllerTest extends TestCase
             ->getJson("/api/roles/game/{$this->game['id']}")
             ->assertOk()
             ->assertJson([
-                Role::Werewolf->full(),
-                Role::SimpleVillager->full(),
+                'data' => [
+                    'roles' => [
+                        Role::Werewolf->full(),
+                        Role::SimpleVillager->full(),
+                    ],
+                ],
             ]);
     }
 
     public function testGetOneRole(): void
     {
-        $response = $this->getJson('/api/roles/get/1');
-        $response->assertJson([
-            'role' => [
-                'id' => 1,
-                'name' => 'werewolf',
-                'display_name' => 'Loup-garou',
-                'limit' => null,
-                'weight' => 2,
-                'team' => [
-                    'id' => Team::Werewolves->value,
-                    'name' => Team::Werewolves->name(),
-                    'display_name' => Team::Werewolves->stringify(),
+        $this->getJson('/api/roles/get/1')
+            ->assertJson([
+                'data' => [
+                    'role' => [
+                        'id' => Role::Werewolf->value,
+                        'name' => 'werewolf',
+                        'display_name' => 'Loup-garou',
+                        'limit' => null,
+                        'weight' => Role::Werewolf->weight(),
+                        'team' => [
+                            'id' => Team::Werewolves->value,
+                            'name' => Team::Werewolves->name(),
+                            'display_name' => Team::Werewolves->stringify(),
+                        ],
+                    ],
                 ],
-            ],
-        ]);
+            ]);
     }
 
     public function testGetUnexistentRole(): void
@@ -66,7 +72,7 @@ class RoleControllerTest extends TestCase
         $this
             ->getJson('/api/roles/2')
             ->assertJson([
-                'roles' => [1],
+                'data' => ['roles' => array_map(fn (Role $role) => $role->value, Team::Werewolves->roles())],
             ])
             ->assertStatus(Response::HTTP_OK);
     }
@@ -76,7 +82,7 @@ class RoleControllerTest extends TestCase
         $this
             ->getJson('/api/roles/1')
             ->assertJson([
-                'roles' => [2, 3, 4],
+                'data' => ['roles' => array_map(fn (Role $role) => $role->value, Team::Villagers->roles())],
             ])
             ->assertStatus(Response::HTTP_OK);
     }
@@ -89,7 +95,7 @@ class RoleControllerTest extends TestCase
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->post('/api/roles/assign', ['gameId' => $this->game['id']])
-            ->assertOk();
+            ->assertNoContent();
 
         $game = Redis::get("game:{$this->game['id']}");
 
@@ -105,7 +111,7 @@ class RoleControllerTest extends TestCase
         $this->game = $this
             ->actingAs($user, 'api')
             ->put('/api/game', ['roles' => [1, 2]])
-            ->json('game');
+            ->json('data.game');
 
         Redis::set("game:{$this->game['id']}:members", [
             ['user_id' => $user['id'], 'user_info' => $user],

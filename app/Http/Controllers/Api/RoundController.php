@@ -7,11 +7,11 @@ use App\Enums\Round;
 use App\Enums\State;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
+use App\Http\Responses\JsonApiResponse;
 
 class RoundController extends Controller
 {
-    public function all(?string $gameId = null): JsonResponse
+    public function all(?string $gameId = null): JsonApiResponse
     {
         $rounds = [];
 
@@ -19,12 +19,14 @@ class RoundController extends Controller
             $rounds[] = $this->getRound($round->value, $gameId);
         }
 
-        return new JsonResponse($rounds);
+        return new JsonApiResponse(['rounds' => $rounds]);
     }
 
-    public function get(int $round, ?string $gameId = null): JsonResponse
+    public function get(int $round, ?string $gameId = null): JsonApiResponse
     {
-        return new JsonResponse($this->getRound($round, $gameId));
+        return new JsonApiResponse([
+            'round' => $this->getRound($round, $gameId),
+        ]);
     }
 
     private function getRound(int $round, ?string $gameId = null): array

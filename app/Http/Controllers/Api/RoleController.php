@@ -3,53 +3,52 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\Role;
+use App\Enums\Status;
 use App\Enums\Team;
 use App\Events\WerewolvesList;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GameIdRequest;
+use App\Http\Responses\JsonApiResponse;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
 {
     use GameHelperTrait, MemberHelperTrait;
 
-    public function all(): JsonResponse
+    public function all(): JsonApiResponse
     {
-        return new JsonResponse(['roles' => Role::all()]);
+        return new JsonApiResponse(['roles' => Role::all()]);
     }
 
-    public function game(string $gameId): JsonResponse
+    public function game(string $gameId): JsonApiResponse
     {
         $game = $this->getGame($gameId);
         $roles = array_map(fn ($role) => Role::from($role)->full(), array_keys($game['roles']));
 
-        return new JsonResponse($roles);
+        return new JsonApiResponse(['roles' => $roles]);
     }
 
-    public function get(int $id): JsonResponse
+    public function get(int $id): JsonApiResponse
     {
         $role = Role::tryFrom($id);
 
         if ($role !== null) {
-            return new JsonResponse(['role' => $role->full()]);
+            return new JsonApiResponse(['role' => $role->full()]);
         }
 
-        return (new JsonResponse([], Response::HTTP_NOT_FOUND))
-            ->withMessage("Role with id $id not found.");
+        return new JsonApiResponse(['message' => "Role with id $id not found."], Status::NOT_FOUND);
     }
 
-    public function group(int $group): JsonResponse
+    public function group(int $group): JsonApiResponse
     {
         $roles = Team::from($group)->roles();
 
-        return new JsonResponse(['roles' => $roles]);
+        return new JsonApiResponse(['roles' => $roles]);
     }
 
-    public function assign(GameIdRequest $request): JsonResponse
+    public function assign(GameIdRequest $request): JsonApiResponse
     {
         $assigned = [];
         $werewolves = [];
@@ -86,7 +85,7 @@ class RoleController extends Controller
             )
         );
 
-        return new JsonResponse();
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
     private function pickMember(array $members, array $assigned): string

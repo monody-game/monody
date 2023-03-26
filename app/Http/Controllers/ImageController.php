@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
+use App\Enums\Status;
+use App\Http\Responses\JsonApiResponse;
 use League\Glide\Filesystem\FileNotFoundException;
 use League\Glide\Server;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ImageController extends Controller
 {
-    public function show(Server $server, string $path): Response
+    public function show(Server $server, string $path): JsonApiResponse|StreamedResponse
     {
         try {
             /** @var StreamedResponse $res */
@@ -19,9 +19,9 @@ class ImageController extends Controller
 
             return $res;
         } catch (FileNotFoundException $e) {
-            return new JsonResponse([
+            return new JsonApiResponse([
                 'message' => 'File not found.',
-            ], Response::HTTP_NOT_FOUND);
+            ], Status::NOT_FOUND);
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Game;
 use App\Enums\AlertType;
 use App\Enums\GameType;
 use App\Enums\State;
+use App\Enums\Status;
 use App\Enums\Team;
 use App\Events\Bot\ClearGameInvitations;
 use App\Events\Bot\ClearVoiceChannels;
@@ -17,46 +18,43 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGameRequest;
 use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\JoinGameRequest;
+use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 use function array_key_exists;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Response;
 
 class GameController extends Controller
 {
     use RegisterHelperTrait, GameHelperTrait, MemberHelperTrait;
 
-    public function check(Request $request): JsonResponse
+    public function check(Request $request): JsonApiResponse
     {
         if (!$request->has('gameId')) {
-            return (new JsonResponse(null, Response::HTTP_BAD_REQUEST))
-                ->withMessage('Please specify a game id to check');
+            return new JsonApiResponse(['gameId' => 'Field required.'], Status::UNPROCESSABLE_ENTITY);
         }
 
         $game = Redis::exists("game:{$request->get('gameId')}");
 
         if ($game) {
-            return new JsonResponse([], Response::HTTP_NO_CONTENT);
+            return new JsonApiResponse(status: Status::NO_CONTENT);
         }
 
-        return (new JsonResponse(null, Response::HTTP_NOT_FOUND))
-            ->withMessage('Game not found')
+        return JsonApiResponse::make(['message' => "Game {$request->get('gameId')} not found"], Status::NOT_FOUND)
             ->withAlert(AlertType::Error, "La partie demandée n'existe pas (ou plus) ...");
     }
 
-    public function list(?string $type = null): JsonResponse
+    public function list(?string $type = null): JsonApiResponse
     {
         $games = $this->getGames();
         $list = [];
 
         if ($games === []) {
-            return new JsonResponse(['games' => []]);
+            return new JsonApiResponse(['games' => []]);
         }
 
         foreach ($games as $game) {
@@ -101,19 +99,19 @@ class GameController extends Controller
             $list[] = $gameData;
         }
 
-        return new JsonResponse(['games' => $list]);
+        return new JsonApiResponse(['games' => $list]);
     }
 
-    public function new(CreateGameRequest $request): JsonResponse
+    public function new(CreateGameRequest $request): JsonApiResponse
     {
         $data = $request->validated();
         /** @var User $user */
         $user = $request->user();
 
         if ($request->get('type') === GameType::VOCAL && $user->discord_id === null) {
-            return new JsonResponse([
+            return new JsonApiResponse([
                 'message' => 'You must link your Discord account to Monody in order to create a vocal game.',
-            ], Response::HTTP_BAD_REQUEST);
+            ], Status::BAD_REQUEST);
         }
 
         $data['users'] = array_key_exists('users', $data) ? $data['users'] : [];
@@ -162,12 +160,15 @@ class GameController extends Controller
         ]);
         Redis::set("game:$id:votes", []);
 
-        broadcast(new GameListUpdate($this->list()->getData(true)['games']));
+        /** @var array $list */
+        $list = $this->list()->data;
 
-        return new JsonResponse(['game' => $data]);
+        broadcast(new GameListUpdate($list['games']));
+
+        return new JsonApiResponse(['game' => $data]);
     }
 
-    public function delete(GameIdRequest $request): JsonResponse
+    public function delete(GameIdRequest $request): JsonApiResponse
     {
         $gameId = $request->validated('gameId');
 
@@ -188,10 +189,10 @@ class GameController extends Controller
 
         $this->clearRedisKeys($gameId);
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
-    public function join(JoinGameRequest $request): JsonResponse
+    public function join(JoinGameRequest $request): JsonApiResponse
     {
         $gameId = $request->validated('gameId');
         $game = $this->getGame($gameId);
@@ -222,13 +223,13 @@ class GameController extends Controller
             ]));
         }
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
-    public function leave(Request $request): JsonResponse
+    public function leave(Request $request): JsonApiResponse
     {
         if (!$request->has('userId')) {
-            return new JsonResponse(['userId' => 'Field required'], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return new JsonApiResponse(['userId' => 'Field required'], Status::UNPROCESSABLE_ENTITY);
         }
 
         /** @var User $user */
@@ -236,13 +237,13 @@ class GameController extends Controller
         $user->current_game = null;
         $user->save();
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
-    public function data(string $gameId): JsonResponse
+    public function data(string $gameId): JsonApiResponse
     {
         if (!Redis::exists("game:$gameId")) {
-            return new JsonResponse("Game $gameId not found.", Response::HTTP_NOT_FOUND);
+            return new JsonApiResponse(['message' => "Game $gameId not found."], Status::NOT_FOUND);
         }
 
         $game = Redis::get("game:$gameId");
@@ -253,35 +254,34 @@ class GameController extends Controller
         $interactions = Redis::get("game:$gameId:interactions") ?? [];
 
         $payload = [
-            'game' => [
-                'id' => $gameId,
-                'owner' => [
-                    'id' => $owner->id,
-                    'username' => $owner->username,
-                    'avatar' => $owner->avatar,
-                    'level' => $owner->level,
-                    'elo' => 'N/A',
-                ],
-                'roles' => $game['roles'],
-                'dead_users' => $game['dead_users'],
-                'voted_users' => $votes,
-                'state' => $state,
-                'current_interactions' => $interactions,
-                'type' => $game['type'],
+            'id' => $gameId,
+            'owner' => [
+                'id' => $owner->id,
+                'username' => $owner->username,
+                'avatar' => $owner->avatar,
+                'level' => $owner->level,
+                'elo' => 'N/A',
             ],
+            'roles' => $game['roles'],
+            'dead_users' => $game['dead_users'],
+            'voted_users' => $votes,
+            'state' => $state,
+            'current_interactions' => $interactions,
+            'type' => $game['type'],
         ];
 
         if ($game['type'] === GameType::VOCAL->value) {
-            $payload['game']['discord'] = Redis::get("game:$gameId:discord");
+            $payload['discord'] = Redis::get("game:$gameId:discord");
         }
 
-        return new JsonResponse($payload);
+        return new JsonApiResponse(['game' => $payload]);
     }
 
-    public function discord(string $gameId): JsonResponse
+    public function discord(string $gameId): JsonApiResponse
     {
-        return (new JsonResponse())
-            ->withContent(Redis::get("game:$gameId:discord"));
+        return new JsonApiResponse([
+            'data' => Redis::get("game:$gameId:discord"),
+        ]);
     }
 
     /**

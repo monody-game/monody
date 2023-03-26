@@ -18,8 +18,10 @@ class GameUsersControllerTest extends TestCase
         $this->actingAs($this->user, 'api')
             ->get("/api/game/{$this->game['id']}/users")
             ->assertJson([
-                'users' => [
-                    $this->user['id'],
+                'data' => [
+                    'users' => [
+                        $this->user['id'],
+                    ],
                 ],
             ]);
     }
@@ -37,7 +39,7 @@ class GameUsersControllerTest extends TestCase
         $response = $this->actingAs($this->secondUser, 'api')
             ->call('GET', "/api/game/user/{$this->secondUser->id}/role")
             ->assertOk()
-            ->json();
+            ->json('data.role');
 
         $this->assertSame(Role::from(1)->full(), $response);
     }
@@ -50,6 +52,6 @@ class GameUsersControllerTest extends TestCase
         $this->game = $this->actingAs($this->user, 'api')->put('/api/game', [
             'roles' => [1, 2],
             'users' => [],
-        ])['game'];
+        ])->json('data.game');
     }
 }

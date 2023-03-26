@@ -31,15 +31,17 @@ class GameInteractionControllerTest extends TestCase
                 'type' => Interaction::Vote->value,
             ])
             ->assertJson([
-                'interaction' => [
-                    'gameId' => $this->game['id'],
-                    'authorizedCallers' => '*',
-                    'type' => Interaction::Vote->value,
+                'data' => [
+                    'interaction' => [
+                        'gameId' => $this->game['id'],
+                        'authorizedCallers' => '*',
+                        'type' => Interaction::Vote->value,
+                    ],
                 ],
             ])
             ->assertOk();
 
-        $interactionId = $res->json('interaction')['id'];
+        $interactionId = $res->json('data.interaction')['id'];
         $interactions = Redis::get("game:{$this->game['id']}:interactions");
 
         $this->assertSame([
@@ -59,7 +61,7 @@ class GameInteractionControllerTest extends TestCase
                 'type' => Interaction::Vote->value,
             ]);
 
-        $interactionId = $res->json('interaction')['id'];
+        $interactionId = $res->json('data.interaction')['id'];
 
         $this->assertNotEmpty(Redis::get("game:{$this->game['id']}:interactions"));
 
@@ -111,8 +113,10 @@ class GameInteractionControllerTest extends TestCase
                     'type' => $interaction->value,
                 ])
                 ->assertJson([
-                    'interaction' => [
-                        'authorizedCallers' => $expectedAuthorized[$interaction->name],
+                    'data' => [
+                        'interaction' => [
+                            'authorizedCallers' => $expectedAuthorized[$interaction->name],
+                        ],
                     ],
                 ]);
         }
@@ -127,7 +131,7 @@ class GameInteractionControllerTest extends TestCase
                 'type' => Interaction::Psychic->value,
             ])
             ->assertOk()
-            ->json('interaction');
+            ->json('data.interaction');
 
         $this
             ->actingAs($this->user, 'api')
@@ -138,10 +142,14 @@ class GameInteractionControllerTest extends TestCase
                 'action' => InteractionAction::Spectate->value,
             ])
             ->assertOk()
-            ->assertExactJson([
-                'id' => $res['id'],
-                'action' => InteractionAction::Spectate->value,
-                'response' => Role::Werewolf->value,
+            ->assertJson([
+                'data' => [
+                    'interaction' => [
+                        'id' => $res['id'],
+                        'action' => InteractionAction::Spectate->value,
+                        'response' => Role::Werewolf->value,
+                    ],
+                ],
             ]);
     }
 
@@ -161,7 +169,7 @@ class GameInteractionControllerTest extends TestCase
                 'type' => Interaction::Psychic->value,
             ])
             ->assertOk()
-            ->json('interaction');
+            ->json('data.interaction');
 
         $this
             ->actingAs($this->user)
@@ -183,7 +191,7 @@ class GameInteractionControllerTest extends TestCase
                 'type' => Interaction::Psychic->value,
             ])
             ->assertOk()
-            ->json('interaction');
+            ->json('data.interaction');
 
         $this
             ->actingAs($this->secondUser, 'api')
@@ -201,7 +209,11 @@ class GameInteractionControllerTest extends TestCase
         $this
             ->get('/api/interactions/actions')
             ->assertOk()
-            ->assertExactJson(Interaction::getActions());
+            ->assertJson([
+                'data' => [
+                    'actions' => Interaction::getActions(),
+                ],
+            ]);
     }
 
     public function testGettingActionsForOneInteraction()
@@ -213,23 +225,27 @@ class GameInteractionControllerTest extends TestCase
                 'type' => Interaction::Witch->value,
             ])
             ->assertJson([
-                'interaction' => [
-                    'gameId' => $this->game['id'],
-                    'authorizedCallers' => json_encode(['superWitch']),
-                    'type' => Interaction::Witch->value,
+                'data' => [
+                    'interaction' => [
+                        'gameId' => $this->game['id'],
+                        'authorizedCallers' => json_encode(['superWitch']),
+                        'type' => Interaction::Witch->value,
+                    ],
                 ],
             ])
             ->assertOk()
-            ->json('interaction');
+            ->json('data.interaction');
 
         $this
             ->get("/api/interactions/actions/{$interaction['gameId']}/{$interaction['id']}")
             ->assertOk()
-            ->assertExactJson([
-                'actions' => [
-                    InteractionAction::KillPotion,
-                    InteractionAction::RevivePotion,
-                    InteractionAction::WitchSkip,
+            ->assertJson([
+                'data' => [
+                    'actions' => [
+                        InteractionAction::KillPotion->value,
+                        InteractionAction::RevivePotion->value,
+                        InteractionAction::WitchSkip->value,
+                    ],
                 ],
             ]);
     }
@@ -245,7 +261,7 @@ class GameInteractionControllerTest extends TestCase
                 ->put('/api/game', [
                     'roles' => [1, 1, 3, 4],
                 ])
-                ->json('game');
+                ->json('data.game');
 
         $this->secondGame =
             $this
@@ -253,7 +269,7 @@ class GameInteractionControllerTest extends TestCase
                 ->put('/api/game', [
                     'roles' => [1, 2],
                 ])
-                ->json('game');
+                ->json('data.game');
 
         $this->user->current_game = $this->game['id'];
         $this->user->save();
@@ -294,7 +310,7 @@ class GameInteractionControllerTest extends TestCase
 
         Redis::set("game:{$this->game['id']}", $additionnalKeys);
 
-        Redis::set("game:{$this->secondGame['id']}", array_merge(Redis::get("game:{$this->secondGame['id']}")), ['is_started' => true]);
+        Redis::set("game:{$this->secondGame['id']}", array_merge(Redis::get("game:{$this->secondGame['id']}"), ['is_started' => true]));
 
         Redis::set("game:{$this->game['id']}:state", [
             'status' => State::Vote->value,

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static void set(string $key, array|int|string $value)
  * @method static mixed get(string $key)
- * @method static void del(string $key)
+ * @method static void del(string ...$keys)
  * @method static bool exists(string $key)
  * @method static array scan(int &$cursor, array $params)
  *

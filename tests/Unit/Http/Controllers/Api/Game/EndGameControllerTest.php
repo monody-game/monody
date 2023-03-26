@@ -133,7 +133,7 @@ class EndGameControllerTest extends TestCase
                 'roles' => [Role::WhiteWerewolf->value, Role::Werewolf->value],
                 'users' => [$this->secondUser->id],
             ])
-            ->json('game');
+            ->json('data.game');
 
         $gameId = $game['id'];
 
@@ -227,7 +227,7 @@ class EndGameControllerTest extends TestCase
                 'roles' => [1, 2],
                 'users' => [$this->secondUser->id],
             ])
-            ->json('game');
+            ->json('data.game');
 
         $additionnalKeys = [
             'assigned_roles' => [

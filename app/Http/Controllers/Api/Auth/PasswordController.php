@@ -3,32 +3,34 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Enums\AlertType;
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Symfony\Component\HttpFoundation\Response;
 
 class PasswordController extends Controller
 {
-    public function reset(Request $request): JsonResponse
+    public function reset(Request $request): JsonApiResponse
     {
         $request->validate(['email' => 'required|email']);
 
         $status = Password::sendResetLink($request->only('email'));
 
         return $status === Password::RESET_LINK_SENT
-            ? (new JsonResponse())->withPopup(
-                AlertType::Success,
-                'Un email vient de vous être envoyé avec un lien pour changer votre mot de passe !',
-                'le mail peut mettre quelques minutes à arriver, veillez à regarder dans vos spams également. Vous pouvez fermer cette page'
-            )
-            : (new JsonResponse(null, Response::HTTP_BAD_REQUEST))->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status));
+            ? JsonApiResponse::make()
+                ->withPopup(
+                    AlertType::Success,
+                    'Un email vient de vous être envoyé avec un lien pour changer votre mot de passe !',
+                    'le mail peut mettre quelques minutes à arriver, veillez à regarder dans vos spams également. Vous pouvez fermer cette page'
+                )
+            : JsonApiResponse::make(status: Status::BAD_REQUEST)
+                ->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status));
     }
 
-    public function token(Request $request): JsonResponse
+    public function token(Request $request): JsonApiResponse
     {
         $request->validate([
             'token' => 'required',
@@ -48,7 +50,8 @@ class PasswordController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET
-            ? new JsonResponse()
-            : (new JsonResponse(null, Response::HTTP_BAD_REQUEST))->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status));
+            ? new JsonApiResponse()
+            : JsonApiResponse::make(status: Status::BAD_REQUEST)
+                ->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status));
     }
 }

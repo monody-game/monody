@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\Role;
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Responses\JsonApiResponse;
 use App\Models\GameOutcome;
 use App\Models\Statistic;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class StatisticsController extends Controller
 {
-    public function index(Request $request, ?string $userId = null): JsonResponse
+    public function index(Request $request, ?string $userId = null): JsonApiResponse
     {
         if ($userId === null && $request->user() === null) {
-            return new JsonResponse('You must specify a user id.', Response::HTTP_BAD_REQUEST);
+            return new JsonApiResponse(['userId' => 'Field required.'], Status::UNPROCESSABLE_ENTITY);
         }
 
         $userId = $userId ?? $request->user()?->id;
@@ -30,7 +30,7 @@ class StatisticsController extends Controller
         ];
 
         if (GameOutcome::where('user_id', $userId)->doesntExist()) {
-            return new JsonResponse($stats);
+            return new JsonApiResponse(['statistics' => $stats]);
         }
 
         $outcomes = GameOutcome::select('role_id', 'win')->where('user_id', $userId)->get();
@@ -69,6 +69,6 @@ class StatisticsController extends Controller
         $stats['win_streak'] = $userStats['win_streak'];
         $stats['longest_streak'] = $userStats['longest_streak'];
 
-        return new JsonResponse($stats);
+        return new JsonApiResponse(['statistics' => $stats]);
     }
 }

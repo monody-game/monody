@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AvatarUploadRequest;
+use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
 use App\Services\AvatarGenerator;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use League\Glide\Server;
-use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @deprecated Useless
+ */
 class AvatarController extends Controller
 {
     private AvatarGenerator $generator;
@@ -21,7 +24,7 @@ class AvatarController extends Controller
         $this->generator = new AvatarGenerator();
     }
 
-    public function generate(Request $request): JsonResponse
+    public function generate(Request $request): JsonApiResponse
     {
         /** @var User $user */
         $user = $request->user();
@@ -39,10 +42,10 @@ class AvatarController extends Controller
         $user->avatar = str_replace('storage', 'assets', Storage::url("avatars/{$user->id}.png"));
         $user->save();
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
-    public function upload(AvatarUploadRequest $request, Server $server): JsonResponse
+    public function upload(AvatarUploadRequest $request, Server $server): JsonApiResponse
     {
         /** @var User $user */
         $user = $request->user();
@@ -64,11 +67,10 @@ class AvatarController extends Controller
         $user->avatar = str_replace('storage', 'assets', Storage::url("avatars/$user->id.{$file->extension()}"));
         $user->save();
 
-        return (new JsonResponse(null, Response::HTTP_CREATED))
-            ->withMessage('Avatar successfully uploaded');
+        return new JsonApiResponse(['message' => 'Avatar successfully uploaded'], Status::CREATED);
     }
 
-    public function delete(Request $request): JsonResponse
+    public function delete(Request $request): JsonApiResponse
     {
         /** @var User $user */
         $user = $request->user();
@@ -78,6 +80,6 @@ class AvatarController extends Controller
         $user->avatar = str_replace('storage', 'assets', Storage::url('avatars/default.png'));
         $user->save();
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 }

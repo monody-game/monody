@@ -15,7 +15,7 @@ class BadgeControllerTest extends TestCase
     {
         $this
             ->getJson('/api/badges')
-            ->assertJson($this->badges);
+            ->assertJsonPath('data.badges', $this->badges);
     }
 
     public function testRetrievingUserBadges()
@@ -54,11 +54,11 @@ class BadgeControllerTest extends TestCase
         $this
             ->actingAs($user)
             ->getJson('/api/badges')
-            ->assertJson($expected);
+            ->assertJson(['data' => ['badges' => $expected]]);
 
         $this
             ->getJson("/api/badges/{$user->id}")
-            ->assertJson($expected);
+            ->assertJson(['data' => ['badges' => $expected]]);
     }
 
     public function setUp(): void

@@ -14,7 +14,11 @@ class UserControllerTest extends TestCase
         $this
             ->actingAs($this->user, 'api')
             ->get('/api/user')
-            ->assertJson($this->user->toArray());
+            ->assertJson([
+                'data' => [
+                    'user' => $this->user->toArray(),
+                ],
+            ]);
     }
 
     public function testUpdatingUser()
@@ -31,9 +35,13 @@ class UserControllerTest extends TestCase
             ])
             ->assertStatus(Response::HTTP_OK)
             ->assertJson([
-                'id' => $user->id,
-                'username' => 'John',
-                'email' => 'emailtest@test.com',
+                'data' => [
+                    'user' => [
+                        'id' => $user->id,
+                        'username' => 'John',
+                        'email' => 'emailtest@test.com',
+                    ],
+                ],
             ]);
 
         $user = $user->refresh();
@@ -55,7 +63,9 @@ class UserControllerTest extends TestCase
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->get('/api/user/discord/1234')
             ->assertJson([
-                $linkedUser->fresh()->toArray(),
+                'data' => [
+                    'user' => $linkedUser->fresh()->toArray(),
+                ],
             ]);
     }
 

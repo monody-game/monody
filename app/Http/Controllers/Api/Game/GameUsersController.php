@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\Role;
+use App\Enums\Status;
 use App\Events\CloseVoiceChannelNotice;
 use App\Events\Websockets\GameStart;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserJoinedVocalChannelRequest;
 use App\Http\Requests\UserRoleRequest;
+use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class GameUsersController extends Controller
 {
     use GameHelperTrait, MemberHelperTrait;
 
-    public function joined(UserJoinedVocalChannelRequest $request): JsonResponse
+    public function joined(UserJoinedVocalChannelRequest $request): JsonApiResponse
     {
         $query = User::where('discord_id', $request->validated('discord_id'))->get();
         /** @var User $user */
@@ -27,7 +27,7 @@ class GameUsersController extends Controller
         $gameId = $user->current_game;
 
         if (!$gameId) {
-            return new JsonResponse([], Response::HTTP_BAD_REQUEST);
+            return new JsonApiResponse(status: Status::BAD_REQUEST);
         }
 
         $discordData = Redis::get("game:$gameId:discord");
@@ -43,17 +43,17 @@ class GameUsersController extends Controller
             broadcast(new GameStart($game));
         }
 
-        return new JsonResponse();
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
-    public function list(string $gameId): JsonResponse
+    public function list(string $gameId): JsonApiResponse
     {
         $game = $this->getGame($gameId);
 
-        return new JsonResponse(['users' => $game['users']]);
+        return new JsonApiResponse(['users' => $game['users']]);
     }
 
-    public function role(UserRoleRequest $request): JsonResponse
+    public function role(UserRoleRequest $request): JsonApiResponse
     {
         /** @var string $gameId */
         $gameId = $request->user()?->current_game;
@@ -64,6 +64,6 @@ class GameUsersController extends Controller
         $userRole = $game['assigned_roles'][$request->validated('id')];
         $role = Role::from($userRole)->full();
 
-        return new JsonResponse($role);
+        return new JsonApiResponse(['role' => $role]);
     }
 }

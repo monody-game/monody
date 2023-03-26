@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\Badge;
 use App\Http\Controllers\Controller;
+use App\Http\Responses\JsonApiResponse;
 use App\Models\UserBadge as BadgeModel;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class BadgeController extends Controller
 {
-    public function get(Request $request, string $userId = null): JsonResponse
+    public function get(Request $request, string $userId = null): JsonApiResponse
     {
         $userBadges = [];
 
@@ -33,6 +33,8 @@ class BadgeController extends Controller
             $list[$userBadge->badge_id]['obtained_at'] = $userBadge->obtained_at;
         }
 
-        return new JsonResponse([...$list]);
+        return new JsonApiResponse([
+            'badges' => [...$list],
+        ]);
     }
 }

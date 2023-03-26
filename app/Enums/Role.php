@@ -68,9 +68,10 @@ enum Role: int
     public function weight(): int
     {
         return match ($this) {
-            self::Werewolf, self::LittleGirl, self::Elder => 2,
+            self::InfectedWerewolf, self::WhiteWerewolf => 5,
+            self::Werewolf => 4,
+            self::LittleGirl, self::Elder, self::Psychic, self::Witch, self::Angel => 2,
             self::SimpleVillager => 1,
-            self::Psychic, self::Witch, self::InfectedWerewolf, self::WhiteWerewolf, self::Angel => 3,
         };
     }
 

@@ -193,7 +193,7 @@ class GameChatControllerTest extends TestCase
         $this->game = $this->actingAs($this->user, 'api')->put('/api/game', [
             'roles' => [1, 2],
             'users' => [],
-        ])['game'];
+        ])->json('data.game');
 
         $game = Redis::get("game:{$this->game['id']}");
 

@@ -27,7 +27,7 @@ class LoginControllerTest extends TestCase
         ]);
 
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
-        $response->assertJson(['message' => 'Invalid credentials.']);
+        $response->assertJsonPath('data.message', 'Invalid credentials.');
         $response->assertCookieMissing('monody_access_token');
     }
 
