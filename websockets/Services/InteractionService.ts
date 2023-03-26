@@ -14,7 +14,7 @@ export class InteractionService {
 		});
 
 		try {
-			const interaction = res.json.interaction;
+			const interaction = res.json.data.interaction;
 
 			const interactionId = interaction.id;
 			let callers = interaction.authorizedCallers;

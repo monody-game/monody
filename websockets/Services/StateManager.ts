@@ -53,7 +53,7 @@ export class StateManager {
 			const message = await fetch(`${process.env.API_URL}/state/${state.status}/message`);
 
 			if (state.status > 1 && message.status !== 404) {
-				ChatService.info(this.io, channel, message.json.message);
+				ChatService.info(this.io, channel, message.json.data.state_message);
 			}
 		}
 

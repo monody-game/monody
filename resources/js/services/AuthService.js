@@ -13,10 +13,10 @@ export default class AuthService {
 			return false;
 		}
 
-		const data = res.data;
+		const data = res.data.user;
 		res = await window.JSONFetch("/exp/get", "GET");
-		data.exp = res.data.exp;
-		data.next_level = res.data.next_level;
+		data.exp = res.data.exp.exp;
+		data.next_level = res.data.exp.next_level;
 
 		if (!data) {
 			return false;

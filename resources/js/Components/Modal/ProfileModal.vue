@@ -128,7 +128,7 @@ const hasUploaded = ref(false);
 const discordInfos = async () => {
 	const res = await window.JSONFetch("/oauth/user/discord");
 
-	return res.data;
+	return res.data.user;
 };
 
 const discordUsername = ref("n/a");

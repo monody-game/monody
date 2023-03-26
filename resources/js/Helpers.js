@@ -62,6 +62,7 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 
 	res.status = response.status;
 	res.ok = response.ok;
+	res.data = res.data.data;
 
 	return res;
 };

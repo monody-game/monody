@@ -98,7 +98,7 @@ let roles = store.roles;
 const assignedRole = ref(0);
 
 const actions = await window.JSONFetch("/interactions/actions", "GET");
-store.availableActions = actions.data;
+store.availableActions = actions.data.actions;
 
 if (localStorage.getItem("show_share") === "true") {
 	modalStore.open("share-game-modal");
@@ -126,7 +126,8 @@ window.Echo.join(`game.${gameId}`)
 
 		if (e.type === 1 && e.discord === null) {
 			const res = await window.JSONFetch(`/game/${gameId}/discord`);
-			store.discord = res.data.content;
+			console.log(res);
+			store.discord = res.data.data;
 		} else {
 			store.discord = e.discord;
 		}
@@ -136,7 +137,6 @@ window.Echo.join(`game.${gameId}`)
 		}
 	})
 	.listen(".game.role-assign", async (role_id) => {
-		console.log(role_id);
 		const res = await window.JSONFetch(`/roles/get/${role_id}`, "GET");
 		const role = res.data.role;
 		store.setRole(userStore.id, role);

@@ -11,12 +11,6 @@
       />
     </div>
     <div class="modal__buttons">
-      <!--      <button
-			class="btn medium"
-			@click="close"
-		>
-			Annuler
-		</button>-->
       <div class="modal__buttons-right">
         <button
           class="btn medium"
@@ -45,14 +39,10 @@ const badges = computed(() => {
 
 if (store.badges.length === 0) {
 	const res = await window.JSONFetch("/badges");
-	store.badges = res.data;
+	store.badges = res.data.badges;
 }
 
 const close = () => {
 	modalStore.close();
-};
-
-const finish = () => {
-
 };
 </script>

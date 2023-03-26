@@ -50,7 +50,7 @@ export async function getRounds(gameId = ""): Promise<RoundList|[]> {
 	}
 
 	try {
-		for (const round of apiRounds.json) {
+		for (const round of apiRounds.json.data.rounds) {
 			const roundStates: Round = [];
 			for (let state of round) {
 				if (hookedStates.includes(state.identifier)) {

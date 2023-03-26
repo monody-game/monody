@@ -116,7 +116,7 @@ window.Echo.join(`game.${route.params.id}`)
 
 		const user = gameStore.getPlayerByID(killed);
 		let role = await window.JSONFetch(`/game/user/${user.id}/role`, "GET");
-		role = role.data.display_name;
+		role = role.data.role.display_name;
 
 		if (payload.infected && payload.infected === true) {
 			role = role + " (infecté)";
