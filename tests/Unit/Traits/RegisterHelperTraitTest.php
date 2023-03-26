@@ -13,14 +13,12 @@ class RegisterHelperTraitTest extends TestCase
     public function testGettingAndSettingActivity()
     {
         $user = User::factory()->create();
-        $game = json_decode(
-            $this
-            ->actingAs($user, 'api')
+        $game = $this->actingAs($user, 'api')
             ->put('/api/game', [
                 'users' => [$user->id],
                 'roles' => [1],
-            ]
-            )->getContent(), true)['game'];
+            ])
+            ->json('data.game');
 
         $this->setCurrentUserGameActivity($user->id, $game['id']);
         $user->refresh();

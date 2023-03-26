@@ -3,21 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\AlertType;
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
-    public function user(Request $request): JsonResponse
+    public function user(Request $request): JsonApiResponse
     {
-        return new JsonResponse($request->user());
+        return new JsonApiResponse([
+            'user' => $request->user(),
+        ]);
     }
 
-    public function update(UserUpdateRequest $request): JsonResponse
+    public function update(UserUpdateRequest $request): JsonApiResponse
     {
         /** @var User $user */
         $user = $request->user();
@@ -35,7 +37,7 @@ class UserController extends Controller
         if ($request->has('email') && $user->hasVerifiedEmail() === false) {
             $user->sendEmailVerificationNotification();
 
-            return (new JsonResponse($user))
+            return JsonApiResponse::make(['user' => $user])
                 ->withPopup(
                     AlertType::Info,
                     "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
@@ -45,18 +47,17 @@ class UserController extends Controller
                 );
         }
 
-        return new JsonResponse($user);
+        return new JsonApiResponse(['user' => $user]);
     }
 
-    public function discord(string $discordId): JsonResponse
+    public function discord(string $discordId): JsonApiResponse
     {
         $user = User::where('discord_id', $discordId)->get();
 
         if (!$user->first()) {
-            return (new JsonResponse([], Response::HTTP_UNAUTHORIZED))
-                    ->withMessage('You need to link your discord account first');
+            return new JsonApiResponse(['message' => 'You need to link your discord account first'], Status::UNAUTHORIZED);
         }
 
-        return new JsonResponse($user);
+        return new JsonApiResponse(['user' => $user->first()]);
     }
 }

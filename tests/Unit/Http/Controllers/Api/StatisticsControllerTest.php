@@ -17,13 +17,17 @@ class StatisticsControllerTest extends TestCase
         $this
             ->get("/api/stats/{$user->id}")
             ->assertOk()
-            ->assertExactJson([
-                'win_streak' => 0,
-                'longest_streak' => 0,
-                'wins' => 0,
-                'losses' => 0,
-                'highest_win_role' => null,
-                'most_possessed_role' => null,
+            ->assertJson([
+                'data' => [
+                    'statistics' => [
+                        'win_streak' => 0,
+                        'longest_streak' => 0,
+                        'wins' => 0,
+                        'losses' => 0,
+                        'highest_win_role' => null,
+                        'most_possessed_role' => null,
+                    ],
+                ],
             ]);
     }
 
@@ -45,18 +49,22 @@ class StatisticsControllerTest extends TestCase
             ->actingAs($user, 'api')
             ->get('/api/stats')
             ->assertOk()
-            ->assertExactJson([
-                'win_streak' => 0,
-                'longest_streak' => 0,
-                'wins' => 1,
-                'losses' => 0,
-                'highest_win_role' => [
-                    'role' => Role::Psychic,
-                    'occurences' => 1,
-                ],
-                'most_possessed_role' => [
-                    'role' => Role::Psychic,
-                    'occurences' => 1,
+            ->assertJson([
+                'data' => [
+                    'statistics' => [
+                        'win_streak' => 0,
+                        'longest_streak' => 0,
+                        'wins' => 1,
+                        'losses' => 0,
+                        'highest_win_role' => [
+                            'role' => Role::Psychic->value,
+                            'occurences' => 1,
+                        ],
+                        'most_possessed_role' => [
+                            'role' => Role::Psychic->value,
+                            'occurences' => 1,
+                        ],
+                    ],
                 ],
             ]);
     }
@@ -69,28 +77,32 @@ class StatisticsControllerTest extends TestCase
         $stats->user_id = $user->id;
         $stats->save();
 
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::SimpleVillager, 'win' => true]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch, 'win' => true]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch, 'win' => false]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch, 'win' => false]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::SimpleVillager, 'win' => true]);
+        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::SimpleVillager->value, 'win' => true]);
+        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch->value, 'win' => true]);
+        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch->value, 'win' => false]);
+        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch->value, 'win' => false]);
+        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::SimpleVillager->value, 'win' => true]);
 
         $this
             ->actingAs($user, 'api')
             ->get('/api/stats')
             ->assertOk()
-            ->assertExactJson([
-                'win_streak' => 0,
-                'longest_streak' => 0,
-                'wins' => 3,
-                'losses' => 2,
-                'highest_win_role' => [
-                    'role' => Role::SimpleVillager,
-                    'occurences' => 2,
-                ],
-                'most_possessed_role' => [
-                    'role' => Role::Witch,
-                    'occurences' => 3,
+            ->assertJson([
+                'data' => [
+                    'statistics' => [
+                        'win_streak' => 0,
+                        'longest_streak' => 0,
+                        'wins' => 3,
+                        'losses' => 2,
+                        'highest_win_role' => [
+                            'role' => Role::SimpleVillager->value,
+                            'occurences' => 2,
+                        ],
+                        'most_possessed_role' => [
+                            'role' => Role::Witch->value,
+                            'occurences' => 3,
+                        ],
+                    ],
                 ],
             ]);
     }

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api\Oauth;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -13,44 +14,45 @@ use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 final class DiscordOauthController extends Controller
 {
     use OauthProviderTrait;
+
+    private const API_ENDPOINT = 'https://discord.com/api/v10';
 
     public function link(): RedirectResponse
     {
         return $this->generateProvider('discord', ['identify', 'email', 'role_connections.write'])->redirect();
     }
 
-    public function user(Request $request): JsonResponse
+    public function user(Request $request): JsonApiResponse
     {
         /** @var User $user Route is protected by auth guard */
         $user = $request->user();
 
         if ($user->discord_id === null || $user->discord_token === null) {
-            return (new JsonResponse([], Response::HTTP_UNAUTHORIZED))
-                ->withMessage('You need to link your discord account first');
+            return new JsonApiResponse(['message' => 'You need to link your discord account first']);
         }
 
         /** @var AbstractProvider $driver */
         $driver = Socialite::driver('discord');
-        $user = $driver->userFromToken($user->discord_token);
 
-        return new JsonResponse([
+        $user = $driver->userFromToken($user->discord_token);
+        // TODO: Handle case where token needs to be refreshed
+        //$token = $this->getToken($user->discord_refresh_token);
+
+        return new JsonApiResponse(['user' => [
             'id' => $user->getId(),
             'username' => $user->getNickname(),
             'avatar' => $user->getAvatar(),
-        ]);
+        ]]);
     }
 
-    public function check(Request $request): RedirectResponse|JsonResponse
+    public function check(Request $request): RedirectResponse|JsonApiResponse
     {
         if (!$request->has('code')) {
-            return (new JsonResponse([]))
-                ->withMessage('GET parameter "code" is mandatory.')
-                ->withContent($request->all());
+            return new JsonApiResponse(['message' => 'GET parameter "code" is mandatory.'], Status::BAD_REQUEST);
         }
 
         try {
@@ -58,8 +60,7 @@ final class DiscordOauthController extends Controller
             $driver = Socialite::driver('discord');
             $discordUser = $driver->stateless()->user();
         } catch (Exception) {
-            return (new JsonResponse([], Response::HTTP_BAD_REQUEST))
-                ->withMessage('An error occurred, try to relog.');
+            return new JsonApiResponse(['message' => 'An unexpected error occurred, try to relog.'], Status::BAD_REQUEST);
         }
 
         $discordId = config('services.discord.client_id');
@@ -79,7 +80,7 @@ final class DiscordOauthController extends Controller
         $res = Http::withToken($discordUser->accessTokenResponseBody['access_token'])
             ->asJson()
             ->put(
-                "https://discord.com/api/v10/users/@me/applications/{$discordId}/role-connection",
+                self::API_ENDPOINT . "/users/@me/applications/{$discordId}/role-connection",
                 [
                     'plateform_name' => 'Monody',
                     'metadata' => [
@@ -94,19 +95,19 @@ final class DiscordOauthController extends Controller
             return new RedirectResponse('/play');
         }
 
-        return (new JsonResponse([], Response::HTTP_BAD_REQUEST))
-            ->withMessage('An error occurred, please retry.');
+        return new JsonApiResponse([
+            'message' => 'An error occurred, please retry.',
+        ]);
     }
 
-    public function unlink(Request $request): JsonResponse
+    public function unlink(Request $request): JsonApiResponse
     {
         /** @var User $user */
         $user = $request->user();
         $discordId = config('services.discord.client_id');
 
         if (!$user->discord_id) {
-            return (new JsonResponse([], Response::HTTP_FORBIDDEN))
-                ->withMessage('Your Discord account is not linked.');
+            return new JsonApiResponse(['message' => 'Your Discord account is not linked to Monody.'], Status::FORBIDDEN);
         }
 
         /** @var string $token */
@@ -130,6 +131,6 @@ final class DiscordOauthController extends Controller
         $user->discord_linked_at = null;
         $user->save();
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 }

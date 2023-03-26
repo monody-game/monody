@@ -19,7 +19,9 @@ class GameActionsControllerTest extends TestCase
         $this
             ->get('/api/interactions/actions')
             ->assertOk()
-            ->assertExactJson(Interaction::getActions());
+            ->assertJson([
+                'data' => ['actions' => Interaction::getActions()],
+            ]);
     }
 
     public function testGettingActionsForPsychicInteraction()
@@ -30,13 +32,15 @@ class GameActionsControllerTest extends TestCase
                 'gameId' => $this->game['id'],
                 'type' => Interaction::Psychic->value,
             ])
-            ->json('interaction');
+            ->json('data.interaction');
 
         $this
             ->get("/api/interactions/actions/{$this->game['id']}/{$interaction['id']}")
-            ->assertExactJson([
-                'actions' => [
-                    InteractionAction::Spectate,
+            ->assertJson([
+                'data' => [
+                    'actions' => [
+                        InteractionAction::Spectate->value,
+                    ],
                 ],
             ]);
     }
@@ -49,15 +53,17 @@ class GameActionsControllerTest extends TestCase
                 'gameId' => $this->game['id'],
                 'type' => Interaction::Witch->value,
             ])
-            ->json('interaction');
+            ->json('data.interaction');
 
         $this
             ->get("/api/interactions/actions/{$this->game['id']}/{$interaction['id']}")
-            ->assertExactJson([
-                'actions' => [
-                    InteractionAction::KillPotion,
-                    InteractionAction::RevivePotion,
-                    InteractionAction::WitchSkip,
+            ->assertJson([
+                'data' => [
+                    'actions' => [
+                        InteractionAction::KillPotion->value,
+                        InteractionAction::RevivePotion->value,
+                        InteractionAction::WitchSkip->value,
+                    ],
                 ],
             ]);
 
@@ -65,10 +71,12 @@ class GameActionsControllerTest extends TestCase
 
         $this
             ->get("/api/interactions/actions/{$this->game['id']}/{$interaction['id']}")
-            ->assertExactJson([
-                'actions' => [
-                    InteractionAction::KillPotion,
-                    InteractionAction::WitchSkip,
+            ->assertJson([
+                'data' => [
+                    'actions' => [
+                        InteractionAction::KillPotion->value,
+                        InteractionAction::WitchSkip->value,
+                    ],
                 ],
             ]);
     }
@@ -87,7 +95,7 @@ class GameActionsControllerTest extends TestCase
                     Role::Psychic->value,
                     Role::Werewolf->value,
                 ],
-            ])->json('game');
+            ])->json('data.game');
 
         $this->game = $game;
     }

@@ -14,7 +14,7 @@ class TeamControllerTest extends TestCase
     public function testGetAllTeams(): void
     {
         $response = $this->actingAs($this->user, 'api')->getJson('/api/teams');
-        $response->assertJsonCount(3, 'teams');
+        $response->assertJsonCount(3, 'data.teams');
     }
 
     public function testRetrievingOneTeam(): void
@@ -25,11 +25,13 @@ class TeamControllerTest extends TestCase
             ->actingAs($this->user, 'api')
             ->getJson("/api/team/{$id}")
             ->assertOk()
-            ->assertExactJson([
-                'team' => [
-                    'id' => $id,
-                    'name' => Team::Villagers->name(),
-                    'display_name' => Team::Villagers->stringify(),
+            ->assertJson([
+                'data' => [
+                    'team' => [
+                        'id' => $id,
+                        'name' => Team::Villagers->name(),
+                        'display_name' => Team::Villagers->stringify(),
+                    ],
                 ],
             ]);
     }

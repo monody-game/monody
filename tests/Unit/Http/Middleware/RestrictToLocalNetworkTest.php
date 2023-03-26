@@ -3,7 +3,7 @@
 namespace Tests\Unit\Http\Middleware;
 
 use App\Http\Middleware\RestrictToLocalNetwork;
-use Illuminate\Http\JsonResponse;
+use App\Http\Responses\JsonApiResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -31,7 +31,7 @@ class RestrictToLocalNetworkTest extends TestCase
         $res = $middleware->handle(new Request(), function () {
         });
 
-        $this->assertInstanceOf(JsonResponse::class, $res);
-        $this->assertSame(Response::HTTP_FORBIDDEN, $res->status());
+        $this->assertInstanceOf(JsonApiResponse::class, $res);
+        $this->assertSame(Response::HTTP_FORBIDDEN, $res->status->value);
     }
 }

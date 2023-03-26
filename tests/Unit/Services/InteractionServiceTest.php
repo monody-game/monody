@@ -234,7 +234,7 @@ class InteractionServiceTest extends TestCase
             ->put('/api/game', [
                 'roles' => [1, 2, 3, 4, 7],
             ])
-            ->json('game');
+            ->json('data.game');
 
         $additionnalKeys = array_merge($this->game, [
             'assigned_roles' => [

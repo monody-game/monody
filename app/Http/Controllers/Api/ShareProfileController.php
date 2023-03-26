@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Responses\JsonApiResponse;
 use App\Models\Exp;
 use App\Models\User;
 use App\Services\ExpService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\AbstractFont;
 use Intervention\Image\AbstractShape;
 use Intervention\Image\Facades\Image;
 use League\Glide\Server;
-use Symfony\Component\HttpFoundation\Response;
 
 class ShareProfileController extends Controller
 {
@@ -35,12 +35,10 @@ class ShareProfileController extends Controller
 
     private string $accent = self::LIGHT_ACCENT;
 
-    public function index(Request $request, Server $glide, ExpService $expService, string $theme = 'light'): JsonResponse
+    public function index(Request $request, Server $glide, ExpService $expService, string $theme = 'light'): JsonApiResponse
     {
         if (!in_array($theme, ['dark', 'light'], true)) {
-            return new JsonResponse([
-                'message' => '"Theme" parameter value must be either "light" (default) or "dark"',
-            ], Response::HTTP_BAD_REQUEST);
+            return new JsonApiResponse(['theme' => 'Must be either "light" (default) or "dark"'], Status::BAD_REQUEST);
         }
 
         /** @var User $user Route protected by auth guard */
@@ -48,26 +46,24 @@ class ShareProfileController extends Controller
 
         $this->generateProfileCanvas($user, $theme, $glide, $expService);
 
-        return new JsonResponse();
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
-    public function discord(string $discordId, Server $glide, ExpService $expService, string $theme = 'light'): JsonResponse
+    public function discord(string $discordId, Server $glide, ExpService $expService, string $theme = 'light'): JsonApiResponse
     {
         if (!in_array($theme, ['dark', 'light'], true)) {
-            return new JsonResponse([
-                'message' => '"Theme" parameter value must be either "light" (default) or "dark"',
-            ], Response::HTTP_BAD_REQUEST);
+            return new JsonApiResponse(['theme' => 'Must be either "light" (default) or "dark"'], Status::BAD_REQUEST);
         }
 
         $user = User::where('discord_id', $discordId)->get();
 
         if ($user->first() === null) {
-            return new JsonResponse([], Response::HTTP_UNAUTHORIZED);
+            return new JsonApiResponse(status: Status::UNAUTHORIZED);
         }
 
         $this->generateProfileCanvas($user->first(), $theme, $glide, $expService);
 
-        return new JsonResponse();
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
     private function generateProfileCanvas(User $user, string $theme, Server $glide, ExpService $expService): void

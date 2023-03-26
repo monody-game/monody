@@ -3,22 +3,21 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Enums\AlertType;
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Http\Responses\JsonApiResponse;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class VerifyEmailController extends Controller
 {
-    public function verify(EmailVerificationRequest $request): JsonResponse
+    public function verify(EmailVerificationRequest $request): JsonApiResponse
     {
         $request->fulfill();
 
-        return (new JsonResponse([], Response::HTTP_TEMPORARY_REDIRECT, [
-            'Location' => '/play',
-        ]))->withAlert(AlertType::Success, 'Email vérifié avec succès !');
+        return JsonApiResponse::make(status: Status::TEMPORARY_REDIRECT, headers: ['Location' => '/play'])
+            ->withAlert(AlertType::Success, 'Email vérifié avec succès !');
     }
 
     public function notice(Request $request): RedirectResponse

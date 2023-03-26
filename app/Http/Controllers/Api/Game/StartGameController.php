@@ -3,32 +3,32 @@
 namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\GameType;
+use App\Enums\Status;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GameIdRequest;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use App\Http\Responses\JsonApiResponse;
 
 class StartGameController extends Controller
 {
-    public function check(GameIdRequest $request): JsonResponse
+    public function check(GameIdRequest $request): JsonApiResponse
     {
         $gameId = $request->validated('gameId');
         $game = Redis::get("game:$gameId");
 
         if ($game['is_started'] === true) {
-            return new JsonResponse(['message' => 'You cannot start an already started game.'], Response::HTTP_FORBIDDEN);
+            return new JsonApiResponse(['message' => 'You cannot start an already started game.'], Status::FORBIDDEN);
         }
 
         if ($game['type'] === GameType::NORMAL->value && $this->isFull($game)) {
-            return new JsonResponse([], Response::HTTP_NO_CONTENT);
+            return new JsonApiResponse(status: Status::NO_CONTENT);
         }
 
         if ($game['type'] === GameType::VOCAL->value && $this->isFull($game) && $this->allUsersJoinedVoiceChannel($game)) {
-            return new JsonResponse([], Response::HTTP_NO_CONTENT);
+            return new JsonApiResponse(status: Status::NO_CONTENT);
         }
 
-        return new JsonResponse(['message' => "Game $gameId is not ready to be started."], Response::HTTP_FORBIDDEN);
+        return new JsonApiResponse(['message' => "Game $gameId is not ready to be started."], Status::FORBIDDEN);
     }
 
     public static function isFull(array $game): bool

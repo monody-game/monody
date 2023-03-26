@@ -16,13 +16,13 @@ enum Interaction: string
     public static function getActions(): array
     {
         return [
-            self::Vote->value => InteractionAction::Vote,
-            self::Mayor->value => InteractionAction::Elect,
-            self::Witch->value => [InteractionAction::RevivePotion, InteractionAction::KillPotion, InteractionAction::WitchSkip],
-            self::Psychic->value => InteractionAction::Spectate,
-            self::Werewolves->value => InteractionAction::Kill,
-            self::InfectedWerewolf->value => [InteractionAction::Infect, InteractionAction::InfectedSkip],
-            self::WhiteWerewolf->value => InteractionAction::BetrayalKill,
+            self::Vote->value => InteractionAction::Vote->value,
+            self::Mayor->value => InteractionAction::Elect->value,
+            self::Witch->value => [InteractionAction::RevivePotion->value, InteractionAction::KillPotion->value, InteractionAction::WitchSkip->value],
+            self::Psychic->value => InteractionAction::Spectate->value,
+            self::Werewolves->value => InteractionAction::Kill->value,
+            self::InfectedWerewolf->value => [InteractionAction::Infect->value, InteractionAction::InfectedSkip->value],
+            self::WhiteWerewolf->value => InteractionAction::BetrayalKill->value,
             self::Angel->value => [],
         ];
     }

@@ -2,14 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Status;
+use App\Http\Responses\JsonApiResponse;
 use Closure;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class RestrictToLocalNetwork
 {
-    public function handle(Request $request, Closure $next): JsonResponse|bool
+    public function handle(Request $request, Closure $next): JsonApiResponse|bool
     {
         if (
             $request->hasHeader('X-Network-Key') &&
@@ -18,6 +18,6 @@ class RestrictToLocalNetwork
             return $next($request);
         }
 
-        return new JsonResponse('Unauthorized.', Response::HTTP_FORBIDDEN);
+        return new JsonApiResponse(['message' => 'Unauthorized.'], Status::FORBIDDEN);
     }
 }

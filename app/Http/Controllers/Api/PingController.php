@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
+use App\Http\Responses\JsonApiResponse;
 
 class PingController extends Controller
 {
-    public function ping(): JsonResponse
+    public function ping(): JsonApiResponse
     {
-        return (new JsonResponse())
-            ->withMessage('Alive 🌙');
+        return new JsonApiResponse([
+            'message' => 'Alive 🌙',
+        ]);
     }
 }

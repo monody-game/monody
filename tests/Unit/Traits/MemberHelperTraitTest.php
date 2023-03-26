@@ -99,7 +99,7 @@ class MemberHelperTraitTest extends TestCase
                 'roles' => [Role::InfectedWerewolf->value, Role::Werewolf->value],
                 'users' => [$this->secondUser['id']],
             ])
-            ->json('game');
+            ->json('data.game');
 
         Redis::set("game:{$this->game['id']}", array_merge($this->game, [
             'assigned_roles' => [

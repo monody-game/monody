@@ -40,14 +40,14 @@ class RoundControllerTest extends TestCase
         $this
             ->get('/api/rounds')
             ->assertOk()
-            ->assertExactJson($rounds);
+            ->assertJson(['data' => ['rounds' => $rounds]]);
     }
 
     public function testGettingOneRound()
     {
         $round = array_map(function ($state) {
             return [
-                'identifier' => $state,
+                'identifier' => $state->value,
                 'raw_name' => $state->stringify(),
                 'duration' => $state->duration(),
             ];
@@ -56,7 +56,7 @@ class RoundControllerTest extends TestCase
         $this
             ->get('/api/round/1')
             ->assertOk()
-            ->assertExactJson($round);
+            ->assertJson(['data' => ['round' => $round]]);
     }
 
     public function testGettingOneRoundForASpecificGame()
@@ -64,7 +64,7 @@ class RoundControllerTest extends TestCase
         $round = $this
             ->get("/api/round/1/{$this->game['id']}")
             ->assertOk()
-            ->json();
+            ->json('data.round');
 
         $this->assertSame($this->firstRound, $round);
     }
@@ -74,15 +74,19 @@ class RoundControllerTest extends TestCase
         $this
             ->get("/api/rounds/{$this->game['id']}")
             ->assertOk()
-            ->assertExactJson([
-                $this->firstRound,
-                $this->secondRound,
-                $this->loopRound,
-                [
-                    [
-                        'duration' => State::End->duration(),
-                        'identifier' => State::End->value,
-                        'raw_name' => State::End->stringify(),
+            ->assertJson([
+                'data' => [
+                    'rounds' => [
+                        $this->firstRound,
+                        $this->secondRound,
+                        $this->loopRound,
+                        [
+                            [
+                                'duration' => State::End->duration(),
+                                'identifier' => State::End->value,
+                                'raw_name' => State::End->stringify(),
+                            ],
+                        ],
                     ],
                 ],
             ]);
@@ -93,26 +97,30 @@ class RoundControllerTest extends TestCase
         $this
             ->get("/api/round/2/{$this->secondGame['id']}")
             ->assertOk()
-            ->assertExactJson([
-                [
-                    'identifier' => State::Night->value,
-                    'raw_name' => State::Night->stringify(),
-                    'duration' => State::Night->duration(),
-                ],
-                [
-                    'identifier' => State::Werewolf->value,
-                    'raw_name' => State::Werewolf->stringify(),
-                    'duration' => State::Werewolf->duration(),
-                ],
-                [
-                    'identifier' => State::Day->value,
-                    'raw_name' => State::Day->stringify(),
-                    'duration' => State::Day->duration(),
-                ],
-                [
-                    'identifier' => State::Mayor->value,
-                    'raw_name' => State::Mayor->stringify(),
-                    'duration' => State::Mayor->duration(),
+            ->assertJson([
+                'data' => [
+                    'round' => [
+                        [
+                            'identifier' => State::Night->value,
+                            'raw_name' => State::Night->stringify(),
+                            'duration' => State::Night->duration(),
+                        ],
+                        [
+                            'identifier' => State::Werewolf->value,
+                            'raw_name' => State::Werewolf->stringify(),
+                            'duration' => State::Werewolf->duration(),
+                        ],
+                        [
+                            'identifier' => State::Day->value,
+                            'raw_name' => State::Day->stringify(),
+                            'duration' => State::Day->duration(),
+                        ],
+                        [
+                            'identifier' => State::Mayor->value,
+                            'raw_name' => State::Mayor->stringify(),
+                            'duration' => State::Mayor->duration(),
+                        ],
+                    ],
                 ],
             ]);
     }
@@ -122,31 +130,35 @@ class RoundControllerTest extends TestCase
         $this
             ->get("/api/round/2/{$this->thirdGame['id']}")
             ->assertOk()
-            ->assertExactJson([
-                [
-                    'identifier' => State::Night->value,
-                    'raw_name' => State::Night->stringify(),
-                    'duration' => State::Night->duration(),
-                ],
-                [
-                    'identifier' => State::Werewolf->value,
-                    'raw_name' => State::Werewolf->stringify(),
-                    'duration' => State::Werewolf->duration(),
-                ],
-                [
-                    'identifier' => State::InfectedWerewolf->value,
-                    'raw_name' => State::InfectedWerewolf->stringify(),
-                    'duration' => State::InfectedWerewolf->duration(),
-                ],
-                [
-                    'identifier' => State::Day->value,
-                    'raw_name' => State::Day->stringify(),
-                    'duration' => State::Day->duration(),
-                ],
-                [
-                    'identifier' => State::Mayor->value,
-                    'raw_name' => State::Mayor->stringify(),
-                    'duration' => State::Mayor->duration(),
+            ->assertJson([
+                'data' => [
+                    'round' => [
+                        [
+                            'identifier' => State::Night->value,
+                            'raw_name' => State::Night->stringify(),
+                            'duration' => State::Night->duration(),
+                        ],
+                        [
+                            'identifier' => State::Werewolf->value,
+                            'raw_name' => State::Werewolf->stringify(),
+                            'duration' => State::Werewolf->duration(),
+                        ],
+                        [
+                            'identifier' => State::InfectedWerewolf->value,
+                            'raw_name' => State::InfectedWerewolf->stringify(),
+                            'duration' => State::InfectedWerewolf->duration(),
+                        ],
+                        [
+                            'identifier' => State::Day->value,
+                            'raw_name' => State::Day->stringify(),
+                            'duration' => State::Day->duration(),
+                        ],
+                        [
+                            'identifier' => State::Mayor->value,
+                            'raw_name' => State::Mayor->stringify(),
+                            'duration' => State::Mayor->duration(),
+                        ],
+                    ],
                 ],
             ]);
     }
@@ -162,21 +174,21 @@ class RoundControllerTest extends TestCase
             ->put('/api/game', [
                 'roles' => [Role::Werewolf->value, Role::Werewolf->value, Role::Psychic->value],
             ])
-            ->json('game');
+            ->json('data.game');
 
         $this->secondGame = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
                 'roles' => [Role::Werewolf->value, Role::SimpleVillager->value],
             ])
-            ->json('game');
+            ->json('data.game');
 
         $this->thirdGame = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
                 'roles' => [Role::SimpleVillager->value, Role::InfectedWerewolf->value],
             ])
-            ->json('game');
+            ->json('data.game');
 
         $this->loopRound = [
             [

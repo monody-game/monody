@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GameIdRequest;
+use App\Http\Responses\JsonApiResponse;
 use App\Services\EndGameService;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class EndGameController extends Controller
 {
@@ -15,21 +15,21 @@ class EndGameController extends Controller
     ) {
     }
 
-    public function check(GameIdRequest $request): JsonResponse
+    public function check(GameIdRequest $request): JsonApiResponse
     {
         if ($this->service->enoughTeamPlayersToContinue($request->validated('gameId'))) {
-            return new JsonResponse([], Response::HTTP_FORBIDDEN);
+            return new JsonApiResponse(status: Status::FORBIDDEN);
         }
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
-    public function index(GameIdRequest $request): JsonResponse
+    public function index(GameIdRequest $request): JsonApiResponse
     {
         $gameId = $request->validated('gameId');
 
         $this->service->end($gameId);
 
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 }
