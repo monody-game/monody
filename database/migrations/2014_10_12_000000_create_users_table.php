@@ -15,7 +15,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('avatar')->default('/assets/avatars/default.png');
             $table->string('password');
-            $table->smallInteger('level', false, true)->default(0);
+            $table->smallInteger('level', false, true)->default(1);
             $table->string('current_game')->nullable();
             $table->string('discord_id')->nullable();
             $table->timestamp('discord_linked_at')->nullable();
