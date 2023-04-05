@@ -1,4 +1,4 @@
-FROM php:fpm
+FROM php:8.2.4RC1-fpm-buster
 
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
