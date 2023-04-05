@@ -7,11 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
+use SocialiteProviders\Discord\Provider;
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -23,7 +26,12 @@ final class DiscordOauthController extends Controller
 
     public function link(): RedirectResponse
     {
-        return $this->generateProvider('discord', ['identify', 'email', 'role_connections.write'])->redirect();
+        /** @var Provider $provider */
+        $provider = $this->generateProvider('discord', ['identify', 'email', 'role_connections.write']);
+
+        return $provider
+            ->withConsent()
+            ->redirect();
     }
 
     public function user(Request $request): JsonApiResponse
@@ -32,21 +40,29 @@ final class DiscordOauthController extends Controller
         $user = $request->user();
 
         if ($user->discord_id === null || $user->discord_token === null) {
-            return new JsonApiResponse(['message' => 'You need to link your discord account first']);
+            return new JsonApiResponse(['message' => 'You need to link your discord account first'], status: Status::BAD_REQUEST);
         }
 
-        /** @var AbstractProvider $driver */
+        /** @var Provider $driver */
         $driver = Socialite::driver('discord');
 
-        $user = $driver->userFromToken($user->discord_token);
-        // TODO: Handle case where token needs to be refreshed
-        //$token = $this->getToken($user->discord_refresh_token);
+        try {
+            $user = $driver->userFromToken($user->discord_token);
+        } catch (ClientException $e) {
+            $payload = $this->refreshToken($user->discord_refresh_token);
+            $user->discord_token = $payload['access_token'];
+            $user->discord_refresh_token = $payload['refresh_token'];
+            $user->save();
+            $user = $driver->userFromToken($payload['access_token']);
+        }
 
-        return new JsonApiResponse(['user' => [
-            'id' => $user->getId(),
-            'username' => $user->getNickname(),
-            'avatar' => $user->getAvatar(),
-        ]]);
+        return new JsonApiResponse([
+            'user' => [
+                'id' => $user->getId(),
+                'username' => $user->getNickname(),
+                'avatar' => $user->getAvatar(),
+            ],
+        ]);
     }
 
     public function check(Request $request): RedirectResponse|JsonApiResponse
@@ -76,7 +92,7 @@ final class DiscordOauthController extends Controller
 
         $user->save();
 
-        /** @var \Illuminate\Http\Client\Response $res */
+        /** @var Response $res */
         $res = Http::withToken($discordUser->accessTokenResponseBody['access_token'])
             ->asJson()
             ->put(
@@ -132,5 +148,21 @@ final class DiscordOauthController extends Controller
         $user->save();
 
         return new JsonApiResponse(status: Status::NO_CONTENT);
+    }
+
+    private function refreshToken(string $refreshToken): array
+    {
+        $url = self::API_ENDPOINT . '/oauth2/token';
+        $data = [
+            'client_id' => config('services.discord.client_id'),
+            'client_secret' => config('services.discord.client_secret'),
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $refreshToken,
+        ];
+
+        $res = Http::asForm()
+            ->post($url, $data);
+
+        return $res->json();
     }
 }
