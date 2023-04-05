@@ -16,6 +16,7 @@ trait OauthProviderTrait
         $provider = Socialite::driver($name);
 
         return $provider->stateless()
+            ->with(['prompt' => 'consent'])
             ->scopes($scopes);
     }
 }
