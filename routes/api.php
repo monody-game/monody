@@ -42,7 +42,9 @@ Route::get('/interactions/actions', 'Game\GameActionsController@all');
 Route::get('/interactions/actions/{gameId}/{interactionId}', 'Game\GameActionsController@get');
 
 Route::group(['middleware' => OptionalAuthentication::class], function () {
-    Route::get('/stats/{userId?}', 'StatisticsController@index');
+    Route::get('/stats/{userId?}', 'StatisticsController@show');
+    Route::get('/elo/{userId?}', 'EloController@show');
+
     Route::get('/badges/{userId?}', 'BadgeController@get');
 });
 
