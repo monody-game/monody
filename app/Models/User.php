@@ -54,7 +54,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'discord_refresh_token',
     ];
 
-    public function sendPasswordResetNotification($token)
+    public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPassword($token));
     }
