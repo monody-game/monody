@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.4.1.
+ * Generated for Laravel 10.6.2.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -3770,6 +3770,18 @@
                         return $instance->extend($driver, $callback);
         }
                     /**
+         * Set the application instance used by the manager.
+         *
+         * @param \Illuminate\Contracts\Foundation\Application $app
+         * @return \Illuminate\Cache\CacheManager 
+         * @static 
+         */ 
+        public static function setApplication($app)
+        {
+                        /** @var \Illuminate\Cache\CacheManager $instance */
+                        return $instance->setApplication($app);
+        }
+                    /**
          * Determine if an item exists in the cache.
          *
          * @param array|string $key
@@ -5236,6 +5248,20 @@
                         return $instance->select($query, $bindings, $useReadPdo);
         }
                     /**
+         * Run a select statement against the database and returns all of the result sets.
+         *
+         * @param string $query
+         * @param array $bindings
+         * @param bool $useReadPdo
+         * @return array 
+         * @static 
+         */ 
+        public static function selectResultSets($query, $bindings = [], $useReadPdo = true)
+        {            //Method inherited from \Illuminate\Database\Connection         
+                        /** @var \Illuminate\Database\MySqlConnection $instance */
+                        return $instance->selectResultSets($query, $bindings, $useReadPdo);
+        }
+                    /**
          * Run a select statement against the database and returns a generator.
          *
          * @param string $query
@@ -6448,15 +6474,16 @@
          * Get the contents of a file as decoded JSON.
          *
          * @param string $path
+         * @param int $flags
          * @param bool $lock
          * @return array 
          * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
          * @static 
          */ 
-        public static function json($path, $lock = false)
+        public static function json($path, $flags = 0, $lock = false)
         {
                         /** @var \Illuminate\Filesystem\Filesystem $instance */
-                        return $instance->json($path, $lock);
+                        return $instance->json($path, $flags, $lock);
         }
                     /**
          * Get contents of a file with shared access.
@@ -7613,7 +7640,7 @@
      * @method static \Illuminate\Http\Client\PendingRequest sink(string|resource $to)
      * @method static \Illuminate\Http\Client\PendingRequest timeout(int $seconds)
      * @method static \Illuminate\Http\Client\PendingRequest connectTimeout(int $seconds)
-     * @method static \Illuminate\Http\Client\PendingRequest retry(int $times, int $sleepMilliseconds = 0, callable|null $when = null, bool $throw = true)
+     * @method static \Illuminate\Http\Client\PendingRequest retry(int $times, Closure|int $sleepMilliseconds = 0, callable|null $when = null, bool $throw = true)
      * @method static \Illuminate\Http\Client\PendingRequest withOptions(array $options)
      * @method static \Illuminate\Http\Client\PendingRequest withMiddleware(callable $middleware)
      * @method static \Illuminate\Http\Client\PendingRequest beforeSending(callable $callback)
@@ -15158,6 +15185,19 @@
                         return $instance->get($path);
         }
                     /**
+         * Get the contents of a file as decoded JSON.
+         *
+         * @param string $path
+         * @param int $flags
+         * @return array|null 
+         * @static 
+         */ 
+        public static function json($path, $flags = 0)
+        {
+                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+                        return $instance->json($path, $flags);
+        }
+                    /**
          * Create a streamed response for a given file.
          *
          * @param string $path
@@ -18760,6 +18800,7 @@ namespace  {
              * @param array|string $columns
              * @param string $pageName
              * @param int|null $page
+             * @param \Closure|int|null $total
              * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator 
              * @throws \InvalidArgumentException
              * @static 
