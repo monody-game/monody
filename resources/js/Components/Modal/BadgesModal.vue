@@ -1,5 +1,5 @@
 <template>
-  <BaseModal>
+  <BaseModal wrapper="badge-modal__main">
     <header>
       <h3>Badges</h3>
     </header>
