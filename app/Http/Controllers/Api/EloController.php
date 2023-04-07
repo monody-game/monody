@@ -17,7 +17,7 @@ class EloController extends Controller
             return new JsonApiResponse(['userId' => 'Field required.'], Status::UNPROCESSABLE_ENTITY);
         }
 
-        $userId = $userId ?? $request->user()->id;
+        $userId = $userId ?? $request->user()?->id;
 
         if (!User::where('id', $userId)->exists()) {
             return new JsonApiResponse(['message' => "Unable to find user with id \"{$userId}\""], Status::NOT_FOUND);
