@@ -39,7 +39,7 @@ final class DiscordOauthController extends Controller
         /** @var User $user Route is protected by auth guard */
         $user = $request->user();
 
-        if ($user->discord_id === null || $user->discord_token === null) {
+        if ($user->discord_id === null || $user->discord_token === null || $user->discord_refresh_token === null) {
             return new JsonApiResponse(['message' => 'You need to link your discord account first'], status: Status::BAD_REQUEST);
         }
 
