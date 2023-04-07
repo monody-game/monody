@@ -121,3 +121,9 @@
 		border-radius: 14px;
 	}
 }
+
+.badge-modal__main {
+	@extend .modal__main;
+
+	overflow: initial;
+}
