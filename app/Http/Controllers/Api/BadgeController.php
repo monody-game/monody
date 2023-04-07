@@ -19,18 +19,16 @@ class BadgeController extends Controller
             $userBadges = BadgeModel::select('id', 'level', 'badge_id', 'obtained_at')->where('user_id', $user)->get();
         }
 
-        $badges = collect(Badge::cases());
-
         $list = [];
 
-        foreach ($badges as $badge) {
+        foreach (Badge::cases() as $badge) {
             $list[$badge->value] = $badge->full();
         }
 
         foreach ($userBadges as $userBadge) {
-            $list[$userBadge->badge_id]['owned'] = true;
-            $list[$userBadge->badge_id]['current_level'] = $userBadge->level;
-            $list[$userBadge->badge_id]['obtained_at'] = $userBadge->obtained_at;
+            $list[$userBadge->badge_id->value]['owned'] = true;
+            $list[$userBadge->badge_id->value]['current_level'] = $userBadge->level;
+            $list[$userBadge->badge_id->value]['obtained_at'] = $userBadge->obtained_at;
         }
 
         return new JsonApiResponse([
