@@ -22,7 +22,7 @@ class UserTableSeed extends Seeder
             'email' => 'mooneupho@gmail.com',
             'level' => 5,
             'password' => Hash::make('moon250bg'),
-			'avatar' => '/assets/avatars/moon250.png',
+            'avatar' => '/assets/avatars/moon250.png',
             'created_at' => Carbon::now(),
         ]);
 
