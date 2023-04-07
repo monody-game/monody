@@ -6,7 +6,7 @@
   >
     <img
       v-if="props.badge.owned"
-      :src="`/assets/badges/${store.theme}/${name}`"
+      :src="`/assets/badges/${store.theme}/${name}?w=60&dpr=2`"
       :alt="props.badge.display_name"
     >
     <p v-else>
@@ -36,7 +36,7 @@
           <img
             v-if="n <= props.badge.current_level"
             :key="n"
-            :src="`/assets/badges/${store.theme}/${props.badge.name}_${n}.png`"
+            :src="`/assets/badges/${store.theme}/${props.badge.name}_${n}.png?w=60&dpr=2`"
             :alt="props.badge.display_name"
           >
           <div
