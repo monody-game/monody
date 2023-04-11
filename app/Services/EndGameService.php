@@ -24,6 +24,7 @@ class EndGameService
     public function __construct(
         private readonly ExpService $expService,
         private readonly BadgeService $badgeService,
+        private readonly EloService $eloService
     ) {
     }
 
@@ -83,6 +84,9 @@ class EndGameService
             $outcome->role_id = $this->getRoleByUserId($userId, $gameId)->value;
             $outcome->win = $win;
             $outcome->save();
+
+            $elo = $this->eloService->computeElo($user, $gameId, $win);
+            $this->eloService->add($elo, $user);
 
             if ($userId === $game['owner']['id']) {
                 $this->expService->add(20, $user->refresh());
