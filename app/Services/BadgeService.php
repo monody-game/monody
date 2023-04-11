@@ -42,7 +42,7 @@ readonly class BadgeService
 
         $badges = $badges->map(function (UserBadge $badge) {
             return [
-                'badge' => Badge::from($badge->badge_id),
+                'badge' => $badge->badge_id,
                 'user_id' => $badge->user_id,
                 'level' => $badge->level,
                 'obtained_at' => $badge->obtained_at,

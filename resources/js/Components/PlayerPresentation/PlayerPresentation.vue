@@ -31,7 +31,7 @@
             <svg>
               <use href="/sprite.svg#elo" />
             </svg>
-            <p>N/A</p>
+            <p>{{ store.elo }}</p>
           </div>
         </div>
       </ProgressBar>

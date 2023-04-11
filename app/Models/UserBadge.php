@@ -12,6 +12,10 @@ class UserBadge extends Model
 
     protected $fillable = ['user_id', 'badge_id', 'level', 'obtained_at'];
 
+    protected $casts = [
+        'badge_id' => Badge::class,
+    ];
+
     public $timestamps = false;
 
     /**
