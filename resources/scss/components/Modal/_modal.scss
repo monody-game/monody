@@ -20,8 +20,6 @@
 
   position: sticky;
   z-index: 5000;
-	overflow-y: auto;
-	overflow-x: hidden;
 
 	display: flex;
   flex-direction: column;
@@ -54,6 +52,7 @@
 
 .modal__buttons-right {
 	display: flex;
+	flex: 1;
 	gap: space(1);
 	justify-content: flex-end;
 }
@@ -73,6 +72,9 @@
 		padding: space(2);
 		padding-block: space(4);
 		margin: 0;
+
+		overflow-y: auto;
+		overflow-x: hidden;
 	}
 
 	.modal__buttons {
