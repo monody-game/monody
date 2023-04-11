@@ -5,9 +5,7 @@
       :title="'La partie est ' + currentStatus"
     >
       <span class="roles-balance__villagers" />
-      <span
-        class="roles-balance__bubble"
-      />
+      <span class="roles-balance__bubble">{{ roleCount }}</span>
       <span class="roles-balance__werewolf" />
     </div>
   </div>
@@ -23,6 +21,7 @@ const props = defineProps({
 	}
 });
 
+const roleCount = ref(props.selectedRoles.reduce((accumulator, current) => accumulator + current.count, 0));
 const werewolfWidth = ref(50);
 const villagerWidth = ref(50);
 const varContainer = computed(() => document.documentElement.style);
@@ -48,6 +47,8 @@ const getCurrentStatus = function () {
 const render = (roles) => {
 	let villagerWeight = 0;
 	let werewolfWeight = 0;
+
+	roleCount.value = roles.reduce((accumulator, current) => accumulator + current.count, 0);
 
 	if (roles.length === 0) {
 		varContainer.value.setProperty(
