@@ -89,11 +89,16 @@
 	& span {
 		font-size: .8rem;
 	}
+}
 
-  &:hover {
-		background-color: var(--secondary-hover);
-    color: rgba(var(--unchanged-color), 80%);
-  }
+.day .chat__send-button:hover {
+	background-color: var(--light-background-hover);
+	color: rgba(var(--unchanged-color), 80%);
+}
+
+.night .chat__send-button:hover {
+	background-color: var(--dark-background-hover);
+	color: rgba(var(--unchanged-color), 100%);
 }
 
 .chat__submit-icon {

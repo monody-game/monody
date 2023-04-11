@@ -96,7 +96,6 @@ onBeforeRouteLeave(() => {
 
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
-		console.log(e);
 		const payload = e.data.payload;
 		store.send(payload.content, payload.type, payload.author);
 	})
