@@ -17,11 +17,11 @@
       <article class="share-profile__template-wrapper">
         <section>
           <img
-            :src="store.avatar"
+            :src="store.avatar + '?w=100&dpr=2'"
             :alt="store.username + '\'s avatar'"
           >
           <div>
-            <h4 class="">
+            <h4>
               {{ store.username }}
             </h4>
             <div class="share-profile__template-stats">
@@ -31,7 +31,7 @@
                 <svg>
                   <use href="/sprite.svg#level" />
                 </svg>
-                <p>Niveau : {{ store.level }}</p>
+                <p>Niveau : N/A</p>
               </div>
               <div
                 title="Elo"
