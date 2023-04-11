@@ -11,6 +11,7 @@ export const useStore = defineStore("user", {
 		level: 0,
 		exp: 0,
 		exp_needed: 0,
+		elo: 0,
 		theme: "dark",
 	}),
 	actions: {
@@ -23,6 +24,7 @@ export const useStore = defineStore("user", {
 			this.level = payload.level;
 			this.exp = payload.exp;
 			this.exp_needed = payload.exp_needed;
+			this.elo = payload.elo;
 			this.discord_linked_at = payload.discord_linked_at;
 		},
 	},
@@ -37,6 +39,7 @@ export const useStore = defineStore("user", {
 				level: this.level,
 				exp: this.exp,
 				exp_needed: this.exp_needed,
+				elo: this.elo,
 				discord_linked_at: this.discord_linked_at
 			};
 		}

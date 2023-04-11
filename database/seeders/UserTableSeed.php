@@ -22,11 +22,9 @@ class UserTableSeed extends Seeder
             'email' => 'mooneupho@gmail.com',
             'level' => 5,
             'password' => Hash::make('moon250bg'),
+            'avatar' => '/assets/avatars/moon250.png',
             'created_at' => Carbon::now(),
         ]);
-
-        $user->avatar = "/assets/avatars/{$user->id}.png";
-        $user->save();
 
         $stat = new Statistic();
         $stat->user_id = $user->id;
@@ -46,7 +44,6 @@ class UserTableSeed extends Seeder
 
         $user = User::factory()->create([
             'username' => 'gerard123',
-            'avatar' => '/assets/avatars/default.png',
             'email' => 'gerard123@monody.fr',
             'level' => 2,
             'password' => Hash::make('gerard123'),
