@@ -7,13 +7,61 @@
     >
       <LogoSpinner />
     </div>
-    <div class="roles__list">
-      <RoleSelector
-        v-for="role in roles"
-        :key="role.id"
-        :role="role"
-        class="roles__item"
-      />
+    <div class="team__list">
+      <div class="roles__villagers">
+        <div class="roles__team-description">
+          <svg>
+            <use href="/sprite.svg#villager" />
+          </svg>
+          <span class="bold">
+            Villageois
+          </span>
+        </div>
+        <div class="roles__list">
+          <RoleSelector
+            v-for="role in villagers"
+            :key="role.id"
+            :role="role"
+            class="roles__item"
+          />
+        </div>
+      </div>
+      <div class="roles__werewolves">
+        <div class="roles__team-description">
+          <svg>
+            <use href="/sprite.svg#werewolves" />
+          </svg>
+          <span class="bold">
+            Loup-garous
+          </span>
+        </div>
+        <div class="roles__list">
+          <RoleSelector
+            v-for="role in werewolves"
+            :key="role.id"
+            :role="role"
+            class="roles__item"
+          />
+        </div>
+      </div>
+      <div class="roles__loners roles__list">
+        <div class="roles__team-description">
+          <svg>
+            <use href="/sprite.svg#loners" />
+          </svg>
+          <span class="bold">
+            Solitaires
+          </span>
+        </div>
+        <div class="roles__list">
+          <RoleSelector
+            v-for="role in loners"
+            :key="role.id"
+            :role="role"
+            class="roles__item"
+          />
+        </div>
+      </div>
     </div>
     <RolesBalance :selected-roles="getSelectedRoles" />
   </div>
@@ -27,6 +75,9 @@ import { useStore } from "../../../../stores/modals/game-creation-modal.js";
 import RolesBalance from "./RolesBalance.vue";
 
 const roles = ref([]);
+const villagers = ref([]);
+const werewolves = ref([]);
+const loners = ref([]);
 const loading = ref(false);
 const store = useStore();
 
@@ -67,6 +118,10 @@ const getRoles = async function() {
 	} else {
 		roles.value = store.roles;
 	}
+
+	villagers.value = roles.value.filter(role => role.team.id === 1);
+	werewolves.value = roles.value.filter(role => role.team.id === 2);
+	loners.value = roles.value.filter(role => role.team.id === 3);
 };
 
 const getTeams = async function() {
