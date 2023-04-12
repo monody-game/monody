@@ -1,5 +1,9 @@
+.notice-component__wrapper {
+	height: 18px;
+}
+
 .notice__content {
-	display: none;
+	display: grid;
 	gap: space(1);
 
 	position: absolute;
