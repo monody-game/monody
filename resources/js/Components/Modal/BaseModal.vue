@@ -4,17 +4,19 @@
     class="modal__background"
     @click="closeModal()"
   >
-    <div
-      ref="modal"
-      aria-modal="true"
-      role="dialog"
-      :class="props.wrapper"
-      tabindex="-1"
-      aria-labelledby="modal__title"
-      @click.stop=""
-      @keyup.esc="closeModal()"
-    >
-      <slot />
+    <div class="modal__overflow-wrapper">
+      <div
+        ref="modal"
+        aria-modal="true"
+        role="dialog"
+        :class="props.wrapper"
+        tabindex="-1"
+        aria-labelledby="modal__title"
+        @click.stop=""
+        @keyup.esc="closeModal()"
+      >
+        <slot />
+      </div>
     </div>
   </div>
 </template>
