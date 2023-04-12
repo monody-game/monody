@@ -53,6 +53,7 @@ export const useStore = defineStore("modal", {
 			}
 		},
 		open(type) {
+			window.scrollTo(0, 0);
 			this.getModalStore(type).isOpenned = true;
 			this.opennedModal = type;
 			document.body.classList.add("overflow-hidden");
