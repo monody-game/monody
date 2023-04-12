@@ -1,12 +1,53 @@
 @use "../../tools/functions" as *;
 
-.roles__list {
+.team__list {
 	display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  column-gap: space(3);
+	margin-top: space(1);
+	gap: space(1);
+
+	& > div {
+		display: flex;
+		align-items: center;
+		gap: space(1);
+		position: relative;
+	}
+
+	& > div ~ div::before, {
+		content: '';
+		width: 100%;
+		position: absolute;
+		top: -16px;
+		border-top: var(--border-secondary) 2px solid;
+	}
+}
+
+.roles__list {
+	position: relative;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+	column-gap: space(1);
+	flex: 1;
+
   box-sizing: border-box;
   margin-top: space(1);
   margin-bottom: space(1);
+}
+
+.roles__team-description {
+	display: flex;
+	flex-direction: column;
+	gap: space(1);
+	align-items: center;
+	width: 85px;
+
+	svg {
+		height: 64px;
+		width: 64px;
+	}
+
+	span {
+		font-size: .85rem;
+	}
 }
 
 .roles__page {

@@ -1,5 +1,8 @@
 <template>
-  <div class="role-selector__container">
+  <div
+    class="role-selector__container"
+    :data-has-operations="showOperations"
+  >
     <div class="role-selector__main">
       <button
         v-if="showOperations"
