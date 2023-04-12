@@ -1,13 +1,23 @@
 @use "../../tools/functions.scss" as *;
 
 .player-presentation__badges {
+	cursor: pointer;
+	height: 50px;
+	width: 50px;
+
 	position: absolute;
 	top: space(1);
 	right: space(2);
+}
 
-	height: 50px;
-	width: 50px;
+.player-presentation__leaderboards {
 	cursor: pointer;
+	height: 32px;
+	width: 32px;
+
+	position: absolute;
+	top: space(2);
+	left: space(3);
 }
 
 .player-presentation__container {
