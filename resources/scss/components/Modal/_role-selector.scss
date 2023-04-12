@@ -3,6 +3,10 @@
   flex-direction: column;
   align-items: center;
   margin-top: space(2);
+
+	&[data-has-operations="false"] {
+		margin-inline: calc(space(3) - 8px);
+	}
 }
 
 .role-selector__main {
@@ -26,11 +30,11 @@ button.role-selector__operation-button {
 }
 
 .role-selector__operation-add {
-	transform: translateX(-4px);
+	transform: translateX(-8px);
 }
 
 .role-selector__operation-minus {
-	transform: translateX(4px);
+	transform: translateX(8px);
 }
 
 .role-selector__image {
@@ -61,7 +65,7 @@ button.role-selector__operation-button {
 	font-size: 14px;
 
 	position: absolute;
-	top: -30%;
+	top: -35%;
 	left: 50%;
 	transform: translateX(-50%);
 
