@@ -1,8 +1,11 @@
 <template>
-  <div class="role-selector__container">
+  <div
+    class="role-selector__container"
+    :data-has-operations="showOperations"
+  >
     <div class="role-selector__main">
       <button
-        v-if="operations"
+        v-if="showOperations"
         :class="count === 0 ? 'disable-hover' : ''"
         :disabled="count === 0"
         class="btn role-selector__operation-button role-selector__operation-minus"
@@ -20,7 +23,7 @@
         class="role-selector__image"
       >
       <button
-        v-if="operations"
+        v-if="showOperations"
         :class="count >= default_limit || count >= props.role.limit ? 'disable-hover' : ''"
         :disabled="count >= default_limit || count >= props.role.limit"
         class="btn role-selector__operation-button role-selector__operation-add"
@@ -31,15 +34,39 @@
         </svg>
       </button>
     </div>
-    <p class="role-selector__count">
-      {{ count }}
-    </p>
+    <div>
+      <button
+        v-if="!showOperations && count < 1 && !('id' in route.params)"
+        class="btn role-selector__operation-button role-selector__count"
+        @click="add()"
+      >
+        <svg>
+          <use href="/sprite.svg#plus" />
+        </svg>
+      </button>
+      <button
+        v-else-if="!showOperations && count >= 1 && !('id' in route.params)"
+        class="btn role-selector__operation-button role-selector__count"
+        @click="substract()"
+      >
+        <svg>
+          <use href="/sprite.svg#minus" />
+        </svg>
+      </button>
+      <p
+        v-else
+        class="role-selector__count"
+      >
+        {{ count }}
+      </p>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { computed, ref } from "vue";
 import { useStore } from "../../../../stores/modals/game-creation-modal.js";
-import { ref } from "vue";
+import { useRoute } from "vue-router";
 
 const props = defineProps({
 	role: {
@@ -54,7 +81,15 @@ const props = defineProps({
 });
 
 const store = useStore();
+const route = useRoute();
 const default_limit = ref(10);
+
+const showOperations = computed(() => {
+	if ("limit" in props.role) {
+		return props.operations && props.role.limit > 1;
+	}
+	return props.operations;
+});
 
 const currentSelectedCount = function () {
 	return store.getRoleCountById(props.role.id) ?? 0;

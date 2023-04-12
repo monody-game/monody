@@ -8,7 +8,7 @@
         Créateur de la partie :
         <div class="game-details__owner">
           <img
-            :src="gameStore.owner.avatar"
+            :src="gameStore.owner.avatar + '?w=50&dpr=2'"
             :alt="gameStore.owner.username + '\'s avatar'"
           >
           <div class="game-details__owner-right">
