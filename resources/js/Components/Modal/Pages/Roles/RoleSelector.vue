@@ -36,7 +36,7 @@
     </div>
     <div>
       <button
-        v-if="!showOperations && count < 1"
+        v-if="!showOperations && count < 1 && !('id' in route.params)"
         class="btn role-selector__operation-button role-selector__count"
         @click="add()"
       >
@@ -45,7 +45,7 @@
         </svg>
       </button>
       <button
-        v-else-if="!showOperations && count >= 1"
+        v-else-if="!showOperations && count >= 1 && !('id' in route.params)"
         class="btn role-selector__operation-button role-selector__count"
         @click="substract()"
       >
@@ -64,8 +64,9 @@
 </template>
 
 <script setup>
-import { useStore } from "../../../../stores/modals/game-creation-modal.js";
 import { computed, ref } from "vue";
+import { useStore } from "../../../../stores/modals/game-creation-modal.js";
+import { useRoute } from "vue-router";
 
 const props = defineProps({
 	role: {
@@ -80,11 +81,12 @@ const props = defineProps({
 });
 
 const store = useStore();
+const route = useRoute();
 const default_limit = ref(10);
 
 const showOperations = computed(() => {
 	if ("limit" in props.role) {
-		return props.operations && props.role["limit"] > 1;
+		return props.operations && props.role.limit > 1;
 	}
 	return props.operations;
 });
