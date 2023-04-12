@@ -13,7 +13,7 @@
     <div
       :class="{ active: store.type === 1, disabled: props.hasLinked === false }"
       :title="props.hasLinked === false ? 'Vous devez lier un compte Discord à Monody afin d\'utiliser cette fonctionnalité' : ''"
-      @click="store.type = 1"
+      @click="store.type = props.hasLinked === true ? 1 : 0"
     >
       <svg class="game-type__vocal-icon">
         <use href="/sprite.svg#vocal" />
