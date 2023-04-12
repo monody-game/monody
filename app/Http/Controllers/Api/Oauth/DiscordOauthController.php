@@ -81,13 +81,13 @@ final class DiscordOauthController extends Controller
 
         $discordId = config('services.discord.client_id');
 
-		$user = $request->user() ?? User::firstOrCreate(['email' => $discordUser->email]);
+        $user = $request->user() ?? User::firstOrCreate(['email' => $discordUser->email]);
 
-		$user->avatar = '/images/avatar/default.png' === $user->avatar && $discordUser->getAvatar() !== null ? $discordUser->getAvatar() : $user->avatar;
+        $user->avatar = '/images/avatar/default.png' === $user->avatar && $discordUser->getAvatar() !== null ? $discordUser->getAvatar() : $user->avatar;
         $user->discord_linked_at = Carbon::now();
-		$user->discord_id = $discordUser->getId();
-		$user->discord_token = $discordUser->accessTokenResponseBody['access_token'];
-		$user->discord_refresh_token = $discordUser->accessTokenResponseBody['refresh_token'];
+        $user->discord_id = $discordUser->getId();
+        $user->discord_token = $discordUser->accessTokenResponseBody['access_token'];
+        $user->discord_refresh_token = $discordUser->accessTokenResponseBody['refresh_token'];
 
         $user->save();
 
