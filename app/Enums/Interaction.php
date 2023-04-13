@@ -10,6 +10,7 @@ enum Interaction: string
     case Werewolves = 'werewolves';
     case InfectedWerewolf = 'infected_werewolf';
     case WhiteWerewolf = 'white_werewolf';
+    case SurlyWerewolf = 'surly_werewolf';
     case Mayor = 'mayor';
     case Angel = 'angel';
 
@@ -23,6 +24,7 @@ enum Interaction: string
             self::Werewolves->value => InteractionAction::Kill->value,
             self::InfectedWerewolf->value => [InteractionAction::Infect->value, InteractionAction::InfectedSkip->value],
             self::WhiteWerewolf->value => InteractionAction::BetrayalKill->value,
+            self::SurlyWerewolf->value => InteractionAction::Bite->value,
             self::Angel->value => [],
         ];
     }

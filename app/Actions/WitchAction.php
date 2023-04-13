@@ -30,6 +30,8 @@ class WitchAction implements ActionInterface
     public function call(string $targetId, InteractionAction $action, string $emitterId): null
     {
         $gameId = $this->getGameId($targetId);
+        $this->setUsed($action, $gameId);
+
         switch ($action) {
             case InteractionAction::WitchSkip:
                 break;
@@ -40,8 +42,6 @@ class WitchAction implements ActionInterface
                 $this->revivePotion($targetId);
                 break;
         }
-
-        $this->setUsed($action, $gameId);
 
         return null;
     }
