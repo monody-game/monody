@@ -27,6 +27,6 @@ enum InteractionAction: string
     // White Werewolf
     case BetrayalKill = 'white_werewolf:kill';
 
-	// Surly werewolf
-	case Bite = 'surly_werewolf:bite';
+    // Surly werewolf
+    case Bite = 'surly_werewolf:bite';
 }
