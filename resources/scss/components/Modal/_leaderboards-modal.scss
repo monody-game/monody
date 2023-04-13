@@ -108,3 +108,37 @@
 		clip-path: polygon(50% 100%, -2px 0px, 103% 0px);
 	}
 }
+
+.leaderboards__board tr td {
+	width: 50%;
+	padding-inline: space(2);
+	padding-block: space(.5);
+	border-bottom: var(--border-secondary) 2px solid;
+	text-align: center;
+
+	&:nth-child(2) {
+		border-left: var(--border-secondary) 2px solid;
+	}
+}
+
+.leaderboards__board tr:last-child td {
+	border-bottom: transparent;
+}
+
+.leaderboards__cell-content {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	img {
+		height: 42px;
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+}
+
+.leaderboards__board-right {
+	display: flex;
+	align-items: center;
+	gap: space(1);
+}

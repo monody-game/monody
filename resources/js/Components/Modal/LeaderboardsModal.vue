@@ -4,20 +4,27 @@
       <h3>Classements</h3>
     </header>
     <div class="leaderboards__wrapper">
-      <div class="leaderboards__selection">
+      <section class="leaderboards__selection">
         <p>Choix du classement :</p>
         <div class="leaderboards__dropdown">
-          <select>
+          <select v-model.lazy="selected">
             <option
               class="option"
               selected
+              value="elo"
             >
               Elo
             </option>
-            <option class="option">
+            <option
+              class="option"
+              value="level"
+            >
               Niveau
             </option>
-            <option class="option">
+            <option
+              class="option"
+              value="wins"
+            >
               Victoires
             </option>
           </select>
@@ -30,60 +37,195 @@
             />
           </svg>
         </div>
-      </div>
-      <div class="leaderboards__top-three">
+      </section>
+      <section class="leaderboards__top-three">
         <div class="leaderboards__second">
           <img
-            :src="userStore.avatar"
+            :src="board[1].user.avatar + '?w=110&dpr=2'"
             alt=""
           >
           <div class="leaderboards__user-presentation">
             <div class="bold">
               2
             </div>
-            <p>JohnDoe</p>
+            <p>{{ board[1].user.username }}</p>
             <p class="bold">
-              5010
+              {{ board[1].information }}
             </p>
           </div>
         </div>
         <div class="leaderboards__first">
           <img
-            :src="userStore.avatar"
+            :src="board[0].user.avatar + '?w=110&dpr=2'"
             alt=""
           >
           <div class="leaderboards__user-presentation">
             <div class="bold">
               1
             </div>
-            <p>Unity</p>
+            <p>{{ board[0].user.username }}</p>
             <p class="bold">
-              10000
+              {{ board[0].information }}
             </p>
           </div>
         </div>
         <div class="leaderboards__third">
           <img
-            :src="userStore.avatar"
+            :src="board[2].user.avatar + '?w=110&dpr=2'"
             alt=""
           >
           <div class="leaderboards__user-presentation">
             <div class="bold">
               3
             </div>
-            <p>JaneDoe</p>
+            <p>{{ board[2].user.username }}</p>
             <p class="bold">
-              4980
+              {{ board[2].information }}
             </p>
           </div>
         </div>
-      </div>
+      </section>
+      <table class="leaderboards__board">
+        <tr>
+          <td>
+            <div class="leaderboards__cell-content">
+              <div class="leaderboards__board-right">
+                <span class="bold">4</span>
+                <img
+                  :src="board[3].user.avatar"
+                  alt=""
+                >
+                <p>{{ board[3].user.username }}</p>
+              </div>
+              <span class="bold">{{ board[3].information }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="leaderboards__cell-content">
+              <div class="leaderboards__board-right">
+                <span class="bold">8</span>
+                <img
+                  :src="board[7].user.avatar"
+                  alt=""
+                >
+                <p>{{ board[7].user.username }}</p>
+              </div>
+              <span class="bold">{{ board[7].information }}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="leaderboards__cell-content">
+              <div class="leaderboards__board-right">
+                <span class="bold">5</span>
+                <img
+                  :src="board[4].user.avatar"
+                  alt=""
+                >
+                <p>{{ board[4].user.username }}</p>
+              </div>
+              <span class="bold">{{ board[4].information }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="leaderboards__cell-content">
+              <div class="leaderboards__board-right">
+                <span class="bold">9</span>
+                <img
+                  :src="board[8].user.avatar"
+                  alt=""
+                >
+                <p>{{ board[8].user.username }}</p>
+              </div>
+              <span class="bold">{{ board[8].information }}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="leaderboards__cell-content">
+              <div class="leaderboards__board-right">
+                <span class="bold">6</span>
+                <img
+                  :src="board[5].user.avatar"
+                  alt=""
+                >
+                <p>{{ board[5].user.username }}</p>
+              </div>
+              <span class="bold">{{ board[5].information }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="leaderboards__cell-content">
+              <div class="leaderboards__board-right">
+                <span class="bold">10</span>
+                <img
+                  :src="board[9].user.avatar"
+                  alt=""
+                >
+                <p>{{ board[9].user.username }}</p>
+              </div>
+              <span class="bold">{{ board[9].information }}</span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="leaderboards__cell-content">
+              <div class="leaderboards__board-right">
+                <span class="bold">7</span>
+                <img
+                  :src="board[6].user.avatar"
+                  alt=""
+                >
+                <p>{{ board[6].user.username }}</p>
+              </div>
+              <span class="bold">{{ board[6].information }}</span>
+            </div>
+          </td>
+          <td class="bold">
+            ...
+          </td>
+        </tr>
+      </table>
     </div>
   </BaseModal>
 </template>
 
 <script setup>
+import { ref, watch } from "vue";
 import BaseModal from "./BaseModal.vue";
-import { useStore } from "../../stores/user.js";
-const userStore = useStore();
+
+const selected = ref("elo");
+const placeholder = { user: { username: "/", avatar: "" }, information: "/" };
+const res = (await window.JSONFetch(`/leaderboard/${selected.value}`)).data.board;
+const board = ref([]);
+const boards = ref({});
+
+boards.value[selected.value] = res;
+
+const populate = (data) => {
+	for (let i = 0; i < 10; i++) {
+		if (i <= (data.length - 1)) {
+			board.value[i] = data[i];
+			continue;
+		}
+
+		board.value[i] = placeholder;
+	}
+};
+
+populate(res);
+
+watch(selected, async (newSelected) => {
+	if (newSelected in boards.value) {
+		populate(boards.value[newSelected]);
+		return;
+	}
+
+	const newRes = await window.JSONFetch(`/leaderboard/${newSelected}`);
+	populate(newRes.data.board);
+	boards.value[newSelected] = newRes.data.board;
+});
 </script>

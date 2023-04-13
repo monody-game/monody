@@ -141,3 +141,7 @@ button {
     font-size: 1rem;
     font-weight: 400;
 }
+
+img[src=""], img[src^="?"]{
+	opacity: 0;
+}
