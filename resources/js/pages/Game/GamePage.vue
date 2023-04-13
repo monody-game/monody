@@ -126,7 +126,6 @@ window.Echo.join(`game.${gameId}`)
 
 		if (e.type === 1 && e.discord === null) {
 			const res = await window.JSONFetch(`/game/${gameId}/discord`);
-			console.log(res);
 			store.discord = res.data.data;
 		} else {
 			store.discord = e.discord;

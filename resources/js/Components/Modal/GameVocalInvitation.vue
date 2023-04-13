@@ -45,6 +45,12 @@ import { useRoute } from "vue-router";
 const store = useStore();
 const gameStore = useGameStore();
 const gameId = useRoute().params.id;
+
+if (gameStore.discord === null) {
+	const res = await window.JSONFetch(`/game/${gameId}/discord`);
+	gameStore.discord = res.data.data;
+}
+
 const voiceChannelLink = computed(() => `https://discord.com/channels/${gameStore.discord.guild}/${gameStore.discord.voice_channel}`);
 
 window.Echo.join(`game.${gameId}`)
