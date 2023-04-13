@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref } from "vue";
 import { useStore as useGameStore } from "../../stores/game.js";
 import BaseModal from "./BaseModal.vue";
 import { useStore } from "../../stores/modals/vocal-invitation-store.js";
@@ -45,13 +45,18 @@ import { useRoute } from "vue-router";
 const store = useStore();
 const gameStore = useGameStore();
 const gameId = useRoute().params.id;
+const voiceChannelLink = ref("");
 
-if (gameStore.discord === null) {
-	const res = await window.JSONFetch(`/game/${gameId}/discord`);
-	gameStore.discord = res.data.data;
+if (gameStore.discord === null || gameStore.discord.guild === "") {
+	setTimeout(async () => {
+		const res = await window.JSONFetch(`/game/${gameId}/discord`);
+		gameStore.discord = res.data.data;
+		console.log(gameStore, res.data);
+		voiceChannelLink.value = `https://discord.com/channels/${gameStore.discord.guild}/${gameStore.discord.voice_channel}`;
+	}, 500);
+} else {
+	voiceChannelLink.value = `https://discord.com/channels/${gameStore.discord.guild}/${gameStore.discord.voice_channel}`;
 }
-
-const voiceChannelLink = computed(() => `https://discord.com/channels/${gameStore.discord.guild}/${gameStore.discord.voice_channel}`);
 
 window.Echo.join(`game.${gameId}`)
 	.listen(".voice-notice.close", () => {
