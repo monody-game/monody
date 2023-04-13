@@ -54,6 +54,11 @@
         :value="userStore.email"
         @model="newEmail => email = newEmail"
       />
+      <a
+        v-if="email !== null && email !== '' && userStore.email_verified_at === null"
+        class="auth-page__link"
+        @click.prevent="notify"
+      >Renvoyer le mail de vérification</a>
       <div class="profile-modal__connections">
         <label for="connections">Connexions</label>
         <div
@@ -207,14 +212,13 @@ const updateProfile = async () => {
 		return;
 	}
 
-	const res = await window.JSONFetch("/user", "PATCH", modifiedFields);
+	const res = (await window.JSONFetch("/user", "PATCH", modifiedFields)).data.user;
 
 	userStore.setUser({
-		id: res.data.id,
-		username: res.data.username,
-		email: res.data.email,
-		avatar: res.data.avatar,
-		level: res.data.level,
+		id: res.id,
+		username: res.username,
+		email: res.email,
+		level: res.level,
 		exp: userStore.exp,
 		exp_needed: userStore.exp_needed
 	});
@@ -243,5 +247,9 @@ const unlink = async () => {
 			error: "Une erreur inattendue est survenue en déconnectant votre compte Discord"
 		});
 	}
+};
+
+const notify = async () => {
+	await window.JSONFetch("/email/notify");
 };
 </script>
