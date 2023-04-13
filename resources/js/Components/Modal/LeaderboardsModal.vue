@@ -92,7 +92,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">4</span>
                 <img
-                  :src="board[3].user.avatar"
+                  :src="board[3].user.avatar + '?w=40&dpr=2'"
                   alt=""
                 >
                 <p>{{ board[3].user.username }}</p>
@@ -105,7 +105,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">8</span>
                 <img
-                  :src="board[7].user.avatar"
+                  :src="board[7].user.avatar + '?w=40&dpr=2'"
                   alt=""
                 >
                 <p>{{ board[7].user.username }}</p>
@@ -120,7 +120,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">5</span>
                 <img
-                  :src="board[4].user.avatar"
+                  :src="board[4].user.avatar + '?w=40&dpr=2'"
                   alt=""
                 >
                 <p>{{ board[4].user.username }}</p>
@@ -133,7 +133,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">9</span>
                 <img
-                  :src="board[8].user.avatar"
+                  :src="board[8].user.avatar + '?w=40&dpr=2'"
                   alt=""
                 >
                 <p>{{ board[8].user.username }}</p>
@@ -148,7 +148,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">6</span>
                 <img
-                  :src="board[5].user.avatar"
+                  :src="board[5].user.avatar + '?w=40&dpr=2'"
                   alt=""
                 >
                 <p>{{ board[5].user.username }}</p>
@@ -161,7 +161,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">10</span>
                 <img
-                  :src="board[9].user.avatar"
+                  :src="board[9].user.avatar + '?w=40&dpr=2'"
                   alt=""
                 >
                 <p>{{ board[9].user.username }}</p>
@@ -176,7 +176,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">7</span>
                 <img
-                  :src="board[6].user.avatar"
+                  :src="board[6].user.avatar + '?w=40&dpr=2'"
                   alt=""
                 >
                 <p>{{ board[6].user.username }}</p>
@@ -190,13 +190,25 @@
         </tr>
       </table>
     </div>
+    <div class="modal__buttons">
+      <div class="modal__buttons-right">
+        <button
+          class="btn medium"
+          @click="modalStore.close()"
+        >
+          Fermer
+        </button>
+      </div>
+    </div>
   </BaseModal>
 </template>
 
 <script setup>
 import { ref, watch } from "vue";
 import BaseModal from "./BaseModal.vue";
+import { useStore } from "../../stores/modals/modal.js";
 
+const modalStore = useStore();
 const selected = ref("elo");
 const placeholder = { user: { username: "/", avatar: "" }, information: "/" };
 const res = (await window.JSONFetch(`/leaderboard/${selected.value}`)).data.board;
