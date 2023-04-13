@@ -160,11 +160,6 @@ class GameController extends Controller
         ]);
         Redis::set("game:$id:votes", []);
 
-        /** @var array $list */
-        $list = $this->list()->data;
-
-        broadcast(new GameListUpdate($list['games']));
-
         return new JsonApiResponse(['game' => $data]);
     }
 
@@ -213,6 +208,11 @@ class GameController extends Controller
                 [...$werewolves, ...$game['dead_users']]
             )
         );
+
+        /** @var array $list */
+        $list = $this->list()->data;
+
+        broadcast(new GameListUpdate($list['games']));
 
         broadcast(new ClearGameInvitations);
 

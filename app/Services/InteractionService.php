@@ -7,6 +7,7 @@ use App\Actions\AngelAction;
 use App\Actions\InfectedWerewolfAction;
 use App\Actions\MayorAction;
 use App\Actions\PsychicAction;
+use App\Actions\SurlyWerewolfAction;
 use App\Actions\VoteAction;
 use App\Actions\WerewolvesAction;
 use App\Actions\WhiteWerewolfAction;
@@ -232,7 +233,8 @@ class InteractionService
             Interaction::InfectedWerewolf => new InfectedWerewolfAction,
             Interaction::WhiteWerewolf => app(WhiteWerewolfAction::class),
             Interaction::Mayor => app(MayorAction::class),
-            Interaction::Angel => app(AngelAction::class)
+            Interaction::Angel => app(AngelAction::class),
+            Interaction::SurlyWerewolf => new SurlyWerewolfAction
         };
     }
 }
