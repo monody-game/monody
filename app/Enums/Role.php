@@ -7,6 +7,7 @@ enum Role: int
     // Werewolves
     case Werewolf = 1;
     case InfectedWerewolf = 7;
+	case SurlyWerewolf = 10;
 
     // Villagers
     case SimpleVillager = 2;
@@ -30,7 +31,8 @@ enum Role: int
             self::Elder => 'Ancien',
             self::InfectedWerewolf => 'Loup malade',
             self::WhiteWerewolf => 'Loup blanc',
-            self::Angel => 'Ange'
+            self::Angel => 'Ange',
+			self::SurlyWerewolf => 'Loup hargneux'
         };
     }
 
@@ -46,6 +48,7 @@ enum Role: int
             'infected_werewolf' => self::InfectedWerewolf,
             'white_werewolf' => self::WhiteWerewolf,
             'angel' => self::Angel,
+            'surly_werewolf' => self::SurlyWerewolf,
             default => null,
         };
     }
@@ -62,6 +65,7 @@ enum Role: int
             self::InfectedWerewolf => 'infected_werewolf',
             self::WhiteWerewolf => 'white_werewolf',
             self::Angel => 'angel',
+			self::SurlyWerewolf => 'surly_werewolf',
         };
     }
 
@@ -69,7 +73,7 @@ enum Role: int
     {
         return match ($this) {
             self::InfectedWerewolf, self::WhiteWerewolf => 5,
-            self::Werewolf => 4,
+            self::Werewolf, self::SurlyWerewolf => 4,
             self::LittleGirl, self::Elder, self::Psychic, self::Witch, self::Angel => 2,
             self::SimpleVillager => 1,
         };
@@ -94,6 +98,7 @@ enum Role: int
             self::Werewolf => [InteractionAction::Kill],
             self::InfectedWerewolf => [InteractionAction::Infect, InteractionAction::InfectedSkip],
             self::WhiteWerewolf => [InteractionAction::BetrayalKill],
+			self::SurlyWerewolf => [InteractionAction::Bite],
             default => [],
         };
     }
