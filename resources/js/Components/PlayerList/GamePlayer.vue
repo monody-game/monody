@@ -237,7 +237,7 @@ const send = async function(votingUser, votedUser) {
 	}
 
 	if (interactionType.value === "psychic") {
-		const role = await window.JSONFetch(`/roles/get/${res.data.response}`, "GET");
+		const role = await window.JSONFetch(`/roles/get/${res.data.interaction.response}`, "GET");
 		chatStore.send(
 			`Vous avez choisi d'espionner le rôle de ${props.player.username} qui est ${role.data.role.display_name}`,
 			"success"

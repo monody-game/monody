@@ -74,13 +74,13 @@ export class GameChannel {
 
 			if (canStart.ok) {
 				await this.gameService.startGame(channel, game, socket);
+
+				const list = await fetch(`${process.env.API_URL}/game/list/*`, "GET");
+
+				socket.broadcast.to("home").volatile.emit("game-list.update", "home", {
+					data: list.json.data
+				});
 			}
-
-			const list = await fetch(`${process.env.API_URL}/game/list/*`, "GET");
-
-			this.io.to("home").volatile.emit("game-list.update", "home", {
-				data: list.json
-			});
 		}
 	}
 
@@ -95,7 +95,7 @@ export class GameChannel {
 		const state = await this.stateManager.getState(id);
 		if (!state) return;
 
-		if (state.status === StartingState.state) {
+		if (state.status === StartingState.data.state.id) {
 			log(`Stopping starting state of game ${id}`);
 			await this.gameService.stopGameLaunch(channel);
 			game.is_started = false;
@@ -131,11 +131,6 @@ export class GameChannel {
 		if(!member.socketId) return
 
 		socket.broadcast.to(channel).emit("presence:joining", channel, member);
-		const list = await fetch(`${process.env.API_URL}/game/list/*`);
-
-		this.io.to("home").volatile.emit("game-list.update", "home", {
-			data: list.json
-		});
 
 		const gameData = await fetch(`${process.env.API_URL}/game/data/${gameId(channel)}`);
 
@@ -153,12 +148,6 @@ export class GameChannel {
 
 	async onDelete(id: string) {
 		await fetch(`${process.env.API_URL}/game`, "DELETE", { gameId: id });
-
-		const list = await fetch(`${process.env.API_URL}/game/list/*`);
-
-		this.io.to("home").volatile.emit("game-list.update", "home", {
-			data: list.json
-		});
 
 		this.io.to('bot.private').volatile.emit('game.share.clear', 'bot.private')
 

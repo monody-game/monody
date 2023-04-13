@@ -8,7 +8,7 @@ import { success } from "../Logger.js";
 import { EventEmitter } from "node:events";
 import {Server, Socket} from "socket.io";
 
-const WaitingState = (await fetch(`${process.env.API_URL}/state/0`)).json;
+const WaitingState = (await fetch(`${process.env.API_URL}/state/0`)).json.data.state;
 
 type Member = {
 	socketId?: string
@@ -70,7 +70,7 @@ export class GameService {
 	async stopGameLaunch(channel: string) {
 		this.emitter.emit("time.halt", gameId(channel));
 		await this.stateManager.setState({
-			status: WaitingState.state,
+			status: WaitingState.id,
 			startTimestamp: Date.now(),
 			counterDuration: WaitingState.duration,
 			round: 0
