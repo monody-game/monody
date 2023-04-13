@@ -15,6 +15,7 @@ enum State: int
     case Werewolf = 3;
     case InfectedWerewolf = 10;
     case WhiteWerewolf = 11;
+    case SurlyWerewolf = 13;
     case Witch = 4;
 
     case Day = 6;
@@ -37,6 +38,7 @@ enum State: int
             self::Werewolf => Role::Werewolf->name(),
             self::InfectedWerewolf => Role::InfectedWerewolf->name(),
             self::WhiteWerewolf => Role::WhiteWerewolf->name(),
+            self::SurlyWerewolf => Role::SurlyWerewolf->name(),
             self::Witch => Role::Witch->name(),
             self::Day => 'day',
             self::Mayor => 'mayor',
@@ -59,6 +61,7 @@ enum State: int
             self::Werewolf => 'Tour des loups-garous',
             self::InfectedWerewolf => 'Tour du loup malade',
             self::WhiteWerewolf => 'Tour du loup blanc',
+            self::SurlyWerewolf => 'Tour du loup hargneux',
             self::Witch => 'Tour de la sorcière',
             self::Day => 'Jour',
             self::Mayor => 'Élection du maire',
@@ -74,7 +77,7 @@ enum State: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles, self::Day, self::Mayor, self::Vote, self::End => 'day',
-            self::Night, self::Psychic, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Witch => 'night',
+            self::Night, self::Psychic, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf, self::Witch => 'night',
         };
     }
 
@@ -84,7 +87,7 @@ enum State: int
             self::Waiting, self::End => -1,
             self::Starting, self::Night => 10,
             self::Day => 60,
-            self::Roles, self::InfectedWerewolf, self::WhiteWerewolf => 30,
+            self::Roles, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf => 30,
             self::Mayor, self::Vote, self::Werewolf, self::Psychic, self::Witch => 90,
         };
     }
@@ -96,7 +99,7 @@ enum State: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles => 'wait',
-            self::Night, self::Witch, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic => 'night',
+            self::Night, self::Witch, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::SurlyWerewolf => 'night',
             self::Day, self::Mayor, self::Vote => 'day',
             self::End => 'trophy'
         };
@@ -135,7 +138,7 @@ enum State: int
             self::Waiting, self::Starting, self::Roles, self::Night, self::Day, self::End => null, // Cannot be skipped
             self::Vote, self::Mayor => 30,
             self::Werewolf => 10,
-            self::Witch, self::Psychic, self::InfectedWerewolf, self::WhiteWerewolf => 0, // Skip the state to the next
+            self::Witch, self::Psychic, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf => 0, // Skip the state to the next
         };
     }
 
