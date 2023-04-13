@@ -32,34 +32,39 @@ class LeaderboardController extends Controller
     }
 
     /**
-     * @return Collection<int, Elo>
+     * @return Collection<int, array{information: int, user: User}>
      */
     private function byElo(): Collection
     {
         return Elo::limit(10)
             ->orderBy('elo', 'desc')
             ->get()
-            ->map(function ($elo) {
-                $elo['user'] = User::select(['id', 'username', 'avatar', 'level'])->find($elo->user_id);
+            ->map(function (Elo $elo) {
+                /** @var User $user */
+                $user = User::select(['id', 'username', 'avatar', 'level'])->find($elo->user_id);
                 unset($elo['user_id']);
 
-                return $elo;
+                return [
+                    'information' => $elo->elo,
+                    'user' => $user,
+                ];
             });
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, array{information: int, user: User}>
      */
     private function byLevel(): Collection
     {
         return User::limit(10)
             ->select(['id', 'username', 'avatar', 'level'])
             ->orderBy('level', 'desc')
-            ->get();
+            ->get()
+            ->map(fn (User $user) => ['information' => $user->level, 'user' => $user]);
     }
 
     /**
-     * @return Collection<int, array{wins: int, user: User}>
+     * @return Collection<int, array{information: int, user: User}>
      */
     private function byWins(): Collection
     {
@@ -69,7 +74,7 @@ class LeaderboardController extends Controller
             ->groupBy('user_id')
             ->orderBy('wins', 'desc')
             ->get()
-            ->map(function ($outcome) {
+            ->map(function (GameOutcome $outcome) {
                 /** @var int $wins */
                 $wins = $outcome['wins'];
 
@@ -77,7 +82,7 @@ class LeaderboardController extends Controller
                 $user = User::select(['id', 'username', 'avatar', 'level'])->find($outcome->user_id);
 
                 return [
-                    'wins' => $wins,
+                    'information' => $wins,
                     'user' => $user,
                 ];
             });
