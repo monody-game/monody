@@ -381,7 +381,7 @@ class GameControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->create(['discord_linked_at' => 'now', 'discord_id' => 1234]);
         $this->secondUser = User::factory()->create();
         $this->game = [
             'users' => [$this->user->id],

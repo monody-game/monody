@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\GameType;
 use App\Facades\Redis;
 use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
@@ -18,6 +19,10 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
     }
 
     if ($member) {
+        return false;
+    }
+
+    if ($game['type'] === GameType::VOCAL->value && $user->discord_linked_at === null) {
         return false;
     }
 

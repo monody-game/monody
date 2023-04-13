@@ -73,6 +73,8 @@ const getUserCount = function () {
 };
 
 const openGame = async function () {
+	if (props.game.type === 1 && userStore.discord_linked_at === null) return;
+
 	if (props.game.type === 1) {
 		popupStore.setPopup({
 			warn: {
