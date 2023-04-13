@@ -5,7 +5,7 @@ import { UserService } from "./UserService.js";
 import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
 import { success } from "../Logger.js";
-const WaitingState = (await fetch(`${process.env.API_URL}/state/0`)).json;
+const WaitingState = (await fetch(`${process.env.API_URL}/state/0`)).json.data.state;
 export class GameService {
     emitter;
     stateManager;
@@ -46,7 +46,7 @@ export class GameService {
     async stopGameLaunch(channel) {
         this.emitter.emit("time.halt", gameId(channel));
         await this.stateManager.setState({
-            status: WaitingState.state,
+            status: WaitingState.id,
             startTimestamp: Date.now(),
             counterDuration: WaitingState.duration,
             round: 0
