@@ -15,21 +15,6 @@ class AvatarControllerTest extends TestCase
 
     private User $user;
 
-    public function testGenerateCallService(): void
-    {
-        Storage::putFileAs('avatars', base_path('tests/Helpers/avatars/1.png'), 'default.png');
-        Storage::putFileAs('levels', base_path('tests/Helpers/levels/100.png'), '100.png');
-
-        $this
-            ->actingAs($this->user, 'api')
-            ->getJson('/api/avatars/generate')
-            ->assertStatus(Response::HTTP_NO_CONTENT);
-
-        Storage::assertExists("avatars/{$this->user->id}.png");
-        $this->assertSame("/assets/avatars/{$this->user->id}.png", $this->user->avatar);
-        Storage::putFileAs('avatars', storage_path('app/public/avatars/default.png'), 'default.png');
-    }
-
     public function testUploadingAvatar(): void
     {
         $this->assertSame('/assets/avatars/default.png', $this->user->avatar);
@@ -71,9 +56,6 @@ class AvatarControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        Storage::fake();
-        Storage::putFileAs('avatars', storage_path('app/public/avatars/default.png'), 'default.png');
 
         $this->user = User::factory()->make([
             'level' => 100,

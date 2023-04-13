@@ -6,8 +6,9 @@ import { useStore as usePopupStore } from "./popup.js";
 import { useStore as useRoleAssignationStore } from "./role-assignation.js";
 import { useStore as useActivityConfirmationModalStore } from "./activity-confirmation-modal.js";
 import { useStore as useGameDetailsModalStore } from "./game-details.js";
-import { useStore as useShareProfleStore } from "./share-profile-modal.js";
+import { useStore as useShareProfileStore } from "./share-profile-modal.js";
 import { useStore as useBadgesModalStore } from "./badges.js";
+import { useStore as useLeaderboardsModalStore } from "./leaderboards.js";
 
 export const useStore = defineStore("modal", {
 	state: () => {
@@ -33,9 +34,11 @@ export const useStore = defineStore("modal", {
 			case "game-details":
 				return useGameDetailsModalStore();
 			case "share-profile":
-				return useShareProfleStore();
+				return useShareProfileStore();
 			case "badges":
 				return useBadgesModalStore();
+			case "leaderboards":
+				return useLeaderboardsModalStore();
 			}
 		}
 	},
@@ -53,6 +56,7 @@ export const useStore = defineStore("modal", {
 			}
 		},
 		open(type) {
+			window.scrollTo(0, 0);
 			this.getModalStore(type).isOpenned = true;
 			this.opennedModal = type;
 			document.body.classList.add("overflow-hidden");

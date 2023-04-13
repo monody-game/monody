@@ -68,6 +68,9 @@
       <Transition name="modal">
         <BadgesModal v-if="badgesModalStore.isOpenned" />
       </Transition>
+      <Transition name="modal">
+        <LeaderboardsModal v-if="leaderboardsModalStore.isOpenned" />
+      </Transition>
       <Footer />
     </div>
   </div>
@@ -81,6 +84,7 @@ import { useStore as useModalStore } from "../stores/modals/modal.js";
 import { useStore as useProfileModalStore } from "../stores/modals/profile-modal.js";
 import { useStore as useShareProfileModalStore } from "../stores/modals/share-profile-modal.js";
 import { useStore as useBadgesModalStore } from "../stores/modals/badges.js";
+import { useStore as useLeaderboardsModalStore } from "../stores/modals/leaderboards.js";
 import AuthService from "../services/AuthService.js";
 import Footer from "../Components/FooterComponent.vue";
 import GameCreationModal from "../Components/Modal/GameCreationModal.vue";
@@ -89,14 +93,17 @@ import PlayerPresentation from "../Components/PlayerPresentation/PlayerPresentat
 import ProfileModal from "../Components/Modal/ProfileModal.vue";
 import ShareProfileModal from "../Components/Modal/ShareProfileModal.vue";
 import BadgesModal from "../Components/Modal/BadgesModal.vue";
+import LeaderboardsModal from "../Components/Modal/LeaderboardsModal.vue";
 
 const games = ref([]);
 const roles = ref([]);
 const store = useStore();
 const router = useRouter();
+
 const profileModalStore = useProfileModalStore();
 const shareProfileModalStore = useShareProfileModalStore();
 const badgesModalStore = useBadgesModalStore();
+const leaderboardsModalStore = useLeaderboardsModalStore();
 
 onBeforeRouteLeave(() => {
 	window.Echo.leave("home");
