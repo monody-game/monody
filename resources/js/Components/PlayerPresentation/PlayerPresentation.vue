@@ -2,8 +2,14 @@
   <div class="player-presentation__container">
     <div class="player-presentation__main">
       <svg
+        class="player-presentation__leaderboards"
+        @click="modalStore.open('leaderboards')"
+      >
+        <use href="/sprite.svg#ranking" />
+      </svg>
+      <svg
         class="player-presentation__badges"
-        @click="openBadges"
+        @click="modalStore.open('badges')"
       >
         <use :href="'/sprite.svg#badges_' + store.theme " />
       </svg>
@@ -57,8 +63,4 @@ import UserStatistics from "./UserStatistics.vue";
 
 const store = useStore();
 const modalStore = useModalStore();
-
-const openBadges = () => {
-	modalStore.open("badges");
-};
 </script>

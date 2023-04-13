@@ -24,7 +24,7 @@ Route::group(['middleware' => ['auth:api', VerifiedEmailNeeded::class]], functio
     //Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
 });
 
-Route::get('/roles/', 'RoleController@all');
+Route::get('/roles', 'RoleController@all');
 Route::get('/roles/game/{gameId}', 'RoleController@game');
 Route::get('/roles/get/{id}', 'RoleController@get');
 Route::get('/roles/{group}', 'RoleController@group');
@@ -41,6 +41,8 @@ Route::get('/team/{id}', 'TeamController@get');
 Route::get('/interactions/actions', 'Game\GameActionsController@all');
 Route::get('/interactions/actions/{gameId}/{interactionId}', 'Game\GameActionsController@get');
 
+Route::get('/leaderboard/{leaderboard}', 'LeaderboardController@index');
+
 Route::group(['middleware' => OptionalAuthentication::class], function () {
     Route::get('/stats/{userId?}', 'StatisticsController@show');
     Route::get('/elo/{userId?}', 'EloController@show');
@@ -55,7 +57,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
     Route::post('/oauth/unlink/google', 'Oauth\GoogleOauthController@unlink');
 
-    Route::get('/avatars/generate', 'AvatarController@generate');
     Route::post('/avatars', 'AvatarController@upload');
     Route::delete('/avatars', 'AvatarController@delete');
 

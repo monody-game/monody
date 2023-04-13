@@ -7,44 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AvatarUploadRequest;
 use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
-use App\Services\AvatarGenerator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use League\Glide\Server;
 
-/**
- * @deprecated Useless
- */
 class AvatarController extends Controller
 {
-    private AvatarGenerator $generator;
-
-    public function __construct()
-    {
-        $this->generator = new AvatarGenerator();
-    }
-
-    public function generate(Request $request): JsonApiResponse
-    {
-        /** @var User $user */
-        $user = $request->user();
-
-        $result = $this->generator->generate($user);
-
-        $path = $this->generator->toStoragePath($user->avatar);
-
-        if ($path !== 'default.png') {
-            Storage::delete("avatars/$path");
-        }
-
-        Storage::put("avatars/{$user->id}.png", $result);
-
-        $user->avatar = str_replace('storage', 'assets', Storage::url("avatars/{$user->id}.png"));
-        $user->save();
-
-        return new JsonApiResponse(status: Status::NO_CONTENT);
-    }
-
     public function upload(AvatarUploadRequest $request, Server $server): JsonApiResponse
     {
         /** @var User $user */
