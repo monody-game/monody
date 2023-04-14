@@ -231,7 +231,7 @@ class InteractionService
             Interaction::Psychic => new PsychicAction,
             Interaction::Werewolves => app(WerewolvesAction::class),
             Interaction::InfectedWerewolf => new InfectedWerewolfAction,
-            Interaction::WhiteWerewolf => app(WhiteWerewolfAction::class),
+            Interaction::WhiteWerewolf => new WhiteWerewolfAction,
             Interaction::Mayor => app(MayorAction::class),
             Interaction::Angel => app(AngelAction::class),
             Interaction::SurlyWerewolf => new SurlyWerewolfAction

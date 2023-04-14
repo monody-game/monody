@@ -30,7 +30,7 @@ export default {
 		const state: State = JSON.parse(await client.get(`game:${id}:state`) as string);
 
 		if ("bitten" in game && (state.round ?? 0) - game["bitten"].round === 1) {
-			await fetch(`${baseUrl}/game/kill`, "POST", {
+			await fetch(`${baseUrl}/kill`, "POST", {
 				userId: game["bitten"].target,
 				gameId: id,
 				context: 'bitten'

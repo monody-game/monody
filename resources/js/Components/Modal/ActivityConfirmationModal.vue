@@ -29,7 +29,7 @@
         style="width: 47.5%;"
         @click="no()"
       >
-        Non
+        Quitter
       </button>
       <button
         class="btn medium"
