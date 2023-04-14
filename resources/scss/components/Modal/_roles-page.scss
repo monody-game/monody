@@ -16,7 +16,7 @@
 		content: '';
 		width: 100%;
 		position: absolute;
-		top: -16px;
+		top: -8px;
 		border-top: var(--border-secondary) 2px solid;
 	}
 }
@@ -33,10 +33,15 @@
   margin-bottom: space(1);
 }
 
+.roles__loners .roles__team-description svg {
+	height: 60px;
+	width: 60px;
+}
+
 .roles__team-description {
 	display: flex;
 	flex-direction: column;
-	gap: space(1);
+	gap: space(2);
 	align-items: center;
 	width: 85px;
 
