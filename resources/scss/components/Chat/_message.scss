@@ -21,7 +21,7 @@
 .alert-message__content {
 	display: flex;
 	align-items: center;
-	gap: space(1);
+	gap: space(1.5);
 }
 
 .alert__main {
@@ -90,7 +90,7 @@
 }
 
 .alert-message__icon {
-	width: 38px;
+	width: 32px;
 	aspect-ratio: 1 / 1;
 }
 
