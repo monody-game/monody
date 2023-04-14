@@ -63,7 +63,7 @@
 	flex-direction: column;
 
 	& .alert-message__icon use {
-		color: #fff;
+		color: var(--light-background);
 	}
 }
 
@@ -72,7 +72,7 @@
 	background-color: var(--success);
 
 	& .alert-message__icon use {
-		color: #fff;
+		color: var(--light-background);
 	}
 }
 
@@ -81,7 +81,16 @@
 	background: var(--dark-danger);
 
 	& .alert-message__icon use {
-		color: #fff;
+		color: var(--light-background);
+	}
+}
+
+.alert-message__warn {
+	@extend .alert__main;
+	background: var(--warn);
+
+	& .alert-message__icon use {
+		color: var(--light-background);
 	}
 }
 
