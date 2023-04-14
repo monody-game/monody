@@ -47,6 +47,7 @@ class AngelAction implements ActionInterface
     {
         $game = Redis::get("game:$gameId");
         $users = array_filter($game['users'], fn ($user) => $user !== $this->getUserIdByRole(Role::Angel, $gameId)[0]);
+        $users = array_values($users); // Cancel array's key preservation
         /** @var int<5, max> $count */
         $count = count($users);
 

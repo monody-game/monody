@@ -68,11 +68,11 @@ class GameUsersController extends Controller
         return new JsonApiResponse(['role' => $role]);
     }
 
-	public function eliminate(Request $request): JsonApiResponse
-	{
-		$res = $this->kill($request->get('userId'), $request->get('gameId'), $request->get('context'));
-		$status = $res ? Status::NO_CONTENT : Status::BAD_REQUEST;
+    public function eliminate(Request $request): JsonApiResponse
+    {
+        $res = $this->kill($request->get('userId'), $request->get('gameId'), $request->get('context'));
+        $status = $res ? Status::NO_CONTENT : Status::BAD_REQUEST;
 
-		return new JsonApiResponse(status: $status);
-	}
+        return new JsonApiResponse(status: $status);
+    }
 }

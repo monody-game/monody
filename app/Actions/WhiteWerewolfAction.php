@@ -5,7 +5,6 @@ namespace App\Actions;
 use App\Enums\InteractionAction;
 use App\Enums\Role;
 use App\Enums\State;
-use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
 use App\Traits\RegisterHelperTrait;
 
