@@ -18,6 +18,15 @@ export default {
                 await InteractionService.closeInteraction(io, channel, "angel");
             }
         }
+        const game = JSON.parse(await client.get(`game:${id}`));
+        const state = JSON.parse(await client.get(`game:${id}:state`));
+        if ("bitten" in game && (state.round ?? 0) - game["bitten"].round === 1) {
+            await fetch(`${baseUrl}/game/kill`, "POST", {
+                userId: game["bitten"].target,
+                gameId: id,
+                context: 'bitten'
+            });
+        }
         await fetch(`${baseUrl}/chat/lock`, "POST", body);
         await fetch(`${baseUrl}/message/deaths`, "POST", body);
         const res = await fetch(`${baseUrl}/end/check`, "POST", body);
