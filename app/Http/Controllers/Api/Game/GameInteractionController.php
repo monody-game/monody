@@ -105,6 +105,7 @@ class GameInteractionController extends Controller
             Interaction::InfectedWerewolf => $this->getUserIdByRole(Role::InfectedWerewolf, $gameId),
             Interaction::WhiteWerewolf => $this->getUserIdByRole(Role::WhiteWerewolf, $gameId),
             Interaction::Angel => $this->getUserIdByRole(Role::Angel, $gameId),
+			Interaction::SurlyWerewolf => $this->getUserIdByRole(Role::SurlyWerewolf, $gameId),
             default => '*'
         };
     }

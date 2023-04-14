@@ -123,6 +123,8 @@ window.Echo.join(`game.${route.params.id}`)
 
 		if (context === "vote") {
 			store.send(`Le village a décidé de tuer ${user.username} qui était ${role}`, "death");
+		} else if (context === "bitten") {
+			store.send(`${user.username} a succombé à ses blessures. Il était ${role}`, "death");
 		} else {
 			store.send(`${user.username} a été tué cette nuit, il était ${role} !`, "death");
 		}

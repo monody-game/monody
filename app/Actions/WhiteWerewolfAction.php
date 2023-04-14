@@ -13,11 +13,6 @@ class WhiteWerewolfAction implements ActionInterface
 {
     use MemberHelperTrait, RegisterHelperTrait;
 
-    public function __construct(
-        private readonly VoteService $service)
-    {
-    }
-
     public function isSingleUse(): bool
     {
         return false;
@@ -32,7 +27,7 @@ class WhiteWerewolfAction implements ActionInterface
 
     public function call(string $targetId, InteractionAction $action, string $emitterId): bool
     {
-        return $this->service->kill($targetId, $this->getGameId($targetId), State::WhiteWerewolf->stringify());
+        return $this->kill($targetId, $this->getGameId($targetId), State::WhiteWerewolf->stringify());
     }
 
     public function updateClients(string $userId): void

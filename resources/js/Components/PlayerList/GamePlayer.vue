@@ -184,6 +184,25 @@ window.Echo
 				}]);
 			}
 			break;
+		case "surly_werewolf":
+			if (isDead.value === false) {
+				player.value.classList.add("player__votable");
+			}
+
+			if (gamePlayer.role && gamePlayer.role.name === "surly_werewolf") {
+				chatStore.send("Cliquez sur un joueur pour le mordre ?", "info", null, [
+					{
+						title: "Passer",
+						async callback() {
+							await window.JSONFetch("/interactions/use", "POST", {
+								id: gameStore.currentInteractionId,
+								gameId:	gameId.value,
+								action: "surly_werewolf:skip"
+							});
+						},
+						id: "surly_werewolf:skip"
+					}]);
+			}
 		}
 	})
 	.listen(".interaction.close", ({ interaction }) => {
@@ -191,6 +210,7 @@ window.Echo
 		case "vote":
 		case "werewolves":
 		case "white_werewolf":
+		case "surly_werewolf":
 		case "mayor":
 			if (player.value) {
 				player.value.classList.remove("player__votable", "player__electable");
@@ -211,7 +231,10 @@ window.Echo
 		gameStore.currentInteractionId = "";
 	})
 	.listen(".interaction.vote", ({ data }) => addVote(data))
-	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data));
+	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data))
+	.listen(".interaction.surly_werewolf:bite", () => {
+		if (player.value.id === userID.value) chatStore.send("Vous avez été mordu par le loup hargneux. Vos blessures semblent graves et vous survivrez pas à la prochaine nuit.", "warn");
+	});
 
 const send = async function(votingUser, votedUser) {
 	let action = null;
@@ -223,6 +246,10 @@ const send = async function(votingUser, votedUser) {
 
 	if (classList.contains("player__witch-kill")) {
 		action = "witch:kill";
+	}
+
+	if (classList.contains("player__votable") && interactionType.value === "surly_werewolf") {
+		action = "surly_werewolf:bite";
 	}
 
 	const res = await window.JSONFetch("/interactions/use", "POST", {
@@ -240,6 +267,13 @@ const send = async function(votingUser, votedUser) {
 		const role = await window.JSONFetch(`/roles/get/${res.data.interaction.response}`, "GET");
 		chatStore.send(
 			`Vous avez choisi d'espionner le rôle de ${props.player.username} qui est ${role.data.role.display_name}`,
+			"success"
+		);
+	}
+
+	if (interactionType.value === "surly_werewolf") {
+		chatStore.send(
+			`Vous avez choisi de mordre ${props.player.username}. Il succombera à ses blessures la prochaine nuit.`,
 			"success"
 		);
 	}
