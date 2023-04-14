@@ -98,7 +98,7 @@ enum Role: int
             self::Werewolf => [InteractionAction::Kill],
             self::InfectedWerewolf => [InteractionAction::Infect, InteractionAction::InfectedSkip],
             self::WhiteWerewolf => [InteractionAction::BetrayalKill],
-            self::SurlyWerewolf => [InteractionAction::Bite],
+            self::SurlyWerewolf => [InteractionAction::Bite, InteractionAction::SurlySkip],
             default => [],
         };
     }

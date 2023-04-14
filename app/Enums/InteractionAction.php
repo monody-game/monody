@@ -29,4 +29,5 @@ enum InteractionAction: string
 
     // Surly werewolf
     case Bite = 'surly_werewolf:bite';
+    case SurlySkip = 'surly_werewolf:skip';
 }
