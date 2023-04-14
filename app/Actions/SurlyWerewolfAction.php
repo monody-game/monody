@@ -7,11 +7,15 @@ use App\Enums\Role;
 use App\Events\InteractionUpdate;
 use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
-use App\Traits\RegisterHelperTrait;
 
 class SurlyWerewolfAction implements ActionInterface
 {
-    use RegisterHelperTrait, MemberHelperTrait;
+    use MemberHelperTrait;
+
+    public function __construct(
+        private readonly string $gameId
+    ) {
+    }
 
     public function isSingleUse(): bool
     {
@@ -20,14 +24,12 @@ class SurlyWerewolfAction implements ActionInterface
 
     public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
-        $gameId = $this->getGameId($userId);
-
         $actionCondition = match ($action) {
-            InteractionAction::Bite => $this->alive($targetId, $gameId),
+            InteractionAction::Bite => $this->alive($targetId, $this->gameId),
             default => true,
         };
 
-        return $this->getRoleByUserId($userId, $gameId) === Role::SurlyWerewolf && $actionCondition;
+        return $this->getRoleByUserId($userId, $this->gameId) === Role::SurlyWerewolf && $actionCondition;
     }
 
     public function call(string $targetId, InteractionAction $action, string $emitterId): null
@@ -36,7 +38,7 @@ class SurlyWerewolfAction implements ActionInterface
             case InteractionAction::SurlySkip:
                 break;
             case InteractionAction::Bite:
-                $this->bite($targetId, $this->getGameId($targetId));
+                $this->bite($targetId, $this->gameId);
                 break;
         }
 
@@ -86,11 +88,6 @@ class SurlyWerewolfAction implements ActionInterface
     public function status(string $gameId): null
     {
         return null;
-    }
-
-    private function getGameId(string $userId): string
-    {
-        return $this->getCurrentUserGameActivity($userId);
     }
 
     private function isUsed(InteractionAction $action, string $gameId): bool

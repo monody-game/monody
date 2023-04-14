@@ -7,18 +7,20 @@ use App\Enums\Role;
 use App\Enums\State;
 use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
-use App\Traits\RegisterHelperTrait;
 
 class WitchAction implements ActionInterface
 {
-    use MemberHelperTrait, RegisterHelperTrait;
+    use MemberHelperTrait;
+
+    public function __construct(
+        private readonly string $gameId
+    ) {
+    }
 
     public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
-        $gameId = $this->getGameId($userId);
-
         $actionCondition = match ($action) {
-            InteractionAction::KillPotion => $this->alive($targetId, $gameId),
+            InteractionAction::KillPotion => $this->alive($targetId, $this->gameId),
             default => true,
         };
 
@@ -29,18 +31,16 @@ class WitchAction implements ActionInterface
 
     public function call(string $targetId, InteractionAction $action, string $emitterId): null
     {
-        $gameId = $this->getGameId($targetId);
-
         switch ($action) {
             case InteractionAction::WitchSkip:
                 break;
             case InteractionAction::KillPotion:
                 $this->killPotion($targetId);
-                $this->setUsed($action, $gameId);
+                $this->setUsed($action, $this->gameId);
                 break;
             case InteractionAction::RevivePotion:
                 $this->revivePotion($targetId);
-                $this->setUsed($action, $gameId);
+                $this->setUsed($action, $this->gameId);
                 break;
         }
 
@@ -57,21 +57,18 @@ class WitchAction implements ActionInterface
 
     private function killPotion(string $targetId): void
     {
-        $gameId = $this->getGameId($targetId);
-
-        if ($this->isUsed(InteractionAction::KillPotion, $gameId)) {
+        if ($this->isUsed(InteractionAction::KillPotion, $this->gameId)) {
             return;
         }
 
-        $this->kill($targetId, $gameId, State::Witch->stringify());
+        $this->kill($targetId, $this->gameId, State::Witch->stringify());
     }
 
     private function revivePotion(string $targetId): void
     {
-        $gameId = $this->getGameId($targetId);
-        $game = Redis::get("game:$gameId");
+        $game = Redis::get("game:$this->gameId");
 
-        if ($this->isUsed(InteractionAction::RevivePotion, $gameId)) {
+        if ($this->isUsed(InteractionAction::RevivePotion, $this->gameId)) {
             return;
         }
 
@@ -79,24 +76,19 @@ class WitchAction implements ActionInterface
             return;
         }
 
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+        $deaths = Redis::get("game:$this->gameId:deaths") ?? [];
 
         $index = array_search($targetId, $game['dead_users'], true);
         array_splice($game['dead_users'], (int) $index, 1);
         $deaths = array_filter($deaths, fn ($death) => $death['user'] !== $targetId);
 
-        Redis::set("game:$gameId", $game);
-        Redis::set("game:$gameId:deaths", $deaths);
+        Redis::set("game:$this->gameId", $game);
+        Redis::set("game:$this->gameId:deaths", $deaths);
     }
 
     private function getRole(string $userId): Role
     {
-        return $this->getRoleByUserId($userId, $this->getGameId($userId));
-    }
-
-    private function getGameId(string $userId): string
-    {
-        return $this->getCurrentUserGameActivity($userId);
+        return $this->getRoleByUserId($userId, $this->gameId);
     }
 
     public function updateClients(string $userId): void

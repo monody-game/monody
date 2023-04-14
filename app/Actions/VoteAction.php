@@ -6,39 +6,33 @@ use App\Enums\InteractionAction;
 use App\Events\InteractionUpdate;
 use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
-use App\Traits\RegisterHelperTrait;
 
 class VoteAction implements ActionInterface
 {
-    use MemberHelperTrait, RegisterHelperTrait;
+    use MemberHelperTrait;
 
     public function __construct(
-        private readonly VoteService $service
+        private readonly VoteService $service,
+        private readonly string $gameId
     ) {
     }
 
     public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
-        return $this->alive($targetId, $this->getGameId($targetId));
+        return $this->alive($targetId, $this->gameId);
     }
 
-    public function call(string $targetId, InteractionAction $action, string $emitterId): mixed
+    public function call(string $targetId, InteractionAction $action, string $emitterId): array
     {
-        return $this->service->vote($targetId, $this->getGameId($targetId), $emitterId);
-    }
-
-    private function getGameId(string $userId): string
-    {
-        return $this->getCurrentUserGameActivity($userId);
+        return $this->service->vote($targetId, $this->gameId, $emitterId);
     }
 
     public function updateClients(string $userId): void
     {
-        $gameId = $this->getGameId($userId);
         broadcast(new InteractionUpdate([
-            'gameId' => $gameId,
+            'gameId' => $this->gameId,
             'type' => InteractionAction::Vote->value,
-            'votedPlayers' => $this->service::getVotes($gameId),
+            'votedPlayers' => $this->service::getVotes($this->gameId),
         ]));
     }
 

@@ -6,6 +6,7 @@ use App\Actions\ActionInterface;
 use App\Actions\AngelAction;
 use App\Actions\InfectedWerewolfAction;
 use App\Actions\MayorAction;
+use App\Actions\ParasiteAction;
 use App\Actions\PsychicAction;
 use App\Actions\SurlyWerewolfAction;
 use App\Actions\VoteAction;
@@ -57,7 +58,7 @@ class InteractionService
             'type' => $type->value,
         ];
 
-        $action = $this->getService($type);
+        $action = $this->getService($type, $gameId);
         $data = $action->additionnalData($gameId);
 
         if ($data !== null) {
@@ -85,7 +86,7 @@ class InteractionService
             return self::INTERACTION_DOES_NOT_EXISTS;
         }
 
-        $service = $this->getService($interactions[$interaction]['type']);
+        $service = $this->getService($interactions[$interaction]['type'], $gameId);
 
         $service->close($gameId);
 
@@ -140,7 +141,7 @@ class InteractionService
             return self::INVALID_ACTION_ON_INTERACTION;
         }
 
-        $service = $this->getService(Interaction::from($type));
+        $service = $this->getService(Interaction::from($type), $gameId);
 
         if (
             !$service->canInteract($action, $emitterId, $targetId) ||
@@ -187,7 +188,7 @@ class InteractionService
     public function shouldSkipTime(string $id, string $gameId): bool
     {
         $interaction = $this->getInteraction($gameId, $id);
-        $service = $this->getService($interaction['type']);
+        $service = $this->getService($interaction['type'], $gameId);
         $game = Redis::get("game:$gameId");
         $state = Redis::get("game:$gameId:state");
 
@@ -204,7 +205,7 @@ class InteractionService
 
     public function status(string $gameId, Interaction $type): mixed
     {
-        $service = $this->getService($type);
+        $service = $this->getService($type, $gameId);
 
         return $service->status($gameId);
     }
@@ -219,22 +220,23 @@ class InteractionService
         return array_key_exists('skipped', $status) && $status['skipped'] === true;
     }
 
-    private function getService(Interaction|string $type): ActionInterface
+    private function getService(Interaction|string $type, string $gameId): ActionInterface
     {
         if (is_string($type)) {
             $type = Interaction::from($type);
         }
 
         return match ($type) {
-            Interaction::Vote => app(VoteAction::class),
-            Interaction::Witch => new WitchAction,
-            Interaction::Psychic => new PsychicAction,
-            Interaction::Werewolves => app(WerewolvesAction::class),
-            Interaction::InfectedWerewolf => new InfectedWerewolfAction,
-            Interaction::WhiteWerewolf => new WhiteWerewolfAction,
-            Interaction::Mayor => app(MayorAction::class),
-            Interaction::Angel => app(AngelAction::class),
-            Interaction::SurlyWerewolf => new SurlyWerewolfAction
+            Interaction::Vote => app(VoteAction::class, ['gameId' => $gameId]),
+            Interaction::Witch => new WitchAction($gameId),
+            Interaction::Psychic => new PsychicAction($gameId),
+            Interaction::Werewolves => app(WerewolvesAction::class, ['gameId' => $gameId]),
+            Interaction::InfectedWerewolf => new InfectedWerewolfAction($gameId),
+            Interaction::WhiteWerewolf => new WhiteWerewolfAction($gameId),
+            Interaction::Mayor => app(MayorAction::class, ['gameId' => $gameId]),
+            Interaction::Angel => app(AngelAction::class, ['gameId' => $gameId]),
+            Interaction::SurlyWerewolf => new SurlyWerewolfAction($gameId),
+            Interaction::Parasite => new ParasiteAction($gameId)
         };
     }
 }

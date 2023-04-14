@@ -17,7 +17,7 @@ enum State: int
     case WhiteWerewolf = 11;
     case SurlyWerewolf = 13;
     case Witch = 4;
-	case Parasite = 14;
+    case Parasite = 14;
 
     case Day = 6;
     case Mayor = 12;
@@ -41,7 +41,7 @@ enum State: int
             self::WhiteWerewolf => Role::WhiteWerewolf->name(),
             self::SurlyWerewolf => Role::SurlyWerewolf->name(),
             self::Witch => Role::Witch->name(),
-			self::Parasite => Role::Parasite->name(),
+            self::Parasite => Role::Parasite->name(),
             self::Day => 'day',
             self::Mayor => 'mayor',
             self::Vote => 'vote',
@@ -65,7 +65,7 @@ enum State: int
             self::WhiteWerewolf => 'Tour du loup blanc',
             self::SurlyWerewolf => 'Tour du loup hargneux',
             self::Witch => 'Tour de la sorcière',
-			self::Parasite => 'Tour du parasite',
+            self::Parasite => 'Tour du parasite',
             self::Day => 'Jour',
             self::Mayor => 'Élection du maire',
             self::Vote => 'Vote',
