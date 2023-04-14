@@ -83,7 +83,7 @@ export class StateManager {
 
 		const roundList = await getRounds(id);
 
-		if(roundList.length === 0) {
+		if (roundList.length === 0) {
 			error(`Round list is empty for game ${id}`)
 		}
 
@@ -91,13 +91,12 @@ export class StateManager {
 
 		const loopingRoundIndex = rounds.length - 2;
 		let currentRound = state["round"] || 0;
-		let toUseRound = currentRound;
 
-		if (toUseRound >= loopingRoundIndex) {
-			toUseRound = loopingRoundIndex;
+		if (currentRound >= loopingRoundIndex) {
+			currentRound = loopingRoundIndex;
 		}
 
-		const currentRoundObject = rounds[toUseRound];
+		const currentRoundObject = rounds[currentRound];
 		if(!currentRoundObject) return;
 
 		let stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
@@ -108,29 +107,26 @@ export class StateManager {
 
 		if (
 			currentRound < loopingRoundIndex &&
-			!currentRoundObject[stateIndex] &&
-			!rounds[currentRound + 1]
+			!currentRoundObject[stateIndex]
 		) {
 			// We are at the end of the current round
 			currentRound++;
-			toUseRound++;
 			const round = rounds[currentRound] as Hook[]
 			currentState = (round[0] as Hook).identifier;
 			stateIndex = 0;
-		} else if (currentRound >= loopingRoundIndex && typeof currentRoundObject[stateIndex] === "undefined") {
+		} else if (currentRound >= loopingRoundIndex && !currentRoundObject[stateIndex]) {
 			// We are at the end of the looping round
 			currentRound++;
-			toUseRound++;
 			const round = rounds[currentRound] as Hook[]
 			currentState = (round[0] as Hook).identifier;
 			stateIndex = 0;
 		}
 
 		if (currentRound >= loopingRoundIndex) {
-			toUseRound = loopingRoundIndex;
+			currentRound = loopingRoundIndex;
 		}
 
-		const currentUsedRound = rounds[toUseRound] as Round;
+		const currentUsedRound = rounds[currentRound] as Round;
 		const currentUsedState = currentUsedRound[stateIndex] as HookedState
 		let duration = currentUsedState.duration;
 

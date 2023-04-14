@@ -3,6 +3,7 @@ import { gameId } from "../Helpers/Functions.js";
 import { client } from "../Redis/Connection.js";
 import { InteractionService } from "../Services/InteractionService.js";
 import {Server} from "socket.io";
+import {State} from "../Services/StateManager";
 
 export default {
 	identifier: 6,
@@ -23,6 +24,17 @@ export default {
 			if (res.json === true) {
 				await InteractionService.closeInteraction(io, channel, "angel");
 			}
+		}
+
+		const game = JSON.parse(await client.get(`game:${id}`) as string);
+		const state: State = JSON.parse(await client.get(`game:${id}:state`) as string);
+
+		if ("bitten" in game && (state.round ?? 0) - game["bitten"].round === 1) {
+			await fetch(`${baseUrl}/game/kill`, "POST", {
+				userId: game["bitten"].target,
+				gameId: id,
+				context: 'bitten'
+			});
 		}
 
 		await fetch(`${baseUrl}/chat/lock`, "POST", body);

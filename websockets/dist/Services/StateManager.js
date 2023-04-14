@@ -61,11 +61,10 @@ export class StateManager {
         const rounds = roundList;
         const loopingRoundIndex = rounds.length - 2;
         let currentRound = state["round"] || 0;
-        let toUseRound = currentRound;
-        if (toUseRound >= loopingRoundIndex) {
-            toUseRound = loopingRoundIndex;
+        if (currentRound >= loopingRoundIndex) {
+            currentRound = loopingRoundIndex;
         }
-        const currentRoundObject = rounds[toUseRound];
+        const currentRoundObject = rounds[currentRound];
         if (!currentRoundObject)
             return;
         let stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
@@ -73,27 +72,24 @@ export class StateManager {
         const isLast = stateIndex === currentRoundObject.length;
         halt = await this.handleAfter(isLast, currentRoundObject, stateIndex, channel);
         if (currentRound < loopingRoundIndex &&
-            !currentRoundObject[stateIndex] &&
-            !rounds[currentRound + 1]) {
+            !currentRoundObject[stateIndex]) {
             // We are at the end of the current round
             currentRound++;
-            toUseRound++;
             const round = rounds[currentRound];
             currentState = round[0].identifier;
             stateIndex = 0;
         }
-        else if (currentRound >= loopingRoundIndex && typeof currentRoundObject[stateIndex] === "undefined") {
+        else if (currentRound >= loopingRoundIndex && !currentRoundObject[stateIndex]) {
             // We are at the end of the looping round
             currentRound++;
-            toUseRound++;
             const round = rounds[currentRound];
             currentState = round[0].identifier;
             stateIndex = 0;
         }
         if (currentRound >= loopingRoundIndex) {
-            toUseRound = loopingRoundIndex;
+            currentRound = loopingRoundIndex;
         }
-        const currentUsedRound = rounds[toUseRound];
+        const currentUsedRound = rounds[currentRound];
         const currentUsedState = currentUsedRound[stateIndex];
         let duration = currentUsedState.duration;
         halt = await this.handleBefore(currentRoundObject, stateIndex, channel);
