@@ -24,7 +24,7 @@ enum Interaction: string
             self::Werewolves->value => InteractionAction::Kill->value,
             self::InfectedWerewolf->value => [InteractionAction::Infect->value, InteractionAction::InfectedSkip->value],
             self::WhiteWerewolf->value => InteractionAction::BetrayalKill->value,
-            self::SurlyWerewolf->value => InteractionAction::Bite->value,
+            self::SurlyWerewolf->value => [InteractionAction::Bite->value, InteractionAction::SurlySkip->value],
             self::Angel->value => [],
         ];
     }

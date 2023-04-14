@@ -22,12 +22,32 @@ class SurlyWerewolfAction implements ActionInterface
     {
         $gameId = $this->getGameId($userId);
 
-        return $this->getUserIdByRole(Role::SurlyWerewolf, $gameId)[0] === $userId && $this->alive($targetId, $gameId);
+        $actionCondition = match ($action) {
+            InteractionAction::Bite => $this->alive($targetId, $gameId),
+            default => true,
+        };
+
+        return $this->getRoleByUserId($userId, $gameId) === Role::SurlyWerewolf && $actionCondition;
     }
 
-    public function call(string $targetId, InteractionAction $action, string $emitterId): mixed
+    public function call(string $targetId, InteractionAction $action, string $emitterId): null
     {
-        $gameId = $this->getGameId($targetId);
+        switch ($action) {
+            case InteractionAction::SurlySkip:
+                break;
+            case InteractionAction::Bite:
+                $this->bite($targetId, $this->getGameId($targetId));
+                break;
+        }
+
+        return null;
+    }
+
+    public function bite(string $targetId, string $gameId): void
+    {
+        if ($this->isUsed(InteractionAction::Bite, $gameId)) {
+            return;
+        }
 
         broadcast(new InteractionUpdate([
             'gameId' => $gameId,
@@ -35,11 +55,9 @@ class SurlyWerewolfAction implements ActionInterface
         ], true, [$targetId]));
 
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
-        $usedActions[] = $action->value;
+        $usedActions[] = InteractionAction::Bite->value;
 
         Redis::set("game:$gameId:interactions:usedActions", $usedActions);
-
-        return $targetId;
     }
 
     public function updateClients(string $userId): void
@@ -63,5 +81,12 @@ class SurlyWerewolfAction implements ActionInterface
     private function getGameId(string $userId): string
     {
         return $this->getCurrentUserGameActivity($userId);
+    }
+
+    private function isUsed(InteractionAction $action, string $gameId): bool
+    {
+        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+
+        return in_array($action->value, $usedActions, true);
     }
 }
