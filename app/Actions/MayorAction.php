@@ -13,8 +13,9 @@ class MayorAction implements ActionInterface
     use MemberHelperTrait, RegisterHelperTrait;
 
     public function __construct(
-        private readonly VoteService $service)
-    {
+        private readonly VoteService $service,
+        private readonly string $gameId
+    ) {
     }
 
     public function isSingleUse(): bool
@@ -24,23 +25,20 @@ class MayorAction implements ActionInterface
 
     public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
-        $gameId = $this->getGameId($userId);
-
-        return $this->alive($targetId, $gameId);
+        return $this->alive($targetId, $this->gameId);
     }
 
-    public function call(string $targetId, InteractionAction $action, string $emitterId): mixed
+    public function call(string $targetId, InteractionAction $action, string $emitterId): array
     {
-        return $this->service->vote($targetId, $this->getGameId($targetId), $emitterId);
+        return $this->service->vote($targetId, $this->gameId, $emitterId);
     }
 
     public function updateClients(string $userId): void
     {
-        $gameId = $this->getGameId($userId);
         broadcast(new InteractionUpdate([
-            'gameId' => $gameId,
+            'gameId' => $this->gameId,
             'type' => InteractionAction::Vote->value,
-            'votedPlayers' => $this->service::getVotes($gameId),
+            'votedPlayers' => $this->service::getVotes($this->gameId),
         ]));
     }
 
@@ -52,11 +50,6 @@ class MayorAction implements ActionInterface
     public function close(string $gameId): void
     {
         $this->service->elect($gameId);
-    }
-
-    private function getGameId(string $userId): string
-    {
-        return $this->getCurrentUserGameActivity($userId);
     }
 
     public function status(string $gameId): null

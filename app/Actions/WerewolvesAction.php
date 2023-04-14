@@ -16,37 +16,30 @@ class WerewolvesAction implements ActionInterface
     use MemberHelperTrait, RegisterHelperTrait;
 
     public function __construct(
-        private readonly VoteService $service
+        private readonly VoteService $service,
+        private readonly string $gameId
     ) {
     }
 
     public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
-        $gameId = $this->getGameId($userId);
-
-        return in_array($userId, $this->getUsersByTeam(Team::Werewolves, $gameId), true) && $this->alive($targetId, $gameId);
+        return in_array($userId, $this->getUsersByTeam(Team::Werewolves, $this->gameId), true) && $this->alive($targetId, $this->gameId);
     }
 
-    public function call(string $targetId, InteractionAction $action, string $emitterId): mixed
+    public function call(string $targetId, InteractionAction $action, string $emitterId): array
     {
-        return $this->service->vote($targetId, $this->getGameId($targetId));
-    }
-
-    private function getGameId(string $userId): string
-    {
-        return $this->getCurrentUserGameActivity($userId);
+        return $this->service->vote($targetId, $this->gameId);
     }
 
     public function updateClients(string $userId): void
     {
-        $gameId = $this->getGameId($userId);
-        $game = Redis::get("game:$gameId");
+        $game = Redis::get("game:$this->gameId");
 
         broadcast(new InteractionUpdate([
-            'gameId' => $gameId,
+            'gameId' => $this->gameId,
             'type' => InteractionAction::Kill->value,
-            'votedPlayers' => $this->service::getVotes($gameId),
-        ], true, [...$this->getUsersByTeam(Team::Werewolves, $gameId), ...$game['dead_users']]));
+            'votedPlayers' => $this->service::getVotes($this->gameId),
+        ], true, [...$this->getUsersByTeam(Team::Werewolves, $this->gameId), ...$game['dead_users']]));
     }
 
     public function close(string $gameId): void

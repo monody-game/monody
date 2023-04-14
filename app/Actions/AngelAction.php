@@ -14,7 +14,8 @@ class AngelAction implements ActionInterface
     use MemberHelperTrait, RegisterHelperTrait;
 
     public function __construct(
-        private readonly EndGameService $service
+        private readonly EndGameService $service,
+        private readonly string $gameId
     ) {
     }
 
@@ -30,8 +31,7 @@ class AngelAction implements ActionInterface
 
     public function call(string $targetId, InteractionAction $action, string $emitterId): bool
     {
-        $gameId = $this->getGameId($emitterId);
-        $game = Redis::get("game:$gameId");
+        $game = Redis::get("game:$this->gameId");
 
         return in_array($game['angel_target'], $game['dead_users'], true);
     }
@@ -69,11 +69,6 @@ class AngelAction implements ActionInterface
         if (in_array($game['angel_target'], $game['dead_users'], true)) {
             $this->service->end($gameId, $this->getUserIdByRole(Role::Angel, $gameId));
         }
-    }
-
-    private function getGameId(string $userId): string
-    {
-        return $this->getCurrentUserGameActivity($userId);
     }
 
     /**

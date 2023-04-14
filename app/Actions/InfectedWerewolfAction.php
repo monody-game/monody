@@ -8,11 +8,15 @@ use App\Events\WerewolvesList;
 use App\Facades\Redis;
 use App\Services\ChatService;
 use App\Traits\MemberHelperTrait;
-use App\Traits\RegisterHelperTrait;
 
 class InfectedWerewolfAction implements ActionInterface
 {
-    use MemberHelperTrait, RegisterHelperTrait;
+    use MemberHelperTrait;
+
+    public function __construct(
+        private readonly string $gameId
+    ) {
+    }
 
     public function isSingleUse(): bool
     {
@@ -21,16 +25,15 @@ class InfectedWerewolfAction implements ActionInterface
 
     public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
-        $gameId = $this->getGameId($userId);
         $actionCondition = true;
 
         if ($action === InteractionAction::Infect) {
-            $target = $this->getMember($targetId, $gameId);
+            $target = $this->getMember($targetId, $this->gameId);
 
             if (!$target) {
                 $actionCondition = false;
             } else {
-                $deaths = Redis::get("game:$gameId:deaths");
+                $deaths = Redis::get("game:$this->gameId:deaths");
 
                 if (
                     array_key_exists('is_dead', $target['user_info']) &&
@@ -49,7 +52,6 @@ class InfectedWerewolfAction implements ActionInterface
 
     public function call(string $targetId, InteractionAction $action, string $emitterId): null
     {
-        $gameId = $this->getGameId($targetId);
         switch ($action) {
             case InteractionAction::InfectedSkip:
                 return null;
@@ -58,18 +60,17 @@ class InfectedWerewolfAction implements ActionInterface
                 break;
         }
 
-        $this->setUsed(InteractionAction::Infect, $gameId);
+        $this->setUsed(InteractionAction::Infect, $this->gameId);
 
         return null;
     }
 
     public function infection(string $targetId): void
     {
-        $gameId = $this->getGameId($targetId);
-        $game = Redis::get("game:$gameId");
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+        $game = Redis::get("game:$this->gameId");
+        $deaths = Redis::get("game:$this->gameId:deaths") ?? [];
 
-        if ($this->isUsed(InteractionAction::Infect, $gameId)) {
+        if ($this->isUsed(InteractionAction::Infect, $this->gameId)) {
             return;
         }
 
@@ -85,12 +86,12 @@ class InfectedWerewolfAction implements ActionInterface
         $game['infected'] = $targetId;
 
         $chat = new ChatService();
-        $chat->alert('Vous avez été infecté ! Vous devez désormais gagner avec les loup-garous', 'info', $gameId, [$targetId]);
+        $chat->alert('Vous avez été infecté ! Vous devez désormais gagner avec les loup-garous', 'info', $this->gameId, [$targetId]);
 
         broadcast(
             new WerewolvesList(
                 [
-                    'gameId' => $gameId,
+                    'gameId' => $this->gameId,
                     'list' => $game['werewolves'],
                 ],
                 true,
@@ -98,8 +99,8 @@ class InfectedWerewolfAction implements ActionInterface
             )
         );
 
-        Redis::set("game:$gameId:deaths", $deaths);
-        Redis::set("game:$gameId", $game);
+        Redis::set("game:$this->gameId:deaths", $deaths);
+        Redis::set("game:$this->gameId", $game);
     }
 
     public function updateClients(string $userId): void
@@ -117,14 +118,9 @@ class InfectedWerewolfAction implements ActionInterface
     {
     }
 
-    private function getGameId(string $userId): string
-    {
-        return $this->getCurrentUserGameActivity($userId);
-    }
-
     private function getRole(string $userId): Role
     {
-        return $this->getRoleByUserId($userId, $this->getGameId($userId));
+        return $this->getRoleByUserId($userId, $this->gameId);
     }
 
     private function setUsed(InteractionAction $action, string $gameId): void
