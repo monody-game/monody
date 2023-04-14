@@ -89,7 +89,7 @@ enum State: int
             self::Day => 10,
             self::Roles, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf => 30,
             self::Mayor, self::Vote, self::Psychic, self::Witch => 10,
-			self::Werewolf => 10,
+            self::Werewolf => 10,
         };
     }
 
