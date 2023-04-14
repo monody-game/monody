@@ -19,6 +19,7 @@ enum Role: int
     // Loners
     case WhiteWerewolf = 8;
     case Angel = 9;
+    case Parasite = 11;
 
     public function stringify(): string
     {
@@ -32,7 +33,8 @@ enum Role: int
             self::InfectedWerewolf => 'Loup malade',
             self::WhiteWerewolf => 'Loup blanc',
             self::Angel => 'Ange',
-            self::SurlyWerewolf => 'Loup hargneux'
+            self::SurlyWerewolf => 'Loup hargneux',
+            self::Parasite => 'Parasite'
         };
     }
 
@@ -49,6 +51,7 @@ enum Role: int
             'white_werewolf' => self::WhiteWerewolf,
             'angel' => self::Angel,
             'surly_werewolf' => self::SurlyWerewolf,
+            'parasite' => self::Parasite,
             default => null,
         };
     }
@@ -66,6 +69,7 @@ enum Role: int
             self::WhiteWerewolf => 'white_werewolf',
             self::Angel => 'angel',
             self::SurlyWerewolf => 'surly_werewolf',
+            self::Parasite => 'parasite',
         };
     }
 
@@ -73,7 +77,7 @@ enum Role: int
     {
         return match ($this) {
             self::InfectedWerewolf, self::WhiteWerewolf => 5,
-            self::Werewolf, self::SurlyWerewolf => 4,
+            self::Werewolf, self::SurlyWerewolf, self::Parasite => 4,
             self::LittleGirl, self::Elder, self::Psychic, self::Witch, self::Angel => 2,
             self::SimpleVillager => 1,
         };
@@ -99,6 +103,7 @@ enum Role: int
             self::InfectedWerewolf => [InteractionAction::Infect, InteractionAction::InfectedSkip],
             self::WhiteWerewolf => [InteractionAction::BetrayalKill],
             self::SurlyWerewolf => [InteractionAction::Bite, InteractionAction::SurlySkip],
+            self::Parasite => [InteractionAction::Contaminate],
             default => [],
         };
     }

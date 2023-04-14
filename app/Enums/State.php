@@ -17,6 +17,7 @@ enum State: int
     case WhiteWerewolf = 11;
     case SurlyWerewolf = 13;
     case Witch = 4;
+	case Parasite = 14;
 
     case Day = 6;
     case Mayor = 12;
@@ -40,6 +41,7 @@ enum State: int
             self::WhiteWerewolf => Role::WhiteWerewolf->name(),
             self::SurlyWerewolf => Role::SurlyWerewolf->name(),
             self::Witch => Role::Witch->name(),
+			self::Parasite => Role::Parasite->name(),
             self::Day => 'day',
             self::Mayor => 'mayor',
             self::Vote => 'vote',
@@ -63,6 +65,7 @@ enum State: int
             self::WhiteWerewolf => 'Tour du loup blanc',
             self::SurlyWerewolf => 'Tour du loup hargneux',
             self::Witch => 'Tour de la sorcière',
+			self::Parasite => 'Tour du parasite',
             self::Day => 'Jour',
             self::Mayor => 'Élection du maire',
             self::Vote => 'Vote',
@@ -77,7 +80,7 @@ enum State: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles, self::Day, self::Mayor, self::Vote, self::End => 'day',
-            self::Night, self::Psychic, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf, self::Witch => 'night',
+            default => 'night',
         };
     }
 
@@ -87,7 +90,7 @@ enum State: int
             self::Waiting, self::End => -1,
             self::Starting, self::Night => 10,
             self::Day => 60,
-            self::Roles, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf => 30,
+            self::Roles, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf, self::Parasite => 30,
             self::Mayor, self::Werewolf, self::Vote, self::Psychic, self::Witch => 90,
         };
     }
@@ -138,7 +141,7 @@ enum State: int
             self::Waiting, self::Starting, self::Roles, self::Night, self::Day, self::End => null, // Cannot be skipped
             self::Vote, self::Mayor => 30,
             self::Werewolf => 10,
-            self::Witch, self::Psychic, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf => 0, // Skip the state to the next
+            self::Witch, self::Psychic, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf, self::Parasite => 0, // Skip the state to the next
         };
     }
 
