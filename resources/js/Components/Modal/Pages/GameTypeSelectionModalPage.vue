@@ -2,6 +2,7 @@
   <div class="game-type__wrapper">
     <div
       :class="store.type === 0 ? 'active' : ''"
+      tabindex="0"
       @click="store.type = 0"
     >
       <svg class="game-type__monody-icon">
@@ -13,6 +14,7 @@
     <div
       :class="{ active: store.type === 1, disabled: props.hasLinked === false }"
       :title="props.hasLinked === false ? 'Vous devez lier un compte Discord à Monody afin d\'utiliser cette fonctionnalité' : ''"
+      tabindex="0"
       @click="store.type = props.hasLinked === true ? 1 : 0"
     >
       <svg class="game-type__vocal-icon">
