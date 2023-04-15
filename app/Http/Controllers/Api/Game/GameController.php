@@ -234,8 +234,20 @@ class GameController extends Controller
 
         /** @var User $user */
         $user = User::find($request->post('userId'));
+
+        /** @var string $gameId */
+        $gameId = $user->current_game;
+
         $user->current_game = null;
         $user->save();
+
+        $game = Redis::get("game:$gameId");
+
+        if ($game['is_started'] === false) {
+            // We remove the user id from saved users to prevent issues with roles that rely on the number of players
+            $game['users'] = array_diff($game['users'], [$user->id]);
+            Redis::set("game:$gameId", $game);
+        }
 
         return new JsonApiResponse(status: Status::NO_CONTENT);
     }
