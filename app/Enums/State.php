@@ -102,7 +102,7 @@ enum State: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles => 'wait',
-            self::Night, self::Witch, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::SurlyWerewolf => 'night',
+            self::Night, self::Witch, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::SurlyWerewolf, self::Parasite => 'night',
             self::Day, self::Mayor, self::Vote => 'day',
             self::End => 'trophy'
         };
