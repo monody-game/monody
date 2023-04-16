@@ -4,6 +4,8 @@
       :class="store.type === 0 ? 'active' : ''"
       tabindex="0"
       @click="store.type = 0"
+      @keydown.enter="store.type = 0"
+      @keydown.space="store.type = 0"
     >
       <svg class="game-type__monody-icon">
         <use href="/sprite.svg#monody" />
@@ -16,6 +18,8 @@
       :title="props.hasLinked === false ? 'Vous devez lier un compte Discord à Monody afin d\'utiliser cette fonctionnalité' : ''"
       tabindex="0"
       @click="store.type = props.hasLinked === true ? 1 : 0"
+      @keydown.enter="store.type = props.hasLinked === true ? 1 : 0"
+      @keydown.space="store.type = props.hasLinked === true ? 1 : 0"
     >
       <svg class="game-type__vocal-icon">
         <use href="/sprite.svg#vocal" />

@@ -105,8 +105,8 @@ if (localStorage.getItem("show_share") === "true") {
 }
 
 window.Echo.join(`game.${gameId}`)
-	.listen(".game.data", async (e) => {
-		e = e.data.payload;
+	.listen(".game.data", async ({ data }) => {
+		const e = data.payload;
 		store.owner = e.owner;
 
 		if (Object.keys(e.roles) !== roles.map(role => role.id) || roles.length === 0) {
@@ -121,6 +121,8 @@ window.Echo.join(`game.${gameId}`)
 
 		store.voted_users = e.voted_users;
 		store.dead_users = e.dead_users;
+		store.chat_locked = e.chat_locked;
+		store.assignedRole = e.role ?? {};
 		store.roles = roles;
 		store.type = e.type;
 
@@ -172,6 +174,9 @@ window.Echo.join(`game.${gameId}`)
 				"info"
 			);
 		}
+	})
+	.listen(".interaction.parasite:contaminate", ({ data }) => {
+		chatStore.send("Vous avez été infecté par le parasite.", "warn");
 	});
 
 const leave = () => {

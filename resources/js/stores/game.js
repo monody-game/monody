@@ -15,12 +15,14 @@ export const useStore = defineStore("game", {
 			voted_users: {},
 			mayor: "",
 			werewolves: [],
+			contaminated: [],
 			angel_target: "",
 			type: 0,
 			discord: {
 				guild: "",
 				voice_channel: "",
 			},
+			chat_locked: false,
 		};
 	},
 	actions: {

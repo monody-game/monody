@@ -28,7 +28,7 @@
                 <svg>
                   <use href="/sprite.svg#elo" />
                 </svg>
-                <p>N/A</p>
+                <p>{{ gameStore.owner.elo }}</p>
               </div>
             </div>
           </div>
