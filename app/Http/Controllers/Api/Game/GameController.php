@@ -254,7 +254,7 @@ class GameController extends Controller
         return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
-    public function data(string $gameId): JsonApiResponse
+    public function data(string $gameId, string $userId): JsonApiResponse
     {
         if (!Redis::exists("game:$gameId")) {
             return new JsonApiResponse(['message' => "Game $gameId not found."], Status::NOT_FOUND);
@@ -266,9 +266,11 @@ class GameController extends Controller
         $votes = Redis::get("game:$gameId:votes");
         $state = Redis::get("game:$gameId:state");
         $interactions = Redis::get("game:$gameId:interactions") ?? [];
+
         $currentState = State::from($state['status']);
-        $role = array_key_exists($owner->id, $game['assigned_roles']) ? $game['assigned_roles'][$owner->id] : null;
+        $role = array_key_exists($userId, $game['assigned_roles']) ? $game['assigned_roles'][$userId] : null;
         $chatLocked = $currentState->background() === 'night' || ($role !== null && Team::role(Role::from($role)) === Team::Werewolves && $currentState === State::Werewolf);
+        $contaminated = array_key_exists('contaminated', $game) && (in_array($userId, $game['contaminated'], true) || Role::from($role) === Role::Parasite) ? $game['contaminated'] : [];
 
         $payload = [
             'id' => $gameId,
@@ -280,13 +282,14 @@ class GameController extends Controller
                 'elo' => Elo::select('elo')->where('user_id', $owner->id)->firstOrCreate(['user_id' => $owner->id])->elo,
             ],
             'roles' => $game['roles'],
-            'role' => array_key_exists($owner->id, $game['assigned_roles']) ? Role::from($game['assigned_roles'][$owner->id])->full() : null,
+            'role' => array_key_exists($owner->id, $game['assigned_roles']) ? Role::from($game['assigned_roles'][$userId])->full() : null,
             'dead_users' => $game['dead_users'],
             'voted_users' => $votes,
             'state' => $state,
             'current_interactions' => $interactions,
             'type' => $game['type'],
             'chat_locked' => $chatLocked,
+            'contaminated' => $contaminated,
         ];
 
         if ($game['type'] === GameType::VOCAL->value) {

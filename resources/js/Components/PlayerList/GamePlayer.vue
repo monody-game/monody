@@ -219,12 +219,13 @@ window.Echo
 			}
 			break;
 		case "parasite":
-			if (isDead.value === false) {
+			if (isDead.value === false && userStore.id !== props.player.id) {
 				player.value.classList.add("player__parasite-hover");
 			}
 
-			if (userStore.id === player.value.id) {
+			if (userStore.id === props.player.id) {
 				chatStore.send("Cliquez sur un joueur pour le contaminer", "info");
+				player.value.classList.add("player__hover-disabled");
 			}
 		}
 	})
@@ -256,12 +257,13 @@ window.Echo
 		gameStore.currentInteractionId = "";
 	})
 	.listen(".interaction.vote", ({ data }) => addVote(data))
-	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data))
-	.listen(".interaction.surly_werewolf:bite", () => {
-		if (player.value.id === userID.value) chatStore.send("Vous avez été mordu par le loup hargneux. Vos blessures semblent graves et vous survivrez pas à la prochaine nuit.", "warn");
-	});
+	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data));
 
 const send = async function(votingUser, votedUser) {
+	if (!gameStore.currentInteractionId) {
+		return;
+	}
+
 	let action = null;
 	const classList = player.value.classList;
 
@@ -301,6 +303,10 @@ const send = async function(votingUser, votedUser) {
 			`Vous avez choisi de mordre ${props.player.username}. Il succombera à ses blessures la prochaine nuit.`,
 			"success"
 		);
+	}
+
+	if (interactionType.value === "parasite") {
+		gameStore.contaminated.push(votedUser);
 	}
 };
 

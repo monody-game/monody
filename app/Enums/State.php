@@ -89,9 +89,9 @@ enum State: int
         return match ($this) {
             self::Waiting, self::End => -1,
             self::Starting, self::Night => 10,
-            self::Day => 60,
+            self::Day => 10,
             self::Roles, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf, self::Parasite => 30,
-            self::Mayor, self::Werewolf, self::Vote, self::Psychic, self::Witch => 90,
+            self::Mayor, self::Werewolf, self::Vote, self::Psychic, self::Witch => 10,
         };
     }
 
@@ -114,7 +114,7 @@ enum State: int
     public function message(): ?string
     {
         return match ($this) {
-            self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch => self::readeableStringify(),
+            self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch, self::Parasite => self::readeableStringify(),
             self::Vote => 'Début du ' . mb_strtolower(self::readeableStringify()),
             self::Mayor => 'Début de l\'' . mb_strtolower(self::readeableStringify()) . '. Présentez vous !',
             default => null

@@ -72,20 +72,6 @@ import ChatMessage from "./ChatMessage.vue";
 import TimeSeparator from "./TimeSeparator.vue";
 import InAndOutMessage from "./InAndOutMessage.vue";
 
-/**
- * input.value.disabled = !input.value.disabled;
- * 		input.value.classList.toggle("locked");
- * 		button.value.classList.toggle("locked");
- *
- * 		if (input.value.disabled) {
- * 			input.value.placeholder = "Chat verrouillé";
- * 			icon.value.setAttribute("href", "/sprite.svg#lock");
- * 		} else {
- * 			input.value.placeholder = "Envoyer un message";
- * 			icon.value.setAttribute("href", "/sprite.svg#send");
- * 		}
- */
-
 const content = ref("");
 const input = ref(null);
 const button = ref(null);
@@ -95,7 +81,6 @@ const route = useRoute();
 const store = useStore();
 let interval = null;
 const isLocked = ref(false);
-
 
 gameStore.$subscribe((mutation, state) => {
 	isLocked.value = state.chat_locked;
@@ -151,7 +136,9 @@ window.Echo.join(`game.${route.params.id}`)
 			store.send(`${user.username} a été tué cette nuit, il était ${role} !`, "death");
 		}
 	})
-	.listen(".chat.lock", () => isLocked.value = true)
+	.listen(".chat.lock", ({ data }) => {
+		isLocked.value = data.payload.lock;
+	})
 	.listen(".game.end", async (e) => {
 		const data = e.data.payload;
 		const winners = Object.keys(data.winners);

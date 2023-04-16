@@ -28,7 +28,7 @@ class EloController extends Controller
         ]);
 
         return new JsonApiResponse([
-            'elo' => $elo->first(),
+            'elo' => $elo,
         ]);
     }
 }
