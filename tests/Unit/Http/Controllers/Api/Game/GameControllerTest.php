@@ -330,7 +330,8 @@ class GameControllerTest extends TestCase
         ])->json('data.game');
 
         $this
-            ->get("/api/game/data/{$res['id']}")
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->get("/api/game/data/{$res['id']}/{$this->user->id}")
             ->assertJson([
                 'data' => [
                     'game' => [
@@ -340,7 +341,7 @@ class GameControllerTest extends TestCase
                             'username' => $this->user->username,
                             'avatar' => $this->user->avatar,
                             'level' => $this->user->level,
-                            'elo' => 'N/A',
+                            'elo' => null,
                         ],
                         'roles' => [
                             Role::Werewolf->value => 2,
@@ -361,7 +362,7 @@ class GameControllerTest extends TestCase
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->get('/api/game/unexisting')
+            ->get('/api/game/unexisting/test')
             ->assertNotFound();
     }
 

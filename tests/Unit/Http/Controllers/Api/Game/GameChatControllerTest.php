@@ -113,7 +113,7 @@ class GameChatControllerTest extends TestCase
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->post('/api/game/chat/lock', ['gameId' => $this->game['id']])
+            ->post('/api/game/chat/lock/true', ['gameId' => $this->game['id']])
             ->assertNoContent();
 
         Event::assertDispatched(ChatLock::class);
@@ -128,7 +128,7 @@ class GameChatControllerTest extends TestCase
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->post('/api/game/chat/lock', [
+            ->post('/api/game/chat/lock/true', [
                 'gameId' => $game['id'],
                 'users' => $this->user->id,
             ])
@@ -137,6 +137,7 @@ class GameChatControllerTest extends TestCase
         Event::assertDispatched(function (ChatLock $event) use ($game, $user) {
             return (array) $event === [
                 'gameId' => $game['id'],
+                'payload' => ['lock' => true],
                 'private' => true,
                 'recipients' => [$user->id],
                 'socket' => null,
@@ -153,7 +154,7 @@ class GameChatControllerTest extends TestCase
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->post('/api/game/chat/lock', [
+            ->post('/api/game/chat/lock/true', [
                 'gameId' => $game['id'],
                 'team' => Team::Werewolves->value,
             ])
@@ -162,6 +163,7 @@ class GameChatControllerTest extends TestCase
         Event::assertDispatched(function (ChatLock $event) use ($game, $user) {
             return (array) $event === [
                 'gameId' => $game['id'],
+                'payload' => ['lock' => true],
                 'private' => true,
                 'recipients' => [$user->id],
                 'socket' => null,
