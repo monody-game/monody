@@ -5,7 +5,11 @@
   >
     <header class="popup__header">
       <div class="popup__header-left">
-        <svg class="popup__icon">
+        <svg
+          class="popup__icon"
+          role="button"
+          tabindex="0"
+        >
           <use :href="'/sprite.svg#' + store.type" />
         </svg>
         <p
