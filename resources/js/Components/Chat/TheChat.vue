@@ -30,8 +30,10 @@
       <input
         ref="input"
         v-model="content"
+        :disabled="isLocked === true"
+        :class="{locked: isLocked}"
         class="chat__send-input"
-        placeholder="Envoyer un message"
+        :placeholder="isLocked ? 'Chat verrouillé' : 'Envoyer un message' "
         type="text"
         @keyup.enter="sendMessage()"
       >
@@ -40,14 +42,14 @@
         aria-label="Envoyer"
         class="chat__send-button"
         type="submit"
-        :class="content.length > 500 ? 'locked' : ''"
+        :class="content.length > 500 || isLocked ? 'locked' : ''"
         @click.prevent="sendMessage()"
         @keyup.stop
       >
         <svg class="chat__submit-icon">
           <use
             ref="icon"
-            :href="content.length > 500 ? '/sprite.svg#lock' : '/sprite.svg#send'"
+            :href="content.length > 500 || isLocked ? '/sprite.svg#lock' : '/sprite.svg#send'"
           />
         </svg>
         <span v-if="content.length > 500">
@@ -70,6 +72,20 @@ import ChatMessage from "./ChatMessage.vue";
 import TimeSeparator from "./TimeSeparator.vue";
 import InAndOutMessage from "./InAndOutMessage.vue";
 
+/**
+ * input.value.disabled = !input.value.disabled;
+ * 		input.value.classList.toggle("locked");
+ * 		button.value.classList.toggle("locked");
+ *
+ * 		if (input.value.disabled) {
+ * 			input.value.placeholder = "Chat verrouillé";
+ * 			icon.value.setAttribute("href", "/sprite.svg#lock");
+ * 		} else {
+ * 			input.value.placeholder = "Envoyer un message";
+ * 			icon.value.setAttribute("href", "/sprite.svg#send");
+ * 		}
+ */
+
 const content = ref("");
 const input = ref(null);
 const button = ref(null);
@@ -78,6 +94,12 @@ const gameStore = useGameStore();
 const route = useRoute();
 const store = useStore();
 let interval = null;
+const isLocked = ref(false);
+
+
+gameStore.$subscribe((mutation, state) => {
+	isLocked.value = state.chat_locked;
+});
 
 const sendMessage = async function() {
 	if (content.value.length < 500) {
@@ -129,19 +151,7 @@ window.Echo.join(`game.${route.params.id}`)
 			store.send(`${user.username} a été tué cette nuit, il était ${role} !`, "death");
 		}
 	})
-	.listen(".chat.lock", () => {
-		input.value.disabled = !input.value.disabled;
-		input.value.classList.toggle("locked");
-		button.value.classList.toggle("locked");
-
-		if (input.value.disabled) {
-			input.value.placeholder = "Chat verrouillé";
-			icon.value.setAttribute("href", "/sprite.svg#lock");
-		} else {
-			input.value.placeholder = "Envoyer un message";
-			icon.value.setAttribute("href", "/sprite.svg#send");
-		}
-	})
+	.listen(".chat.lock", () => isLocked.value = true)
 	.listen(".game.end", async (e) => {
 		const data = e.data.payload;
 		const winners = Object.keys(data.winners);

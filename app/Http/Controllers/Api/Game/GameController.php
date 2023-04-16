@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Game;
 
 use App\Enums\AlertType;
 use App\Enums\GameType;
+use App\Enums\Role;
 use App\Enums\State;
 use App\Enums\Status;
 use App\Enums\Team;
@@ -19,6 +20,7 @@ use App\Http\Requests\CreateGameRequest;
 use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\JoinGameRequest;
 use App\Http\Responses\JsonApiResponse;
+use App\Models\Elo;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
@@ -264,6 +266,9 @@ class GameController extends Controller
         $votes = Redis::get("game:$gameId:votes");
         $state = Redis::get("game:$gameId:state");
         $interactions = Redis::get("game:$gameId:interactions") ?? [];
+        $currentState = State::from($state['status']);
+        $role = array_key_exists($owner->id, $game['assigned_roles']) ? $game['assigned_roles'][$owner->id] : null;
+        $chatLocked = $currentState->background() === 'night' || ($role !== null && Team::role(Role::from($role)) === Team::Werewolves && $currentState === State::Werewolf);
 
         $payload = [
             'id' => $gameId,
@@ -272,14 +277,16 @@ class GameController extends Controller
                 'username' => $owner->username,
                 'avatar' => $owner->avatar,
                 'level' => $owner->level,
-                'elo' => 'N/A',
+                'elo' => Elo::select('elo')->where('user_id', $owner->id)->firstOrCreate(['user_id' => $owner->id])->elo,
             ],
             'roles' => $game['roles'],
+            'role' => array_key_exists($owner->id, $game['assigned_roles']) ? Role::from($game['assigned_roles'][$owner->id])->full() : null,
             'dead_users' => $game['dead_users'],
             'voted_users' => $votes,
             'state' => $state,
             'current_interactions' => $interactions,
             'type' => $game['type'],
+            'chat_locked' => $chatLocked,
         ];
 
         if ($game['type'] === GameType::VOCAL->value) {
