@@ -51,6 +51,15 @@
             <use href="/sprite.svg#mayor" />
           </svg>
         </span>
+        <span
+          v-if="isContaminated === true"
+          title="Ce joueur est infecté"
+          class="player__is-contaminated"
+        >
+          <svg>
+            <use href="/sprite.svg#parasite" />
+          </svg>
+        </span>
       </div>
     </div>
     <p class="player__username">
@@ -82,6 +91,7 @@ const isDead = ref(false);
 const isMayor = ref(false);
 const isWerewolf = ref(false);
 const isTargeted = ref(false);
+const isContaminated = ref(false);
 
 const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
@@ -114,6 +124,10 @@ gameStore.$subscribe((mutation, state) => {
 
 	if (state.angel_target === props.player.id) {
 		isTargeted.value = true;
+	}
+
+	if (state.contaminated.includes(props.player.id)) {
+		isContaminated.value = true;
 	}
 });
 
@@ -203,6 +217,15 @@ window.Echo
 						id: "surly_werewolf:skip"
 					}]);
 			}
+			break;
+		case "parasite":
+			if (isDead.value === false) {
+				player.value.classList.add("player__parasite-hover");
+			}
+
+			if (userStore.id === player.value.id) {
+				chatStore.send("Cliquez sur un joueur pour le contaminer", "info");
+			}
 		}
 	})
 	.listen(".interaction.close", ({ interaction }) => {
@@ -224,8 +247,10 @@ window.Echo
 			player.value.classList.remove("player__psychic-hover");
 			break;
 		case "witch":
-			player.value.classList.remove("player__witch-heal");
-			player.value.classList.remove("player__witch-kill");
+			player.value.classList.remove("player__witch-heal", "player__witch-kill");
+			break;
+		case "parasite":
+			player.value.classList.remove("player__parasite-hover");
 		}
 
 		gameStore.currentInteractionId = "";
