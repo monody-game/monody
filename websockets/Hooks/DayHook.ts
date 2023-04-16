@@ -37,7 +37,7 @@ export default {
 			});
 		}
 
-		await fetch(`${baseUrl}/chat/lock`, "POST", body);
+		await fetch(`${baseUrl}/chat/lock/false`, "POST", body);
 
 		await fetch(`${baseUrl}/message/deaths`, "POST", body);
 

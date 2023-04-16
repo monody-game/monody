@@ -98,6 +98,7 @@ class EndGameService
 
     private function getWinningTeam(string $gameId): Team
     {
+        $game = Redis::get("game:$gameId");
         $werewolves = $this->getUsersByTeam(Team::Werewolves, $gameId);
 
         if ($werewolves === []) {
@@ -105,7 +106,9 @@ class EndGameService
         }
 
         if (
-            $werewolves === $this->getUserIdByRole(Role::WhiteWerewolf, $gameId)
+            $werewolves === $this->getUserIdByRole(Role::WhiteWerewolf, $gameId) ||
+            in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
+            $this->alive($this->getUserIdByRole(Role::Parasite, $gameId)[0], $gameId)
         ) {
             return Team::Loners;
         }
@@ -119,8 +122,8 @@ class EndGameService
         $villagers = $this->getUsersByTeam(Team::Villagers, $gameId);
         $werewolves = array_filter($game['werewolves'], fn ($werewolf) => $this->alive($werewolf, $gameId));
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
-        $whiteWerewolf = false;
-        $parasite = false;
+        $whiteWerewolf = true;
+        $parasite = true;
 
         if (in_array(Role::WhiteWerewolf->value, array_keys($game['roles']), true)) {
             $whiteWerewolf = !in_array($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], $game['dead_users'], true) && count($werewolves) > 1;
@@ -132,7 +135,7 @@ class EndGameService
                 count($game['contaminated']) < (count($game['users']) - 1);
         }
 
-        return ($villagers !== [] && $werewolves !== []) || $whiteWerewolf || $parasite;
+        return ($villagers !== [] && $werewolves !== []) && $whiteWerewolf && $parasite;
     }
 
     private function getWinningUsers(string $gameId): array
@@ -141,6 +144,13 @@ class EndGameService
         $villagers = $this->getUsersByTeam(Team::Villagers, $gameId);
         $werewolves = array_filter($game['werewolves'], fn ($werewolf) => $this->alive($werewolf, $gameId));
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
+
+        if (
+            in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
+            $this->alive($this->getUserIdByRole(Role::Parasite, $gameId)[0], $gameId)
+        ) {
+            return $this->getUserIdByRole(Role::Parasite, $gameId);
+        }
 
         if ($werewolves === []) {
             return $villagers;

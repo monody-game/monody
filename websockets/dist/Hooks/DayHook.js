@@ -27,7 +27,7 @@ export default {
                 context: 'bitten'
             });
         }
-        await fetch(`${baseUrl}/chat/lock`, "POST", body);
+        await fetch(`${baseUrl}/chat/lock/false`, "POST", body);
         await fetch(`${baseUrl}/message/deaths`, "POST", body);
         const res = await fetch(`${baseUrl}/end/check`, "POST", body);
         if (res.status === 204) {

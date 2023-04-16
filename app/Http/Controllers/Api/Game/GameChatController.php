@@ -71,12 +71,13 @@ class GameChatController extends Controller
         return new JsonApiResponse(status: Status::NO_CONTENT);
     }
 
-    public function lock(GameIdRequest $request): JsonApiResponse
+    public function lock(GameIdRequest $request, string $lock): JsonApiResponse
     {
         $gameId = $request->validated('gameId');
+        $lock = $lock === 'true';
 
         if ($request->has('users')) {
-            broadcast(new ChatLock($gameId, true, (array) $request->get('users')));
+            broadcast(new ChatLock($gameId, ['lock' => $lock], true, (array) $request->get('users')));
         } elseif ($request->has('team')) {
             $recipients = [];
 
@@ -90,9 +91,9 @@ class GameChatController extends Controller
                 $recipients = [...$recipients, ...$users];
             }
 
-            broadcast(new ChatLock($gameId, true, $recipients));
+            broadcast(new ChatLock($gameId, ['lock' => $lock], true, $recipients));
         } else {
-            broadcast(new ChatLock($gameId));
+            broadcast(new ChatLock($gameId, ['lock' => $lock]));
             $game = Redis::get("game:$gameId");
 
             if ($game['type'] === GameType::VOCAL->value) {

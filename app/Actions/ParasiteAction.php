@@ -4,6 +4,7 @@ namespace App\Actions;
 
 use App\Enums\InteractionAction;
 use App\Enums\Role;
+use App\Events\InteractionUpdate;
 use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
 
@@ -53,6 +54,12 @@ class ParasiteAction implements ActionInterface
         }
 
         $game['contaminated'] = $contaminated;
+
+        broadcast(new InteractionUpdate([
+            'gameId' => $this->gameId,
+            'type' => InteractionAction::Contaminate->value,
+            'contaminated' => $contaminated,
+        ], true, $contaminated));
 
         Redis::set("game:$this->gameId", $game);
 

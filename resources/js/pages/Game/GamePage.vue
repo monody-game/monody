@@ -123,6 +123,7 @@ window.Echo.join(`game.${gameId}`)
 		store.dead_users = e.dead_users;
 		store.chat_locked = e.chat_locked;
 		store.assignedRole = e.role ?? {};
+		store.contaminated = e.contaminated;
 		store.roles = roles;
 		store.type = e.type;
 
@@ -175,8 +176,15 @@ window.Echo.join(`game.${gameId}`)
 			);
 		}
 	})
+	.listen(".interaction.surly_werewolf:bite", () => {
+		chatStore.send("Vous avez été mordu par le loup hargneux. Vos blessures semblent graves et vous survivrez pas à la prochaine nuit.", "warn");
+	})
 	.listen(".interaction.parasite:contaminate", ({ data }) => {
-		chatStore.send("Vous avez été infecté par le parasite.", "warn");
+		if (store.contaminated.length === 0) {
+			chatStore.send("Vous avez été contaminé par le parasite.", "warn");
+		}
+
+		store.contaminated = data.payload.contaminated;
 	});
 
 const leave = () => {
