@@ -8,16 +8,18 @@
       <a
         href="https://www.instagram.com/monody_game"
         target="_blank"
+        aria-label="Instagram de Monody"
       >
-        <svg>
+        <svg role="img">
           <use href="/sprite.svg#instagram" />
         </svg>
       </a>
       <a
         href="https://discord.gg/FxeRt58xZt"
         target="_blank"
+        aria-label="Discord de Monody"
       >
-        <svg>
+        <svg role="img">
           <use href="/sprite.svg#discord" />
         </svg>
       </a>

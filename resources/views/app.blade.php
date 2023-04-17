@@ -16,7 +16,7 @@
 	<meta property="og:title" content="Monody">
 	<meta property="og:description"
 		  content="Monody est un jeu du loup-garou en ligne ! Jouez avec vos amis, débusquez les traîtres ou éliminez le village afin de remporter la partie !">
-	<meta property="og:image" content="https://monody.fr/images/monody.png">
+	<meta property="og:image" content="https://monody.fr/images/monody.webp">
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image">
@@ -24,7 +24,7 @@
 	<meta property="twitter:title" content="Monody">
 	<meta property="twitter:description"
 		  content="Monody est un jeu du loup-garou en ligne ! Jouez avec vos amis, débusquez les traîtres ou éliminez le village afin de remporter la partie !">
-	<meta property="twitter:image" content="https://monody.fr/images/monody.png">
+	<meta property="twitter:image" content="https://monody.fr/images/monody.webp">
 
 	@vite('resources/js/app.js')
 </head>
