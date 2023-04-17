@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AddContentSecurityPolicyHeaders;
 use App\Http\Middleware\AddTokenToRequests;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
@@ -37,6 +38,7 @@ class Kernel extends HttpKernel
         HandleCors::class,
         TrustProxies::class,
         PreventRequestsDuringMaintenance::class,
+		AddContentSecurityPolicyHeaders::class,
         ValidatePostSize::class,
         TrimStrings::class,
         ConvertEmptyStringsToNull::class,

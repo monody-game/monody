@@ -1,6 +1,6 @@
 services:
   web:
-    image: macbre/nginx-http3:latest
+    image: fholzer/nginx-brotli:latest
     restart: unless-stopped
     ports:
       - "443:443"
