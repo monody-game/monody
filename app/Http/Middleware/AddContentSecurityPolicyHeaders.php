@@ -12,22 +12,22 @@ class AddContentSecurityPolicyHeaders
 {
     public function handle(Request $request, Closure $next): Response
     {
-		Vite::useCspNonce();
+        Vite::useCspNonce();
 
         $response = $next($request);
 
-		if($response instanceof StreamedResponse) {
-			return $response;
-		}
+        if ($response instanceof StreamedResponse) {
+            return $response;
+        }
 
-		$csp = "script-src 'nonce-" . Vite::cspNonce() . "' 'unsafe-inline'";
+        $csp = "script-src 'nonce-" . Vite::cspNonce() . "' 'unsafe-inline'";
 
-		if (!app()->isProduction()) {
-			$csp .= " 'unsafe-eval'";
-		}
+        if (!app()->isProduction()) {
+            $csp .= " 'unsafe-eval'";
+        }
 
-		return $response->withHeaders([
-			'Content-Security-Policy' => $csp . "; object-src 'none'; base-uri 'self'; form-action 'self'"
-		]);
+        return $response->withHeaders([
+            'Content-Security-Policy' => $csp . "; object-src 'none'; base-uri 'self'; form-action 'self'",
+        ]);
     }
 }
