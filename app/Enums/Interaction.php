@@ -14,6 +14,7 @@ enum Interaction: string
     case Parasite = 'parasite';
     case Mayor = 'mayor';
     case Angel = 'angel';
+    case Cupid = 'cupid';
 
     public static function getActions(): array
     {

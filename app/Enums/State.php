@@ -11,6 +11,7 @@ enum State: int
     case Roles = 9;
 
     case Night = 2;
+    case Cupid = 15;
     case Psychic = 5;
     case Werewolf = 3;
     case InfectedWerewolf = 10;
@@ -35,6 +36,7 @@ enum State: int
             self::Starting => 'starting',
             self::Roles => 'roles',
             self::Night => 'night',
+            self::Cupid => Role::Cupid->name(),
             self::Psychic => Role::Psychic->name(),
             self::Werewolf => Role::Werewolf->name(),
             self::InfectedWerewolf => Role::InfectedWerewolf->name(),
@@ -59,6 +61,7 @@ enum State: int
             self::Starting => 'Démarrage',
             self::Roles => 'Distribution des rôles',
             self::Night => 'Nuit',
+            self::Cupid => 'Tour du cupidon',
             self::Psychic => 'Tour de la voyante',
             self::Werewolf => 'Tour des loups-garous',
             self::InfectedWerewolf => 'Tour du loup malade',
@@ -90,7 +93,7 @@ enum State: int
             self::Waiting, self::End => -1,
             self::Starting, self::Night => 10,
             self::Day => 60,
-            self::Roles, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf, self::Parasite, self::Psychic, self::Witch => 30,
+            self::Roles, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf, self::Parasite, self::Psychic, self::Witch, self::Cupid => 30,
             self::Mayor, self::Werewolf, self::Vote => 90,
         };
     }
@@ -102,7 +105,7 @@ enum State: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles => 'wait',
-            self::Night, self::Witch, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::SurlyWerewolf, self::Parasite => 'night',
+            self::Night, self::Witch, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::SurlyWerewolf, self::Parasite, self::Cupid => 'night',
             self::Day, self::Mayor, self::Vote => 'day',
             self::End => 'trophy'
         };
@@ -114,7 +117,7 @@ enum State: int
     public function message(): ?string
     {
         return match ($this) {
-            self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch, self::Parasite => self::readeableStringify(),
+            self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch, self::Parasite, self::Cupid => self::readeableStringify(),
             self::Vote => 'Début du ' . mb_strtolower(self::readeableStringify()),
             self::Mayor => 'Début de l\'' . mb_strtolower(self::readeableStringify()) . '. Présentez vous !',
             default => null
@@ -141,7 +144,7 @@ enum State: int
             self::Waiting, self::Starting, self::Roles, self::Night, self::Day, self::End => null, // Cannot be skipped
             self::Vote, self::Mayor => 30,
             self::Werewolf => 10,
-            self::Witch, self::Psychic, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf, self::Parasite => 0, // Skip the state to the next
+            self::Witch, self::Psychic, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf, self::Parasite, self::Cupid => 0, // Skip the state to the next
         };
     }
 

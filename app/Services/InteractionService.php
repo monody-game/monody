@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Actions\ActionInterface;
 use App\Actions\AngelAction;
+use App\Actions\CupidAction;
 use App\Actions\InfectedWerewolfAction;
 use App\Actions\MayorAction;
 use App\Actions\ParasiteAction;
@@ -236,7 +237,8 @@ class InteractionService
             Interaction::Mayor => app(MayorAction::class, ['gameId' => $gameId]),
             Interaction::Angel => app(AngelAction::class, ['gameId' => $gameId]),
             Interaction::SurlyWerewolf => new SurlyWerewolfAction($gameId),
-            Interaction::Parasite => new ParasiteAction($gameId)
+            Interaction::Parasite => new ParasiteAction($gameId),
+            Interaction::Cupid => app(CupidAction::class, ['gameId' => $gameId]),
         };
     }
 }
