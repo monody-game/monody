@@ -129,6 +129,14 @@ trait MemberHelperTrait
             return true;
         }
 
+        if (
+            array_key_exists('couple', $game) &&
+            in_array($userId, $game['couple'], true)
+        ) {
+            $otherPair = array_filter($game['couple'], fn ($user) => $user !== $userId);
+            $this->kill($otherPair[0], $gameId, 'couple');
+        }
+
         $game['dead_users'][] = $userId;
 
         $deaths = Redis::get("game:$gameId:deaths") ?? [];
