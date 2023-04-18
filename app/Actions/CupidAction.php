@@ -53,7 +53,7 @@ class CupidAction implements ActionInterface
         if (!$canPair) {
             $game = Redis::get("game:$this->gameId");
             $game['couple'] = $toPair[$emitterId];
-			$usedActions = Redis::get("game:$this->gameId:interactions:usedActions") ?? [];
+            $usedActions = Redis::get("game:$this->gameId:interactions:usedActions") ?? [];
 
             broadcast(new CouplePaired(
                 payload: [
@@ -64,9 +64,8 @@ class CupidAction implements ActionInterface
                 recipients: $game['couple']
             ));
 
-
-			$usedActions[] = Role::Cupid->name();
-			Redis::set("game:$this->gameId:interactions:usedActions", $usedActions);
+            $usedActions[] = Role::Cupid->name();
+            Redis::set("game:$this->gameId:interactions:usedActions", $usedActions);
 
             $this->service->clearVotes($this->gameId);
         }
