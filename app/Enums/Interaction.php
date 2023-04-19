@@ -29,6 +29,7 @@ enum Interaction: string
             self::SurlyWerewolf->value => [InteractionAction::Bite->value, InteractionAction::SurlySkip->value],
             self::Angel->value => [],
             self::Parasite->value => InteractionAction::Contaminate->value,
+            self::Cupid->value => InteractionAction::Pair->value,
         ];
     }
 }

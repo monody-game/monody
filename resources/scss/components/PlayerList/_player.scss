@@ -167,6 +167,14 @@
 	}
 }
 
+.player__pairable {
+	cursor: pointer;
+
+	&:hover > .player__avatar-container img {
+		box-shadow: 0 0 20px 4px var(--pink);
+	}
+}
+
 .player__avatar-container img {
 	transition: box-shadow .2s;
 }

@@ -174,6 +174,11 @@ window.Echo.join(`game.${gameId}`)
 				`Votre cible est : ${store.getPlayerByID(interaction.data).username}. Si votre cible vient à mourir avant la prochaine nuit, vous gagnerez la partie instantanément.`,
 				"info"
 			);
+		} else if (interaction.type === "cupid") {
+			chatStore.send(
+				"Cliquez sur deux joueurs afin de les mettre en couple.",
+				"info"
+			);
 		}
 	})
 	.listen(".interaction.surly_werewolf:bite", () => {
@@ -186,8 +191,8 @@ window.Echo.join(`game.${gameId}`)
 
 		store.contaminated = data.payload.contaminated;
 	})
-	.listen(".interaction.cupid:pair", ({ data }) => {
-		store.couple = data.payload.couple;
+	.listen(".game.couple", ({ data }) => {
+		store.couple = data.payload.pairedPlayers;
 	});
 
 const leave = () => {

@@ -27,7 +27,7 @@ class CupidAction implements ActionInterface
      */
     public function isSingleUse(): bool
     {
-        return $this->canPair;
+        return !$this->canPair;
     }
 
     /**
@@ -44,8 +44,8 @@ class CupidAction implements ActionInterface
      */
     public function call(string $targetId, InteractionAction $action, string $emitterId): array
     {
-        $toPair = $this->service->vote($targetId, $this->gameId, $emitterId);
-        $canPair = count($toPair) < 2;
+        $toPair = $this->service->vote($emitterId, $this->gameId, $targetId);
+        $canPair = count($toPair[$emitterId]) < 2;
 
         $this->canPair = $canPair;
 
@@ -53,6 +53,7 @@ class CupidAction implements ActionInterface
         if (!$canPair) {
             $game = Redis::get("game:$this->gameId");
             $game['couple'] = $toPair[$emitterId];
+            Redis::set("game:$this->gameId", $game);
             $usedActions = Redis::get("game:$this->gameId:interactions:usedActions") ?? [];
 
             broadcast(new CouplePaired(
@@ -61,13 +62,11 @@ class CupidAction implements ActionInterface
                     'type' => InteractionAction::Pair->value,
                     'pairedPlayers' => $game['couple'],
                 ],
-                recipients: $game['couple']
+                recipients: [...$game['couple'], $emitterId]
             ));
 
             $usedActions[] = Role::Cupid->name();
             Redis::set("game:$this->gameId:interactions:usedActions", $usedActions);
-
-            $this->service->clearVotes($this->gameId);
         }
 
         return $toPair;
@@ -76,13 +75,16 @@ class CupidAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function updateClients(string $userId): void
+    public function updateClients(string $emitterId): void
     {
+        $game = Redis::get("game:$this->gameId");
+        $couple = array_key_exists('couple', $game) ? [$emitterId => $game['couple']] : $this->service::getVotes($this->gameId);
+
         broadcast(new InteractionUpdate([
             'gameId' => $this->gameId,
             'type' => InteractionAction::Pair->value,
-            'votedPlayers' => $this->service::getVotes($this->gameId),
-        ], true, [$userId]));
+            'votedPlayers' => $couple,
+        ], true, [$emitterId]));
     }
 
     /**
@@ -98,6 +100,7 @@ class CupidAction implements ActionInterface
      */
     public function close(string $gameId): void
     {
+        $this->service->clearVotes($this->gameId);
     }
 
     /**

@@ -241,37 +241,40 @@ window.Echo
 				chatStore.send("Cliquez sur un joueur pour le contaminer", "info");
 				player.value.classList.add("player__hover-disabled");
 			}
+			break;
+		case "cupid":
+			player.value.classList.add("player__pairable");
 		}
 	})
-	.listen(".interaction.close", ({ interaction }) => {
-		switch (interaction.type) {
-		case "vote":
-		case "werewolves":
-		case "white_werewolf":
-		case "surly_werewolf":
-		case "mayor":
-			if (player.value) {
-				player.value.classList.remove("player__votable", "player__electable");
-			}
-
-			votedBy.value = [];
-			isVoted.value = false;
-			gameStore.currentVote = 0;
-			break;
-		case "psychic":
-			player.value.classList.remove("player__psychic-hover");
-			break;
-		case "witch":
-			player.value.classList.remove("player__witch-heal", "player__witch-kill");
-			break;
-		case "parasite":
-			player.value.classList.remove("player__parasite-hover");
+	.listen(".interaction.close", () => {
+		if (player.value) {
+			player.value.classList.remove(
+				"player__votable",
+				"player__electable",
+				"player__psychic-hover",
+				"player__witch-heal",
+				"player__witch-kill",
+				"player__parasite-hover",
+				"player__pairable"
+			);
 		}
 
+		votedBy.value = [];
+		isVoted.value = false;
 		gameStore.currentInteractionId = "";
 	})
 	.listen(".interaction.vote", ({ data }) => addVote(data))
-	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data));
+	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data))
+	.listen(".interaction.cupid:pair", ({ data }) => {
+		const pairArray = data.payload.votedPlayers;
+		votedBy.value = [];
+		isVoted.value = false;
+
+		if (Object.values(pairArray)[0].includes(props.player.id)) {
+			votedBy.value = props.player;
+			isVoted.value = true;
+		}
+	});
 
 const send = async function(votingUser, votedUser) {
 	if (!gameStore.currentInteractionId) {
