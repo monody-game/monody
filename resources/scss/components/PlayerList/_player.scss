@@ -65,44 +65,58 @@
 
 .player__badges {
 	position: absolute;
-	top: 8px;
-	right: 8px;
+	top: 6px;
+	right: 6px;
+	left: 6px;
 	display: flex;
 	align-items: flex-start;
-	width: max-content;
-	gap: 4px;
+	flex-direction: row-reverse;
+	flex-wrap: wrap;
+	gap: 2px 4px;
+}
+
+.player__badge {
+	height: 20px;
+	aspect-ratio: 1;
+	border-radius: 50%;
 }
 
 .player__is-wolf {
+	@extend .player__badge;
   background-color: #e50000;
-  height: 20px;
-	aspect-ratio: 1 / 1;
-  border-radius: 50%;
 }
 
 .player__is-contaminated {
+	@extend .player__badge;
 	background-color: var(--success);
-	height: 20px;
-	aspect-ratio: 1 / 1;
-	border-radius: 50%;
 
 	> svg {
 		color: var(--light-background);
-		aspect-ratio: 1 / 1;
+		aspect-ratio: 1;
+	}
+}
+
+.player__is-paired {
+	@extend .player__badge;
+	background-color: #fb7592;
+	display: grid;
+	place-items: center;
+
+	> svg {
+		height: 14px;
+		aspect-ratio: 1;
 	}
 }
 
 .player__is-target {
-	height: 20px;
-	aspect-ratio: 1 / 1;
+	@extend .player__badge;
 	color: var(--dark-background);
 	background-color: var(--light-background);
 	display: grid;
 	place-items: center;
-	border-radius: 50%;
 
 	& > svg {
-		height: 17px;
+		height: 16px;
 		aspect-ratio: 1 / 1;
 	}
 

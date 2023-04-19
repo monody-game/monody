@@ -185,6 +185,9 @@ window.Echo.join(`game.${gameId}`)
 		}
 
 		store.contaminated = data.payload.contaminated;
+	})
+	.listen(".interaction.cupid:pair", ({ data }) => {
+		store.couple = data.payload.couple;
 	});
 
 const leave = () => {

@@ -29,20 +29,6 @@
       </div>
       <div class="player__badges">
         <span
-          v-if="isTargeted === true"
-          title="Ce joueur est votre cible"
-          class="player__is-target"
-        >
-          <svg>
-            <use href="/sprite.svg#target" />
-          </svg>
-        </span>
-        <span
-          v-if="isWerewolf === true"
-          title="Ce joueur est votre allié"
-          class="player__is-wolf"
-        />
-        <span
           v-if="isMayor === true"
           title="Ce joueur est le maire"
           class="player__is-mayor"
@@ -52,12 +38,35 @@
           </svg>
         </span>
         <span
+          v-if="isWerewolf === true"
+          title="Ce joueur est votre allié"
+          class="player__is-wolf"
+        />
+        <span
+          v-if="isPaired === true"
+          title="Vous êtes en couple"
+          class="player__is-paired"
+        >
+          <svg>
+            <use href="/sprite.svg#heart" />
+          </svg>
+        </span>
+        <span
           v-if="isContaminated === true"
           title="Ce joueur est infecté"
           class="player__is-contaminated"
         >
           <svg>
             <use href="/sprite.svg#parasite" />
+          </svg>
+        </span>
+        <span
+          v-if="isTargeted === true"
+          title="Ce joueur est votre cible"
+          class="player__is-target"
+        >
+          <svg>
+            <use href="/sprite.svg#target" />
           </svg>
         </span>
       </div>
@@ -92,6 +101,7 @@ const isMayor = ref(false);
 const isWerewolf = ref(false);
 const isTargeted = ref(false);
 const isContaminated = ref(false);
+const isPaired = ref(false);
 
 const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
@@ -128,6 +138,10 @@ gameStore.$subscribe((mutation, state) => {
 
 	if (state.contaminated.includes(props.player.id)) {
 		isContaminated.value = true;
+	}
+
+	if (state.couple.includes(props.player.id)) {
+		isPaired.value = true;
 	}
 });
 
