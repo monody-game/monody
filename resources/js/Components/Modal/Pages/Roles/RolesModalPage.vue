@@ -78,7 +78,7 @@ const roles = ref([]);
 const villagers = ref([]);
 const werewolves = ref([]);
 const loners = ref([]);
-const loading = ref(false);
+const loading = ref(true);
 const store = useStore();
 
 onMounted(async () => {

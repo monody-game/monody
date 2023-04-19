@@ -123,7 +123,7 @@ class EndGameService
         $werewolves = array_filter($game['werewolves'], fn ($werewolf) => $this->alive($werewolf, $gameId));
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
         $whiteWerewolf = false;
-        $parasite = false;
+        $parasite = true;
 
         if (in_array(Role::WhiteWerewolf->value, array_keys($game['roles']), true)) {
             $whiteWerewolf = !in_array($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], $game['dead_users'], true) && count($werewolves) > 1;
@@ -135,7 +135,7 @@ class EndGameService
                 count($game['contaminated']) < (count($game['users']) - 1);
         }
 
-        return ($villagers !== [] && $werewolves !== []) || ($whiteWerewolf || $parasite);
+        return (($villagers !== [] && $werewolves !== []) || $whiteWerewolf) && $parasite;
     }
 
     private function getWinningUsers(string $gameId): array
