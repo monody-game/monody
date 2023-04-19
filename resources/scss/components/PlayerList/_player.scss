@@ -55,8 +55,8 @@
 }
 
 .player__electable:hover .player__avatar-container img,
-.player__is-voted.player__electable .player__avatar-container img{
-	box-shadow: 0 0 20px 4px var(--info);
+.player__is-voted.player__electable .player__avatar-container img {
+	box-shadow: 0 0 20px 4px var(--level);
 }
 
 .player__votable:hover, .player__witch-kill:hover, .player__electable:hover {
@@ -98,7 +98,7 @@
 
 .player__is-paired {
 	@extend .player__badge;
-	background-color: #fb7592;
+	background-color: var(--pink);
 	display: grid;
 	place-items: center;
 
