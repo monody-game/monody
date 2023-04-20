@@ -29,20 +29,6 @@
       </div>
       <div class="player__badges">
         <span
-          v-if="isTargeted === true"
-          title="Ce joueur est votre cible"
-          class="player__is-target"
-        >
-          <svg>
-            <use href="/sprite.svg#target" />
-          </svg>
-        </span>
-        <span
-          v-if="isWerewolf === true"
-          title="Ce joueur est votre allié"
-          class="player__is-wolf"
-        />
-        <span
           v-if="isMayor === true"
           title="Ce joueur est le maire"
           class="player__is-mayor"
@@ -52,12 +38,35 @@
           </svg>
         </span>
         <span
+          v-if="isWerewolf === true"
+          title="Ce joueur est votre allié"
+          class="player__is-wolf"
+        />
+        <span
+          v-if="isPaired === true"
+          title="Vous êtes en couple"
+          class="player__is-paired"
+        >
+          <svg>
+            <use href="/sprite.svg#heart" />
+          </svg>
+        </span>
+        <span
           v-if="isContaminated === true"
           title="Ce joueur est infecté"
           class="player__is-contaminated"
         >
           <svg>
             <use href="/sprite.svg#parasite" />
+          </svg>
+        </span>
+        <span
+          v-if="isTargeted === true"
+          title="Ce joueur est votre cible"
+          class="player__is-target"
+        >
+          <svg>
+            <use href="/sprite.svg#target" />
           </svg>
         </span>
       </div>
@@ -92,6 +101,7 @@ const isMayor = ref(false);
 const isWerewolf = ref(false);
 const isTargeted = ref(false);
 const isContaminated = ref(false);
+const isPaired = ref(false);
 
 const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
@@ -128,6 +138,10 @@ gameStore.$subscribe((mutation, state) => {
 
 	if (state.contaminated.includes(props.player.id)) {
 		isContaminated.value = true;
+	}
+
+	if (state.couple.includes(props.player.id)) {
+		isPaired.value = true;
 	}
 });
 
@@ -227,37 +241,40 @@ window.Echo
 				chatStore.send("Cliquez sur un joueur pour le contaminer", "info");
 				player.value.classList.add("player__hover-disabled");
 			}
+			break;
+		case "cupid":
+			player.value.classList.add("player__pairable");
 		}
 	})
-	.listen(".interaction.close", ({ interaction }) => {
-		switch (interaction.type) {
-		case "vote":
-		case "werewolves":
-		case "white_werewolf":
-		case "surly_werewolf":
-		case "mayor":
-			if (player.value) {
-				player.value.classList.remove("player__votable", "player__electable");
-			}
-
-			votedBy.value = [];
-			isVoted.value = false;
-			gameStore.currentVote = 0;
-			break;
-		case "psychic":
-			player.value.classList.remove("player__psychic-hover");
-			break;
-		case "witch":
-			player.value.classList.remove("player__witch-heal", "player__witch-kill");
-			break;
-		case "parasite":
-			player.value.classList.remove("player__parasite-hover");
+	.listen(".interaction.close", () => {
+		if (player.value) {
+			player.value.classList.remove(
+				"player__votable",
+				"player__electable",
+				"player__psychic-hover",
+				"player__witch-heal",
+				"player__witch-kill",
+				"player__parasite-hover",
+				"player__pairable"
+			);
 		}
 
+		votedBy.value = [];
+		isVoted.value = false;
 		gameStore.currentInteractionId = "";
 	})
 	.listen(".interaction.vote", ({ data }) => addVote(data))
-	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data));
+	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data))
+	.listen(".interaction.cupid:pair", ({ data }) => {
+		const pairArray = data.payload.votedPlayers;
+		votedBy.value = [];
+		isVoted.value = false;
+
+		if (Object.values(pairArray)[0].includes(props.player.id)) {
+			votedBy.value = props.player;
+			isVoted.value = true;
+		}
+	});
 
 const send = async function(votingUser, votedUser) {
 	if (!gameStore.currentInteractionId) {

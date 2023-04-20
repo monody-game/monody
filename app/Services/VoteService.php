@@ -134,18 +134,14 @@ class VoteService
         return $majority;
     }
 
-    private function clearVotes(string $gameId): void
+    public function clearVotes(string $gameId): void
     {
         Redis::set("game:$gameId:votes", []);
     }
 
     public static function getVotes(string $gameId): array
     {
-        /** @var array|null $votes */
-        $votes = Redis::get("game:$gameId:votes");
-
-        /** @var array|null $votes */
-        return $votes ?? [];
+        return Redis::get("game:$gameId:votes") ?? [];
     }
 
     public function hasMajorityVoted(array $game, string $context): bool

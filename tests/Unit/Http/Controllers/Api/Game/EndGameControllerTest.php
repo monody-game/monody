@@ -50,10 +50,10 @@ class EndGameControllerTest extends TestCase
         Event::fake();
         Notification::fake();
 
-        Redis::set("game:{$this->game['id']}:members", [
-            ['user_id' => $this->user['id'], 'user_info' => array_merge($this->user->toArray(), ['is_dead' => true])],
-            ['user_id' => $this->secondUser['id'], 'user_info' => $this->secondUser],
-        ]);
+        Redis::set("game:{$this->game['id']}", array_merge(
+            Redis::get("game:{$this->game['id']}"),
+            ['dead_users' => [$this->user->id]]
+        ));
 
         $villager = $this->user;
         $werewolf = $this->secondUser;

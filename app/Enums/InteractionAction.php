@@ -33,4 +33,7 @@ enum InteractionAction: string
 
     // Parasite
     case Contaminate = 'parasite:contaminate';
+
+    // Cupid
+    case Pair = 'cupid:pair';
 }

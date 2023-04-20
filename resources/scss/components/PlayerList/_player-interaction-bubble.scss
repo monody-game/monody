@@ -43,7 +43,7 @@
 
 .player-interaction-bubble__arrow {
 	position: absolute;
-	top: 30px;
+	top: 29px;
 	height: 12px;
 	width: 12px;
 }
@@ -53,8 +53,12 @@
 		background: var(--level);
 	}
 
-	& > svg > use {
+	& > svg {
 		color: var(--level);
+	}
+
+	& + .player__avatar-container .player__is-voted {
+		box-shadow: 0 0 20px 4px var(--level);
 	}
 }
 
@@ -63,8 +67,22 @@
 		background: var(--werewolf-color-darker);
 	}
 
-	& > svg > use {
+	& > svg {
 		color: var(--werewolf-color-darker);
+	}
+}
+
+.player-interaction-bubble__cupid-color {
+	& > span {
+		background: var(--pink);
+	}
+
+	& > svg {
+		color: var(--pink);
+	}
+
+	& + .player__avatar-container .player__is-voted {
+		box-shadow: 0 0 20px 8px var(--pink);
 	}
 }
 

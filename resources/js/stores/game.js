@@ -23,6 +23,7 @@ export const useStore = defineStore("game", {
 				voice_channel: "",
 			},
 			chat_locked: false,
+			couple: []
 		};
 	},
 	actions: {

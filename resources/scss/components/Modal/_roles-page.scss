@@ -58,19 +58,19 @@
 .roles__page {
   height: 100%;
   width: 100%;
+	position: relative;
 }
 
 .roles__loader {
 	position: absolute;
 	background-color: var(--primary);
 	z-index: 1000;
-	height: 50%;
-	width: calc(100% - space(8));
+	height: 100%;
+	width: 100%;
 	display: grid;
 	place-items: center;
 
-	& > .spinner {
-		top: calc(50% - 14px);
-		left: calc(50% - 14px);
+ 	~ * {
+		opacity: 0;
 	}
 }

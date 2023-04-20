@@ -8,7 +8,6 @@
         <svg
           class="popup__icon"
           role="button"
-          tabindex="0"
         >
           <use :href="'/sprite.svg#' + store.type" />
         </svg>
@@ -21,6 +20,7 @@
       </div>
       <svg
         class="popup__close"
+        tabindex="0"
         @click="store.close()"
       >
         <use href="/sprite.svg#cross" />

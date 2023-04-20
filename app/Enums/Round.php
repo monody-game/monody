@@ -20,6 +20,7 @@ enum Round: int
                 State::Starting,
                 State::Roles,
                 State::Night,
+                State::Cupid,
                 State::Psychic,
                 State::Werewolf,
                 State::InfectedWerewolf,
