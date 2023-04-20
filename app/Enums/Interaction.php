@@ -14,6 +14,7 @@ enum Interaction: string
     case Parasite = 'parasite';
     case Mayor = 'mayor';
     case Angel = 'angel';
+    case Cupid = 'cupid';
 
     public static function getActions(): array
     {
@@ -28,6 +29,7 @@ enum Interaction: string
             self::SurlyWerewolf->value => [InteractionAction::Bite->value, InteractionAction::SurlySkip->value],
             self::Angel->value => [],
             self::Parasite->value => InteractionAction::Contaminate->value,
+            self::Cupid->value => InteractionAction::Pair->value,
         ];
     }
 }

@@ -33,7 +33,8 @@ class EndGameService
      */
     public function end(string $gameId, ?array $winners = null): void
     {
-        $winners = $winners ?? $this->getWinningUsers($gameId);
+        $winningTeam = $this->getWinningTeam($gameId);
+        $winners = $winners ?? $this->getWinningUsers($gameId, $winningTeam);
         $loosers = $this->getLoosingUsers($gameId, $winners);
         $payload = [
             'gameId' => $gameId,
@@ -41,7 +42,7 @@ class EndGameService
 
         broadcast(new GameEnd(array_merge($payload, [
             'winners' => $this->getFormattedWinners($winners, $gameId),
-            'winningTeam' => $this->getWinningTeam($gameId),
+            'winningTeam' => $winningTeam,
         ])));
         broadcast(new GameWin($payload, true, $winners));
         broadcast(new GameLoose($payload, true, $loosers));
@@ -53,6 +54,12 @@ class EndGameService
         foreach ([...$winners, ...$loosers] as $userId) {
             $win = in_array($userId, $winners, true);
             $stat = Statistic::firstOrCreate(['user_id' => $userId]);
+
+            $outcome = new GameOutcome();
+            $outcome->user_id = $userId;
+            $outcome->role_id = $this->getRoleByUserId($userId, $gameId)->value;
+            $outcome->win = $win;
+            $outcome->save();
 
             /** @var User $user user is in game so it must be found */
             $user = User::where('id', $userId)->first();
@@ -79,12 +86,6 @@ class EndGameService
 
             $stat->save();
 
-            $outcome = new GameOutcome();
-            $outcome->user_id = $userId;
-            $outcome->role_id = $this->getRoleByUserId($userId, $gameId)->value;
-            $outcome->win = $win;
-            $outcome->save();
-
             $elo = $this->eloService->computeElo($user, $gameId, $win);
             $this->eloService->add($elo, $user);
 
@@ -96,10 +97,22 @@ class EndGameService
         broadcast(new ClearGameInvitations);
     }
 
-    private function getWinningTeam(string $gameId): Team
+    private function getWinningTeam(string $gameId): Team|string
     {
         $game = Redis::get("game:$gameId");
         $werewolves = $this->getUsersByTeam(Team::Werewolves, $gameId);
+        $aliveUsers = array_diff($game['users'], $game['dead_users']);
+        $couple = array_key_exists('couple', $game) ? $game['couple'] : [];
+
+        sort($aliveUsers);
+        sort($couple);
+
+        if (
+            array_key_exists('couple', $game) &&
+            $aliveUsers === $couple
+        ) {
+            return 'couple';
+        }
 
         if ($werewolves === []) {
             return Team::Villagers;
@@ -116,47 +129,70 @@ class EndGameService
         return Team::Werewolves;
     }
 
+    /**
+     * Must return false if the game needs to continue.
+     */
     public function enoughTeamPlayersToContinue(string $gameId): bool
     {
         $game = $this->getGame($gameId);
         $villagers = $this->getUsersByTeam(Team::Villagers, $gameId);
         $werewolves = array_filter($game['werewolves'], fn ($werewolf) => $this->alive($werewolf, $gameId));
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
-        $whiteWerewolf = false;
-        $parasite = false;
+        $aliveUsers = array_diff($game['users'], $game['dead_users']);
+
+        if (
+            array_key_exists('couple', $game) &&
+            in_array($game['couple'][0], $aliveUsers, true)
+        ) {
+            return array_diff($aliveUsers, $game['couple']) !== [] &&
+                array_diff($aliveUsers, $game['couple']) !== $this->getUserIdByRole(Role::Cupid, $gameId);
+        }
 
         if (in_array(Role::WhiteWerewolf->value, array_keys($game['roles']), true)) {
-            $whiteWerewolf = !in_array($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], $game['dead_users'], true) && count($werewolves) > 1;
+            return !in_array($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], $game['dead_users'], true) &&
+                count($werewolves) > 1;
         }
 
         if (in_array(Role::Parasite->value, array_keys($game['roles']), true)) {
-            $parasite =
-                !in_array($this->getUserIdByRole(Role::Parasite, $gameId)[0], $game['dead_users'], true) &&
+            return !in_array($this->getUserIdByRole(Role::Parasite, $gameId)[0], $game['dead_users'], true) &&
                 count($game['contaminated']) < (count($game['users']) - 1);
         }
 
-        return ($villagers !== [] && $werewolves !== []) || ($whiteWerewolf || $parasite);
+        return $villagers !== [] && $werewolves !== [];
     }
 
-    private function getWinningUsers(string $gameId): array
+    private function getWinningUsers(string $gameId, Team|string $winningTeam): array
     {
         $game = $this->getGame($gameId);
-        $villagers = $this->getUsersByTeam(Team::Villagers, $gameId);
-        $werewolves = array_filter($game['werewolves'], fn ($werewolf) => $this->alive($werewolf, $gameId));
-        $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
 
-        if (
-            in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
-            $this->alive($this->getUserIdByRole(Role::Parasite, $gameId)[0], $gameId)
-        ) {
-            return $this->getUserIdByRole(Role::Parasite, $gameId);
+        switch ($winningTeam) {
+            case Team::Villagers:
+                return $this->getUsersByTeam(Team::Villagers, $gameId);
+            case Team::Werewolves:
+                return $this->getUsersByTeam(Team::Werewolves, $gameId);
+            case 'couple':
+                return $game['couple'];
+            case Team::Loners:
+                if (
+                    in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
+                    $this->alive($this->getUserIdByRole(Role::Parasite, $gameId)[0], $gameId) &&
+                    count($game['contaminated']) === count($game['users']) - 1
+                ) {
+                    return $this->getUserIdByRole(Role::Parasite, $gameId);
+                } elseif (
+                    in_array(Role::WhiteWerewolf->value, array_keys($game['roles']), true) &&
+                    $this->alive($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], $gameId)
+                ) {
+                    return $this->getUserIdByRole(Role::WhiteWerewolf, $gameId);
+                } elseif (
+                    in_array(Role::Angel->value, array_keys($game['roles']), true) &&
+                    $this->alive($this->getUserIdByRole(Role::Angel, $gameId)[0], $gameId)
+                ) {
+                    return $this->getUserIdByRole(Role::Angel, $gameId);
+                }
         }
 
-        if ($werewolves === []) {
-            return $villagers;
-        }
-
-        return [...$werewolves];
+        return [];
     }
 
     private function getLoosingUsers(string $gameId, array $winners): array

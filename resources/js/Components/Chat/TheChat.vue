@@ -132,6 +132,8 @@ window.Echo.join(`game.${route.params.id}`)
 			store.send(`Le village a décidé de tuer ${user.username} qui était ${role}`, "death");
 		} else if (context === "bitten") {
 			store.send(`${user.username} a succombé à ses blessures. Il était ${role}`, "death");
+		} else if (context === "couple") {
+			store.send(`Dans un élan de chagrin amoureux, ${user.username} rejoint son âme-soeur dans sa tombe, il était ${role}.`, "death");
 		} else {
 			store.send(`${user.username} a été tué cette nuit, il était ${role} !`, "death");
 		}
@@ -142,13 +144,18 @@ window.Echo.join(`game.${route.params.id}`)
 	.listen(".game.end", async (e) => {
 		const data = e.data.payload;
 		const winners = Object.keys(data.winners);
-		const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
 		let message = `La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(", ")}`;
 
-		if (team.data.team.name !== "loners") {
-			message += ` du camp des ${team.data.team.display_name}`;
+		if (data.winningTeam === "couple") {
+			message += " qui étaient en couple.";
 		} else {
-			message += ` qui était ${Object.values(data.winners)[0].display_name}`;
+			const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
+
+			if (team.data.team.name !== "loners") {
+				message += ` du camp des ${team.data.team.display_name}`;
+			} else {
+				message += ` qui était ${Object.values(data.winners)[0].display_name}`;
+			}
 		}
 
 		store.send(message, "info");

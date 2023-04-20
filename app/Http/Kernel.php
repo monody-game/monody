@@ -38,7 +38,7 @@ class Kernel extends HttpKernel
         HandleCors::class,
         TrustProxies::class,
         PreventRequestsDuringMaintenance::class,
-		AddContentSecurityPolicyHeaders::class,
+        AddContentSecurityPolicyHeaders::class,
         ValidatePostSize::class,
         TrimStrings::class,
         ConvertEmptyStringsToNull::class,

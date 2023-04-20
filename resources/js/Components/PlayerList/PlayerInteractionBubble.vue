@@ -12,6 +12,11 @@
         class="player-interaction-bubble__content"
       >
     </span>
+    <span v-else-if="props.type === 'cupid'">
+      <svg class="player-interaction-bubble__content">
+        <use href="/sprite.svg#heart" />
+      </svg>
+    </span>
     <svg class="player-interaction-bubble__arrow">
       <use href="/sprite.svg#arrow_down" />
     </svg>
@@ -27,7 +32,7 @@ const props = defineProps({
 		type: String,
 		required: true,
 		validator(value) {
-			return ["vote", "werewolves", "witch", "mayor"].includes(value);
+			return ["vote", "werewolves", "mayor", "cupid"].includes(value);
 		}
 	},
 	data: [Object, Array],
