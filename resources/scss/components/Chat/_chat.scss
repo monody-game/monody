@@ -21,9 +21,25 @@
 		background-color: var(--border-light);
 	}
 
+	> div {
+		position: relative;
+	}
+
 	> div[data-selected="true"] {
 		background-color: var(--dark-background-hover);
 		border-bottom: var(--border-light) 2px solid;
+	}
+
+	> div[data-unread="true"]::after {
+		content: '!';
+		background-color: var(--danger);
+		height: 16px;
+		width: 16px;
+		border-radius: 50%;
+		text-align: center;
+		position: absolute;
+		top: 4px;
+		right: 4px;
 	}
 }
 

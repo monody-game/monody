@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { nextTick } from "vue";
+import { useStore as useUserStore } from "./user.js";
 
 export const useStore = defineStore("chat", {
 	state: () => {
@@ -7,12 +8,17 @@ export const useStore = defineStore("chat", {
 			messages: {
 				main: [],
 				couple: []
+			},
+			unread: {
+				main: false,
+				couple: true
 			}
 		};
 	},
 	actions: {
 		send(content, type, author = null, actionList = []) {
 			if (type === "couple") {
+				this.unread.couple = author !== null ? author.id !== useUserStore.id : false;
 				this.messages.couple.push({
 					content,
 					type: "message",
@@ -21,6 +27,7 @@ export const useStore = defineStore("chat", {
 					timestamp: Date.now()
 				});
 			} else {
+				this.unread.main = author !== null ? author.id !== useUserStore.id : false;
 				this.messages.main.push({
 					content,
 					type,

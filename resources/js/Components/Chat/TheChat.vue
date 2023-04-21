@@ -6,14 +6,16 @@
     >
       <div
         :data-selected="chatSelected === 'main'"
-        @click="chatSelected = 'main'"
+        :data-unread="store.unread.main"
+        @click="chatSelected = 'main'; store.unread.main = false"
       >
         Main
       </div>
       <span class="chat__selector-separator" />
       <div
         :data-selected="chatSelected === 'couple'"
-        @click="chatSelected = 'couple'"
+        :data-unread="store.unread.couple"
+        @click="chatSelected = 'couple'; store.unread.couple = false"
       >
         Couple
       </div>
