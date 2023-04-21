@@ -155,7 +155,7 @@ class EndGameService
 
         if (in_array(Role::Parasite->value, array_keys($game['roles']), true)) {
             return !in_array($this->getUserIdByRole(Role::Parasite, $gameId)[0], $game['dead_users'], true) &&
-                count($game['contaminated']) < (count($game['users']) - 1);
+                count($game['contaminated']) < (count(array_diff($game['users'], $game['dead_users'])) - 1);
         }
 
         return $villagers !== [] && $werewolves !== [];
@@ -176,7 +176,7 @@ class EndGameService
                 if (
                     in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
                     $this->alive($this->getUserIdByRole(Role::Parasite, $gameId)[0], $gameId) &&
-                    count($game['contaminated']) === count($game['users']) - 1
+                    count($game['contaminated']) === count(array_diff($game['users'], $game['dead_users'])) - 1
                 ) {
                     return $this->getUserIdByRole(Role::Parasite, $gameId);
                 } elseif (
