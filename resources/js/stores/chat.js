@@ -4,18 +4,31 @@ import { nextTick } from "vue";
 export const useStore = defineStore("chat", {
 	state: () => {
 		return {
-			messages: []
+			messages: {
+				main: [],
+				couple: []
+			}
 		};
 	},
 	actions: {
 		send(content, type, author = null, actionList = []) {
-			this.messages.push({
-				content,
-				type,
-				author: author,
-				actionList: actionList,
-				timestamp: Date.now()
-			});
+			if (type === "couple") {
+				this.messages.couple.push({
+					content,
+					type: "message",
+					author: author,
+					actionList: actionList,
+					timestamp: Date.now()
+				});
+			} else {
+				this.messages.main.push({
+					content,
+					type,
+					author: author,
+					actionList: actionList,
+					timestamp: Date.now()
+				});
+			}
 
 			nextTick(() => {
 				const messageContainer = document.querySelector(".chat__messages");

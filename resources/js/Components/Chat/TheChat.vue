@@ -1,8 +1,26 @@
 <template>
   <div class="chat__main">
+    <div
+      v-if="gameStore.couple.includes(userStore.id)"
+      class="chat__selector"
+    >
+      <div
+        :data-selected="chatSelected === 'main'"
+        @click="chatSelected = 'main'"
+      >
+        Main
+      </div>
+      <span class="chat__selector-separator" />
+      <div
+        :data-selected="chatSelected === 'couple'"
+        @click="chatSelected = 'couple'"
+      >
+        Couple
+      </div>
+    </div>
     <div class="chat__messages">
       <template
-        v-for="message in store.messages"
+        v-for="message in store.messages[chatSelected]"
         :key="message.content + message.timestamp"
       >
         <InAndOutMessage
@@ -15,7 +33,7 @@
           :message="message.content"
         />
         <ChatMessage
-          v-else-if="message.type === 'message' || message.type === 'werewolf' || message.type === 'dead'"
+          v-else-if="message.type === 'message' || message.type === 'couple' || message.type === 'werewolf' || message.type === 'dead'"
           :message="message"
         />
         <ChatAlert
@@ -64,6 +82,7 @@
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useStore as useGameStore } from "../../stores/game.js";
+import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import { useStore } from "../../stores/chat.js";
 import { send } from "../../services/sendMessage.js";
@@ -77,10 +96,13 @@ const input = ref(null);
 const button = ref(null);
 const icon = ref(null);
 const gameStore = useGameStore();
+const userStore = useUserStore();
 const route = useRoute();
 const store = useStore();
 let interval = null;
 const isLocked = ref(false);
+
+const chatSelected = ref("main");
 
 gameStore.$subscribe((mutation, state) => {
 	isLocked.value = state.chat_locked;
@@ -88,7 +110,7 @@ gameStore.$subscribe((mutation, state) => {
 
 const sendMessage = async function() {
 	if (content.value.length < 500) {
-		await send(content.value);
+		await send(content.value, chatSelected.value);
 	}
 	content.value = "";
 };
@@ -104,7 +126,7 @@ onBeforeRouteLeave(() => {
 window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.send", (e) => {
 		const payload = e.data.payload;
-		store.send(payload.content, payload.type, payload.author);
+		store.send(payload.content, payload.type, payload.author, []);
 	})
 	.listen(".game.kill", async (e) => {
 		const payload = e.data.payload;
