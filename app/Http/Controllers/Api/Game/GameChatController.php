@@ -35,6 +35,16 @@ class GameChatController extends Controller
         /** @var User $user */
         $user = $request->user();
         $state = $this->getState($gameId)['status'];
+		$couple = $request->input('couple', false);
+
+		if (
+			array_key_exists('couple', $game) &&
+			in_array($user->id, $game['couple']) &&
+			$couple === true
+		) {
+			$this->service->private($request->validated('content'), $user, 'couple', $gameId, $game['couple']);
+        	return new JsonApiResponse(status: Status::NO_CONTENT);
+		}
 
         if ($state === State::Werewolf->value && $this->isWerewolf($user['id'], $gameId)) {
             $this->service->werewolf($request->validated(), $user);
