@@ -82,6 +82,7 @@
   padding-left: space(2);
   padding-right: space(2);
   overflow-y: scroll;
+	overflow-anchor: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--light-scrollbar-color) var(--light-scrollbar-background);
 
