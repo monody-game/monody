@@ -19,7 +19,7 @@
 
 	transition: background-color .2s, outline-width .2s;
 	border-radius: 6px;
-	outline: var(--border-secondary) 2px solid;
+	border: var(--border-secondary) 2px solid;
 
 	&:not(.game-show__container-disabled) {
 		cursor: pointer;
@@ -46,9 +46,8 @@
 		font-size: 1.25em;
 	}
 
-	&:hover:not(.game-show__container-disabled) {
+	&:hover:not(.game-show__container-disabled), &:focus-visible:not(.game-show__container-disabled),  {
 		background-color: var(--primary-hover);
-		outline-width: 3px;
 		text-decoration: none;
 	}
 

@@ -52,6 +52,15 @@
           </svg>
         </span>
         <span
+          v-if="isGuarded === true"
+          title="Vous avez protégé ce joueur"
+          class="player__is-guarded"
+        >
+          <svg>
+            <use href="/sprite.svg#guard" />
+          </svg>
+        </span>
+        <span
           v-if="isContaminated === true"
           title="Ce joueur est infecté"
           class="player__is-contaminated"
@@ -102,6 +111,7 @@ const isWerewolf = ref(false);
 const isTargeted = ref(false);
 const isContaminated = ref(false);
 const isPaired = ref(false);
+const isGuarded = ref(false);
 
 const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
@@ -146,7 +156,7 @@ gameStore.$subscribe((mutation, state) => {
 });
 
 const gameId = computed(() => {
-	return document.URL.split("/")[document.URL.split("/").length - 1];
+	return document.URL.split("/").at(-1);
 });
 
 const userID = computed(() => {
@@ -170,6 +180,17 @@ window.Echo
 		case "mayor":
 			if (isDead.value === false) {
 				player.value.classList.add("player__electable");
+			}
+			break;
+		case "guard":
+			isGuarded.value = false;
+
+			if (gamePlayer.role && gamePlayer.role.name === "guard") {
+				chatStore.send("Cliquez sur un joueur pour le protéger des loups.", "info");
+			}
+
+			if (isDead.value === false && props.player.id !== interaction.data) {
+				player.value.classList.add("player__guardable");
 			}
 			break;
 		case "psychic":
@@ -255,7 +276,8 @@ window.Echo
 				"player__witch-heal",
 				"player__witch-kill",
 				"player__parasite-hover",
-				"player__pairable"
+				"player__pairable",
+				"player__guardable"
 			);
 		}
 
@@ -324,6 +346,10 @@ const send = async function(votingUser, votedUser) {
 
 	if (interactionType.value === "parasite") {
 		gameStore.contaminated.push(votedUser);
+	}
+
+	if (interactionType.value === "guard") {
+		isGuarded.value = votedUser === props.player.id;
 	}
 };
 

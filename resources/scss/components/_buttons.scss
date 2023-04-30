@@ -16,7 +16,7 @@
 		color: var(--secondary-disabled);
   }
 
-  &:not(.disable-hover):not(:disabled):hover {
+  &:not(.disable-hover):not(:disabled):hover, &:not(.disable-hover):not(:disabled):focus-visible {
 		background-color: var(--primary-hover);
   }
 

@@ -55,11 +55,12 @@
 }
 
 .player__electable:hover .player__avatar-container img,
+.player__guardable:hover .player__avatar-container img,
 .player__is-voted.player__electable .player__avatar-container img {
 	box-shadow: 0 0 20px 4px var(--level);
 }
 
-.player__votable:hover, .player__witch-kill:hover, .player__electable:hover {
+.player__votable, .player__witch-kill, .player__electable, .player__guardable {
 	cursor: pointer;
 }
 
@@ -76,9 +77,16 @@
 }
 
 .player__badge {
+	display: grid;
+	place-items: center;
 	height: 20px;
 	aspect-ratio: 1;
 	border-radius: 50%;
+
+	> svg {
+		height: 14px;
+		aspect-ratio: 1;
+	}
 }
 
 .player__is-wolf {
@@ -91,20 +99,22 @@
 	background-color: var(--success);
 
 	> svg {
+		height: 20px;
 		color: var(--light-background);
-		aspect-ratio: 1;
 	}
 }
 
 .player__is-paired {
 	@extend .player__badge;
 	background-color: var(--pink);
-	display: grid;
-	place-items: center;
+}
+
+.player__is-guarded {
+	@extend .player__badge;
+	background-color: var(--villager-color);
 
 	> svg {
-		height: 14px;
-		aspect-ratio: 1;
+		height: 12px;
 	}
 }
 
@@ -112,8 +122,6 @@
 	@extend .player__badge;
 	color: var(--dark-background);
 	background-color: var(--light-background);
-	display: grid;
-	place-items: center;
 
 	& > svg {
 		height: 16px;

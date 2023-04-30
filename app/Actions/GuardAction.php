@@ -58,14 +58,19 @@ class GuardAction implements ActionInterface
      */
     public function updateClients(string $emitterId): void
     {
-        // TODO: Implement updateClients() method.
     }
 
     /**
      * {@inheritDoc}
      */
-    public function additionnalData(string $gameId): null
+    public function additionnalData(string $gameId): ?string
     {
+        $game = Redis::get("game:$this->gameId");
+
+        if (array_key_exists('guarded', $game)) {
+            return $game['guarded'];
+        }
+
         return null;
     }
 
@@ -74,7 +79,6 @@ class GuardAction implements ActionInterface
      */
     public function close(string $gameId): void
     {
-        // TODO: Implement close() method.
     }
 
     /**
