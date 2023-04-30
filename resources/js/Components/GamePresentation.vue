@@ -1,9 +1,12 @@
 <template>
   <div
+    tabindex="0"
     class="game-show__container"
     :class="userStore.discord_linked_at === null && props.game.type === 1 ? 'game-show__container-disabled' : ''"
     :title="userStore.discord_linked_at === null && props.game.type === 1 ? 'Vous devez lier votre compte Discord à Monody pour rejoindre cette partie' : ''"
     @click="openGame()"
+    @keydown.enter="openGame"
+    @keydown.space="openGame"
   >
     <img
       :alt="props.game.owner.username + '\'s avatar'"

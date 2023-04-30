@@ -17,6 +17,9 @@
       </div>
       <svg
         class="popup__close"
+        tabindex="0"
+        @keydown.enter="yes()"
+        @keydown.space="yes()"
         @click="yes()"
       >
         <use href="/sprite.svg#cross" />

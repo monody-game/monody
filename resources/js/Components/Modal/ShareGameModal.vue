@@ -4,7 +4,10 @@
       <h3>Partagez votre partie !</h3>
       <svg
         class="popup__close"
+        tabindex="0"
         @click="store.close()"
+        @keydown.enter="store.close()"
+        @keydown.space="store.close()"
       >
         <use href="/sprite.svg#cross" />
       </svg>
