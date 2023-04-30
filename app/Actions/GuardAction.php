@@ -4,6 +4,7 @@ namespace App\Actions;
 
 use App\Enums\InteractionAction;
 use App\Enums\Role;
+use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
 
 class GuardAction implements ActionInterface
@@ -20,7 +21,7 @@ class GuardAction implements ActionInterface
      */
     public function isSingleUse(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,6 +29,12 @@ class GuardAction implements ActionInterface
      */
     public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
+        $game = Redis::get("game:$this->gameId");
+
+        if (array_key_exists('guarded', $game) && $game['guarded'] === $targetId) {
+            return false;
+        }
+
         return $this->getRoleByUserId($userId, $this->gameId) === Role::Guard &&
             $this->alive($targetId, $this->gameId);
     }
@@ -35,9 +42,15 @@ class GuardAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function call(string $targetId, InteractionAction $action, string $emitterId): null
+    public function call(string $targetId, InteractionAction $action, string $emitterId): string
     {
-        return null;
+        $game = Redis::get("game:$this->gameId");
+
+        $game['guarded'] = $targetId;
+
+        Redis::set("game:$this->gameId", $game);
+
+        return $targetId;
     }
 
     /**
