@@ -106,6 +106,7 @@ class GameInteractionControllerTest extends TestCase
             Interaction::SurlyWerewolf->name => json_encode(['surlyWerewolf']),
             Interaction::Parasite->name => json_encode(['parasite']),
             Interaction::Cupid->name => json_encode(['cupid']),
+            Interaction::Guard->name => json_encode(['guard']),
         ];
 
         foreach (Interaction::cases() as $interaction) {
@@ -291,6 +292,7 @@ class GameInteractionControllerTest extends TestCase
                 'surlyWerewolf' => Role::SurlyWerewolf,
                 'parasite' => Role::Parasite,
                 'cupid' => Role::Cupid,
+                'guard' => Role::Guard,
             ],
             'users' => [
                 $this->user->id,
@@ -303,6 +305,7 @@ class GameInteractionControllerTest extends TestCase
                 'surlyWerewolf',
                 'parasite',
                 'cupid',
+                'guard',
             ],
             'is_started' => true,
         ]);
