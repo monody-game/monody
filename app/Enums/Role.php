@@ -16,6 +16,7 @@ enum Role: int
     case LittleGirl = 5;
     case Elder = 6;
     case Cupid = 12;
+    case Guard = 13;
 
     // Loners
     case WhiteWerewolf = 8;
@@ -36,7 +37,8 @@ enum Role: int
             self::Angel => 'Ange',
             self::SurlyWerewolf => 'Loup hargneux',
             self::Parasite => 'Parasite',
-            self::Cupid => 'Cupidon'
+            self::Cupid => 'Cupidon',
+            self::Guard => 'Garde',
         };
     }
 
@@ -55,6 +57,7 @@ enum Role: int
             'surly_werewolf' => self::SurlyWerewolf,
             'parasite' => self::Parasite,
             'cupid' => self::Cupid,
+            'guard' => self::Guard,
             default => null,
         };
     }
@@ -73,7 +76,8 @@ enum Role: int
             self::Angel => 'angel',
             self::SurlyWerewolf => 'surly_werewolf',
             self::Parasite => 'parasite',
-            self::Cupid => 'cupid'
+            self::Cupid => 'cupid',
+            self::Guard => 'guard',
         };
     }
 
@@ -81,7 +85,7 @@ enum Role: int
     {
         return match ($this) {
             self::InfectedWerewolf, self::WhiteWerewolf => 5,
-            self::Werewolf, self::SurlyWerewolf, self::Parasite, self::Cupid => 4,
+            self::Werewolf, self::SurlyWerewolf, self::Parasite, self::Cupid, self::Guard => 4,
             self::LittleGirl, self::Elder, self::Psychic, self::Witch, self::Angel => 2,
             self::SimpleVillager => 1,
         };
@@ -109,6 +113,7 @@ enum Role: int
             self::SurlyWerewolf => [InteractionAction::Bite, InteractionAction::SurlySkip],
             self::Parasite => [InteractionAction::Contaminate],
             self::Cupid => [InteractionAction::Pair],
+            self::Guard => [InteractionAction::Guard],
             default => [],
         };
     }

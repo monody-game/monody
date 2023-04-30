@@ -36,4 +36,7 @@ enum InteractionAction: string
 
     // Cupid
     case Pair = 'cupid:pair';
+
+    // Guard
+    case Guard = 'guard:guard';
 }
