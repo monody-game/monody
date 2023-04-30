@@ -21,6 +21,7 @@ enum Round: int
                 State::Roles,
                 State::Night,
                 State::Cupid,
+                State::Guard,
                 State::Psychic,
                 State::Werewolf,
                 State::InfectedWerewolf,
@@ -32,6 +33,7 @@ enum Round: int
             ],
             self::SecondRound => [
                 State::Night,
+                State::Guard,
                 State::Psychic,
                 State::Werewolf,
                 State::InfectedWerewolf,
@@ -44,6 +46,7 @@ enum Round: int
             ],
             self::LoopRound => [
                 State::Night,
+                State::Guard,
                 State::Psychic,
                 State::Werewolf,
                 State::InfectedWerewolf,
