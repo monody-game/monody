@@ -130,6 +130,14 @@ trait MemberHelperTrait
         }
 
         if (
+            $context === State::Werewolf->stringify() &&
+            array_key_exists('guarded', $game) &&
+            $userId === $game['guarded']
+        ) {
+            return true;
+        }
+
+        if (
             array_key_exists('couple', $game) &&
             in_array($userId, $game['couple'], true) &&
             $context !== 'couple'

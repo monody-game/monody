@@ -36,6 +36,8 @@ class InteractionServiceTest extends TestCase
 
     private User $angel;
 
+    private User $guard;
+
     public function testCreatingAnInteraction()
     {
         $expectedInteraction = [
@@ -197,6 +199,9 @@ class InteractionServiceTest extends TestCase
         $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
 
         $this->service->call(InteractionAction::Vote, $id, $this->infectedWerewolf->id, $this->werewolf->id);
+        $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
+
+        $this->service->call(InteractionAction::Vote, $id, $this->guard->id, $this->werewolf->id);
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
 
         $this->service->call(InteractionAction::Vote, $id, $this->witch->id, $this->werewolf->id);
@@ -209,6 +214,9 @@ class InteractionServiceTest extends TestCase
         $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
 
         $this->service->call(InteractionAction::Elect, $id, $this->user->id, $this->werewolf->id);
+        $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
+
+        $this->service->call(InteractionAction::Elect, $id, $this->guard->id, $this->werewolf->id);
         $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
 
         $this->service->call(InteractionAction::Elect, $id, $this->infectedWerewolf->id, $this->werewolf->id);
