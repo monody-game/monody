@@ -126,6 +126,17 @@ class InteractionServiceTest extends TestCase
         $this->assertSame([$this->witch->id => [$this->user->id]], $vote);
         $vote = $this->service->call(InteractionAction::Vote, $id, $this->user->id, $this->witch->id);
         $this->assertSame([], $vote);
+
+        // Guard
+        $id = $this->service->create($this->game['id'], Interaction::Guard)['id'];
+        $this->service->call(InteractionAction::Guard, $id, $this->guard->id, $this->witch->id);
+        $this->assertSame($this->witch->id, Redis::get("game:{$this->game['id']}")['guarded']);
+        $this->service->close($this->game['id'], $id);
+        $id = $this->service->create($this->game['id'], Interaction::Guard)['id'];
+        $res = $this->service->call(InteractionAction::Guard, $id, $this->guard->id, $this->witch->id);
+        $this->assertSame($this->service::USER_CANNOT_USE_THIS_INTERACTION, $res);
+        $this->service->call(InteractionAction::Guard, $id, $this->guard->id, $this->psychic->id);
+        $this->assertSame($this->psychic->id, Redis::get("game:{$this->game['id']}")['guarded']);
     }
 
     public function testBeingUnAllowedToUseInteraction()
@@ -225,8 +236,8 @@ class InteractionServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf, $this->angel] = User::factory(6)->create();
-        $users = [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf, $this->angel];
+        [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf, $this->angel, $this->guard] = User::factory(7)->create();
+        $users = [$this->user, $this->witch, $this->psychic, $this->werewolf, $this->infectedWerewolf, $this->angel, $this->guard];
         $this->service = new InteractionService(new VoteService());
 
         $this->game = $this
@@ -244,6 +255,7 @@ class InteractionServiceTest extends TestCase
                 $this->witch->id => 4,
                 $this->infectedWerewolf->id => Role::InfectedWerewolf,
                 $this->angel->id => Role::Angel,
+                $this->guard->id => Role::Guard,
             ],
             'users' => array_map(fn ($user) => $user->id, $users),
             'is_started' => true,
