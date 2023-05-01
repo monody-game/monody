@@ -39,4 +39,7 @@ enum InteractionAction: string
 
     // Guard
     case Guard = 'guard:guard';
+
+    // Hunter
+    case Shoot = 'hunter:shoot';
 }

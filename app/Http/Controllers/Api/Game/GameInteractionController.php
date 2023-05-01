@@ -109,6 +109,7 @@ class GameInteractionController extends Controller
             Interaction::Parasite => $this->getUserIdByRole(Role::Parasite, $gameId),
             Interaction::Cupid => $this->getUserIdByRole(Role::Cupid, $gameId),
             Interaction::Guard => $this->getUserIdByRole(Role::Guard, $gameId),
+            Interaction::Hunter => $this->getUserIdByRole(Role::Hunter, $gameId),
             default => '*'
         };
     }
