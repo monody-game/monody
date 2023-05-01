@@ -18,13 +18,15 @@ trait GameHelperTrait
 
     public function clearRedisKeys(string $gameId): void
     {
-        Redis::del("game:$gameId");
-        Redis::del("game:$gameId:members");
-        Redis::del("game:$gameId:state");
-        Redis::del("game:$gameId:votes");
-        Redis::del("game:$gameId:interactions");
-        Redis::del("game:$gameId:interactions:usedActions");
-        Redis::del("game:$gameId:deaths");
-        Redis::del("game:$gameId:discord");
+        Redis::del(
+            "game:$gameId",
+            "game:$gameId:members",
+            "game:$gameId:state",
+            "game:$gameId:votes",
+            "game:$gameId:interactions",
+            "game:$gameId:interactions:usedActions",
+            "game:$gameId:deaths",
+            "game:$gameId:discord",
+        );
     }
 }

@@ -142,12 +142,7 @@ trait MemberHelperTrait
             in_array($userId, $game['couple'], true) &&
             $context !== 'couple'
         ) {
-            $deaths = Redis::get("game:$gameId:deaths") ?? [];
-
-            Redis::set("game:$gameId:deaths", [...$deaths, [
-                'user' => $userId,
-                'context' => $context,
-            ]]);
+            Redis::update("game:$gameId:deaths", fn (array &$deaths) => [...$deaths, ['user' => $userId, 'context' => $context]]);
 
             $game['dead_users'][] = $userId;
 
@@ -160,14 +155,9 @@ trait MemberHelperTrait
 
         $game['dead_users'][] = $userId;
 
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
-
         Redis::set("game:$gameId", $game);
 
-        Redis::set("game:$gameId:deaths", [...$deaths, [
-            'user' => $userId,
-            'context' => $context,
-        ]]);
+        Redis::update("game:$gameId:deaths", fn (array &$deaths) => [...$deaths, ['user' => $userId, 'context' => $context]]);
 
         return true;
     }

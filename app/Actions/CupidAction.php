@@ -51,10 +51,11 @@ class CupidAction implements ActionInterface
 
         // If the cupid can't pair another player, then we need to end the interaction and save the couple
         if (!$canPair) {
-            $game = Redis::get("game:$this->gameId");
-            $game['couple'] = $toPair[$emitterId];
-            Redis::set("game:$this->gameId", $game);
-            $usedActions = Redis::get("game:$this->gameId:interactions:usedActions") ?? [];
+            $game = Redis::update("game:$this->gameId", function ($game) use ($toPair, $emitterId) {
+                $game['couple'] = $toPair[$emitterId];
+
+                return $game;
+            });
 
             broadcast(new CouplePaired(
                 payload: [
@@ -65,8 +66,9 @@ class CupidAction implements ActionInterface
                 recipients: [...$game['couple'], $emitterId]
             ));
 
-            $usedActions[] = Role::Cupid->name();
-            Redis::set("game:$this->gameId:interactions:usedActions", $usedActions);
+            Redis::update("game:$this->gameId:interactions:usedActions", function (&$usedActions) {
+                $usedActions[] = Role::Cupid->name();
+            });
         }
 
         return $toPair;

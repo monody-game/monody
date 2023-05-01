@@ -44,11 +44,9 @@ class GuardAction implements ActionInterface
      */
     public function call(string $targetId, InteractionAction $action, string $emitterId): string
     {
-        $game = Redis::get("game:$this->gameId");
-
-        $game['guarded'] = $targetId;
-
-        Redis::set("game:$this->gameId", $game);
+        Redis::update("game:$this->gameId", function (array &$game) use ($targetId) {
+            $game['guarded'] = $targetId;
+        });
 
         return $targetId;
     }

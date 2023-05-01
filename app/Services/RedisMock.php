@@ -78,9 +78,19 @@ class RedisMock
     /**
      * Update a key using the callback given
      */
-    public function update(string $key, callable $callback): void
+    public function update(string $key, callable $callback): mixed
     {
-        $updated = $callback($this->get($key));
+        $value = $this->get($key) ?? []; // Allow to pass by reference
+        $old = $value;
+
+        $updated = $callback($value);
+
+        if ($old !== $value) {
+            $updated = $value;
+        }
+
         $this->set($key, $updated);
+
+        return $updated;
     }
 }

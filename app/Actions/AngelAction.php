@@ -45,18 +45,17 @@ class AngelAction implements ActionInterface
      */
     public function additionnalData(string $gameId): string
     {
-        $game = Redis::get("game:$gameId");
-        $users = array_filter($game['users'], fn ($user) => $user !== $this->getUserIdByRole(Role::Angel, $gameId)[0]);
-        $users = array_values($users); // Cancel array's key preservation
-        /** @var int<5, max> $count */
-        $count = count($users);
+        $game = Redis::update("game:$gameId", function (array &$game) use ($gameId) {
+            $users = array_filter($game['users'], fn ($user) => $user !== $this->getUserIdByRole(Role::Angel, $gameId)[0]);
+            $users = array_values($users); // Cancel array's key preservation
+            /** @var int<5, max> $count */
+            $count = count($users);
 
-        $target = $users[random_int(0, $count - 1)];
-        $game['angel_target'] = $target;
+            $target = $users[random_int(0, $count - 1)];
+            $game['angel_target'] = $target;
+        });
 
-        Redis::set("game:$gameId", $game);
-
-        return $target;
+        return $game['angel_target'];
     }
 
     /**

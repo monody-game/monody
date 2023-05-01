@@ -33,7 +33,7 @@ interface ActionInterface
     /**
      * Update clients with data edited after the action (voted players for example)
      */
-    public function updateClients(string $emitterId): void;
+    public function updateClients(string $userId): void;
 
     /**
      * Return additional data that should be added to interaction payload

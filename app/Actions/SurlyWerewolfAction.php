@@ -56,20 +56,18 @@ class SurlyWerewolfAction implements ActionInterface
             'type' => InteractionAction::Bite->value,
         ], true, [$targetId]));
 
-        $game = Redis::get("game:$gameId");
-        $state = Redis::get("game:$gameId:state");
+        Redis::update("game:$gameId", function (array &$game) use ($gameId, $targetId) {
+            $state = Redis::get("game:$gameId:state");
 
-        $game['bitten'] = [
-            'target' => $targetId,
-            'round' => $state['round'],
-        ];
+            $game['bitten'] = [
+                'target' => $targetId,
+                'round' => $state['round'],
+            ];
+        });
 
-        Redis::set("game:$gameId", $game);
-
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
-        $usedActions[] = InteractionAction::Bite->value;
-
-        Redis::set("game:$gameId:interactions:usedActions", $usedActions);
+        Redis::update("game:$gameId:interactions:usedActions", function (array &$usedActions) {
+            $usedActions[] = InteractionAction::Bite->value;
+        });
     }
 
     public function updateClients(string $userId): void

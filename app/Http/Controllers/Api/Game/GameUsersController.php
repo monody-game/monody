@@ -31,10 +31,7 @@ class GameUsersController extends Controller
             return new JsonApiResponse(status: Status::BAD_REQUEST);
         }
 
-        $discordData = Redis::get("game:$gameId:discord");
-        $discordData['members'][$request->validated('discord_id')] = $user->id;
-
-        Redis::set("game:$gameId:discord", $discordData);
+        Redis::update("game:$gameId:discord", fn (array &$discordData) => $discordData['members'][$request->validated('discord_id')] = $user->id);
 
         broadcast(new CloseVoiceChannelNotice($gameId, true, [$user->id]));
 
