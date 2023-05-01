@@ -35,14 +35,24 @@ class RedisService extends Redis
         return (bool) parent::exists($key);
     }
 
-	/**
-	 * Update a key using the callback given
-	 */
-	public function update(string $key, callable $callback): void
-	{
-		$updated = $callback($this->get($key));
-		$this->set($key, $updated);
-	}
+    /**
+     * Update a key using the callback given
+     */
+    public function update(string $key, callable $callback): mixed
+    {
+        $value = $this->get($key) ?? []; // Allow to pass by reference
+        $old = $value;
+
+        $updated = $callback($value);
+
+        if ($old !== $value) {
+            $updated = $value;
+        }
+
+        $this->set($key, $updated);
+
+        return $updated;
+    }
 
     public function __call(string $method, array $parameters): mixed
     {

@@ -77,6 +77,22 @@ class RedisMockFacadeTest extends TestCase
             return $value;
         });
 
-        $this->assertSame(Redis::get('test:123'), ['key' => ['test', 'values', 'another value'], 'other_key' => 'changed value']);
+        $this->assertSame(['key' => ['test', 'values', 'another value'], 'other_key' => 'changed value'], Redis::get('test:123'));
+    }
+
+    public function testUpdatingKeyByReference()
+    {
+        Redis::set('test:456', ['key' => ['test', 'values'], 'other_key' => 123]);
+        $this->assertSame(Redis::get('test:456'), ['key' => ['test', 'values'], 'other_key' => 123]);
+
+        Redis::update('test:456', fn (&$value) => $value['key'] = 'changed value');
+
+        $this->assertSame(['key' => 'changed value', 'other_key' => 123], Redis::get('test:456'));
+
+        Redis::update('test:456', function (&$value) {
+            $value['key'] = 'another changed value';
+        });
+
+        $this->assertSame(['key' => 'another changed value', 'other_key' => 123], Redis::get('test:456'));
     }
 }

@@ -72,7 +72,7 @@ class RoleController extends Controller
         $game['assigned_roles'] = $assigned;
         $game['werewolves'] = $werewolves;
 
-        Redis::set("game:{$gameId}", $game);
+        Redis::set("game:$gameId", $game);
 
         broadcast(
             new WerewolvesList(

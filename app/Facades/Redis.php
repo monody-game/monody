@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void del(string ...$keys)
  * @method static bool exists(string $key)
  * @method static array scan(int &$cursor, array $params)
+ * @method static array update(string $key, callable $callback)
  *
  * @see RedisService
  * @see \Illuminate\Redis\RedisManager

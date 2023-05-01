@@ -47,9 +47,7 @@ class EndGameService
         broadcast(new GameWin($payload, true, $winners));
         broadcast(new GameLoose($payload, true, $loosers));
 
-        $game = Redis::get("game:$gameId");
-        $game['ended'] = true;
-        Redis::set("game:$gameId", $game);
+        $game = Redis::update("game:$gameId", fn (array &$game) => $game['ended'] = true);
 
         foreach ([...$winners, ...$loosers] as $userId) {
             $win = in_array($userId, $winners, true);

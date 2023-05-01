@@ -125,10 +125,9 @@ class InfectedWerewolfAction implements ActionInterface
 
     private function setUsed(InteractionAction $action, string $gameId): void
     {
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
-        $usedActions[] = $action->value;
-
-        Redis::set("game:$gameId:interactions:usedActions", $usedActions);
+        Redis::update("game:$gameId:interactions:usedActions", function (array &$usedActions) use ($action) {
+            $usedActions[] = $action->value;
+        });
     }
 
     private function isUsed(InteractionAction $action, string $gameId): bool
