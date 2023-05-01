@@ -27,6 +27,8 @@ enum State: int
 
     case End = 8;
 
+    case Hunter = 17;
+
     /**
      * Returns the technical name of a state (usually single worded)
      */
@@ -50,6 +52,7 @@ enum State: int
             self::Mayor => 'mayor',
             self::Vote => 'vote',
             self::End => 'end',
+            self::Hunter => Role::Hunter->name(),
         };
     }
 
@@ -76,6 +79,7 @@ enum State: int
             self::Mayor => 'Élection du maire',
             self::Vote => 'Vote',
             self::End => 'Fin de la partie',
+            self::Hunter => 'Tour du chasseur',
         };
     }
 
@@ -85,7 +89,7 @@ enum State: int
     public function background(): string
     {
         return match ($this) {
-            self::Waiting, self::Starting, self::Roles, self::Day, self::Mayor, self::Vote, self::End => 'day',
+            self::Waiting, self::Starting, self::Roles, self::Day, self::Mayor, self::Vote, self::End, self::Hunter => 'day',
             default => 'night',
         };
     }
@@ -123,6 +127,7 @@ enum State: int
             self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch, self::Parasite, self::Cupid, self::Guard => self::readeableStringify(),
             self::Vote => 'Début du ' . mb_strtolower(self::readeableStringify()),
             self::Mayor => 'Début de l\'' . mb_strtolower(self::readeableStringify()) . '. Présentez vous !',
+            self::Hunter => 'Le chasseur va tirer sur un joueur pour se venger !',
             default => null
         };
     }
@@ -147,7 +152,7 @@ enum State: int
             self::Waiting, self::Starting, self::Roles, self::Night, self::Day, self::End => null, // Cannot be skipped
             self::Vote, self::Mayor => 30,
             self::Werewolf => 10,
-            self::Witch, self::Psychic, self::InfectedWerewolf, self::WhiteWerewolf, self::SurlyWerewolf, self::Parasite, self::Cupid, self::Guard => 0, // Skip the state to the next
+            default => 0, // Skip the state to the next
         };
     }
 

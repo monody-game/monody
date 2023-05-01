@@ -17,6 +17,7 @@ enum Role: int
     case Elder = 6;
     case Cupid = 12;
     case Guard = 13;
+    case Hunter = 14;
 
     // Loners
     case WhiteWerewolf = 8;
@@ -39,6 +40,7 @@ enum Role: int
             self::Parasite => 'Parasite',
             self::Cupid => 'Cupidon',
             self::Guard => 'Garde',
+            self::Hunter => 'Chasseur',
         };
     }
 
@@ -58,6 +60,7 @@ enum Role: int
             'parasite' => self::Parasite,
             'cupid' => self::Cupid,
             'guard' => self::Guard,
+            'hunter' => self::Hunter,
             default => null,
         };
     }
@@ -78,6 +81,7 @@ enum Role: int
             self::Parasite => 'parasite',
             self::Cupid => 'cupid',
             self::Guard => 'guard',
+            self::Hunter => 'hunter',
         };
     }
 
@@ -85,7 +89,7 @@ enum Role: int
     {
         return match ($this) {
             self::InfectedWerewolf, self::WhiteWerewolf => 5,
-            self::Werewolf, self::SurlyWerewolf, self::Parasite, self::Cupid, self::Guard => 4,
+            self::Werewolf, self::SurlyWerewolf, self::Parasite, self::Cupid, self::Guard, self::Hunter => 4,
             self::LittleGirl, self::Elder, self::Psychic, self::Witch, self::Angel => 2,
             self::SimpleVillager => 1,
         };
@@ -114,6 +118,7 @@ enum Role: int
             self::Parasite => [InteractionAction::Contaminate],
             self::Cupid => [InteractionAction::Pair],
             self::Guard => [InteractionAction::Guard],
+            self::Hunter => [InteractionAction::Shoot],
             default => [],
         };
     }

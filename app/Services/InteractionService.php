@@ -240,7 +240,8 @@ class InteractionService
             Interaction::SurlyWerewolf => new SurlyWerewolfAction($gameId),
             Interaction::Parasite => new ParasiteAction($gameId),
             Interaction::Cupid => app(CupidAction::class, ['gameId' => $gameId]),
-            Interaction::Guard => new GuardAction($gameId)
+            Interaction::Guard => new GuardAction($gameId),
+            Interaction::Hunter => new GuardAction($gameId),
         };
     }
 }
