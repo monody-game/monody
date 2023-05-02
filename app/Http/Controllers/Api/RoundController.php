@@ -8,9 +8,12 @@ use App\Enums\State;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
+use App\Traits\MemberHelperTrait;
 
 class RoundController extends Controller
 {
+    use MemberHelperTrait;
+
     public function all(?string $gameId = null): JsonApiResponse
     {
         $rounds = [];
@@ -63,6 +66,19 @@ class RoundController extends Controller
                 if (
                     !in_array($state->stringify(), $roles, true) &&
                     count(array_filter($roles, fn ($role) => str_contains($role, $state->stringify()))) === 0
+                ) {
+                    $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
+                }
+
+                if (
+                    $state === State::Hunter &&
+                    in_array(Role::Hunter->value, array_values($game['assigned_roles']), true) &&
+                    (
+                        $this->alive($this->getUserIdByRole(Role::Hunter, $gameId)[0], $gameId) ||
+                        !$state->hasActionsLeft($gameId)
+                    )
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
