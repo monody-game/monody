@@ -5,6 +5,7 @@ namespace Tests\Unit\Http\Controllers\Api;
 use App\Enums\Role;
 use App\Enums\Round;
 use App\Enums\State;
+use App\Facades\Redis;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -159,6 +160,87 @@ class RoundControllerTest extends TestCase
                             'duration' => State::Mayor->duration(),
                         ],
                     ],
+                ],
+            ]);
+    }
+
+    public function testGettingRoundWithHunter()
+    {
+        [$user1, $user2, $user3] = User::factory(3)->create();
+
+        $game = $this
+            ->actingAs($user1)
+            ->put('/api/game', [
+                'roles' => [Role::Hunter->value, Role::Werewolf->value, Role::LittleGirl->value],
+            ])
+            ->json('data.game');
+
+        Redis::update("game:{$game['id']}", function (array &$game) use ($user1, $user2, $user3) {
+            $game['assigned_roles'] = [
+                $user1->id => Role::Werewolf,
+                $user2->id => Role::Hunter,
+                $user3->id => Role::LittleGirl,
+            ];
+        });
+
+        $this
+            ->get("/api/round/2/{$game['id']}")
+            ->assertJsonPath('data.round', [
+                [
+                    'identifier' => State::Night->value,
+                    'raw_name' => State::Night->stringify(),
+                    'duration' => State::Night->duration(),
+                ],
+                [
+                    'identifier' => State::Werewolf->value,
+                    'raw_name' => State::Werewolf->stringify(),
+                    'duration' => State::Werewolf->duration(),
+                ],
+                [
+                    'identifier' => State::Day->value,
+                    'raw_name' => State::Day->stringify(),
+                    'duration' => State::Day->duration(),
+                ],
+                [
+                    'identifier' => State::Mayor->value,
+                    'raw_name' => State::Mayor->stringify(),
+                    'duration' => State::Mayor->duration(),
+                ],
+            ]);
+
+        Redis::update("game:{$game['id']}", function (array &$game) use ($user2) {
+            $game['dead_users'][] = $user2->id;
+        });
+
+        Redis::set("game:{$game['id']}:deaths", [['user' => $user2->id, 'context' => 'grr']]);
+
+        $this
+            ->get("/api/round/2/{$game['id']}")
+            ->assertJsonPath('data.round', [
+                [
+                    'identifier' => State::Night->value,
+                    'raw_name' => State::Night->stringify(),
+                    'duration' => State::Night->duration(),
+                ],
+                [
+                    'identifier' => State::Werewolf->value,
+                    'raw_name' => State::Werewolf->stringify(),
+                    'duration' => State::Werewolf->duration(),
+                ],
+                [
+                    'identifier' => State::Hunter->value,
+                    'raw_name' => State::Hunter->stringify(),
+                    'duration' => State::Hunter->duration(),
+                ],
+                [
+                    'identifier' => State::Day->value,
+                    'raw_name' => State::Day->stringify(),
+                    'duration' => State::Day->duration(),
+                ],
+                [
+                    'identifier' => State::Mayor->value,
+                    'raw_name' => State::Mayor->stringify(),
+                    'duration' => State::Mayor->duration(),
                 ],
             ]);
     }
