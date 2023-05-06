@@ -77,16 +77,16 @@ class CupidAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function updateClients(string $emitterId): void
+    public function updateClients(string $userId): void
     {
         $game = Redis::get("game:$this->gameId");
-        $couple = array_key_exists('couple', $game) ? [$emitterId => $game['couple']] : $this->service::getVotes($this->gameId);
+        $couple = array_key_exists('couple', $game) ? [$userId => $game['couple']] : $this->service::getVotes($this->gameId);
 
         broadcast(new InteractionUpdate([
             'gameId' => $this->gameId,
             'type' => InteractionAction::Pair->value,
             'votedPlayers' => $couple,
-        ], true, [$emitterId]));
+        ], true, [$userId]));
     }
 
     /**
