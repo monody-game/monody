@@ -54,7 +54,7 @@ class GuardAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function updateClients(string $emitterId): void
+    public function updateClients(string $userId): void
     {
     }
 

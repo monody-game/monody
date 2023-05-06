@@ -4,6 +4,8 @@ namespace App\Actions;
 
 use App\Enums\InteractionAction;
 use App\Enums\Role;
+use App\Enums\Team;
+use App\Events\InteractionUpdate;
 use App\Traits\MemberHelperTrait;
 
 class HunterAction implements ActionInterface
@@ -37,16 +39,15 @@ class HunterAction implements ActionInterface
      */
     public function call(string $targetId, InteractionAction $action, string $emitterId): mixed
     {
-        // TODO: Implement call() method.
+		$this->kill($targetId, $this->gameId, 'hunter');
         return null;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function updateClients(string $emitterId): void
+    public function updateClients(string $userId): void
     {
-        // TODO: Implement updateClients() method.
     }
 
     /**
@@ -62,7 +63,6 @@ class HunterAction implements ActionInterface
      */
     public function close(string $gameId): void
     {
-        // TODO: Implement close() method.
     }
 
     /**
