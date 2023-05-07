@@ -170,7 +170,7 @@ const updateCircle = function () {
 			percentage = 100;
 		}
 
-		const circumference = Math.PI * 2 * 20;
+		const circumference = Math.floor(Math.PI * 2 * 21.5);
 		const offset = (circumference * percentage) / 100 - circumference;
 
 		circle.style.strokeDasharray = `${circumference}, ${circumference}`;
