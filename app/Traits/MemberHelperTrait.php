@@ -141,6 +141,7 @@ trait MemberHelperTrait
             $context === State::Werewolf->stringify() &&
             $this->getRoleByUserId($userId, $gameId) === Role::LittleGirl &&
             in_array(Role::Hunter->value, $game['roles'], true) &&
+            /** @phpstan-ignore-next-line  */
             $this->alive(array_search(Role::Hunter->value, $game['assigned_roles'], true), $gameId)
         ) {
             return true;
