@@ -212,8 +212,6 @@ class RoundControllerTest extends TestCase
             $game['dead_users'][] = $user2->id;
         });
 
-        Redis::set("game:{$game['id']}:deaths", [['user' => $user2->id, 'context' => 'grr']]);
-
         $this
             ->get("/api/round/2/{$game['id']}")
             ->assertJsonPath('data.round', [

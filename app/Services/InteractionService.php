@@ -51,16 +51,8 @@ class InteractionService
     public function create(string $gameId, Interaction $type, array|string $authorizedCallers = '*'): array
     {
         $key = "game:$gameId:interactions";
-        $game = Redis::get("game:$gameId");
-
-        if (array_key_exists('dead_users', $game) && count($game['dead_users']) > 0) {
-            $authorizedCallers = is_array($authorizedCallers) ?
-                array_diff($authorizedCallers, $game['dead_users']) :
-                array_diff($game['users'], $game['dead_users']);
-        }
-
         /** @var string $callers */
-        $callers = is_array($authorizedCallers) ? json_encode($authorizedCallers) : $authorizedCallers;
+        $callers = is_string($authorizedCallers) ? $authorizedCallers : json_encode($authorizedCallers);
 
         $interaction = [
             'gameId' => $gameId,
