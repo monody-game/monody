@@ -12,7 +12,7 @@
           cx="22.5"
           cy="22.5"
           fill="none"
-          r="20"
+          r="21.5"
           stroke="white"
         />
       </svg>
@@ -184,15 +184,18 @@ const updateOverlay = function () {
 		break;
 	case 2:
 		chatStore.send("Tombée de la nuit", "time_separator");
-		counterIcon.value.classList.remove("counter__icon-rotate");
 		break;
 	case 6:
 		chatStore.send("Lever du jour", "time_separator");
-		counterIcon.value.classList.add("counter__icon-rotate");
 		break;
-	case 8:
+	}
+
+	switch (icon.value) {
+	default:
 		counterIcon.value.classList.remove("counter__icon-rotate");
 		break;
+	case "day":
+		counterIcon.value.classList.add("counter__icon-rotate");
 	}
 };
 
