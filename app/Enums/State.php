@@ -112,8 +112,12 @@ enum State: int
     {
         return match ($this) {
             self::Waiting, self::Starting, self::Roles => 'wait',
-            self::Day, self::Mayor, self::Vote => 'day',
+            self::Day, self::Vote, self::Mayor => 'day',
             self::End => 'trophy',
+            self::Hunter => 'hunter',
+            self::Guard => 'guard',
+            self::Parasite => 'parasite',
+            self::Cupid => 'heart',
             default => 'night',
         };
     }

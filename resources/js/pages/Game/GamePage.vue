@@ -168,15 +168,23 @@ window.Echo.join(`game.${gameId}`)
 		store.werewolves = e.data.payload.list;
 	})
 	.listen(".interaction.open", ({ interaction }) => {
-		if (interaction.type === "angel") {
+		switch (interaction.type) {
+		case "angel":
 			store.angel_target = interaction.data;
 			chatStore.send(
 				`Votre cible est : ${store.getPlayerByID(interaction.data).username}. Si votre cible vient à mourir avant la prochaine nuit, vous gagnerez la partie instantanément.`,
 				"info"
 			);
-		} else if (interaction.type === "cupid") {
+			break;
+		case "cupid":
 			chatStore.send(
 				"Cliquez sur deux joueurs afin de les mettre en couple.",
+				"info"
+			);
+			break;
+		case "hunter":
+			chatStore.send(
+				"Cliquez sur un joueur afin de vous venger.",
 				"info"
 			);
 		}

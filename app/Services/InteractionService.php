@@ -6,6 +6,7 @@ use App\Actions\ActionInterface;
 use App\Actions\AngelAction;
 use App\Actions\CupidAction;
 use App\Actions\GuardAction;
+use App\Actions\HunterAction;
 use App\Actions\InfectedWerewolfAction;
 use App\Actions\MayorAction;
 use App\Actions\ParasiteAction;
@@ -241,7 +242,7 @@ class InteractionService
             Interaction::Parasite => new ParasiteAction($gameId),
             Interaction::Cupid => app(CupidAction::class, ['gameId' => $gameId]),
             Interaction::Guard => new GuardAction($gameId),
-            Interaction::Hunter => new GuardAction($gameId),
+            Interaction::Hunter => new HunterAction($gameId),
         };
     }
 }

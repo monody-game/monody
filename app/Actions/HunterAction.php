@@ -4,8 +4,7 @@ namespace App\Actions;
 
 use App\Enums\InteractionAction;
 use App\Enums\Role;
-use App\Enums\Team;
-use App\Events\InteractionUpdate;
+use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
 
 class HunterAction implements ActionInterface
@@ -37,9 +36,10 @@ class HunterAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function call(string $targetId, InteractionAction $action, string $emitterId): mixed
+    public function call(string $targetId, InteractionAction $action, string $emitterId): null
     {
-		$this->kill($targetId, $this->gameId, 'hunter');
+        $this->kill($targetId, $this->gameId, 'hunter');
+
         return null;
     }
 
@@ -63,6 +63,9 @@ class HunterAction implements ActionInterface
      */
     public function close(string $gameId): void
     {
+        Redis::update("game:$this->gameId:interactions:usedActions", function (array &$usedActions) {
+            $usedActions[] = InteractionAction::Shoot->value;
+        });
     }
 
     /**

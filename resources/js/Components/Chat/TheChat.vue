@@ -158,6 +158,8 @@ window.Echo.join(`game.${route.params.id}`)
 			store.send(`${user.username} a succombé à ses blessures. Il était ${role}`, "death");
 		} else if (context === "couple") {
 			store.send(`Dans un élan de chagrin amoureux, ${user.username} rejoint son âme-soeur dans sa tombe, il était ${role}.`, "death");
+		} else if (context === "hunter") {
+			store.send(`Le chasseur à décider de tirer sa dernière balle sur ${user.username} qui était ${role}.`, "death");
 		} else {
 			store.send(`${user.username} a été tué cette nuit, il était ${role} !`, "death");
 		}

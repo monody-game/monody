@@ -51,7 +51,6 @@ if (gameStore.discord === null || gameStore.discord.guild === "") {
 	setTimeout(async () => {
 		const res = await window.JSONFetch(`/game/${gameId}/discord`);
 		gameStore.discord = res.data.data;
-		console.log(gameStore, res.data);
 		voiceChannelLink.value = `https://discord.com/channels/${gameStore.discord.guild}/${gameStore.discord.voice_channel}`;
 	}, 500);
 } else {
