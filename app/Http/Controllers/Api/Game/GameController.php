@@ -66,7 +66,7 @@ class GameController extends Controller
 
             $gameData = Redis::get($game);
 
-            if (!$gameData) {
+            if (!$gameData || !is_array($gameData)) {
                 continue;
             }
 

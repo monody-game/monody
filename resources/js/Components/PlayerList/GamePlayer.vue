@@ -177,6 +177,14 @@ window.Echo
 				player.value.classList.add("player__votable");
 			}
 			break;
+		case "hunter":
+			if (gamePlayer.role && gamePlayer.role.name === "hunter") {
+				player.value.classList.add("player__hover-disabled");
+				break;
+			}
+
+			player.value.classList.add("player__votable");
+			break;
 		case "mayor":
 			if (isDead.value === false) {
 				player.value.classList.add("player__electable");
@@ -277,7 +285,8 @@ window.Echo
 				"player__witch-kill",
 				"player__parasite-hover",
 				"player__pairable",
-				"player__guardable"
+				"player__guardable",
+				"player__disabled"
 			);
 		}
 

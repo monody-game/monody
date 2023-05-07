@@ -9,6 +9,9 @@ export async function getRounds(gameId = "") {
         return [];
     }
     const apiRounds = await fetch(`${process.env.API_URL}/rounds/${gameId}`);
+    if (!apiRounds.ok) {
+        return [];
+    }
     const __dirname = dirname(fileURLToPath(import.meta.url));
     const directory = join(__dirname, "../Hooks");
     const files = readdirSync(directory).filter(file => file.endsWith("Hook.js"));

@@ -3,7 +3,7 @@ import { gameId } from "../Helpers/Functions.js";
 import { client } from "../Redis/Connection.js";
 import { InteractionService } from "../Services/InteractionService.js";
 import {Server} from "socket.io";
-import {State} from "../Services/StateManager";
+import {State} from "../Services/StateManager.js";
 
 export default {
 	identifier: 6,
