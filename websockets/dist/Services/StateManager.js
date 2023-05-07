@@ -93,6 +93,7 @@ export class StateManager {
         const currentUsedState = currentUsedRound[stateIndex];
         let duration = currentUsedState.duration;
         halt = halt || await this.handleBefore(currentRoundObject, stateIndex, channel);
+        console.log(halt);
         if (halt) {
             const lastRound = rounds.at(-1);
             const endState = lastRound[0];
@@ -153,7 +154,7 @@ export class StateManager {
             hook = currentRoundObject.at(-1);
         }
         if (hook && hook.after) {
-            await hook.after(this.io, channel);
+            halt = await hook.after(this.io, channel);
         }
         return halt;
     }

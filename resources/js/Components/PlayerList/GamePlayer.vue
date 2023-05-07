@@ -169,6 +169,10 @@ window.Echo
 		interactionType.value = interaction.type;
 		gameStore.currentInteractionId = interaction.id;
 
+		if (gameStore.dead_users.includes(userStore.id)) {
+			return;
+		}
+
 		switch (interaction.type) {
 		case "vote":
 		case "werewolves":

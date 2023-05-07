@@ -132,6 +132,8 @@ export class StateManager {
 
 		halt = halt || await this.handleBefore(currentRoundObject, stateIndex, channel)
 
+		console.log(halt)
+
 		if (halt) {
 			const lastRound = rounds.at(-1) as Round;
 			const endState = lastRound[0] as HookedState;
@@ -208,7 +210,7 @@ export class StateManager {
 		}
 
 		if (hook && hook.after) {
-			await hook.after(this.io, channel)
+			halt = await hook.after(this.io, channel)
 		}
 
 		return halt
