@@ -130,7 +130,7 @@ export class StateManager {
 		const currentUsedState = currentUsedRound[stateIndex] as HookedState
 		let duration = currentUsedState.duration;
 
-		halt = await this.handleBefore(currentRoundObject, stateIndex, channel)
+		halt = halt || await this.handleBefore(currentRoundObject, stateIndex, channel)
 
 		if (halt) {
 			const lastRound = rounds.at(-1) as Round;
