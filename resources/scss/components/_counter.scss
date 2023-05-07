@@ -8,7 +8,10 @@
 }
 
 .counter__icon-container {
-	color: #ffff;
+	display: grid;
+	place-items: center;
+
+	color: #fff;
   position: relative;
   width: 45px;
   height: 45px;
@@ -16,9 +19,6 @@
 }
 
 .counter__icon-circle {
-  position: absolute;
-  top: 0;
-  left: 0;
   transform: rotateZ(-90deg) rotateX(180deg);
   stroke-width: 2px;
   stroke-dashoffset: 1100;
@@ -30,8 +30,6 @@
 
 .counter__icon {
   position: absolute;
-  top: 7.5px;
-  right: 7.5px;
   height: 30px;
   width: 30px;
 
