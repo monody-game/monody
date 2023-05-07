@@ -140,8 +140,8 @@ trait MemberHelperTrait
         if (
             $context === State::Werewolf->stringify() &&
             $this->getRoleByUserId($userId, $gameId) === Role::LittleGirl &&
-            in_array(Role::Hunter->value, $game['roles']) &&
-            $this->alive(array_search(Role::Hunter->value, $game['assigned_roles']), $gameId)
+            in_array(Role::Hunter->value, $game['roles'], true) &&
+            $this->alive(array_search(Role::Hunter->value, $game['assigned_roles'], true), $gameId)
         ) {
             return true;
         }
