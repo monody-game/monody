@@ -138,6 +138,15 @@ trait MemberHelperTrait
         }
 
         if (
+            $context === State::Werewolf->stringify() &&
+            $this->getRoleByUserId($userId, $gameId) === Role::LittleGirl &&
+            in_array(Role::Hunter->value, $game['roles']) &&
+            $this->alive(array_search(Role::Hunter->value, $game['assigned_roles']), $gameId)
+        ) {
+            return true;
+        }
+
+        if (
             array_key_exists('couple', $game) &&
             in_array($userId, $game['couple'], true) &&
             $context !== 'couple'
