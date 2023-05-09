@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Auth;
 
-use App\Http\Middleware\RestrictToLocalNetwork;
+use App\Http\Middleware\RestrictRequest;
 use App\Models\Statistic;
 use App\Models\User;
 use Tests\TestCase;
@@ -12,7 +12,7 @@ class RegisterControllerTest extends TestCase
     public function testWrongRegisterRequest()
     {
         $response = $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->withoutMiddleware(RestrictRequest::class)
             ->post('/api/auth/register', [
                 'username' => 'carlos',
                 'email' => 'carlos',
@@ -26,7 +26,7 @@ class RegisterControllerTest extends TestCase
     public function testRegisteringUser()
     {
         $response = $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->withoutMiddleware(RestrictRequest::class)
             ->post('/api/auth/register', [
                 'username' => 'carlos',
                 'email' => 'carlos@gmail.com',
@@ -42,7 +42,7 @@ class RegisterControllerTest extends TestCase
     public function testRegisteringExistantUser()
     {
         $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->withoutMiddleware(RestrictRequest::class)
             ->post('/api/auth/register', [
                 'username' => 'JohnTest',
                 'email' => 'john.test10@gmail.com',
@@ -55,7 +55,7 @@ class RegisterControllerTest extends TestCase
     public function testSettingDefaultStatsWhenRegisteringUser()
     {
         $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->withoutMiddleware(RestrictRequest::class)
             ->post('/api/auth/register', [
                 'username' => 'TestUser',
                 'email' => 'test@monody.fr',
@@ -78,7 +78,7 @@ class RegisterControllerTest extends TestCase
         parent::setUp();
 
         $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->withoutMiddleware(RestrictRequest::class)
             ->post('/api/auth/register', [
                 'username' => 'JohnTest',
                 'email' => 'john.test@gmail.com',

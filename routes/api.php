@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\OptionalAuthentication;
+use App\Http\Middleware\RestrictRequest;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Http\Middleware\VerifiedEmailNeeded;
 use Illuminate\Support\Facades\Route;
@@ -86,8 +87,10 @@ Route::group(['middleware' => ['auth:api']], function () {
         ->name('verification.send');
 });
 
+Route::post('/auth/register', 'Auth\RegisterController@register')
+    ->middleware(RestrictRequest::class);
+
 Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
-    Route::post('/auth/register', 'Auth\RegisterController@register');
     Route::post('/roles/assign', 'RoleController@assign');
 
     Route::delete('/game', 'Game\GameController@delete');

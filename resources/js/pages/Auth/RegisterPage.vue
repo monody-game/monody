@@ -81,7 +81,7 @@
             </button>
           </div>
         </form>
-        <div class="auth-page__lock">
+        <!--        <div class="auth-page__lock">
           <div class="auth-page__locked-popup">
             <div
               class="popup__wrapper"
@@ -112,7 +112,7 @@
               </p>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
@@ -132,6 +132,8 @@ const password = ref("");
 const password_confirmation = ref("");
 const loading = ref(false);
 const alertStore = useStore();
+
+const token = localStorage.getItem("restricted_request_token");
 
 const errors = ref({
 	username: {
@@ -189,6 +191,13 @@ watch(email, (newEmail) => {
 });
 
 const register = async function() {
+	if (token === null) {
+		alertStore.addAlerts({
+			error: "Vous ne pouvez pas créer de compte durant la phase de bêta"
+		});
+		return;
+	}
+
 	if (checkInput()) {
 		loading.value = true;
 		const payload = {
@@ -201,8 +210,14 @@ const register = async function() {
 			payload.email = email.value;
 		}
 
+		let url = "/auth/register";
+
+		if (token !== null) {
+			url += "?token=" + token;
+		}
+
 		const res = await window
-			.JSONFetch("/auth/register", "POST", payload);
+			.JSONFetch(url, "POST", payload);
 
 		loading.value = false;
 
