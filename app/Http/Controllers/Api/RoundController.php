@@ -53,9 +53,7 @@ class RoundController extends Controller
             }, $roles);
 
             foreach ($round as $key => $state) {
-                if (
-                    !$state->isRoleState()
-                ) {
+                if (!$state->isRoleState()) {
                     continue;
                 }
 
@@ -82,7 +80,15 @@ class RoundController extends Controller
                     continue;
                 }
 
-                if (!$state->hasActionsLeft($gameId)) {
+                if (
+                    !$state->hasActionsLeft($gameId) ||
+                    (
+                        /** @phpstan-ignore-next-line $state is a role state (line 56), so it must not return null */
+                        count($this->getUserIdByRole(Role::fromName($state->stringify()), $gameId)) > 0 &&
+                        /** @phpstan-ignore-next-line */
+                        !$this->alive($this->getUserIdByRole(Role::fromName($state->stringify()), $gameId)[0], $gameId)
+                    )
+                ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
                 }
 
