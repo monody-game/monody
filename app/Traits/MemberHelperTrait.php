@@ -174,6 +174,9 @@ trait MemberHelperTrait
 
     public function isWerewolf(string $userId, string $gameId): bool
     {
-        return in_array($userId, $this->getUsersByTeam(Team::Werewolves, $gameId), true);
+        $game = Redis::get("game:$gameId");
+
+        return in_array($userId, $this->getUsersByTeam(Team::Werewolves, $gameId), true) ||
+            array_key_exists('infected', $game) && $game['infected'] === $userId;
     }
 }
