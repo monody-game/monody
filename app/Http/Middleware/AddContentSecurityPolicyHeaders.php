@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Vite;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -16,7 +17,7 @@ class AddContentSecurityPolicyHeaders
 
         $response = $next($request);
 
-        if ($response instanceof StreamedResponse) {
+        if ($response instanceof StreamedResponse || $response instanceof RedirectResponse) {
             return $response;
         }
 
