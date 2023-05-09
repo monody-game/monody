@@ -98,10 +98,14 @@ class GameInteractionController extends Controller
 
     private function getAuthorizedMembersByType(Interaction $type, string $gameId): string|array
     {
+        $game = Redis::get("game:$gameId");
+        $infected = array_key_exists('infected', $game) ? $game['infected'] : null;
+        $werewolves = $this->getUsersByTeam(Team::Werewolves, $gameId);
+
         return match ($type) {
             Interaction::Witch => $this->getUserIdByRole(Role::Witch, $gameId),
             Interaction::Psychic => $this->getUserIdByRole(Role::Psychic, $gameId),
-            Interaction::Werewolves => $this->getUsersByTeam(Team::Werewolves, $gameId),
+            Interaction::Werewolves => $infected ? [...$werewolves, $infected] : $werewolves,
             Interaction::InfectedWerewolf => $this->getUserIdByRole(Role::InfectedWerewolf, $gameId),
             Interaction::WhiteWerewolf => $this->getUserIdByRole(Role::WhiteWerewolf, $gameId),
             Interaction::Angel => $this->getUserIdByRole(Role::Angel, $gameId),
