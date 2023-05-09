@@ -26,6 +26,11 @@ const popupStore = useStore();
 const userStore = useUserStore();
 const alertStore = useAlertStore();
 const badgeStore = useBadgesStore();
+const searchURL = new URL(window.location);
+
+if (searchURL.searchParams.has("token")) {
+	localStorage.setItem("restricted_request_token", searchURL.searchParams.get("token"));
+}
 
 const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: dark)");
 

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Auth;
 
-use App\Http\Middleware\RestrictToLocalNetwork;
+use App\Http\Middleware\RestrictRequest;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -99,7 +99,7 @@ class LoginControllerTest extends TestCase
         parent::setUp();
 
         $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->withoutMiddleware(RestrictRequest::class)
             ->post('/api/auth/register', [
                 'username' => 'JohnTest',
                 'email' => 'john.test@gmail.com',
@@ -108,7 +108,7 @@ class LoginControllerTest extends TestCase
             ]);
 
         $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->withoutMiddleware(RestrictRequest::class)
             ->post('/api/auth/register', [
                 'username' => 'second user',
                 'email' => 'second.user@gmail.com',
