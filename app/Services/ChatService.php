@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Enums\Role;
 use App\Enums\Team;
-use App\Events\MessageSended;
+use App\Events\MessageSent;
 use App\Facades\Redis;
 use App\Models\Message;
 use App\Models\User;
@@ -23,7 +23,7 @@ class ChatService
             'type' => $type,
         ]);
 
-        broadcast(new MessageSended($message, true, $recievers));
+        broadcast(new MessageSent($message, true, $recievers));
     }
 
     public function send(array $data, User $user): void
@@ -32,7 +32,7 @@ class ChatService
         $message->set('author', $this->getAuthor($user));
         $message->set('type', 'message');
 
-        MessageSended::dispatch($message);
+        MessageSent::dispatch($message);
     }
 
     public function alert(string $content, string $type, string $gameId, array|null $recievers = null): void
@@ -45,12 +45,12 @@ class ChatService
         ]);
 
         if ($recievers !== null) {
-            broadcast(new MessageSended($message, true, $recievers));
+            broadcast(new MessageSent($message, true, $recievers));
 
             return;
         }
 
-        broadcast(new MessageSended($message));
+        broadcast(new MessageSent($message));
     }
 
     public function werewolf(array $data, User $user): void
@@ -60,7 +60,7 @@ class ChatService
         $message->set('author', $this->getAuthor($user));
         $message->set('type', 'werewolf');
 
-        broadcast(new MessageSended($message, true, [
+        broadcast(new MessageSent($message, true, [
             ...$this->getUsersByTeam(Team::Werewolves, $data['gameId']),
             ...$game['dead_users'],
         ]));
@@ -75,7 +75,7 @@ class ChatService
                 'avatar' => '/assets/roles/werewolf.png',
             ]);
 
-            broadcast(new MessageSended($message, true, [
+            broadcast(new MessageSent($message, true, [
                 $littleGirl[0],
             ]));
         }

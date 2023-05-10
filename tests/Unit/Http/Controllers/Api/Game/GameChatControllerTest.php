@@ -5,7 +5,7 @@ namespace Tests\Unit\Http\Controllers\Api\Game;
 use App\Enums\State;
 use App\Enums\Team;
 use App\Events\ChatLock;
-use App\Events\MessageSended;
+use App\Events\MessageSent;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
@@ -27,7 +27,7 @@ class GameChatControllerTest extends TestCase
             ])
             ->assertNoContent();
 
-        Event::assertDispatched(MessageSended::class);
+        Event::assertDispatched(MessageSent::class);
     }
 
     public function testMessageAuthorIsRestrictedInformations()
@@ -39,7 +39,7 @@ class GameChatControllerTest extends TestCase
             'content' => 'A beautiful message',
             'gameId' => $this->game['id'],
         ]);
-        Event::assertDispatched(function (MessageSended $event) use ($user) {
+        Event::assertDispatched(function (MessageSent $event) use ($user) {
             $author = ((array) $event)['payload']['author'];
 
             return $author === [
@@ -57,7 +57,7 @@ class GameChatControllerTest extends TestCase
             'content' => 'A beautiful message',
             'gameId' => 'aeazrazerazerazeraze',
         ])->assertJsonValidationErrorFor('gameId');
-        Event::assertNotDispatched(MessageSended::class);
+        Event::assertNotDispatched(MessageSent::class);
     }
 
     public function testSendingWhileNotBeingInTheGame()
@@ -67,7 +67,7 @@ class GameChatControllerTest extends TestCase
             'content' => 'A beautiful message',
             'gameId' => $this->game['id'],
         ])->assertJsonValidationErrorFor('gameId');
-        Event::assertNotDispatched(MessageSended::class);
+        Event::assertNotDispatched(MessageSent::class);
     }
 
     public function testSendingWerewolfMessage()
@@ -88,7 +88,7 @@ class GameChatControllerTest extends TestCase
             ])
             ->assertNoContent();
 
-        Event::assertDispatched(function (MessageSended $event) use ($user, $gameId) {
+        Event::assertDispatched(function (MessageSent $event) use ($user, $gameId) {
             return (array) $event === [
                 'payload' => [
                     'gameId' => $gameId,
@@ -183,7 +183,7 @@ class GameChatControllerTest extends TestCase
             ])
             ->assertJsonValidationErrorFor('content');
 
-        Event::assertNotDispatched(MessageSended::class);
+        Event::assertNotDispatched(MessageSent::class);
     }
 
     protected function setUp(): void

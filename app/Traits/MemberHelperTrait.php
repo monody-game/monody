@@ -5,7 +5,9 @@ namespace App\Traits;
 use App\Enums\Role;
 use App\Enums\State;
 use App\Enums\Team;
+use App\Events\MessageSent;
 use App\Facades\Redis;
+use App\Models\Message;
 use function array_key_exists;
 use function count;
 use Exception;
@@ -125,6 +127,15 @@ trait MemberHelperTrait
         ) {
             $usedActions[] = Role::Elder->name();
             Redis::set("game:$gameId:interactions:usedActions", $usedActions);
+
+            $content = new Message([
+                'gameId' => $gameId,
+                'author' => '',
+                'type' => 'warn',
+                'content' => 'Vous venez de revenir à la vie. Vous pouvez plus ressuciter.',
+            ]);
+
+            broadcast(new MessageSent($content, true, [$userId]));
 
             return true;
         }
