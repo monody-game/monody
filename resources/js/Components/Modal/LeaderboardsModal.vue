@@ -41,7 +41,7 @@
       <section class="leaderboards__top-three">
         <div class="leaderboards__second">
           <img
-            :src="board[1].user.avatar + '?w=110&dpr=2'"
+            :src="board[1].user.avatar ? board[1].user.avatar + '?w=40&dpr=2' : ''"
             alt=""
           >
           <div class="leaderboards__user-presentation">
@@ -56,7 +56,7 @@
         </div>
         <div class="leaderboards__first">
           <img
-            :src="board[0].user.avatar + '?w=110&dpr=2'"
+            :src="board[0].user.avatar ? board[0].user.avatar + '?w=40&dpr=2' : ''"
             alt=""
           >
           <div class="leaderboards__user-presentation">
@@ -71,7 +71,7 @@
         </div>
         <div class="leaderboards__third">
           <img
-            :src="board[2].user.avatar + '?w=110&dpr=2'"
+            :src="board[2].user.avatar ? board[2].user.avatar + '?w=40&dpr=2' : ''"
             alt=""
           >
           <div class="leaderboards__user-presentation">
@@ -92,7 +92,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">4</span>
                 <img
-                  :src="board[3].user.avatar + '?w=40&dpr=2'"
+                  :src="board[3].user.avatar ? board[3].user.avatar + '?w=40&dpr=2' : ''"
                   alt=""
                 >
                 <p>{{ board[3].user.username }}</p>
@@ -105,7 +105,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">8</span>
                 <img
-                  :src="board[7].user.avatar + '?w=40&dpr=2'"
+                  :src="board[7].user.avatar ? board[7].user.avatar + '?w=40&dpr=2' : ''"
                   alt=""
                 >
                 <p>{{ board[7].user.username }}</p>
@@ -120,7 +120,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">5</span>
                 <img
-                  :src="board[4].user.avatar + '?w=40&dpr=2'"
+                  :src="board[4].user.avatar ? board[4].user.avatar + '?w=40&dpr=2' : ''"
                   alt=""
                 >
                 <p>{{ board[4].user.username }}</p>
@@ -133,7 +133,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">9</span>
                 <img
-                  :src="board[8].user.avatar + '?w=40&dpr=2'"
+                  :src="board[8].user.avatar ? board[8].user.avatar + '?w=40&dpr=2' : ''"
                   alt=""
                 >
                 <p>{{ board[8].user.username }}</p>
@@ -148,7 +148,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">6</span>
                 <img
-                  :src="board[5].user.avatar + '?w=40&dpr=2'"
+                  :src="board[5].user.avatar ? board[5].user.avatar + '?w=40&dpr=2' : ''"
                   alt=""
                 >
                 <p>{{ board[5].user.username }}</p>
@@ -161,7 +161,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">10</span>
                 <img
-                  :src="board[9].user.avatar + '?w=40&dpr=2'"
+                  :src="board[9].user.avatar ? board[9].user.avatar + '?w=40&dpr=2' : ''"
                   alt=""
                 >
                 <p>{{ board[9].user.username }}</p>
@@ -176,7 +176,7 @@
               <div class="leaderboards__board-right">
                 <span class="bold">7</span>
                 <img
-                  :src="board[6].user.avatar + '?w=40&dpr=2'"
+                  :src="board[6].user.avatar ? board[6].user.avatar + '?w=40&dpr=2' : ''"
                   alt=""
                 >
                 <p>{{ board[6].user.username }}</p>
