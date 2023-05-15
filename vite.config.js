@@ -11,7 +11,7 @@ export default () => {
 	process.env = { ...process.env, VITE_APP_VERSION: process.env.APP_VERSION };
 	return defineConfig({
 		plugins: [
-			laravel.default({
+			laravel({
 				input: "resources/js/app.js",
 				refresh: ["public/**"]
 			}),
