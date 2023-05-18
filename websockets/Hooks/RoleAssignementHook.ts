@@ -14,5 +14,7 @@ export default {
 		if (Object.keys(game.roles).includes("9")) {
 			await InteractionService.openInteraction(io, channel, "angel");
 		}
+
+		return false;
 	}
 };

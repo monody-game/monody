@@ -7,6 +7,7 @@ use App\Enums\Round;
 use App\Enums\State;
 use App\Facades\Redis;
 use App\Models\User;
+use App\Traits\MemberHelperTrait;
 use Tests\TestCase;
 
 class RoundControllerTest extends TestCase
@@ -22,6 +23,8 @@ class RoundControllerTest extends TestCase
     private array $secondRound;
 
     private array $loopRound;
+
+    use MemberHelperTrait;
 
     public function testGettingAllRounds()
     {
@@ -181,6 +184,8 @@ class RoundControllerTest extends TestCase
                 $user2->id => Role::Hunter,
                 $user3->id => Role::LittleGirl,
             ];
+
+            $game['users'] = [$user1->id, $user2->id, $user3->id];
         });
 
         $this
@@ -208,9 +213,7 @@ class RoundControllerTest extends TestCase
                 ],
             ]);
 
-        Redis::update("game:{$game['id']}", function (array &$game) use ($user2) {
-            $game['dead_users'][] = $user2->id;
-        });
+        $this->kill($user2->id, $game['id'], 'werewolves');
 
         $this
             ->get("/api/round/2/{$game['id']}")

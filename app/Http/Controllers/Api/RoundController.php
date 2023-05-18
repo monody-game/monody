@@ -9,6 +9,7 @@ use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
 use App\Traits\MemberHelperTrait;
+use Illuminate\Support\Facades\Log;
 
 class RoundController extends Controller
 {
@@ -46,6 +47,8 @@ class RoundController extends Controller
         if ($gameId !== null && Redis::exists("game:$gameId")) {
             $game = Redis::get("game:$gameId");
             $gameState = Redis::get("game:$gameId:state");
+            $deaths = (Redis::get("game:$gameId:deaths") ?? []);
+            $deaths = array_map(fn ($death) => $death['user'], $deaths);
             $roles = array_keys($game['roles']);
 
             $roles = array_map(function ($role) {
@@ -70,10 +73,22 @@ class RoundController extends Controller
                     continue;
                 }
 
+                if (count($this->getUserIdByRole(Role::Hunter, $gameId)) > 0) {
+                    Log::debug((string) in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $game['dead_users'], true));
+                    Log::debug((string) !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $deaths, true));
+                    Log::debug((string) (!in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $game['dead_users'], true)));
+                    Log::debug('---------');
+                }
+
                 if (
                     $state === State::Hunter &&
                     in_array(Role::Hunter->value, array_values($game['assigned_roles']), true) &&
-                    count($this->getUserIdByRole(Role::Hunter, $gameId)) > 0
+                    count($this->getUserIdByRole(Role::Hunter, $gameId)) > 0 &&
+                    (
+                        in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $game['dead_users'], true) &&
+                        !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $deaths, true) ||
+                        !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $game['dead_users'], true)
+                    )
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
@@ -81,13 +96,7 @@ class RoundController extends Controller
                 }
 
                 if (
-                    !$state->hasActionsLeft($gameId) ||
-                    (
-                        /** @phpstan-ignore-next-line $state is a role state (line 56), so it must not return null */
-                        count($this->getUserIdByRole(Role::fromName($state->stringify()), $gameId)) > 0 &&
-                        /** @phpstan-ignore-next-line */
-                        !$this->alive($this->getUserIdByRole(Role::fromName($state->stringify()), $gameId)[0], $gameId)
-                    )
+                    !$state->hasActionsLeft($gameId)
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
                 }
