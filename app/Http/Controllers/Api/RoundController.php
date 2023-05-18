@@ -88,7 +88,14 @@ class RoundController extends Controller
                 }
 
                 if (
-                    !$state->hasActionsLeft($gameId)
+                    !$state->hasActionsLeft($gameId) ||
+                    /** Remove dead users' role states */
+                    (
+                        /** @phpstan-ignore-next-line $state is a role state (line 56), so it must not return null */
+                        count($this->getUserIdByRole(Role::fromName($state->stringify()), $gameId)) > 0 &&
+                        /** @phpstan-ignore-next-line */
+                        !$this->alive($this->getUserIdByRole(Role::fromName($state->stringify()), $gameId)[0], $gameId)
+                    )
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
                 }
