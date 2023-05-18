@@ -98,6 +98,7 @@ class EndGameService
     private function getWinningTeam(string $gameId): Team|string
     {
         $game = Redis::get("game:$gameId");
+        $state = Redis::get("game:$gameId:state");
         $werewolves = $this->getUsersByTeam(Team::Werewolves, $gameId);
         $aliveUsers = array_diff($game['users'], $game['dead_users']);
         $couple = array_key_exists('couple', $game) ? $game['couple'] : [];
@@ -112,16 +113,25 @@ class EndGameService
             return 'couple';
         }
 
-        if ($werewolves === []) {
-            return Team::Villagers;
-        }
-
         if (
             $werewolves === $this->getUserIdByRole(Role::WhiteWerewolf, $gameId) ||
             in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
             $this->alive($this->getUserIdByRole(Role::Parasite, $gameId)[0], $gameId)
         ) {
             return Team::Loners;
+        }
+
+        if (
+            $state['round'] <= 1 &&
+            array_key_exists('angel_target', $game) &&
+            in_array($game['angel_target'], $game['dead_users'], true) &&
+            !in_array($this->getUserIdByRole(Role::Angel, $gameId)[0], $game['dead_users'], true)
+        ) {
+            return Team::Loners;
+        }
+
+        if ($werewolves === []) {
+            return Team::Villagers;
         }
 
         return Team::Werewolves;

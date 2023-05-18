@@ -52,7 +52,6 @@ Route::group(['middleware' => OptionalAuthentication::class], function () {
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/interactions/use', 'Game\GameInteractionController@interact');
-    Route::post('/interactions/status', 'Game\GameInteractionController@status');
 
     Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
     Route::post('/oauth/unlink/google', 'Oauth\GoogleOauthController@unlink');
@@ -101,6 +100,7 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
 
     Route::post('/interactions', 'Game\GameInteractionController@create');
     Route::delete('/interactions', 'Game\GameInteractionController@close');
+    Route::post('/interactions/status', 'Game\GameInteractionController@status');
 
     Route::post('/game/message/deaths', 'Game\GameChatController@death');
     Route::post('/game/chat/lock/{lock}', 'Game\GameChatController@lock');

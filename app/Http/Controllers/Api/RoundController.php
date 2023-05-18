@@ -9,7 +9,6 @@ use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
 use App\Traits\MemberHelperTrait;
-use Illuminate\Support\Facades\Log;
 
 class RoundController extends Controller
 {
@@ -71,13 +70,6 @@ class RoundController extends Controller
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
                     continue;
-                }
-
-                if (count($this->getUserIdByRole(Role::Hunter, $gameId)) > 0) {
-                    Log::debug((string) in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $game['dead_users'], true));
-                    Log::debug((string) !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $deaths, true));
-                    Log::debug((string) (!in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $game['dead_users'], true)));
-                    Log::debug('---------');
                 }
 
                 if (
