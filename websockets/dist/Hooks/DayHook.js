@@ -10,12 +10,15 @@ export default {
             gameId: id
         };
         const baseUrl = `${process.env.API_URL}/game`;
+        await fetch(`${baseUrl}/chat/lock/false`, "POST", body);
+        await fetch(`${baseUrl}/message/deaths`, "POST", body);
         const interactions = JSON.parse(await client.get(`game:${id}:interactions`));
         const interaction = interactions.find((interactionListItem) => interactionListItem.type === "angel");
         if (interaction) {
-            const res = await fetch(`${baseUrl}/interactions/status`, "POST", { gameId: id, type: "angel" });
-            if (res.json === true) {
+            const res = await fetch(`${process.env.API_URL}/interactions/status`, "POST", { gameId: id, type: "angel" });
+            if (res.json.data.status === true) {
                 await InteractionService.closeInteraction(io, channel, "angel");
+                return true;
             }
         }
         const game = JSON.parse(await client.get(`game:${id}`));
@@ -27,8 +30,6 @@ export default {
                 context: 'bitten'
             });
         }
-        await fetch(`${baseUrl}/chat/lock/false`, "POST", body);
-        await fetch(`${baseUrl}/message/deaths`, "POST", body);
         const res = await fetch(`${baseUrl}/end/check`, "POST", body);
         if (res.status === 204) {
             await fetch(`${baseUrl}/end`, "POST", body);

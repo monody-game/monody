@@ -96,7 +96,7 @@ class GameInteractionController extends Controller
     public function status(CreateInteractionRequest $request): JsonApiResponse
     {
         return new JsonApiResponse([
-            'status' => $this->service->status($request->validated('gameId'), $request->validated('type')),
+            'status' => $this->service->status($request->validated('gameId'), Interaction::from($request->validated('type'))),
         ]);
     }
 
