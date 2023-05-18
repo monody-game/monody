@@ -58,19 +58,27 @@ export class StateManager {
         if (roundList.length === 0) {
             error(`Round list is empty for game ${id}`);
         }
-        const rounds = roundList;
+        let rounds = roundList;
         const loopingRoundIndex = rounds.length - 2;
         let currentRound = state["round"] || 0;
         if (currentRound >= loopingRoundIndex) {
             currentRound = loopingRoundIndex;
         }
-        const currentRoundObject = rounds[currentRound];
+        let currentRoundObject = rounds[currentRound];
         if (!currentRoundObject)
             return;
         let stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
         let currentState = typeof currentRoundObject[stateIndex] === "undefined" ? 0 : currentRoundObject[stateIndex].identifier;
-        const isLast = stateIndex === currentRoundObject.length;
+        let isLast = stateIndex === currentRoundObject.length;
         halt = await this.handleAfter(isLast, currentRoundObject, stateIndex, channel);
+        if (currentState === 6) {
+            rounds = await getRounds(id);
+            currentRoundObject = rounds[currentRound];
+            if (!currentRoundObject)
+                return;
+            stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
+            currentState = typeof currentRoundObject[stateIndex] === "undefined" ? 0 : currentRoundObject[stateIndex].identifier;
+        }
         if (currentRound < loopingRoundIndex &&
             !currentRoundObject[stateIndex]) {
             // We are at the end of the current round
@@ -93,7 +101,6 @@ export class StateManager {
         const currentUsedState = currentUsedRound[stateIndex];
         let duration = currentUsedState.duration;
         halt = halt || await this.handleBefore(currentRoundObject, stateIndex, channel);
-        console.log(halt);
         if (halt) {
             const lastRound = rounds.at(-1);
             const endState = lastRound[0];

@@ -79,7 +79,7 @@ trait MemberHelperTrait
         $users = [];
 
         foreach ($ids as $user) {
-            if ($this->alive($user, $gameId) || array_filter($deaths, fn ($death) => $death['user'] === $user) !== []) {
+            if ($role === Role::Hunter || $this->alive($user, $gameId) || array_filter($deaths, fn ($death) => $death['user'] === $user) !== []) {
                 $users[] = $user;
             }
         }

@@ -87,7 +87,7 @@ export class StateManager {
 			error(`Round list is empty for game ${id}`)
 		}
 
-		const rounds: Round[] = roundList
+		let rounds: Round[] = roundList
 
 		const loopingRoundIndex = rounds.length - 2;
 		let currentRound = state["round"] || 0;
@@ -96,14 +96,24 @@ export class StateManager {
 			currentRound = loopingRoundIndex;
 		}
 
-		const currentRoundObject = rounds[currentRound];
+		let currentRoundObject = rounds[currentRound];
 		if(!currentRoundObject) return;
 
 		let stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
 		let currentState: StateIdentifier = typeof currentRoundObject[stateIndex] === "undefined" ? 0 : (currentRoundObject[stateIndex] as Hook).identifier;
-		const isLast = stateIndex === currentRoundObject.length;
+		let isLast = stateIndex === currentRoundObject.length;
 
 		halt = await this.handleAfter(isLast, currentRoundObject, stateIndex, channel)
+
+		if (currentState === 6) {
+			rounds = await getRounds(id)
+			currentRoundObject = rounds[currentRound];
+
+			if(!currentRoundObject) return;
+
+			stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
+			currentState = typeof currentRoundObject[stateIndex] === "undefined" ? 0 : (currentRoundObject[stateIndex] as Hook).identifier;
+		}
 
 		if (
 			currentRound < loopingRoundIndex &&
@@ -131,8 +141,6 @@ export class StateManager {
 		let duration = currentUsedState.duration;
 
 		halt = halt || await this.handleBefore(currentRoundObject, stateIndex, channel)
-
-		console.log(halt)
 
 		if (halt) {
 			const lastRound = rounds.at(-1) as Round;

@@ -203,6 +203,10 @@ class InteractionService
             return $this->voteService->hasMajorityVoted($game, $interaction['type']);
         }
 
+        if ($interaction['type'] === Interaction::Hunter->value) {
+            return true;
+        }
+
         return false;
     }
 

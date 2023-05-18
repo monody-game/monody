@@ -68,7 +68,11 @@ class GameInteractionController extends Controller
         $targetId = $request->validated('targetId', '');
         $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
-        if (!$this->alive($userId, $gameId) && array_filter($deaths, fn ($death) => $death['user'] === $userId) === []) {
+        if (
+            !$this->alive($userId, $gameId) &&
+            array_filter($deaths, fn ($death) => $death['user'] === $userId) === [] &&
+            $action !== InteractionAction::Shoot->value
+        ) {
             return new JsonApiResponse(['message' => 'You are not alive.'], Status::FORBIDDEN);
         }
 
