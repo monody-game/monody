@@ -177,7 +177,7 @@ export class GameChannel {
 					startTimestamp: Date.now()
 				}, channel)
 			}
-		}, 10_000)
+		}, 30_000)
 	}
 
 	async onDelete(id: string) {
