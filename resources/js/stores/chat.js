@@ -39,6 +39,7 @@ export const useStore = defineStore("chat", {
 
 			nextTick(() => {
 				const messageContainer = document.querySelector(".chat__messages");
+				if (!messageContainer) return;
 				messageContainer.scrollTo(0, messageContainer.scrollHeight);
 			});
 		}

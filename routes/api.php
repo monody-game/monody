@@ -71,7 +71,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::get('/game/{id}/users', 'Game\GameUsersController@list');
     Route::get('/game/{id}/discord', 'Game\GameController@discord');
-    Route::get('/game/user/{id}/role', 'Game\GameUsersController@role');
+    Route::get('/game/{gameId}/user/{id}/role', 'Game\GameUsersController@role');
 
     Route::post('/game/message/send', 'Game\GameChatController@send');
 

@@ -28,14 +28,6 @@ export class StateManager {
 		this.emitter = emitter;
 	}
 
-	/**
-   * Set the current state of a game
-   *
-   * @param { Object } state
-   * @param { Object } channel
-   * @param { Boolean } isSkip
-   * @returns self
-   */
 	async setState(state: State, channel: string, isSkip = false) {
 		const id = gameId(channel);
 

@@ -8,16 +8,19 @@ import {Server, Socket} from "socket.io";
 import {EventEmitter} from "node:events";
 
 const StartingState = (await fetch(`${process.env.API_URL}/state/1`, "GET")).json;
+const EndState = (await fetch(`${process.env.API_URL}/state/8`, "GET")).json;
 
 export class GameChannel {
 	private io: Server;
 	private gameService: GameService;
 	private stateManager: StateManager;
+	private emitter: EventEmitter
 
 	constructor(io: Server, emitter: EventEmitter) {
 		this.io = io;
 		this.gameService = new GameService(io, emitter);
 		this.stateManager = new StateManager(io, emitter);
+		this.emitter = emitter
 	}
 
 	async getMembers(channel: string): Promise<MemberList> {
@@ -30,7 +33,7 @@ export class GameChannel {
 		let members = await this.getMembers(channel);
 		members = await this.removeInactive(channel, members);
 		const search = members.filter(m => m.user_id === member.user_id);
-		return search && search.length;
+		return search && search.length > 0;
 	}
 
 	async removeInactive(channel: string, members: MemberList) {
@@ -138,12 +141,43 @@ export class GameChannel {
 	}
 
 	async onLeave(channel: string, member: Member) {
-		this.io.to(channel).emit("presence:leaving", channel, member);
-		const list = await fetch(`${process.env.API_URL}/game/list/*`);
+		const id = gameId(channel);
+		const game = JSON.parse(await client.get(`game:${id}`) as string)
+		const state = await this.stateManager.getState(id);
 
-		this.io.to("home").volatile.emit("game-list.update", "home", {
-			data: list.json
-		});
+		if(!game.is_started || state === EndState.data.state.id) {
+			this.io.to(channel).emit("presence:leaving", channel, member);
+		} else {
+			this.io.to(channel).emit("list.disconnect", channel, member)
+		}
+
+		setTimeout(async () => {
+			const isMember = await this.isMember(channel, member);
+
+			if (isMember) {
+				return
+			}
+
+			await fetch(`${process.env.API_URL}/game/kill`, "POST", {
+				userId: member.user_id,
+				gameId: id,
+				context: 'disconnect',
+				instant: true
+			});
+
+			const canEnd = await fetch(`${process.env.API_URL}/game/end/check`, "POST", { gameId: id });
+
+			if (canEnd.status === 204) {
+				await fetch(`${process.env.API_URL}/game/end`, "POST", { gameId: id });
+				this.emitter.emit("time.halt")
+				await this.stateManager.setState({
+					status: EndState.data.state.id,
+					round: state.round,
+					counterDuration: EndState.data.state.duration,
+					startTimestamp: Date.now()
+				}, channel)
+			}
+		}, 10_000)
 	}
 
 	async onDelete(id: string) {

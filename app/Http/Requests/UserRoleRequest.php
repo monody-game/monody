@@ -10,7 +10,7 @@ class UserRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['required', 'uuid', 'exists:users,id', new PlayerNotAliveRule()],
+            'id' => ['required', 'uuid', 'exists:users,id'],
         ];
     }
 

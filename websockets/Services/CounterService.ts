@@ -32,7 +32,7 @@ export class CounterService {
 
 		const counterId = setTimeout(async () => {
 			await this.cycle(channel, socket);
-		}, duration ?? ((await this.manager.getNextStateDuration(channel)) + 2) * 1000);
+		}, duration ?? ((await this.manager.getNextStateDuration(channel)) + 1) * 1000);
 
 		this.emitter.on("time.skip", async (data) => {
 			const state = await this.manager.getState(data.gameId);

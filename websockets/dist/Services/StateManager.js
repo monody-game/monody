@@ -12,14 +12,6 @@ export class StateManager {
         this.io = io;
         this.emitter = emitter;
     }
-    /**
-   * Set the current state of a game
-   *
-   * @param { Object } state
-   * @param { Object } channel
-   * @param { Boolean } isSkip
-   * @returns self
-   */
     async setState(state, channel, isSkip = false) {
         const id = gameId(channel);
         log(`Setting state of game ${id} to ${state.status} in round ${state.round || 0} for a duration of ${state.counterDuration}`);
