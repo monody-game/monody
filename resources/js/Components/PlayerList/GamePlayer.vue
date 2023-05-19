@@ -89,7 +89,16 @@
         </svg>
       </span>
     </div>
-    <p class="player__username">
+    <p
+      class="player__username"
+      :data-is-owner="isOwner"
+      :title="isOwner ? 'Ce joueur a créé la partie' : ''"
+    >
+      <svg
+        v-if="isOwner === true"
+      >
+        <use href="/sprite.svg#crown" />
+      </svg>
       {{ props.player.username }}
     </p>
   </div>
@@ -122,6 +131,7 @@ const isContaminated = ref(false);
 const isPaired = ref(false);
 const isGuarded = ref(false);
 const isDisconnected = ref(false);
+const isOwner = ref(false);
 
 const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
@@ -162,6 +172,10 @@ gameStore.$subscribe((mutation, state) => {
 
 	if (state.couple.includes(props.player.id)) {
 		isPaired.value = true;
+	}
+
+	if (state.owner.id === props.player.id) {
+		isOwner.value = true;
 	}
 });
 

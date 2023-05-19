@@ -156,14 +156,27 @@
 }
 
 .player__username {
+	padding: space(.75) space(2);
   z-index: 2;
   border-radius: 31px;
+	display: flex;
+	align-items: center;
+
+	&[data-is-owner="true"] {
+		padding-left: space(1.75);
+		gap: space(.75);
+	}
+
+	svg {
+		color: #FFC700;
+		height: 1rem;
+		aspect-ratio: 1;
+	}
 }
 
 .day .player__username {
 	background-color: var(--light-background);
 	color: var(--dark-background);
-	padding: space(.75) space(2);
 
 	border: var(--border-dark) 2px solid;
 }
@@ -171,7 +184,6 @@
 .night .player__username {
 	background-color: var(--dark-background);
 	color: var(--light-background);
-	padding: space(.75) space(2);
 
 	border: var(--border-light) 2px solid;
 }
@@ -254,6 +266,14 @@
 		font-size: .9rem;
 		padding-inline: space(1);
 		padding-block: space(.5);
+	}
+
+	.player__username[data-is-owner="true"] {
+		gap: space(.5);
+
+		svg {
+			height: .9rem;
+		}
 	}
 
 	.player__avatar-container {

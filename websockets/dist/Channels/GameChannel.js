@@ -146,7 +146,7 @@ export class GameChannel {
                     startTimestamp: Date.now()
                 }, channel);
             }
-        }, 10_000);
+        }, 30_000);
     }
     async onDelete(id) {
         await fetch(`${process.env.API_URL}/game`, "DELETE", { gameId: id });
