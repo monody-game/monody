@@ -25,10 +25,10 @@ class JsonApiResponse implements Responsable
         $response = new JsonResponse(
             data: [
                 'status' => $this->status->statusify(),
-				'meta' => [
-					'name' => config('app.name'),
-					'version' => config('app.version'),
-				],
+                'meta' => [
+                    'name' => config('app.name'),
+                    'version' => config('app.version'),
+                ],
                 'data' => $this->data,
                 'alerts' => $this->alerts,
                 'popups' => $this->popups,

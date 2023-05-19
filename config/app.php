@@ -7,7 +7,7 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
-	'version' => env('APP_VERSION'),
+    'version' => env('APP_VERSION'),
 
     'debug' => (bool) env('APP_DEBUG', false),
 
