@@ -8,7 +8,6 @@ use App\Enums\Team;
 use App\Events\MessageSent;
 use App\Facades\Redis;
 use App\Models\Message;
-use Illuminate\Support\Facades\Log;
 use function array_key_exists;
 use function count;
 use Exception;
@@ -115,9 +114,9 @@ trait MemberHelperTrait
     {
         $game = Redis::get("game:$gameId");
 
-		if (!$game) {
-			return false;
-		}
+        if (!$game) {
+            return false;
+        }
 
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
 
@@ -163,7 +162,7 @@ trait MemberHelperTrait
             array_key_exists('couple', $game) &&
             in_array($userId, $game['couple'], true) &&
             $context !== 'couple' &&
-			$context !== "disconnect"
+            $context !== 'disconnect'
         ) {
             Redis::update("game:$gameId:deaths", fn (array &$deaths) => [...$deaths, ['user' => $userId, 'context' => $context]]);
 

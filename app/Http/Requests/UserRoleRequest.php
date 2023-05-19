@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\PlayerNotAliveRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRoleRequest extends FormRequest

@@ -16,7 +16,6 @@ use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\Request;
-use function Symfony\Component\String\b;
 
 class GameUsersController extends Controller
 {
@@ -55,9 +54,9 @@ class GameUsersController extends Controller
 
     public function role(UserRoleRequest $request, string $gameId): JsonApiResponse
     {
-		if($this->alive($request->input('id'), $gameId)) {
-			return new JsonApiResponse(data: ['message' => 'Player is alive'], status: Status::BAD_REQUEST);
-		}
+        if ($this->alive($request->input('id'), $gameId)) {
+            return new JsonApiResponse(data: ['message' => 'Player is alive'], status: Status::BAD_REQUEST);
+        }
 
         /** @var string[] $game */
         $game = $this->getGame($gameId);
@@ -70,33 +69,35 @@ class GameUsersController extends Controller
 
     public function eliminate(Request $request): JsonApiResponse
     {
-		$gameId = $request->input('gameId');
-		$userId = $request->input('userId');
+        $gameId = $request->input('gameId');
+        $userId = $request->input('userId');
 
         $res = $this->kill($userId, $gameId, $request->input('context'));
         $status = $res ? Status::NO_CONTENT : Status::BAD_REQUEST;
 
-		if($request->input('instant') === true) {
-			$game = Redis::get("game:$gameId");
-			$deaths = Redis::get("game:$gameId:deaths") ?? [];
+        if ($request->input('instant') === true) {
+            $game = Redis::get("game:$gameId");
+            $deaths = Redis::get("game:$gameId:deaths") ?? [];
 
-			foreach ($deaths as $death) {
-				if($death['user'] !== $userId) continue;
+            foreach ($deaths as $death) {
+                if ($death['user'] !== $userId) {
+                    continue;
+                }
 
-				$infected = array_key_exists('infected', $game) && $game['infected'] === $death['user'];
+                $infected = array_key_exists('infected', $game) && $game['infected'] === $death['user'];
 
-				GameKill::broadcast([
-					'killedUser' => $death['user'],
-					'gameId' => $gameId,
-					'context' => $death['context'],
-					'infected' => $infected,
-				]);
+                GameKill::broadcast([
+                    'killedUser' => $death['user'],
+                    'gameId' => $gameId,
+                    'context' => $death['context'],
+                    'infected' => $infected,
+                ]);
 
-				Redis::update("game:$gameId:deaths", fn (array $deaths) => array_diff($deaths, [$death]));
+                Redis::update("game:$gameId:deaths", fn (array $deaths) => array_diff($deaths, [$death]));
 
-				break;
-			}
-		}
+                break;
+            }
+        }
 
         return new JsonApiResponse(status: $status);
     }
