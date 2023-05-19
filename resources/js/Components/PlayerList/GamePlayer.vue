@@ -176,14 +176,14 @@ const userID = computed(() => {
 window.Echo
 	.join(`game.${gameId.value}`)
 	.joining((user) => {
-		if (user.id === props.player.id) {
+		if (user.user_id === props.player.id) {
 			isDisconnected.value = false;
 		}
 	})
 	.listen(".list.disconnect", (user) => {
-		console.log(user);
 		if (user.user_id === props.player.id) {
 			isDisconnected.value = true;
+			chatStore.send(`${user.user_info.username} s'est déconnecté, il a 30 secondes pour se reconnecter.`, "warn");
 		}
 	})
 	.listen(".interaction.open", ({ interaction }) => {
