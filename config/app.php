@@ -7,6 +7,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+	'version' => env('APP_VERSION'),
+
     'debug' => (bool) env('APP_DEBUG', false),
 
     'network_key' => env('APP_PRIVATE_NETWORK_KEY', ''),
