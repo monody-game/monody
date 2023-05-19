@@ -79,6 +79,15 @@
           </svg>
         </span>
       </div>
+      <span
+        v-if="isDisconnected === true"
+        title="Ce joueur s'est déconnecté"
+        class="player__is-disconnected"
+      >
+        <svg>
+          <use href="/sprite.svg#websockets" />
+        </svg>
+      </span>
     </div>
     <p class="player__username">
       {{ props.player.username }}
@@ -112,6 +121,7 @@ const isTargeted = ref(false);
 const isContaminated = ref(false);
 const isPaired = ref(false);
 const isGuarded = ref(false);
+const isDisconnected = ref(false);
 
 const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
@@ -165,6 +175,17 @@ const userID = computed(() => {
 
 window.Echo
 	.join(`game.${gameId.value}`)
+	.joining((user) => {
+		if (user.id === props.player.id) {
+			isDisconnected.value = false;
+		}
+	})
+	.listen(".list.disconnect", (user) => {
+		console.log(user);
+		if (user.user_id === props.player.id) {
+			isDisconnected.value = true;
+		}
+	})
 	.listen(".interaction.open", ({ interaction }) => {
 		interactionType.value = interaction.type;
 		gameStore.currentInteractionId = interaction.id;

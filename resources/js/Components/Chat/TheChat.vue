@@ -145,7 +145,7 @@ window.Echo.join(`game.${route.params.id}`)
 		}
 
 		const user = gameStore.getPlayerByID(killed);
-		let role = await window.JSONFetch(`/game/user/${user.id}/role`, "GET");
+		let role = await window.JSONFetch(`/game/${route.params.id}/user/${user.id}/role`, "GET");
 		role = role.data.role.display_name;
 
 		if (payload.infected && payload.infected === true) {
@@ -160,6 +160,8 @@ window.Echo.join(`game.${route.params.id}`)
 			store.send(`Dans un élan de chagrin amoureux, ${user.username} rejoint son âme-soeur dans sa tombe, il était ${role}.`, "death");
 		} else if (context === "hunter") {
 			store.send(`Le chasseur à décider de tirer sa dernière balle sur ${user.username} qui était ${role}.`, "death");
+		} else if (context === "disconnect") {
+			store.send(`${user.username} s'est déconnecté, il était ${role}`, "death");
 		} else {
 			store.send(`${user.username} a été tué cette nuit, il était ${role} !`, "death");
 		}

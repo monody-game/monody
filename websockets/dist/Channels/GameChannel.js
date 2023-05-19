@@ -5,14 +5,17 @@ import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
 import { log } from "../Logger.js";
 const StartingState = (await fetch(`${process.env.API_URL}/state/1`, "GET")).json;
+const EndState = (await fetch(`${process.env.API_URL}/state/8`, "GET")).json;
 export class GameChannel {
     io;
     gameService;
     stateManager;
+    emitter;
     constructor(io, emitter) {
         this.io = io;
         this.gameService = new GameService(io, emitter);
         this.stateManager = new StateManager(io, emitter);
+        this.emitter = emitter;
     }
     async getMembers(channel) {
         const members = JSON.parse(await client.get(`game:${gameId(channel)}:members`));
@@ -24,7 +27,7 @@ export class GameChannel {
         let members = await this.getMembers(channel);
         members = await this.removeInactive(channel, members);
         const search = members.filter(m => m.user_id === member.user_id);
-        return search && search.length;
+        return search && search.length > 0;
     }
     async removeInactive(channel, members) {
         const clients = await this.io.in(channel).fetchSockets();
@@ -112,11 +115,38 @@ export class GameChannel {
         this.io.to(member.socketId).emit("game.data", channel, { data: { payload: gameData.json.data.game } });
     }
     async onLeave(channel, member) {
-        this.io.to(channel).emit("presence:leaving", channel, member);
-        const list = await fetch(`${process.env.API_URL}/game/list/*`);
-        this.io.to("home").volatile.emit("game-list.update", "home", {
-            data: list.json
-        });
+        const id = gameId(channel);
+        const game = JSON.parse(await client.get(`game:${id}`));
+        const state = await this.stateManager.getState(id);
+        if (!game.is_started || state === EndState.data.state.id) {
+            this.io.to(channel).emit("presence:leaving", channel, member);
+        }
+        else {
+            this.io.to(channel).emit("list.disconnect", channel, member);
+        }
+        setTimeout(async () => {
+            const isMember = await this.isMember(channel, member);
+            if (isMember) {
+                return;
+            }
+            await fetch(`${process.env.API_URL}/game/kill`, "POST", {
+                userId: member.user_id,
+                gameId: id,
+                context: 'disconnect',
+                instant: true
+            });
+            const canEnd = await fetch(`${process.env.API_URL}/game/end/check`, "POST", { gameId: id });
+            if (canEnd.status === 204) {
+                await fetch(`${process.env.API_URL}/game/end`, "POST", { gameId: id });
+                this.emitter.emit("time.halt");
+                await this.stateManager.setState({
+                    status: EndState.data.state.id,
+                    round: state.round,
+                    counterDuration: EndState.data.state.duration,
+                    startTimestamp: Date.now()
+                }, channel);
+            }
+        }, 10_000);
     }
     async onDelete(id) {
         await fetch(`${process.env.API_URL}/game`, "DELETE", { gameId: id });
