@@ -37,7 +37,7 @@ class GameUsersControllerTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->secondUser, 'api')
-            ->call('GET', "/api/game/user/{$this->secondUser->id}/role")
+            ->call('GET', "/api/game/id/user/{$this->secondUser->id}/role")
             ->assertOk()
             ->json('data.role');
 

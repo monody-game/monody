@@ -72,7 +72,7 @@ class GameUsersController extends Controller
         $gameId = $request->input('gameId');
         $userId = $request->input('userId');
 
-        $res = $this->kill($userId, $gameId, $request->input('context'));
+        $res = $this->kill($userId, $gameId, $request->input('context'), false);
         $status = $res ? Status::NO_CONTENT : Status::BAD_REQUEST;
 
         if ($request->input('instant') === true) {
