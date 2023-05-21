@@ -110,11 +110,15 @@ trait MemberHelperTrait
         return $members;
     }
 
-    public function kill(string $userId, string $gameId, string $context): bool
+    public function kill(string $userId, string $gameId, string $context, bool $strict = true): bool
     {
         $game = Redis::get("game:$gameId");
 
         if (!$game) {
+            return false;
+        }
+
+        if ($strict && !in_array($userId, $game['users'], true)) {
             return false;
         }
 
