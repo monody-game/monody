@@ -8,7 +8,7 @@
 	color: var(--secondary);
   cursor: pointer;
 	background: var(--primary);
-	transition: background-color .2s;
+	transition: all .2s;
 
   &:disabled {
     cursor: not-allowed;
@@ -26,5 +26,15 @@
 
 	&.large {
 		padding: space(1) space(3);
+	}
+
+	&.btn-danger {
+		color: var(--dark-danger);
+		border: var(--border-danger) solid 2px;
+	}
+
+	&.btn-danger:not(.disable-hover):not(:disabled):hover, &.btn-danger:not(.disable-hover):not(:disabled):focus-visible {
+		background-color: var(--dark-danger);
+		color: var(--light-background);
 	}
 }

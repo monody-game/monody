@@ -59,7 +59,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/avatars', 'AvatarController@upload');
     Route::delete('/avatars', 'AvatarController@delete');
 
-    Route::post('/auth/logout', 'Auth\LoginController@logout');
+    Route::post('/auth/logout', 'Auth\LogoutController@index');
+    Route::post('/auth/logout/all', 'Auth\LogoutController@all');
 
     Route::get('/user', 'UserController@user')->name('verification.notice');
     Route::patch('/user', 'UserController@update');

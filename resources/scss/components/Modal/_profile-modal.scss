@@ -6,8 +6,7 @@
 	flex: 1;
 	width: 100%;
 
-	margin-top: space(2);
-	margin-bottom: space(4);
+	margin-block: space(2);
 
 	.auth-page__form-group {
 		width: 100%;
@@ -35,6 +34,7 @@
 	gap: space(2);
 
 	padding: space(2);
+	margin-bottom: space(1);
 	border-radius: 4px;
 	width: 100%;
 	max-width: max-content;
