@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
@@ -35,21 +34,12 @@ class LoginController extends Controller
             Cookie::forget('monody_access_token');
         }
 
-        $accessToken = $user->createToken('auth_token')->plainTextToken;
+        $ip = $request->getClientIp() ?? $user->id;
+        $accessToken = $user->createToken($ip)->plainTextToken;
         $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Strict');
 
         return JsonApiResponse::make()
             ->withAlert(AlertType::Success, 'Bon jeu !')
             ->withCookie($cookie);
-    }
-
-    public function logout(Request $request): JsonApiResponse
-    {
-        $request->user()?->tokens()->delete();
-
-        Cookie::expire('monody_access_token');
-
-        return JsonApiResponse::make()
-            ->withAlert(AlertType::Success, 'À bientôt !');
     }
 }

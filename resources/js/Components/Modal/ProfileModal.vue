@@ -90,6 +90,12 @@
             Déconnecter
           </button>
         </div>
+        <button
+          class="btn medium btn-danger"
+          @click="modalStore.open('logout-warn-popup')"
+        >
+          Se déconnecter de tous les appareils
+        </button>
       </div>
     </div>
     <div class="modal__buttons">
@@ -109,20 +115,26 @@
         </button>
       </div>
     </div>
+    <Transition name="modal">
+      <LogoutWarnPopup v-if="warnPopupStore.isOpenned" />
+    </Transition>
   </BaseModal>
 </template>
 
 <script setup>
 import { computed, nextTick, ref, watch } from "vue";
-import { useStore } from "../../stores/user.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
+import { useStore as useWarnPopupStore } from "../../stores/modals/logout-warn-popup.js";
 import { useStore as useAlertStore } from "../../stores/alerts.js";
+import { useStore } from "../../stores/user.js";
 import BaseModal from "./BaseModal.vue";
 import InputComponent from "../Form/InputComponent.vue";
+import LogoutWarnPopup from "./LogoutWarnPopup.vue";
 
 const userStore = useStore();
 const modalStore = useModalStore();
 const alertStore = useAlertStore();
+const warnPopupStore = useWarnPopupStore();
 
 const avatarInput = ref(null);
 const username = ref(userStore.username);

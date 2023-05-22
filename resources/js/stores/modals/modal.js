@@ -9,6 +9,7 @@ import { useStore as useGameDetailsModalStore } from "./game-details.js";
 import { useStore as useShareProfileStore } from "./share-profile-modal.js";
 import { useStore as useBadgesModalStore } from "./badges.js";
 import { useStore as useLeaderboardsModalStore } from "./leaderboards.js";
+import { useStore as useLogoutWarnPopupStore } from "./logout-warn-popup.js";
 
 export const useStore = defineStore("modal", {
 	state: () => {
@@ -39,6 +40,8 @@ export const useStore = defineStore("modal", {
 				return useBadgesModalStore();
 			case "leaderboards":
 				return useLeaderboardsModalStore();
+			case "logout-warn-popup":
+				return useLogoutWarnPopupStore();
 			}
 		}
 	},
