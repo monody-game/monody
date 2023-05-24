@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
+use App\Models\Elo;
 use App\Models\Exp;
 use App\Models\User;
 use App\Services\ExpService;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\AbstractFont;
 use Intervention\Image\AbstractShape;
 use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageCache;
 use League\Glide\Server;
 
 class ShareProfileController extends Controller
@@ -72,7 +74,7 @@ class ShareProfileController extends Controller
 
         $avatarPath = str_replace('/assets/', '', $user->avatar);
 
-        $avatar = Image::cache(function ($image) use ($avatarPath, $user) {
+        $avatar = Image::cache(function (ImageCache $image) use ($avatarPath, $user) {
             $avatar = $image->make(Storage::path($avatarPath));
             $avatar->fit(1250, 1250);
             $avatar->mask($this->createCircleMask(1250, 1250), false);
@@ -86,24 +88,25 @@ class ShareProfileController extends Controller
             Storage::delete("profiles/{$user->id}-avatar.temp.png");
         }
 
-        Image::cache(function ($image) use ($user, $expService, $avatar, $avatarPath, $glide, $theme) {
+        Image::cache(function (ImageCache $image) use ($user, $expService, $avatar, $avatarPath, $glide, $theme) {
             $glide->deleteCache(str_replace('avatars', 'profiles', $avatarPath));
 
             $exp = Exp::where('user_id', $user->id)->get()[0]?->exp;
             $neededExp = $expService->nextLevelExp($user->level);
 
-            $elo = 'N/A';
+            $elo = Elo::where('user_id', $user->id)->get()[0]?->elo;
 
             $senBold = public_path('fonts/Sen-Bold.ttf');
             $senRegular = public_path('fonts/Sen-Regular.ttf');
 
+			/** @var \Intervention\Image\Image $profile */
             $profile = $image->make(Storage::path("profiles/template-$theme.png"));
 
             $profile->insert($avatar, 'top-left', 160, 160);
 
             $profile->text($user->username, 1570, 160 + 190, fn (AbstractFont $font) => $font->file($senBold)->size(200)->color($this->color));
             $profile->text($user->level, 2340, 630 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
-            $profile->text($elo, 3190, 630 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
+            $profile->text($elo, 3150, 630 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
 
             // Progress bar container
             $profile->rectangle(1570, 970, 1570 + 2055, 970 + 240, fn (AbstractShape $shape) => $shape->border(10, $this->border));
