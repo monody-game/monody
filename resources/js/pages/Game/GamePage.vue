@@ -50,10 +50,13 @@
       <ActivityConfirmationModal v-if="activityConfirmationModalStore.isOpenned" />
     </Transition>
     <Transition name="modal">
-      <GameDetailsModal v-if="modalStore.opennedModal === 'game-details'" />
+      <GameDetailsModal v-if="gameDetailsStore.isOpenned" />
     </Transition>
     <Transition name="modal">
       <GameVocalInvitation v-if="store.type === 1 && vocalInvitationStore.isOpenned === true" />
+    </Transition>
+    <Transition name="modal">
+      <RolePresentationModal v-if="rolePresentationStore.isOpenned" />
     </Transition>
   </div>
 </template>
@@ -69,6 +72,8 @@ import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useShareModalStore } from "../../stores/modals/share-game-modal.js";
 import { useStore as useActivityConfirmationModalStore } from "../../stores/modals/activity-confirmation-modal.js";
 import { useStore as useVocalInvitationStore } from "../../stores/modals/vocal-invitation-store.js";
+import { useStore as useRolePresentationStore } from "../../stores/modals/role-presentation.js";
+import { useStore as useGameDetailsStore } from "../../stores/modals/game-details.js";
 import { useStore as useChatStore } from "../../stores/chat.js";
 import RoleAssignationPopup from "../../Components/RoleAssignationPopup.vue";
 import GameCounter from "../../Components/GameCounter.vue";
@@ -79,6 +84,7 @@ import ShareGameModal from "../../Components/Modal/ShareGameModal.vue";
 import ActivityConfirmationModal from "../../Components/Modal/ActivityConfirmationModal.vue";
 import GameDetailsModal from "../../Components/Modal/GameDetailsModal.vue";
 import GameVocalInvitation from "../../Components/Modal/GameVocalInvitation.vue";
+import RolePresentationModal from "../../Components/Modal/RolePresentationModal.vue";
 
 const route = useRoute();
 const store = useStore();
@@ -91,6 +97,8 @@ const assignationPopupStore = useAssignationPopupStore();
 const modalStore = useModalStore();
 const activityConfirmationModalStore = useActivityConfirmationModalStore();
 const vocalInvitationStore = useVocalInvitationStore();
+const rolePresentationStore = useRolePresentationStore();
+const gameDetailsStore = useGameDetailsStore();
 
 const gameId = route.params.id;
 const loading = ref(false);

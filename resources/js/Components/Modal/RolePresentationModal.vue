@@ -14,19 +14,19 @@
     <div class="role-presentation__content">
       <div class="role-presentation__side-group">
         <img
-          :src="props.role.image + '?w=125&dpr=2'"
+          :src="store.role.image + '?w=125&dpr=2'"
           alt=""
         >
         <div class="role-presentation__side-group-right">
-          <h3>{{ props.role.display_name }}</h3>
+          <h3>{{ store.role.display_name }}</h3>
           <div>
-            <p><span class="bold">Camp : </span> {{ props.role.team.display_name }}</p>
-            <p><span class="bold">Limite par partie : </span> {{ props.role.limit === -1 ? 'Aucune' : props.role.limit }}</p>
+            <p><span class="bold">Camp : </span> {{ store.role.team.display_name }}</p>
+            <p><span class="bold">Limite par partie : </span> {{ store.role.limit === -1 ? 'Aucune' : store.role.limit }}</p>
           </div>
         </div>
       </div>
 
-      <p>{{ props.role.description }}</p>
+      <p>{{ store.role.description }}</p>
     </div>
   </BaseModal>
 </template>
@@ -34,10 +34,6 @@
 <script setup>
 import { useStore } from "../../stores/modals/role-presentation.js";
 import BaseModal from "./BaseModal.vue";
-
-const props = defineProps({
-	role: Object
-});
 
 const store = useStore();
 </script>

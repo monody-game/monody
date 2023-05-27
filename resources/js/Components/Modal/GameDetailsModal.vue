@@ -43,6 +43,8 @@
             :role="role"
             class="roles__item"
             :operations="false"
+            :presentable="true"
+            @role="(role) => present(role)"
           />
         </div>
         <RolesBalance :selected-roles="roles" />
@@ -63,6 +65,7 @@
 
 <script setup>
 import { useStore as useGameStore } from "../../stores/game.js";
+import { useStore as useRolePresentationStore } from "../../stores/modals/role-presentation.js";
 import { useStore } from "../../stores/modals/modal.js";
 import BaseModal from "./BaseModal.vue";
 import RoleSelector from "./Pages/Roles/RoleSelector.vue";
@@ -71,4 +74,11 @@ import RolesBalance from "./Pages/Roles/RolesBalance.vue";
 const gameStore = useGameStore();
 const store = useStore();
 const roles = gameStore.roles;
+const rolePresentationStore = useRolePresentationStore();
+
+const present = (role) => {
+	rolePresentationStore.role = role;
+	rolePresentationStore.opennedModal = "game-details";
+	store.open("role-presentation");
+};
 </script>
