@@ -24,6 +24,7 @@
             :role="role"
             class="roles__item"
             :presentable="true"
+            @role="role => present(role)"
           />
         </div>
       </div>
@@ -43,6 +44,7 @@
             :role="role"
             class="roles__item"
             :presentable="true"
+            @role="role => present(role)"
           />
         </div>
       </div>
@@ -62,6 +64,7 @@
             :role="role"
             class="roles__item"
             :presentable="true"
+            @role="role => present(role)"
           />
         </div>
       </div>
@@ -73,6 +76,7 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import { useStore } from "../../../../stores/modals/game-creation-modal.js";
+import { useStore as useRolePresentationStore } from "../../../../stores/modals/role-presentation.js";
 import { useStore as useModalStore } from "../../../../stores/modals/modal.js";
 import RoleSelector from "./RoleSelector.vue";
 import LogoSpinner from "../../../Spinners/LogoSpinner.vue";
@@ -84,6 +88,13 @@ const werewolves = ref([]);
 const loners = ref([]);
 const loading = ref(true);
 const store = useStore();
+const rolePresentationStore = useRolePresentationStore();
+
+const present = (role) => {
+	rolePresentationStore.role = role;
+	rolePresentationStore.opennedModal = "game-creation-modal";
+	useModalStore().open("role-presentation");
+};
 
 onMounted(async () => {
 	loading.value = true;

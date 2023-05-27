@@ -53,7 +53,6 @@
     <Transition name="modal">
       <RolePresentationModal
         v-if="rolePresentationStore.isOpenned"
-        :role="store.toPresent"
       />
     </Transition>
   </BaseModal>

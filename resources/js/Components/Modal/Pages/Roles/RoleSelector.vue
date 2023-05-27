@@ -69,7 +69,6 @@
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "../../../../stores/modals/game-creation-modal.js";
-import { useStore as useModalStore } from "../../../../stores/modals/modal.js";
 
 const props = defineProps({
 	role: {
@@ -87,15 +86,16 @@ const props = defineProps({
 	}
 });
 
+const emit = defineEmits(["role"]);
+
 const store = useStore();
 const route = useRoute();
 const default_limit = ref(10);
 
 const present = () => {
-	if(!props.presentable) return;
+	if (!props.presentable) return;
 
-	useModalStore().open("role-presentation");
-	store.toPresent = props.role;
+	emit("role", props.role);
 };
 
 const showOperations = computed(() => {
