@@ -12,6 +12,8 @@ export const useStore = defineStore("role-presentation", {
 			const modalStore = useModalStore();
 			this.isOpenned = false;
 			modalStore.opennedModal = "game-creation-modal";
+
+			return false;
 		}
 	}
 });

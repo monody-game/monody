@@ -51,9 +51,9 @@ export const useStore = defineStore("modal", {
 	actions: {
 		close() {
 			if (!this.opennedModal) return;
-			this.getModalStore(this.opennedModal).close();
+			const popup = this.getModalStore(this.opennedModal).close();
 
-			if (this.opennedModal !== "popup") {
+			if ((popup ?? true) && this.opennedModal !== "popup") {
 				this.opennedModal = "popup";
 			}
 
