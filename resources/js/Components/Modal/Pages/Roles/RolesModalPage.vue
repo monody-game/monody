@@ -1,6 +1,6 @@
 <template>
   <div class="roles__page">
-    Selection des rôles :
+    <span class="bold">Selection des rôles :</span> <span class="roles__note">(Cliquez sur un rôle pour en savoir plus)</span>
     <div
       v-if="loading === true"
       class="roles__loader"
@@ -22,7 +22,8 @@
             v-for="role in villagers"
             :key="role.id"
             :role="role"
-            class="roles__item"
+            class="roles__item pointer"
+            @click="present(role)"
           />
         </div>
       </div>
@@ -40,7 +41,8 @@
             v-for="role in werewolves"
             :key="role.id"
             :role="role"
-            class="roles__item"
+            class="roles__item pointer"
+            @click="present(role)"
           />
         </div>
       </div>
@@ -58,7 +60,8 @@
             v-for="role in loners"
             :key="role.id"
             :role="role"
-            class="roles__item"
+            class="roles__item pointer"
+            @click="present(role)"
           />
         </div>
       </div>
@@ -69,9 +72,10 @@
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
+import { useStore } from "../../../../stores/modals/game-creation-modal.js";
+import { useStore as useModalStore } from "../../../../stores/modals/modal.js";
 import RoleSelector from "./RoleSelector.vue";
 import LogoSpinner from "../../../Spinners/LogoSpinner.vue";
-import { useStore } from "../../../../stores/modals/game-creation-modal.js";
 import RolesBalance from "./RolesBalance.vue";
 
 const roles = ref([]);
@@ -87,6 +91,11 @@ onMounted(async () => {
 	await getTeams();
 	loading.value = false;
 });
+
+const present = (role) => {
+	useModalStore().open("role-presentation");
+	store.toPresent = role;
+};
 
 const getSelectedRoles = computed(() => {
 	const selectedIds = store.selectedRoles;

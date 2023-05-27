@@ -8,7 +8,8 @@ export const useStore = defineStore("game-creation-modal", {
 			roles: [],
 			teams: [],
 			gameId: null,
-			type: 0
+			type: 0,
+			toPresent: {}
 		};
 	},
 	getters: {

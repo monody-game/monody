@@ -10,6 +10,7 @@ import { useStore as useShareProfileStore } from "./share-profile-modal.js";
 import { useStore as useBadgesModalStore } from "./badges.js";
 import { useStore as useLeaderboardsModalStore } from "./leaderboards.js";
 import { useStore as useLogoutWarnPopupStore } from "./logout-warn-popup.js";
+import { useStore as useRolePresentationStore } from "./role-presentation.js";
 
 export const useStore = defineStore("modal", {
 	state: () => {
@@ -42,6 +43,8 @@ export const useStore = defineStore("modal", {
 				return useLeaderboardsModalStore();
 			case "logout-warn-popup":
 				return useLogoutWarnPopupStore();
+			case "role-presentation":
+				return useRolePresentationStore();
 			}
 		}
 	},
