@@ -3,7 +3,11 @@
     class="auth-page__form-group"
     :data-is-invalid="props.errored"
   >
-    <label :for="props.name">
+    <label
+      :for="props.name"
+      @mouseover="shown = true"
+      @mouseout="shown = false"
+    >
       {{ props.label }}
       <span
         v-if="props.labelNote"
@@ -14,6 +18,7 @@
       <NoticeComponent
         v-if="props.type === 'email' && props.note"
         title="Pourquoi dois-je donner cette information ?"
+        :shown="shown"
       >
         Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody). Veillez à rentrer une adresse mail valide, vous devrez la vérifier.
       </NoticeComponent>
@@ -50,7 +55,6 @@
 import { ref } from "vue";
 import VisibilityToggle from "./VisibilityToggle.vue";
 import NoticeComponent from "../NoticeComponent.vue";
-
 
 const props = defineProps({
 	name: {
@@ -90,5 +94,6 @@ const props = defineProps({
 
 defineEmits(["model"]);
 
+const shown = ref(false);
 const content = ref(props.value);
 </script>
