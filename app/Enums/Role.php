@@ -105,7 +105,7 @@ enum Role: int
             self::Hunter => Team::Villagers->goal() . " À votre mort, vous pourrez **tirer** sur un joueur pour l'emporter dans la tombe avec vous.",
 
             self::WhiteWerewolf => Team::Loners->goal() . ", vous gagnez la partie lorsqu'il ne reste **aucun autre joueur**. Vous disposez d'un tour supplémentaire, une nuit sur deux, pour **tuer** un joueur. Ce joueur ne peut pas réssusciter quel que soit son rôle.",
-            self::Angel => Team::Loners->goal() . '. Au début de la partie une cible vous est assignée. Si cette cible meurt avant la deuxième nuit, vous **remportez la partie instantanément**.',
+            self::Angel => Team::Loners->goal() . '. Au début de la partie une cible vous est assignée. Si cette cible meurt avant la deuxième nuit, vous **remportez la partie instantanément**. Sinon, vous restez en vie sans aucun pouvoir et devez gagner avec le village',
             self::Parasite => Team::Loners->goal() . '. Une fois par nuit, vous pouvez contaminer entre 2 et 3 joueurs. Lorsque tous les joueurs encore en vie sont contaminés, vous **remportez la partie instantanément**.'
         };
     }

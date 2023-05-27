@@ -1,0 +1,40 @@
+.role-presentation__wrapper {
+	@extend .modal__main;
+
+	max-width: 450px;
+}
+
+header.role-presentation__header {
+	width: 100%;
+	text-align: end;
+}
+
+.role-presentation__content {
+	display: grid;
+	gap: space(3);
+	place-items: center;
+	text-align: center;
+
+	img {
+		height: 125px;
+		aspect-ratio: 1;
+	}
+}
+
+.role-presentation__side-group {
+	display: flex;
+	gap: space(3);
+}
+
+
+.role-presentation__side-group-right {
+	display: grid;
+	grid-template-rows: 1.5em auto;
+	align-items: center;
+
+	> div {
+		display: grid;
+		justify-items: flex-start;
+		gap: space(1);
+	}
+}

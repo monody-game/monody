@@ -51,7 +51,7 @@ enum Team: int
         return match ($this) {
             self::Werewolves => 'Loups-garous',
             self::Villagers => 'Villageois',
-            self::Loners => 'Solos',
+            self::Loners => 'Solitaires',
         };
     }
 

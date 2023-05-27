@@ -1,5 +1,9 @@
 @use "../../tools/functions" as *;
 
+.roles__note {
+	font-size: .85em;
+}
+
 .team__list {
 	display: grid;
 	margin-top: space(1);

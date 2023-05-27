@@ -49,23 +49,34 @@
         </button>
       </div>
     </div>
+
+    <Transition name="modal">
+      <RolePresentationModal
+        v-if="rolePresentationStore.isOpenned"
+        :role="store.toPresent"
+      />
+    </Transition>
   </BaseModal>
 </template>
 
 <script setup>
-import RolesModalPage from "./Pages/Roles/RolesModalPage.vue";
-import BaseModal from "./BaseModal.vue";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "../../stores/modals/game-creation-modal.js";
 import { useStore as useUserStore } from "../../stores/user.js";
+import { useStore as useRolePresentationStore } from "../../stores/modals/role-presentation.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
-import { useRouter } from "vue-router";
-import { ref } from "vue";
+import BaseModal from "./BaseModal.vue";
+import RolesModalPage from "./Pages/Roles/RolesModalPage.vue";
 import GameTypeSelectionModalPage from "./Pages/GameTypeSelectionModalPage.vue";
+import RolePresentationModal from "./RolePresentationModal.vue";
 
 const router = useRouter();
 const store = useStore();
 const userStore = useUserStore();
 const modalStore = useModalStore();
+const rolePresentationStore = useRolePresentationStore();
+
 const gameId = ref("");
 const currentPage = ref(1);
 const totalPage = ref(2);
