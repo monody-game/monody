@@ -85,6 +85,31 @@ enum Role: int
         };
     }
 
+    /**
+     * @return string Role's description, markdown-style
+     */
+    public function describe(): string
+    {
+        return "Vous êtes **{$this->stringify()}**. " . match ($this) {
+            self::Werewolf => Team::Werewolves->goal(),
+            self::InfectedWerewolf => Team::Werewolves->goal() . " Vous avez la possibiliter **d'infecter** un joueur tué par les loups, une fois par partie. Le joueur infecté **deviendra un loup**, tout en conservant ses pouvoirs.",
+            self::SurlyWerewolf => Team::Werewolves->goal() . ' Vous vous énervez facilement et vous pouvez **mordre** un joueur une fois par partie. Le joueur mordu **succombera à ses blessures** la nuit suivante.',
+
+            self::SimpleVillager => Team::Villagers->goal() . ' Vous ne possédez aucun pouvoir particulier, sauf votre intelligence !',
+            self::Psychic => Team::Villagers->goal() . " Vous pouvez **observer le rôle** d'un joueur une fois par nuit.",
+            self::Witch => Team::Villagers->goal() . ' Vous disposez de **2 potions**, permettant de respectivement de **tuer** et de **soigner** un joueur. Utilisez les intelligemment !',
+            self::LittleGirl => Team::Villagers->goal() . ' Vous pouvez **observer** le chat des loups. Vous ne pouvez pas mourir des loups lorsque le chasseur est en vie.',
+            self::Elder => Team::Villagers->goal() . " Vous disposez d'une **seconde vie** lorsque vous mourrez la nuit.",
+            self::Cupid => Team::Villagers->goal() . " Vous pouvez également gagner avec le couple. Vous devrez **mettre en couple** deux joueurs. Leur vie sera ainsi liée et si l'un des amoureux meurt, l'autre le suivra dans sa tombe.",
+            self::Guard => Team::Villagers->goal() . ' Vous pouvez **protéger** un joueur par nuit. Le joueur protégé ne peut pas mourir des loups.',
+            self::Hunter => Team::Villagers->goal() . " À votre mort, vous pourrez **tirer** sur un joueur pour l'emporter dans la tombe avec vous.",
+
+            self::WhiteWerewolf => Team::Loners->goal() . ", vous gagnez la partie lorsqu'il ne reste **aucun autre joueur**. Vous disposez d'un tour supplémentaire, une nuit sur deux, pour **tuer** un joueur. Ce joueur ne peut pas réssusciter quel que soit son rôle.",
+            self::Angel => Team::Loners->goal() . '. Au début de la partie une cible vous est assignée. Si cette cible meurt avant la deuxième nuit, vous **remportez la partie instantanément**.',
+            self::Parasite => Team::Loners->goal() . '. Une fois par nuit, vous pouvez contaminer entre 2 et 3 joueurs. Lorsque tous les joueurs encore en vie sont contaminés, vous **remportez la partie instantanément**.'
+        };
+    }
+
     public function weight(): int
     {
         return match ($this) {
@@ -95,10 +120,10 @@ enum Role: int
         };
     }
 
-    public function limit(): ?int
+    public function limit(): int
     {
         return match ($this) {
-            self::Werewolf, self::SimpleVillager => null,
+            self::Werewolf, self::SimpleVillager => -1,
             default => 1
         };
     }
@@ -124,7 +149,7 @@ enum Role: int
     }
 
     /**
-     * @return array<string, string|int|array|null>
+     * @return array<string, string|int|array>
      */
     public function full(): array
     {
@@ -138,16 +163,17 @@ enum Role: int
             'image' => $image,
             'limit' => $role->limit(),
             'weight' => $role->weight(),
+            'description' => $role->describe(),
             'team' => Team::role($role)->full(),
         ];
     }
 
-    public static function all(): array
+    public static function all(bool $markdown = false): array
     {
         $roles = [];
 
         foreach (Role::cases() as $role) {
-            $roles[] = $role->full();
+            $roles[] = array_map(fn ($value) => is_string($value) ? str_replace('*', '', $value) : $value, $role->full());
         }
 
         return $roles;

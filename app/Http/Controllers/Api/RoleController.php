@@ -12,14 +12,17 @@ use App\Http\Requests\GameIdRequest;
 use App\Http\Responses\JsonApiResponse;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
+use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
     use GameHelperTrait, MemberHelperTrait;
 
-    public function all(): JsonApiResponse
+    public function all(Request $request): JsonApiResponse
     {
-        return new JsonApiResponse(['roles' => Role::all()]);
+        $markdown = $request->query('markdown') ?? false;
+
+        return new JsonApiResponse(['roles' => Role::all($markdown)]);
     }
 
     public function game(string $gameId): JsonApiResponse
@@ -30,15 +33,22 @@ class RoleController extends Controller
         return new JsonApiResponse(['roles' => $roles]);
     }
 
-    public function get(int $id): JsonApiResponse
+    public function get(int $id, Request $request): JsonApiResponse
     {
         $role = Role::tryFrom($id);
+        $markdown = $request->query('markdown') ?? false;
 
-        if ($role !== null) {
-            return new JsonApiResponse(['role' => $role->full()]);
+        if ($role === null) {
+            return new JsonApiResponse(['message' => "Role with id $id not found."], Status::NOT_FOUND);
         }
 
-        return new JsonApiResponse(['message' => "Role with id $id not found."], Status::NOT_FOUND);
+        $role = $role->full();
+
+        if (!$markdown) {
+            $role = array_map(fn ($value) => is_string($value) ? str_replace('*', '', $value) : $value, $role);
+        }
+
+        return new JsonApiResponse(['role' => $role]);
     }
 
     public function group(int $group): JsonApiResponse

@@ -12,7 +12,7 @@ class RejectMultipleUniqueRoles implements ValidationRule
     {
         foreach ($value as $role) {
             $limit = Role::from($role)->limit();
-            if ($limit !== null && array_count_values($value)[$role] > $limit) {
+            if ($limit !== -1 && array_count_values($value)[$role] > $limit) {
                 $fail('Unique roles can\'t be used twice.');
             }
         }

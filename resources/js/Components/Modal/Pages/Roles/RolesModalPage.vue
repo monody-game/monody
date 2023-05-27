@@ -108,7 +108,7 @@ const getRoles = async function() {
 
 		list.roles.forEach((role) => {
 			role.image = window.location.origin + role.image;
-			if (role.limit === null) {
+			if (role.limit === -1) {
 				delete role.limit;
 			}
 		});

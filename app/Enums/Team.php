@@ -26,6 +26,15 @@ enum Team: int
         };
     }
 
+    public function goal(): string
+    {
+        return match ($this) {
+            self::Villagers => "Votre but est **d'éliminer les loups et rôles solitaires** afin de remporter la partie.",
+            self::Werewolves => "Votre but est **d'éliminer les villageois et rôles solitaires** afin de remporter la partie.",
+            self::Loners => 'Vous devez gagner seul'
+        };
+    }
+
     public function full(): array
     {
         $team = Team::from($this->value);

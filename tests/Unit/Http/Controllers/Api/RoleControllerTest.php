@@ -48,8 +48,31 @@ class RoleControllerTest extends TestCase
                         'id' => Role::Werewolf->value,
                         'name' => 'werewolf',
                         'display_name' => 'Loup-garou',
-                        'limit' => null,
+                        'limit' => -1,
                         'weight' => Role::Werewolf->weight(),
+                        'description' => str_replace('*', '', Role::Werewolf->describe()),
+                        'team' => [
+                            'id' => Team::Werewolves->value,
+                            'name' => Team::Werewolves->name(),
+                            'display_name' => Team::Werewolves->stringify(),
+                        ],
+                    ],
+                ],
+            ]);
+    }
+
+    public function testGettingOneRoleWithMarkdown(): void
+    {
+        $this->getJson('/api/roles/get/1?markdown=true')
+            ->assertJson([
+                'data' => [
+                    'role' => [
+                        'id' => Role::Werewolf->value,
+                        'name' => 'werewolf',
+                        'display_name' => 'Loup-garou',
+                        'limit' => -1,
+                        'weight' => Role::Werewolf->weight(),
+                        'description' => Role::Werewolf->describe(),
                         'team' => [
                             'id' => Team::Werewolves->value,
                             'name' => Team::Werewolves->name(),
