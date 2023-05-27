@@ -25,6 +25,7 @@ Route::group(['middleware' => ['auth:api', VerifiedEmailNeeded::class]], functio
 });
 
 Route::get('/roles', 'RoleController@all');
+Route::get('/roles/list', 'RoleController@list');
 Route::get('/roles/game/{gameId}', 'RoleController@game');
 Route::get('/roles/get/{id}', 'RoleController@get');
 Route::get('/roles/{group}', 'RoleController@group');

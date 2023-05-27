@@ -20,7 +20,7 @@ class RoleController extends Controller
 
     public function all(Request $request): JsonApiResponse
     {
-        $markdown = $request->query('markdown') ?? false;
+        $markdown = $request->query('markdown') === 'true';
 
         return new JsonApiResponse(['roles' => Role::all($markdown)]);
     }
@@ -96,6 +96,13 @@ class RoleController extends Controller
         );
 
         return new JsonApiResponse(status: Status::NO_CONTENT);
+    }
+
+    public function list(): JsonApiResponse
+    {
+        $roles = array_map(fn (Role $role) => mb_strtolower($role->stringify()), Role::cases());
+
+        return new JsonApiResponse(['roles' => $roles]);
     }
 
     private function pickMember(array $members, array $assigned): string
