@@ -32,7 +32,7 @@
           <InputComponent
             type="text"
             label="Nom d'utilisateur"
-            label_note="entre 3 et 24 caractères"
+            label-note="entre 3 et 24 caractères"
             name="username"
             :errored="errors.username.errored"
             :error="errors.username.text"
@@ -50,7 +50,7 @@
           <InputComponent
             type="password"
             label="Mot de passe"
-            label_note="plus de 8 caractères"
+            label-note="plus de 8 caractères"
             name="password"
             :errored="errors.password.errored"
             :error="errors.password.text"
@@ -81,7 +81,10 @@
             </button>
           </div>
         </form>
-        <!--        <div class="auth-page__lock">
+        <div
+          v-if="token === null"
+          class="auth-page__lock"
+        >
           <div class="auth-page__locked-popup">
             <div
               class="popup__wrapper"
@@ -112,7 +115,7 @@
               </p>
             </div>
           </div>
-        </div>-->
+        </div>
       </div>
     </div>
   </div>
