@@ -100,7 +100,11 @@ class RoleController extends Controller
 
     public function list(): JsonApiResponse
     {
-        $roles = array_map(fn (Role $role) => mb_strtolower($role->stringify()), Role::cases());
+        $roles = [];
+
+        foreach (Role::cases() as $role) {
+            $roles[$role->value] = mb_strtolower($role->stringify());
+        }
 
         return new JsonApiResponse(['roles' => $roles]);
     }

@@ -90,7 +90,7 @@ enum Role: int
      */
     public function describe(): string
     {
-        return "Vous êtes **{$this->stringify()}**. " . match ($this) {
+        return match ($this) {
             self::Werewolf => Team::Werewolves->goal(),
             self::InfectedWerewolf => Team::Werewolves->goal() . " Vous avez la possibiliter **d'infecter** un joueur tué par les loups, une fois par partie. Le joueur infecté **deviendra un loup**, tout en conservant ses pouvoirs.",
             self::SurlyWerewolf => Team::Werewolves->goal() . ' Vous vous énervez facilement et vous pouvez **mordre** un joueur une fois par partie. Le joueur mordu **succombera à ses blessures** la nuit suivante.',
