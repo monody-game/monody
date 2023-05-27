@@ -11,7 +11,7 @@
 
 	& .player__is-dead-shadow {
 		display: block;
-		height: 125px;
+		height: 100px;
 		aspect-ratio: 1 / 1;
 		background-color: #000000;
 		opacity: .45;
@@ -29,14 +29,14 @@
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		height: 70px;
+		height: 60px;
 		aspect-ratio: 1 / 1;
 	}
 }
 
 .player__avatar {
-  height: 125px;
-  border-radius: 20px;
+  height: 100px;
+  border-radius: 15px;
 	aspect-ratio: 1 / 1;
 	object-fit: cover;
 }
@@ -80,13 +80,13 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 20px;
-	aspect-ratio: 1;
+	height: 18px;
+	width: 18px;
 	border-radius: 50%;
 
 	> svg {
 		height: 14px;
-		aspect-ratio: 1;
+		width: 14px;
 	}
 }
 
@@ -100,9 +100,11 @@
 	color: var(--secondary);
 	background-color: var(--primary);
 	height: 20px;
+	width: 20px;
 
 	svg {
-		height: 15px;
+		height: 12px;
+		width: 12px;
 	}
 }
 
@@ -116,7 +118,8 @@
 	background-color: var(--success);
 
 	> svg {
-		height: 20px;
+		height: 18px;
+		width: 18px;
 		color: var(--light-background);
 	}
 }
@@ -141,8 +144,8 @@
 	background-color: var(--light-background);
 
 	& > svg {
-		height: 16px;
-		aspect-ratio: 1 / 1;
+		height: 13px;
+		aspect-ratio: 1;
 	}
 
 	& > * {
@@ -151,7 +154,7 @@
 }
 
 .player__is-mayor, .player__is-mayor svg {
-	height: 30px;
+	height: 27px;
 	aspect-ratio: 2 / 3;
 }
 
@@ -161,6 +164,7 @@
   border-radius: 31px;
 	display: flex;
 	align-items: center;
+	font-size: .9em;
 
 	&[data-is-owner="true"] {
 		padding-left: space(1.75);
@@ -246,16 +250,24 @@
 		height: 45px;
 	}
 
-	.player__is-wolf {
+	.player__badge {
 		height: 15px;
+		width: 15px;
+
+		svg {
+			height: 12px;
+			width: 12px;
+		}
 	}
 
-	.player__is-target {
-		height: 15px;
+	.player__is-guarded svg {
+		height: 10px;
+		width: 10px;
 	}
 
-	.player__is-target svg {
-		height: 12px;
+	.player__is-contaminated svg {
+			height: 15px;
+			width: 15px;
 	}
 
 	.player__is-mayor, .player__is-mayor svg {
@@ -263,7 +275,6 @@
 	}
 
 	.day .player__username, .night .player__username {
-		font-size: .9rem;
 		padding-inline: space(1);
 		padding-block: space(.5);
 	}
