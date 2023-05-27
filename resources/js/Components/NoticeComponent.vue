@@ -1,8 +1,8 @@
 <template>
   <div
     class="notice-component__wrapper"
-    @mouseover="content.style.display = 'grid'"
-    @mouseout="content.style.display = 'none'"
+    @mouseover="isShown = true"
+    @mouseout="isShown = false"
   >
     <svg
       class="notice__icon"
@@ -10,7 +10,7 @@
       <use href="/sprite.svg#question" />
     </svg>
     <div
-      ref="content"
+      :style="isShown ? 'display: grid;' : 'display: none;'"
       class="notice__content"
     >
       <p class="notice__title">
@@ -24,10 +24,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const props = defineProps({
-	title: String
+	title: String,
+	shown: {
+		type: Boolean,
+		required: false,
+		default: false
+	}
 });
-const content = ref(null);
+
+const isShown = ref(props.shown);
+
+watch(props, (value) => {
+	isShown.value = value.shown;
+});
+
 </script>

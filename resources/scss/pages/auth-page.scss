@@ -67,6 +67,11 @@
 	}
 }
 
+.auth-page__title-group {
+	display: grid;
+	gap: space(2);
+}
+
 .auth-page__form-group {
 	display: flex;
 	flex-direction: column;

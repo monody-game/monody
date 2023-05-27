@@ -15,7 +15,10 @@
         </p>
       </router-link>
       <div class="auth-page__form-wrapper">
-        <h1>S'inscrire</h1>
+        <div class="auth-page__title-group">
+          <h1>S'inscrire</h1>
+          <p>Les champs marqués d'une <span class="bold">*</span> sont obligatoires</p>
+        </div>
         <form
           class="register-page__form"
           method="post"
