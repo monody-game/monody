@@ -173,7 +173,7 @@ enum Role: int
         $roles = [];
 
         foreach (Role::cases() as $role) {
-            $roles[] = array_map(fn ($value) => is_string($value) ? str_replace('*', '', $value) : $value, $role->full());
+            $roles[] = array_map(fn ($value) => is_string($value) && !$markdown ? str_replace('*', '', $value) : $value, $role->full());
         }
 
         return $roles;

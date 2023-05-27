@@ -36,7 +36,7 @@ class RoleController extends Controller
     public function get(int $id, Request $request): JsonApiResponse
     {
         $role = Role::tryFrom($id);
-        $markdown = $request->query('markdown') ?? false;
+        $markdown = $request->query('markdown') === 'true';
 
         if ($role === null) {
             return new JsonApiResponse(['message' => "Role with id $id not found."], Status::NOT_FOUND);
