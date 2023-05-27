@@ -22,8 +22,8 @@
             v-for="role in villagers"
             :key="role.id"
             :role="role"
-            class="roles__item pointer"
-            @click="present(role)"
+            class="roles__item"
+            :presentable="true"
           />
         </div>
       </div>
@@ -41,8 +41,8 @@
             v-for="role in werewolves"
             :key="role.id"
             :role="role"
-            class="roles__item pointer"
-            @click="present(role)"
+            class="roles__item"
+            :presentable="true"
           />
         </div>
       </div>
@@ -60,8 +60,8 @@
             v-for="role in loners"
             :key="role.id"
             :role="role"
-            class="roles__item pointer"
-            @click="present(role)"
+            class="roles__item"
+            :presentable="true"
           />
         </div>
       </div>
@@ -91,11 +91,6 @@ onMounted(async () => {
 	await getTeams();
 	loading.value = false;
 });
-
-const present = (role) => {
-	useModalStore().open("role-presentation");
-	store.toPresent = role;
-};
 
 const getSelectedRoles = computed(() => {
 	const selectedIds = store.selectedRoles;
