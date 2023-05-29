@@ -7,7 +7,6 @@
       <p>
         Rendez vous dans le serveur Discord de Monody, et rejoignez le salon vocal : <a
           :href="voiceChannelLink"
-          target="_blank"
         >
           <svg
             width="24"
@@ -51,10 +50,10 @@ if (gameStore.discord === null || gameStore.discord.guild === "") {
 	setTimeout(async () => {
 		const res = await window.JSONFetch(`/game/${gameId}/discord`);
 		gameStore.discord = res.data.data;
-		voiceChannelLink.value = `https://discord.com/channels/${gameStore.discord.guild}/${gameStore.discord.voice_channel}`;
+		voiceChannelLink.value = `discord://discord.com/channels/${gameStore.discord.guild}/${gameStore.discord.voice_channel}`;
 	}, 500);
 } else {
-	voiceChannelLink.value = `https://discord.com/channels/${gameStore.discord.guild}/${gameStore.discord.voice_channel}`;
+	voiceChannelLink.value = `discord://discord.com/channels/${gameStore.discord.guild}/${gameStore.discord.voice_channel}`;
 }
 
 window.Echo.join(`game.${gameId}`)
