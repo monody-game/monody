@@ -1,0 +1,26 @@
+{
+	"short_name": "Monody",
+	"name": "Monody",
+	"author": "moon250",
+	"developer": {
+		"name": "moon250",
+		"url": "https://github.com/moon250"
+	},
+	"offline_enabled": false,
+	"icons": [
+		{
+			"src": "/images/monody-512.png",
+			"type": "image/png",
+			"size": "512x512"
+		},
+		{
+			"src": "/images/monody-192.png",
+			"type": "image/png",
+			"size": "192x192"
+		}
+	],
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#0f1127",
+	"lang": "fr"
+}

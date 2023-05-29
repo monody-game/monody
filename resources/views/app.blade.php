@@ -27,6 +27,9 @@
 	<meta property="twitter:image" content="https://monody.fr/images/monody.webp">
 
 	@vite('resources/js/app.js')
+
+	<!-- PWA -->
+	<link rel="manifest" href="/manifest.json">
 </head>
 <body>
 <main id="app"></main>
