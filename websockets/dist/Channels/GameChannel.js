@@ -36,7 +36,9 @@ export class GameChannel {
                 return clients.filter(client => client.id === member.socketId).length >= 0;
             return false;
         });
-        await client.set(`game:${gameId(channel)}:members`, JSON.stringify(members));
+        if (members.length > 0) {
+            await client.set(`game:${gameId(channel)}:members`, JSON.stringify(members));
+        }
         return members;
     }
     async join(socket, channel, member) {
