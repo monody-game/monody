@@ -63,6 +63,20 @@ class RoundController extends Controller
                     continue;
                 }
 
+                /** @var Role $role, the state is a role state by the condition above */
+                $role = Role::fromName($state->stringify());
+
+                if (
+                    !in_array(
+                        array_search($role->value, $game['assigned_roles'], true),
+                        $game['users'], true
+                    )
+                ) {
+                    $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
+                }
+
                 if (
                     !in_array($state->stringify(), $roles, true) &&
                     count(array_filter($roles, fn ($role) => str_contains($role, $state->stringify()))) === 0
