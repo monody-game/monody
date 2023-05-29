@@ -21,14 +21,14 @@ class AddContentSecurityPolicyHeaders
             return $response;
         }
 
-        $csp = "script-src 'nonce-" . Vite::cspNonce() . "' 'unsafe-inline'";
+        $csp = "script-src 'nonce-" . Vite::cspNonce() . "' 'self'";
 
         if (!app()->isProduction()) {
             $csp .= " 'unsafe-eval'";
         }
 
         return $response->withHeaders([
-            'Content-Security-Policy' => $csp . "; object-src 'none'; base-uri 'self'; form-action 'self'",
+            'Content-Security-Policy' => $csp . "; object-src 'none'; base-uri 'self'; form-action 'self';",
         ]);
     }
 }

@@ -33,3 +33,12 @@ console.log("%c %c Monody",
 );
 
 console.log("%c Version %s", textStyles, import.meta.env.VITE_APP_VERSION);
+
+
+// PWA
+
+window.addEventListener("load", () => {
+	if ("serviceWorker" in navigator) {
+		navigator.serviceWorker.register("/sw.js");
+	}
+});
