@@ -153,6 +153,11 @@ export class GameChannel {
 
 		setTimeout(async () => {
 			const isMember = await this.isMember(channel, member);
+			const game = JSON.parse(await client.get(`game:${id}`) as string)
+
+			if (!game) {
+				return;
+			}
 
 			if (isMember) {
 				return

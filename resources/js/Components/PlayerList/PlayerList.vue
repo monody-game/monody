@@ -15,6 +15,7 @@
       :alt="gameStore.assignedRole.display_name"
       :title="gameStore.assignedRole.display_name"
       class="game-page__role"
+      @click="present()"
     >
   </div>
 </template>
@@ -24,6 +25,8 @@ import { ref } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "../../stores/game.js";
 import { useStore as useChatStore } from "../../stores/chat.js";
+import { useStore as useRolePresentationStore } from "../../stores/modals/role-presentation.js";
+import { useStore as useModalStore } from "../../stores/modals/modal.js";
 import LogoSpinner from "../Spinners/LogoSpinner.vue";
 import GamePlayer from "./GamePlayer.vue";
 
@@ -33,6 +36,8 @@ const loading = ref(false);
 const gameStore = useStore();
 const route = useRoute();
 const chatStore = useChatStore();
+const rolePresentationStore = useRolePresentationStore();
+const modalStore = useModalStore();
 
 window.Echo.join(`game.${route.params.id}`)
 	.here((users) => {
@@ -48,6 +53,11 @@ window.Echo.join(`game.${route.params.id}`)
 		chatStore.send(false, "inandout_alert", user.username);
 		removeUser(user);
 	});
+
+const present = () => {
+	rolePresentationStore.role = gameStore.assignedRole;
+	modalStore.open("role-presentation");
+};
 
 const addUser = function (player) {
 	player = injectPlayersProperties([player])[0];
