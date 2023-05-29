@@ -74,6 +74,10 @@ class GameController extends Controller
                 continue;
             }
 
+			if (count($gameData['users']) === 0) {
+				continue;
+			}
+
             if ($this->fromLocalNetwork() && $gameData['type'] !== (int) $type && $type !== '*') {
                 continue;
             }
@@ -250,6 +254,11 @@ class GameController extends Controller
             $game['users'] = array_diff($game['users'], [$user->id]);
             Redis::set("game:$gameId", $game);
         }
+
+		/** @var array $list */
+		$list = $this->list()->data;
+
+		broadcast(new GameListUpdate($list['games']));
 
         return new JsonApiResponse(status: Status::NO_CONTENT);
     }
