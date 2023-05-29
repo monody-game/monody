@@ -21,7 +21,7 @@
           <h3>{{ store.role.display_name }}</h3>
           <div>
             <p><span class="bold">Camp : </span> {{ store.role.team.display_name }}</p>
-            <p><span class="bold">Limite par partie : </span> {{ store.role.limit === -1 ? 'Aucune' : store.role.limit }}</p>
+            <p><span class="bold">Limite par partie : </span> {{ "limit" in store.role ? store.role.limit : 'Aucune' }}</p>
           </div>
         </div>
       </div>
