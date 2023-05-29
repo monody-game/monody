@@ -22,8 +22,10 @@
         </template>
         <div>
           <img
+            class="pointer"
             :src="assignedRole.image + '?h=200&dpr=2'"
             :alt="assignedRole.display_name"
+            @click="present"
           >
         </div>
       </div>
@@ -42,6 +44,9 @@
       <span v-else>
         <span>du camp des <span class="bold">{{ assignedRole.team.display_name.toLowerCase() }}</span>.</span>
       </span>
+      <span>
+        <span>Cliquez sur l'image pour en savoir plus</span>
+      </span>
     </div>
   </BaseModal>
 </template>
@@ -51,6 +56,8 @@ import { nextTick, onUnmounted, ref } from "vue";
 import BaseModal from "./Modal/BaseModal.vue";
 import { useStore } from "../stores/chat.js";
 import { useStore as useGameStore } from "../stores/game.js";
+import { useStore as useRolePresentationStore } from "../stores/modals/role-presentation.js";
+import { useStore as useModalStore } from "../stores/modals/modal.js";
 
 const props = defineProps({
 	roles: {
@@ -67,11 +74,19 @@ const animationEnded = ref(false);
 const roleText = ref(null);
 const chatStore = useStore();
 const gameStore = useGameStore();
+const rolePresentationStore = useRolePresentationStore();
+const modalStore = useModalStore();
 const timeout = null;
 
 const roles = ref(props.roles);
 const assignedRole = roles.value.filter(role => role.id === parseInt(props.assignedRole))[0];
 const roleOverlay = ref("");
+
+const present = () => {
+	rolePresentationStore.role = assignedRole;
+	rolePresentationStore.opennedModal = "role-assignation";
+	modalStore.open("role-presentation");
+};
 
 const onAnimationEnd = async (e) => {
 	if (e.animationName === "slideRoles") {

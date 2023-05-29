@@ -155,9 +155,12 @@ window.Echo.join(`game.${gameId}`)
 		assignationPopupStore.isOpenned = true;
 
 		setTimeout(() => {
-			if (assignationPopupStore.isOpenned) {
-				modalStore.close();
+			if (rolePresentationStore.isOpenned) {
+				rolePresentationStore.close();
 			}
+
+			modalStore.opennedModal = "role-assignation";
+			modalStore.close();
 		}, 20000);
 	})
 	.listen(".game.kill", (e) => {
