@@ -14,7 +14,7 @@
       :src="gameStore.assignedRole.image"
       :alt="gameStore.assignedRole.display_name"
       :title="gameStore.assignedRole.display_name"
-      class="game-page__role"
+      class="game-page__role pointer"
       @click="present()"
     >
   </div>
