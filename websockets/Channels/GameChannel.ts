@@ -39,10 +39,14 @@ export class GameChannel {
 	async removeInactive(channel: string, members: MemberList) {
 		const clients = await this.io.in(channel).fetchSockets();
 		members = members.filter(member => {
-			if(member.socketId) return clients.filter(client => client.id === member.socketId).length >= 0;
+			if (member.socketId) return clients.filter(client => client.id === member.socketId).length >= 0;
 			return false;
 		});
-		await client.set(`game:${gameId(channel)}:members`, JSON.stringify(members));
+
+		if (members.length > 0) {
+			await client.set(`game:${gameId(channel)}:members`, JSON.stringify(members));
+		}
+
 		return members;
 	}
 
