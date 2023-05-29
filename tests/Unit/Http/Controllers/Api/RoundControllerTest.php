@@ -65,6 +65,17 @@ class RoundControllerTest extends TestCase
 
     public function testGettingOneRoundForASpecificGame()
     {
+        $users = User::factory(3)->create()->toArray();
+
+        Redis::update("game:{$this->game['id']}", function (&$game) use ($users) {
+            $game['users'] = [...array_map(fn ($user) => $user['id'], $users)];
+            $game['assigned_roles'] = [
+                $users[0]['id'] => Role::Werewolf->value,
+                $users[1]['id'] => Role::Werewolf->value,
+                $users[2]['id'] => Role::Psychic->value,
+            ];
+        });
+
         $round = $this
             ->get("/api/round/1/{$this->game['id']}")
             ->assertOk()
@@ -75,6 +86,17 @@ class RoundControllerTest extends TestCase
 
     public function testGettingAllRoundsForOneGame()
     {
+        $users = User::factory(3)->create()->toArray();
+
+        Redis::update("game:{$this->game['id']}", function (&$game) use ($users) {
+            $game['users'] = [...array_map(fn ($user) => $user['id'], $users)];
+            $game['assigned_roles'] = [
+                $users[0]['id'] => Role::Werewolf->value,
+                $users[1]['id'] => Role::Werewolf->value,
+                $users[2]['id'] => Role::Psychic->value,
+            ];
+        });
+
         $this
             ->get("/api/rounds/{$this->game['id']}")
             ->assertOk()
@@ -98,6 +120,16 @@ class RoundControllerTest extends TestCase
 
     public function testGettingRoundsForGameWithSimpleRoles()
     {
+        $users = User::factory(2)->create()->toArray();
+
+        Redis::update("game:{$this->secondGame['id']}", function (&$game) use ($users) {
+            $game['users'] = [...array_map(fn ($user) => $user['id'], $users)];
+            $game['assigned_roles'] = [
+                $users[0]['id'] => Role::Werewolf->value,
+                $users[1]['id'] => Role::SimpleVillager->value,
+            ];
+        });
+
         $this
             ->get("/api/round/2/{$this->secondGame['id']}")
             ->assertOk()
@@ -131,6 +163,16 @@ class RoundControllerTest extends TestCase
 
     public function testGettingRoundInAGameWithNoSimpleWerewolf()
     {
+        $users = User::factory(2)->create()->toArray();
+
+        Redis::update("game:{$this->thirdGame['id']}", function (&$game) use ($users) {
+            $game['users'] = [...array_map(fn ($user) => $user['id'], $users)];
+            $game['assigned_roles'] = [
+                $users[0]['id'] => Role::Werewolf->value,
+                $users[1]['id'] => Role::InfectedWerewolf->value,
+            ];
+        });
+
         $this
             ->get("/api/round/2/{$this->thirdGame['id']}")
             ->assertOk()
