@@ -7,6 +7,7 @@
       <p>
         Rendez vous dans le serveur Discord de Monody, et rejoignez le salon vocal : <a
           :href="voiceChannelLink"
+          target="_blank"
         >
           <svg
             width="24"
