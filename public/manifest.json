@@ -19,7 +19,8 @@
 			"size": "192x192"
 		}
 	],
-	"start_url": "/",
+	"start_url": "/play",
+	"homepage_url": "/",
 	"display": "standalone",
 	"background_color": "#0f1127",
 	"lang": "fr"
