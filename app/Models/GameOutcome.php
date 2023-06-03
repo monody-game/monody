@@ -14,9 +14,24 @@ class GameOutcome extends Model
 
     public $timestamps = false;
 
-	protected $casts = [
-		'winning_role' => Role::class
-	];
+    protected $casts = [
+        'role' => Role::class,
+        'win' => 'boolean',
+        'winning_role' => Role::class,
+        'composition' => 'array',
+        'users' => 'array',
+        'played_at' => 'datetime',
+    ];
 
-    protected $fillable = ['user_id', 'role_id', 'win', 'winning_role', 'round'];
+    protected $fillable = [
+        'user_id',
+        'role',
+        'win',
+        'winning_role',
+        'round',
+        'composition',
+        'owner_id',
+        'users',
+        'played_at',
+    ];
 }

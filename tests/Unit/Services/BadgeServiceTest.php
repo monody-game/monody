@@ -83,6 +83,7 @@ class BadgeServiceTest extends TestCase
 
         GameOutcome::factory(15)->create([
             'user_id' => $user->id,
+            'owner_id' => $user->id,
             'win' => true,
         ]);
 

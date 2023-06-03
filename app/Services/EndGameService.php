@@ -47,6 +47,8 @@ class EndGameService
         broadcast(new GameWin($payload, true, $winners));
         broadcast(new GameLoose($payload, true, $loosers));
 
+        $state = Redis::get("game:$gameId:state");
+
         $game = Redis::update("game:$gameId", fn (array &$game) => $game['ended'] = true);
 
         foreach ([...$winners, ...$loosers] as $userId) {
@@ -55,8 +57,13 @@ class EndGameService
 
             $outcome = new GameOutcome();
             $outcome->user_id = $userId;
-            $outcome->role_id = $this->getRoleByUserId($userId, $gameId)->value;
+            $outcome->role = $this->getRoleByUserId($userId, $gameId);
+            $outcome->owner_id = $game['owner']['id'];
             $outcome->win = $win;
+            $outcome->winning_role = $this->getRoleByUserId($winners[0], $gameId);
+            $outcome->round = $state['round'];
+            $outcome->composition = $game['roles'];
+            $outcome->users = $game['users'];
             $outcome->save();
 
             /** @var User $user user is in game so it must be found */

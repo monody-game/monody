@@ -33,12 +33,12 @@ class StatisticsController extends Controller
             return new JsonApiResponse(['statistics' => $stats]);
         }
 
-        $outcomes = GameOutcome::select('role_id', 'win')->where('user_id', $userId)->get();
+        $outcomes = GameOutcome::select('id', 'role', 'win')->where('user_id', $userId)->get();
 
         $stats['wins'] = $outcomes->where('win', true)->count();
         $stats['losses'] = $outcomes->where('win', false)->count();
 
-        $highestPossession = $outcomes->countBy('role_id')->sortDesc();
+        $highestPossession = $outcomes->map(fn ($outcome) => $outcome['role']->value)->countBy()->sortDesc();
         $highestPossessionOccurences = $highestPossession->first();
 
         if ($highestPossessionOccurences !== null) {
@@ -51,15 +51,14 @@ class StatisticsController extends Controller
             ];
         }
 
-        $highestWinRole = $outcomes->where('win', true)->countBy('role_id')->sortDesc();
+        $highestWinRole = $outcomes->where('win', true)->map(fn ($outcome) => $outcome['role']->value)->countBy()->sortDesc();
         $highestWinRoleOccurences = $highestWinRole->first();
 
         if ($highestWinRoleOccurences !== null) {
-            /** @var int $role */
             $role = $highestWinRole->search($highestWinRoleOccurences);
 
             $stats['highest_win_role'] = [
-                'role' => Role::from($role),
+                'role' => $role,
                 'occurences' => $highestWinRoleOccurences,
             ];
         }

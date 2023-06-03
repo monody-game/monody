@@ -41,7 +41,12 @@ class StatisticsControllerTest extends TestCase
 
         $outcome = new GameOutcome();
         $outcome->user_id = $user->id;
-        $outcome->role_id = Role::Psychic;
+        $outcome->owner_id = $user->id;
+        $outcome->role = Role::Psychic;
+        $outcome->winning_role = Role::Psychic;
+        $outcome->users = [];
+        $outcome->composition = [];
+        $outcome->round = 1;
         $outcome->win = true;
         $outcome->save();
 
@@ -77,11 +82,13 @@ class StatisticsControllerTest extends TestCase
         $stats->user_id = $user->id;
         $stats->save();
 
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::SimpleVillager->value, 'win' => true]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch->value, 'win' => true]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch->value, 'win' => false]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::Witch->value, 'win' => false]);
-        GameOutcome::create(['user_id' => $user->id, 'role_id' => Role::SimpleVillager->value, 'win' => true]);
+        $common = ['user_id' => $user->id, 'owner_id' => $user->id, 'round' => 1, 'composition' => [], 'users' => []];
+
+        GameOutcome::create(array_merge($common, ['role' => Role::SimpleVillager, 'winning_role' => Role::SimpleVillager, 'win' => true]));
+        GameOutcome::create(array_merge($common, ['role' => Role::Witch, 'winning_role' => Role::Witch, 'win' => true]));
+        GameOutcome::create(array_merge($common, ['role' => Role::Witch, 'winning_role' => Role::Witch, 'win' => false]));
+        GameOutcome::create(array_merge($common, ['role' => Role::Witch, 'winning_role' => Role::Witch, 'win' => false]));
+        GameOutcome::create(array_merge($common, ['role' => Role::SimpleVillager, 'winning_role' => Role::SimpleVillager, 'win' => true]));
 
         $this
             ->actingAs($user, 'api')
