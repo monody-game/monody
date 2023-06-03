@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,5 +14,9 @@ class GameOutcome extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['user_id', 'role_id', 'win'];
+	protected $casts = [
+		'winning_role' => Role::class
+	];
+
+    protected $fillable = ['user_id', 'role_id', 'win', 'winning_role', 'round'];
 }
