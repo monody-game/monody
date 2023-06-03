@@ -11,10 +11,14 @@ class GameOutcomeFactory extends Factory
     {
         return [
             'user_id' => $this->faker->uuid,
-            'role_id' => rand(1, 9),
+            'role' => rand(1, 9),
             'win' => (bool) rand(0, 1),
-			'winning_team' => Role::cases()[array_rand(Role::cases())]->name(),
-			'round' => rand(2, 10)
+            'winning_role' => Role::cases()[array_rand(Role::cases())]->value,
+            'round' => rand(2, 10),
+            'composition' => json_encode([]),
+            'owner_id' => $this->faker->uuid,
+            'users' => json_encode([]),
+            'played_at' => now()->toTimeString(),
         ];
     }
 }

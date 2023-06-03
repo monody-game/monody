@@ -19,12 +19,28 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            $table->tinyInteger('role_id');
+            $table->tinyInteger('role');
 
             $table->boolean('win');
-			/** We store the role instead of team, because it is easier to retrieve team from role, than reverse. It takes count of loners' wins */
-			$table->string('winning_role');
-			$table->tinyInteger('round');
+
+            /** We store the role instead of team, because it is easier to retrieve team from role, than reverse. It takes count of loners' wins */
+            $table->string('winning_role');
+
+            $table->tinyInteger('round');
+
+            /** Game's roles list */
+            $table->json('composition');
+
+            $table->uuid('owner_id');
+            $table
+                ->foreign('owner_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade');
+
+            $table->json('users');
+
+            $table->timestamp('played_at')->useCurrent();
         });
     }
 
