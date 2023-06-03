@@ -22,6 +22,9 @@ return new class extends Migration
             $table->tinyInteger('role_id');
 
             $table->boolean('win');
+			/** We store the role instead of team, because it is easier to retrieve team from role, than reverse. It takes count of loners' wins */
+			$table->string('winning_role');
+			$table->tinyInteger('round');
         });
     }
 
