@@ -8,20 +8,8 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('game_outcome', function (Blueprint $table) {
+        Schema::create('game_outcomes', function (Blueprint $table) {
             $table->id();
-
-            $table->uuid('user_id');
-            $table
-                ->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
-            $table->tinyInteger('role');
-
-            $table->boolean('win');
 
             /** We store the role instead of team, because it is easier to retrieve team from role, than reverse. It takes count of loners' wins */
             $table->string('winning_role');
@@ -29,7 +17,7 @@ return new class extends Migration
             $table->tinyInteger('round');
 
             /** Game's roles list */
-            $table->json('composition');
+            $table->json('assigned_roles');
 
             $table->uuid('owner_id');
             $table
@@ -38,7 +26,8 @@ return new class extends Migration
                 ->on('users')
                 ->onUpdate('cascade');
 
-            $table->json('users');
+            $table->json('game_users');
+            $table->json('winning_users');
 
             $table->timestamp('played_at')->useCurrent();
         });

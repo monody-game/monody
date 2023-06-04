@@ -5,33 +5,40 @@ namespace App\Models;
 use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class GameOutcome extends Model
 {
     use HasFactory;
 
-    protected $table = 'game_outcome';
+    protected $table = 'game_outcomes';
 
     public $timestamps = false;
 
     protected $casts = [
-        'role' => Role::class,
-        'win' => 'boolean',
         'winning_role' => Role::class,
-        'composition' => 'array',
-        'users' => 'array',
+        'assigned_roles' => 'array',
+        'game_users' => 'array',
         'played_at' => 'datetime',
+        'winning_users' => 'array',
     ];
 
     protected $fillable = [
-        'user_id',
-        'role',
-        'win',
         'winning_role',
-        'round',
-        'composition',
+        'assigned_roles',
+        'winning_users',
         'owner_id',
-        'users',
+        'game_users',
+        'round',
         'played_at',
     ];
+
+    /**
+     * @return BelongsToMany<User>
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)
+            ->withPivot('win', 'role', 'death_round', 'death_context');
+    }
 }

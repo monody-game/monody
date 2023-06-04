@@ -74,11 +74,11 @@ class InfectedWerewolfAction implements ActionInterface
             return;
         }
 
-        if (!array_key_exists('dead_users', $game) && in_array($targetId, $game['dead_users'], true)) {
+        if (!array_key_exists('dead_users', $game) && in_array($targetId, array_keys($game['dead_users']), true)) {
             return;
         }
 
-        $index = array_search($targetId, $game['dead_users'], true);
+        $index = array_search($targetId, array_keys($game['dead_users']), true);
         array_splice($game['dead_users'], (int) $index, 1);
         $deaths = array_filter($deaths, fn ($death) => $death['user'] !== $targetId);
 
@@ -95,7 +95,7 @@ class InfectedWerewolfAction implements ActionInterface
                     'list' => $game['werewolves'],
                 ],
                 true,
-                [...$game['werewolves'], ...$game['dead_users']]
+                [...$game['werewolves'], ...array_keys($game['dead_users'])]
             )
         );
 

@@ -34,7 +34,7 @@ class EndGameControllerTest extends TestCase
 
         Redis::set(
             "game:{$this->game['id']}",
-            array_merge(Redis::get("game:{$this->game['id']}"), ['dead_users' => [$this->user->id]])
+            array_merge(Redis::get("game:{$this->game['id']}"), ['dead_users' => [$this->user->id => []]])
         );
 
         $this
@@ -52,7 +52,7 @@ class EndGameControllerTest extends TestCase
 
         Redis::set("game:{$this->game['id']}", array_merge(
             Redis::get("game:{$this->game['id']}"),
-            ['dead_users' => [$this->user->id]]
+            ['dead_users' => [$this->user->id => ['round' => 1, 'context' => 'werewolves']]]
         ));
 
         $villager = $this->user;
@@ -158,7 +158,7 @@ class EndGameControllerTest extends TestCase
             ])
             ->assertForbidden();
 
-        Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), ['dead_users' => [$this->user->id]]));
+        Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), ['dead_users' => [$this->user->id => ['round' => 1, 'context' => 'white_werewolf']]]));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)

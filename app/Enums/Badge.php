@@ -106,13 +106,15 @@ enum Badge: int
         $outcomes = collect();
 
         if ($this === self::Wins || $this === self::Losses) {
-            $outcomes = GameOutcome::select('win')->where('user_id', $user->id)->get();
+            $outcomes = GameOutcome::whereHas('users', fn ($query) => $query->where('user_id', $user->id))->get()
+                ->load('users')
+                ->map(fn ($outcome) => $outcome->users->first());
         }
 
         return match ($this) {
             default => false,
-            self::Wins => $outcomes->where('win', true)->count() >= $this->steps()[$level - 1],
-            self::Losses => $outcomes->where('win', false)->count() >= $this->steps()[$level - 1],
+            self::Wins => $outcomes->where('pivot.win', true)->count() >= $this->steps()[$level - 1],
+            self::Losses => $outcomes->where('pivot.win', false)->count() >= $this->steps()[$level - 1],
             self::Level => $user->level >= $this->steps()[$level - 1],
         };
     }

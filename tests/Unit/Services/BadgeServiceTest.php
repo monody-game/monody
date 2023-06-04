@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services;
 
 use App\Enums\Badge;
+use App\Enums\Role;
 use App\Models\Exp;
 use App\Models\GameOutcome;
 use App\Models\User;
@@ -82,10 +83,8 @@ class BadgeServiceTest extends TestCase
         $user = User::factory()->create();
 
         GameOutcome::factory(15)->create([
-            'user_id' => $user->id,
             'owner_id' => $user->id,
-            'win' => true,
-        ]);
+        ])->map(fn ($outcome) => $outcome->users()->attach($user->id, ['win' => true, 'role' => Role::Werewolf]));
 
         $this->assertTrue(BadgeService::canAccess($user, Badge::Wins));
         $this->assertFalse(BadgeService::canAccess($user, Badge::Losses));

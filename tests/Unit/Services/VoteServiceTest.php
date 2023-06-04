@@ -141,7 +141,7 @@ class VoteServiceTest extends TestCase
             ];
         });
 
-        $this->assertSame([$this->secondUser->id], Redis::get("game:$gameId")['dead_users']);
+        $this->assertSame([$this->secondUser->id => ['round' => 1, 'context' => 'vote']], Redis::get("game:$gameId")['dead_users']);
     }
 
     public function testReturnsFalseIfThereIsNoVotes()
@@ -268,6 +268,7 @@ class VoteServiceTest extends TestCase
 
         Redis::set("game:{$this->game['id']}:state", [
             'status' => State::Vote->value,
+            'round' => 1,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
             'counterDuration' => State::Vote->duration(),
         ]);
@@ -281,6 +282,7 @@ class VoteServiceTest extends TestCase
 
         Redis::set("game:{$this->secondGame['id']}:state", [
             'status' => State::Vote->value,
+            'round' => 1,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
             'counterDuration' => State::Vote->duration(),
         ]);
@@ -294,6 +296,7 @@ class VoteServiceTest extends TestCase
 
         Redis::set("game:{$this->thirdGame['id']}:state", [
             'status' => State::Vote->value,
+            'round' => 1,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
             'counterDuration' => State::Vote->duration(),
         ]);

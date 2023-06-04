@@ -211,7 +211,7 @@ class GameController extends Controller
                     'list' => $werewolves,
                 ],
                 true,
-                [...$werewolves, ...$game['dead_users']]
+                [...$werewolves, ...array_keys($game['dead_users'])]
             )
         );
 
@@ -292,7 +292,7 @@ class GameController extends Controller
             ],
             'roles' => $game['roles'],
             'role' => array_key_exists($owner->id, $game['assigned_roles']) ? Role::from($game['assigned_roles'][$userId])->full() : null,
-            'dead_users' => $game['dead_users'],
+            'dead_users' => array_keys($game['dead_users']),
             'voted_users' => $votes,
             'state' => $state,
             'current_interactions' => $interactions,

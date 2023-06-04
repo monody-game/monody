@@ -51,20 +51,35 @@ class EndGameService
 
         $game = Redis::update("game:$gameId", fn (array &$game) => $game['ended'] = true);
 
+        $outcome = new GameOutcome();
+        $outcome->owner_id = $game['owner']['id'];
+        $outcome->winning_role = $this->getRoleByUserId($winners[0], $gameId);
+        $outcome->round = $state['round'];
+        $outcome->assigned_roles = $game['roles'];
+        $outcome->game_users = $game['users'];
+        $outcome->winning_users = $winners;
+        $outcome->save();
+
         foreach ([...$winners, ...$loosers] as $userId) {
             $win = in_array($userId, $winners, true);
             $stat = Statistic::firstOrCreate(['user_id' => $userId]);
 
-            $outcome = new GameOutcome();
-            $outcome->user_id = $userId;
-            $outcome->role = $this->getRoleByUserId($userId, $gameId);
-            $outcome->owner_id = $game['owner']['id'];
-            $outcome->win = $win;
-            $outcome->winning_role = $this->getRoleByUserId($winners[0], $gameId);
-            $outcome->round = $state['round'];
-            $outcome->composition = $game['roles'];
-            $outcome->users = $game['users'];
-            $outcome->save();
+            $pivotAttributes = [
+                'role' => $this->getRoleByUserId($userId, $gameId),
+                'win' => $win,
+            ];
+
+            if (array_key_exists($userId, $game['dead_users'])) {
+                $pivotAttributes = array_merge($pivotAttributes, [
+                    'death_round' => $game['dead_users'][$userId]['round'],
+                    'death_context' => $game['dead_users'][$userId]['context'],
+                ]);
+            }
+
+            $outcome->users()->attach(
+                $userId,
+                $pivotAttributes
+            );
 
             /** @var User $user user is in game so it must be found */
             $user = User::where('id', $userId)->first();
@@ -106,8 +121,8 @@ class EndGameService
     {
         $game = Redis::get("game:$gameId");
         $state = Redis::get("game:$gameId:state");
-        $werewolves = $this->getUsersByTeam(Team::Werewolves, $gameId);
-        $aliveUsers = array_diff($game['users'], $game['dead_users']);
+        $werewolves = array_diff($this->getUsersByTeam(Team::Werewolves, $gameId), array_keys($game['dead_users']));
+        $aliveUsers = array_diff($game['users'], array_keys($game['dead_users']));
         $couple = array_key_exists('couple', $game) ? $game['couple'] : [];
 
         sort($aliveUsers);
@@ -121,9 +136,14 @@ class EndGameService
         }
 
         if (
-            $werewolves === $this->getUserIdByRole(Role::WhiteWerewolf, $gameId) ||
-            in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
-            $this->alive($this->getUserIdByRole(Role::Parasite, $gameId)[0], $gameId)
+            (
+                in_array(Role::WhiteWerewolf->value, array_keys($game['roles']), true) &&
+                $werewolves === $this->getUserIdByRole(Role::WhiteWerewolf, $gameId)
+            ) ||
+            (
+                in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
+                $this->alive($this->getUserIdByRole(Role::Parasite, $gameId)[0], $gameId)
+            )
         ) {
             return Team::Loners;
         }
@@ -131,8 +151,8 @@ class EndGameService
         if (
             $state['round'] <= 1 &&
             array_key_exists('angel_target', $game) &&
-            in_array($game['angel_target'], $game['dead_users'], true) &&
-            !in_array($this->getUserIdByRole(Role::Angel, $gameId)[0], $game['dead_users'], true)
+            in_array($game['angel_target'], array_keys($game['dead_users']), true) &&
+            !in_array($this->getUserIdByRole(Role::Angel, $gameId)[0], array_keys($game['dead_users']), true)
         ) {
             return Team::Loners;
         }
@@ -153,7 +173,7 @@ class EndGameService
         $villagers = $this->getUsersByTeam(Team::Villagers, $gameId);
         $werewolves = array_filter($game['werewolves'], fn ($werewolf) => $this->alive($werewolf, $gameId));
         $villagers = array_filter($villagers, fn ($villager) => !in_array($villager, $werewolves, true));
-        $aliveUsers = array_diff($game['users'], $game['dead_users']);
+        $aliveUsers = array_diff($game['users'], array_keys($game['dead_users']));
 
         if (
             array_key_exists('couple', $game) &&
@@ -164,13 +184,13 @@ class EndGameService
         }
 
         if (in_array(Role::WhiteWerewolf->value, array_keys($game['roles']), true)) {
-            return !in_array($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], $game['dead_users'], true) &&
+            return !in_array($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], array_keys($game['dead_users']), true) &&
                 count($werewolves) > 1;
         }
 
         if (in_array(Role::Parasite->value, array_keys($game['roles']), true)) {
-            return !in_array($this->getUserIdByRole(Role::Parasite, $gameId)[0], $game['dead_users'], true) &&
-                count($game['contaminated']) < (count(array_diff($game['users'], $game['dead_users'])) - 1);
+            return !in_array($this->getUserIdByRole(Role::Parasite, $gameId)[0], array_keys($game['dead_users']), true) &&
+                count($game['contaminated']) < (count(array_diff($game['users'], array_keys($game['dead_users']))) - 1);
         }
 
         return $villagers !== [] && $werewolves !== [];
@@ -191,7 +211,7 @@ class EndGameService
                 if (
                     in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
                     $this->alive($this->getUserIdByRole(Role::Parasite, $gameId)[0], $gameId) &&
-                    count($game['contaminated']) === count(array_diff($game['users'], $game['dead_users'])) - 1
+                    count($game['contaminated']) === count(array_diff($game['users'], array_keys($game['dead_users']))) - 1
                 ) {
                     return $this->getUserIdByRole(Role::Parasite, $gameId);
                 } elseif (

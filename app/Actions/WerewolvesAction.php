@@ -39,7 +39,7 @@ class WerewolvesAction implements ActionInterface
             'gameId' => $this->gameId,
             'type' => InteractionAction::Kill->value,
             'votedPlayers' => $this->service::getVotes($this->gameId),
-        ], true, [...$this->getUsersByTeam(Team::Werewolves, $this->gameId), ...$game['dead_users']]));
+        ], true, [...$this->getUsersByTeam(Team::Werewolves, $this->gameId), ...array_keys($game['dead_users'])]));
     }
 
     public function close(string $gameId): void
