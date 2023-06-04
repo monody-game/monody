@@ -71,13 +71,13 @@ class WitchAction implements ActionInterface
             return;
         }
 
-        if (!array_key_exists('dead_users', $game) && in_array($targetId, $game['dead_users'], true)) {
+        if (!array_key_exists('dead_users', $game) && in_array($targetId, array_keys($game['dead_users']), true)) {
             return;
         }
 
         $deaths = Redis::get("game:$this->gameId:deaths") ?? [];
 
-        $index = array_search($targetId, $game['dead_users'], true);
+        $index = array_search($targetId, array_keys($game['dead_users']), true);
         array_splice($game['dead_users'], (int) $index, 1);
         $deaths = array_filter($deaths, fn ($death) => $death['user'] !== $targetId);
 

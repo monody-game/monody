@@ -164,7 +164,7 @@ class GameInteractionControllerTest extends TestCase
 
         Redis::set(
             "game:$gameId",
-            array_merge(Redis::get("game:$gameId"), ['dead_users' => [$this->user->id]])
+            array_merge(Redis::get("game:$gameId"), ['dead_users' => [$this->user->id => []]])
         );
 
         $res = $this

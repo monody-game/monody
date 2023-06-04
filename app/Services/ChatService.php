@@ -62,7 +62,7 @@ class ChatService
 
         broadcast(new MessageSent($message, true, [
             ...$this->getUsersByTeam(Team::Werewolves, $data['gameId']),
-            ...$game['dead_users'],
+            ...array_keys($game['dead_users']),
         ]));
 
         /** @var array{}|string[] $littleGirl */

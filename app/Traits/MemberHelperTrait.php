@@ -60,7 +60,7 @@ trait MemberHelperTrait
     {
         $game = Redis::get("game:$gameId") ?? [];
 
-        if (array_key_exists('dead_users', $game) && in_array($userId, $game['dead_users'], true)) {
+        if (array_key_exists('dead_users', $game) && array_key_exists($userId, $game['dead_users'])) {
             return false;
         }
 
@@ -122,6 +122,7 @@ trait MemberHelperTrait
             return false;
         }
 
+        $state = Redis::get("game:$gameId:state");
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
 
         if (
@@ -170,7 +171,10 @@ trait MemberHelperTrait
         ) {
             Redis::update("game:$gameId:deaths", fn (array &$deaths) => [...$deaths, ['user' => $userId, 'context' => $context]]);
 
-            $game['dead_users'][] = $userId;
+            $game['dead_users'][$userId] = [
+                'round' => $state['round'],
+                'context' => $context,
+            ];
 
             Redis::set("game:$gameId", $game);
 
@@ -179,7 +183,10 @@ trait MemberHelperTrait
             return $this->kill($otherPair[0], $gameId, 'couple');
         }
 
-        $game['dead_users'][] = $userId;
+        $game['dead_users'][$userId] = [
+            'round' => $state['round'],
+            'context' => $context,
+        ];
 
         Redis::set("game:$gameId", $game);
 

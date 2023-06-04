@@ -33,7 +33,7 @@ class AngelAction implements ActionInterface
     {
         $game = Redis::get("game:$this->gameId");
 
-        return in_array($game['angel_target'], $game['dead_users'], true);
+        return in_array($game['angel_target'], array_keys($game['dead_users']), true);
     }
 
     public function updateClients(string $userId): void
@@ -65,7 +65,7 @@ class AngelAction implements ActionInterface
     {
         $game = Redis::get("game:$gameId");
 
-        if (in_array($game['angel_target'], $game['dead_users'], true)) {
+        if (in_array($game['angel_target'], array_keys($game['dead_users']), true)) {
             $this->service->end($gameId, $this->getUserIdByRole(Role::Angel, $gameId));
         }
     }
@@ -77,7 +77,7 @@ class AngelAction implements ActionInterface
     {
         $game = Redis::get("game:$gameId");
 
-        if (in_array($game['angel_target'], $game['dead_users'], true) && !in_array($this->getUserIdByRole(Role::Angel, $gameId)[0], $game['dead_users'], true)) {
+        if (in_array($game['angel_target'], array_keys($game['dead_users']), true) && !in_array($this->getUserIdByRole(Role::Angel, $gameId)[0], $game['dead_users'], true)) {
             return true;
         }
 

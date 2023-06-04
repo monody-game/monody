@@ -29,16 +29,25 @@ class StatisticsController extends Controller
             'most_possessed_role' => null,
         ];
 
-        if (GameOutcome::where('user_id', $userId)->doesntExist()) {
+        $outcomes = GameOutcome::whereHas('users', fn ($query) => $query->where('user_id', $userId));
+
+        if ($outcomes->doesntExist()) {
             return new JsonApiResponse(['statistics' => $stats]);
         }
 
-        $outcomes = GameOutcome::select('id', 'role', 'win')->where('user_id', $userId)->get();
+        $outcomes = $outcomes->get();
 
-        $stats['wins'] = $outcomes->where('win', true)->count();
-        $stats['losses'] = $outcomes->where('win', false)->count();
+        $userStats = $outcomes->map(
+            fn ($outcome) => $outcome->load('users')
+                ->users
+                ->filter(fn ($user) => $user->id === $userId)
+                ->first()
+        );
 
-        $highestPossession = $outcomes->map(fn ($outcome) => $outcome['role']->value)->countBy()->sortDesc();
+        $stats['wins'] = $userStats->where('pivot.win', true)->count();
+        $stats['losses'] = $userStats->where('pivot.win', false)->count();
+
+        $highestPossession = $userStats->map(fn ($outcome) => $outcome['pivot']['role'])->countBy()->sortDesc();
         $highestPossessionOccurences = $highestPossession->first();
 
         if ($highestPossessionOccurences !== null) {
@@ -51,7 +60,7 @@ class StatisticsController extends Controller
             ];
         }
 
-        $highestWinRole = $outcomes->where('win', true)->map(fn ($outcome) => $outcome['role']->value)->countBy()->sortDesc();
+        $highestWinRole = $userStats->where('pivot.win', true)->map(fn ($outcome) => $outcome['pivot']['role'])->countBy()->sortDesc();
         $highestWinRoleOccurences = $highestWinRole->first();
 
         if ($highestWinRoleOccurences !== null) {

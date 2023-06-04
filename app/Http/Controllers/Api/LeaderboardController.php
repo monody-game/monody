@@ -6,9 +6,9 @@ use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
 use App\Models\Elo;
-use App\Models\GameOutcome;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class LeaderboardController extends Controller
 {
@@ -68,23 +68,27 @@ class LeaderboardController extends Controller
      */
     private function byWins(): Collection
     {
-        return GameOutcome::limit(10)
-            ->selectRaw('count(win) as wins, user_id')
-            ->where('win', true)
-            ->groupBy('user_id')
-            ->orderBy('wins', 'desc')
-            ->get()
-            ->map(function (GameOutcome $outcome) {
-                /** @var int $wins */
-                $wins = $outcome['wins'];
+        // Magic query from stackoverflow... Does exactly what we need, if it fails, I can't fix it 👍
+        $results = collect(DB::select("
+			SELECT user_id, COUNT(*) as wins
+			FROM game_outcomes
+		    CROSS JOIN JSON_TABLE(game_outcomes.winning_users, '$[*]' COLUMNS (user_id VARCHAR(255) PATH '$')) jsontable
+		    GROUP BY user_id
+		    ORDER BY wins DESC
+		"));
 
-                /** @var User $user */
-                $user = User::select(['id', 'username', 'avatar', 'level'])->find($outcome->user_id);
+        /** @phpstan-ignore-next-line too hard to make phpstan understand laravel's magic ... */
+        return $results
+            ->map(function ($result) {
+                $user = User::find($result->user_id);
 
-                return [
-                    'information' => $wins,
-                    'user' => $user,
-                ];
-            });
+                // We still check the case where the user is deleted
+                if ($user === null) {
+                    return false;
+                }
+
+                return ['user' => $user, 'information' => $result->wins];
+            })
+            ->filter(); // We delete rows were users does not exist
     }
 }

@@ -285,6 +285,7 @@ class InteractionServiceTest extends TestCase
             'status' => State::Vote->value,
             'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
             'counterDuration' => State::Vote->duration(),
+            'round' => 1,
         ]);
         Redis::set("game:{$this->game['id']}", $additionnalKeys);
 

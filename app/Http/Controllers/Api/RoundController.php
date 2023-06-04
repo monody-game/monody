@@ -91,9 +91,9 @@ class RoundController extends Controller
                     in_array(Role::Hunter->value, array_values($game['assigned_roles']), true) &&
                     count($this->getUserIdByRole(Role::Hunter, $gameId)) > 0 &&
                     (
-                        in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $game['dead_users'], true) &&
+                        in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], array_keys($game['dead_users']), true) &&
                         !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $deaths, true) ||
-                        !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $game['dead_users'], true)
+                        !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], array_keys($game['dead_users']), true)
                     )
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);

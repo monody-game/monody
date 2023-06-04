@@ -33,7 +33,7 @@ class GameUsersControllerTest extends TestCase
 
         Redis::set('game:id', [
             'assigned_roles' => [$this->secondUser->id => 1],
-            'dead_users' => [$this->secondUser->id],
+            'dead_users' => [$this->secondUser->id => []],
         ]);
 
         $response = $this->actingAs($this->secondUser, 'api')
