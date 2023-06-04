@@ -120,7 +120,7 @@ export class GameChannel {
         const id = gameId(channel);
         const game = JSON.parse(await client.get(`game:${id}`));
         const state = await this.stateManager.getState(id);
-        if (!game.is_started || state === EndState.data.state.id) {
+        if (!game.is_started || state.status === EndState.data.state.id) {
             this.io.to(channel).emit("presence:leaving", channel, member);
         }
         else {
