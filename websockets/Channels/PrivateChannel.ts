@@ -1,7 +1,7 @@
 import fetch from "../Helpers/fetch.js";
 import { error, log, warn } from "../Logger.js";
 import {Socket} from "socket.io";
-import {DataPayload} from "../IoServer";
+import {DataPayload} from "../IoServer.js";
 
 export class PrivateChannel {
 	authenticate(socket: Socket, data: DataPayload) {
