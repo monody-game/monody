@@ -13,6 +13,10 @@
           <use href="/sprite.svg#death" />
         </svg>
       </span>
+      <span
+        v-if="isWerewolf === true"
+        class="message__is-wolf"
+      />
       <img
         :src="avatar"
         alt=""
@@ -30,11 +34,24 @@
 </template>
 
 <script setup>
+import { useStore } from "../../stores/game.js";
+import { ref } from "vue";
+
 const props = defineProps({
 	message: {
 		type: Object,
 		required: true
 	}
 });
+
+const store = useStore();
 const avatar = props.message.author.avatar + "?h=50&dpr=2";
+
+const isWerewolf = ref(store.werewolves.includes(props.message.author.id));
+
+store.$subscribe((mutation, state) => {
+	if (state.werewolves.includes(props.message.author.id)) {
+		isWerewolf.value = true;
+	}
+});
 </script>

@@ -124,6 +124,19 @@
 	}
 }
 
+.message__is-wolf {
+	position: absolute;
+	top: 0;
+	right: 0;
+
+	height: 14px;
+	width: 14px;
+
+	border-radius: 50%;
+
+	background-color: #e50000;
+}
+
 .message__avatar {
 	position: relative;
 }
