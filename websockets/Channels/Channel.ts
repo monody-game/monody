@@ -3,7 +3,7 @@ import { PrivateChannel } from "./PrivateChannel.js";
 import { error, log } from "../Logger.js";
 import {Server, Socket} from "socket.io";
 import {EventEmitter} from "node:events";
-import {DataPayload} from "../IoServer";
+import {DataPayload} from "../IoServer.js";
 
 export class Channel {
 	private privateChannels = ["private-*", "presence-*"];

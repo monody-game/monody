@@ -1,4 +1,4 @@
-class ChatService {
+export class ChatService {
     static send(socket, channel, message, type = "message", to = null) {
         if (to) {
             socket = socket.to(to);
@@ -22,4 +22,3 @@ class ChatService {
         this.send(socket, channel, message, "error", to);
     };
 }
-export { ChatService };
