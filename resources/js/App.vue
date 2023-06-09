@@ -1,6 +1,6 @@
 <template>
   <Suspense>
-    <DebugBar />
+    <DebugBar v-if="isDev" />
   </Suspense>
   <Transition name="modal">
     <PopupComponent v-if="popupStore.isOpenned" />
@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { watch } from "vue";
+import { ref, watch } from "vue";
 import { useStore } from "./stores/modals/popup.js";
 import { useStore as useUserStore } from "./stores/user.js";
 import { useStore as useAlertStore } from "./stores/alerts.js";
@@ -26,10 +26,25 @@ const popupStore = useStore();
 const userStore = useUserStore();
 const alertStore = useAlertStore();
 const badgeStore = useBadgesStore();
-const searchURL = new URL(window.location);
+const url = new URL(window.location);
+const isDev = ref(localStorage.getItem("dev") === "true");
 
-if (searchURL.searchParams.has("token")) {
-	localStorage.setItem("restricted_request_token", searchURL.searchParams.get("token"));
+if (url.searchParams.has("token")) {
+	localStorage.setItem("restricted_request_token", url.searchParams.get("token"));
+
+	url.searchParams.delete("token");
+	location.replace(url.href);
+}
+
+if (url.searchParams.has("dev")) {
+	if (localStorage.getItem("dev") === "true") {
+		localStorage.setItem("dev", false);
+	} else {
+		localStorage.setItem("dev", true);
+	}
+
+	url.searchParams.delete("dev");
+	location.replace(url.href);
 }
 
 const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: dark)");
