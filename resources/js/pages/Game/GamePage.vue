@@ -41,7 +41,10 @@
       </Transition>
       <Chat />
       <LogoSpinner v-if="loading" />
-      <PlayerList />
+      <div class="game-page__side">
+        <PlayerList />
+        <GameInformationBubble />
+      </div>
     </div>
     <Transition name="modal">
       <ShareGameModal v-if="shareModalStore.isOpenned" />
@@ -85,6 +88,7 @@ import ActivityConfirmationModal from "../../Components/Modal/ActivityConfirmati
 import GameDetailsModal from "../../Components/Modal/GameDetailsModal.vue";
 import GameVocalInvitation from "../../Components/Modal/GameVocalInvitation.vue";
 import RolePresentationModal from "../../Components/Modal/RolePresentationModal.vue";
+import GameInformationBubble from "../../Components/GameInformationBubble.vue";
 
 const route = useRoute();
 const store = useStore();
