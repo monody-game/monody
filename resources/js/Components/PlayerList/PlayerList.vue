@@ -61,7 +61,8 @@ const present = () => {
 
 const addUser = function (player) {
 	player = injectPlayersProperties([player])[0];
-	if (!playerList.value.includes(player)) {
+
+	if (playerList.value.filter(user => user.id === player.id).length < 1) {
 		playerList.value.push(player);
 	} else {
 		console.warn(`User ${player.id} was already shown in game`);
