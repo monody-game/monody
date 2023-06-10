@@ -29,6 +29,12 @@
 	color: var(--light-background);
 }
 
+.game-page__side {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
 .game-page__header {
   display: flex;
 	align-items: center;

@@ -1,0 +1,54 @@
+@use "../tools/functions" as *;
+
+.information-bubble_main {
+	background-color: var(--light-background);
+	color: var(--dark-background);
+	opacity: .8;
+
+	display: flex;
+	gap: space(2);
+	align-items: center;
+
+	padding: space(2);
+	height: calc(32px + 2 * space(2));
+
+	position: absolute;
+	right: space(5);
+	left: space(2);
+	bottom: space(2);
+
+	animation: informationBubbleEntry .6s;
+
+	svg {
+		height: 32px;
+		width: 32px;
+	}
+}
+
+.information-bubble_main_out {
+	animation: informationBubbleOut .6s;
+}
+
+@keyframes informationBubbleEntry {
+	0% {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	100% {
+		opacity: .8;
+		transform: translateY(0);
+	}
+}
+
+@keyframes informationBubbleOut {
+	from {
+		opacity: .8;
+		transform: translateY(0);
+	}
+
+	to {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+}
