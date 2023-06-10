@@ -190,7 +190,7 @@ const userID = computed(() => {
 window.Echo
 	.join(`game.${gameId.value}`)
 	.joining((user) => {
-		if (user.user_id === props.player.id) {
+		if (user.id === props.player.id) {
 			isDisconnected.value = false;
 		}
 	})
