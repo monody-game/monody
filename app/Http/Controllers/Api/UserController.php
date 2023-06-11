@@ -15,11 +15,11 @@ class UserController extends Controller
     public function user(Request $request): JsonApiResponse
     {
         return new JsonApiResponse([
-            'user' => $request->user()->makeVisible([
-				'email',
-				'email_verified_at',
-				'discord_linked_at'
-			]),
+            'user' => $request->user()?->makeVisible([
+                'email',
+                'email_verified_at',
+                'discord_linked_at',
+            ]),
         ]);
     }
 
@@ -41,7 +41,14 @@ class UserController extends Controller
         if ($request->has('email') && $user->hasVerifiedEmail() === false) {
             $user->sendEmailVerificationNotification();
 
-            return JsonApiResponse::make(['user' => $user])
+            return JsonApiResponse::make([
+                'user' => $user
+                    ->makeVisible([
+                        'email',
+                        'email_verified_at',
+                        'discord_linked_at',
+                    ]),
+            ])
                 ->withPopup(
                     AlertType::Info,
                     "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
@@ -51,7 +58,13 @@ class UserController extends Controller
                 );
         }
 
-        return new JsonApiResponse(['user' => $user]);
+        return new JsonApiResponse([
+            'user' => $user->makeVisible([
+                'email',
+                'email_verified_at',
+                'discord_linked_at',
+            ]),
+        ]);
     }
 
     public function discord(string $discordId): JsonApiResponse
