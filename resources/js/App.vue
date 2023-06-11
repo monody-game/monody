@@ -29,13 +29,6 @@ const badgeStore = useBadgesStore();
 const url = new URL(window.location);
 const isDev = ref(localStorage.getItem("dev") === "true");
 
-if (url.searchParams.has("token")) {
-	localStorage.setItem("restricted_request_token", url.searchParams.get("token"));
-
-	url.searchParams.delete("token");
-	location.replace(url.href);
-}
-
 if (url.searchParams.has("dev")) {
 	if (localStorage.getItem("dev") === "true") {
 		localStorage.setItem("dev", false);
