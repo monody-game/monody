@@ -216,7 +216,7 @@ class RoundControllerTest extends TestCase
         $game = $this
             ->actingAs($user1)
             ->put('/api/game', [
-                'roles' => [Role::Hunter->value, Role::Werewolf->value, Role::LittleGirl->value],
+                'roles' => [Role::Hunter->value, Role::Werewolf->value, Role::LittleGirl->value, Role::Werewolf->value, Role::SimpleVillager->value],
             ])
             ->json('data.game');
 
@@ -297,21 +297,21 @@ class RoundControllerTest extends TestCase
         $this->game = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [Role::Werewolf->value, Role::Werewolf->value, Role::Psychic->value],
+                'roles' => [Role::Werewolf->value, Role::Werewolf->value, Role::Psychic->value, Role::SimpleVillager->value, Role::SimpleVillager->value],
             ])
             ->json('data.game');
 
         $this->secondGame = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [Role::Werewolf->value, Role::SimpleVillager->value],
+                'roles' => [Role::Werewolf->value, Role::SimpleVillager->value, Role::SimpleVillager->value, Role::SimpleVillager->value, Role::SimpleVillager->value],
             ])
             ->json('data.game');
 
         $this->thirdGame = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [Role::SimpleVillager->value, Role::InfectedWerewolf->value],
+                'roles' => [Role::SimpleVillager->value, Role::InfectedWerewolf->value, Role::SimpleVillager->value, Role::SimpleVillager->value, Role::SimpleVillager->value],
             ])
             ->json('data.game');
 

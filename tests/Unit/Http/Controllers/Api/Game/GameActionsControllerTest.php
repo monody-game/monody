@@ -94,6 +94,8 @@ class GameActionsControllerTest extends TestCase
                     Role::Witch->value,
                     Role::Psychic->value,
                     Role::Werewolf->value,
+                    Role::Werewolf->value,
+                    Role::Werewolf->value,
                 ],
             ])->json('data.game');
 

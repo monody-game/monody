@@ -13,7 +13,7 @@ class CreateGameRequest extends FormRequest
     {
         return [
             'users' => 'array',
-            'roles' => ['array', 'required', new RejectMultipleUniqueRoles()],
+            'roles' => ['array', 'required', new RejectMultipleUniqueRoles(), 'min:5'],
             'type' => [new Enum(GameType::class), 'nullable'],
         ];
     }

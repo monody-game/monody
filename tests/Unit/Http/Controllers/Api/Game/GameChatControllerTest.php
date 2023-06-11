@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
+use App\Enums\Role;
 use App\Enums\State;
 use App\Enums\Team;
 use App\Events\ChatLock;
@@ -193,7 +194,7 @@ class GameChatControllerTest extends TestCase
         $this->secondUser = User::factory()->create();
 
         $this->game = $this->actingAs($this->user, 'api')->put('/api/game', [
-            'roles' => [1, 2],
+            'roles' => [1, 2, Role::Werewolf->value, Role::Werewolf->value, Role::Werewolf->value],
             'users' => [],
         ])->json('data.game');
 

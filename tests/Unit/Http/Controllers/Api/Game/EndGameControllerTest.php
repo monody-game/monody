@@ -130,7 +130,7 @@ class EndGameControllerTest extends TestCase
         $game = $this
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
-                'roles' => [Role::WhiteWerewolf->value, Role::Werewolf->value],
+                'roles' => [Role::WhiteWerewolf->value, Role::Werewolf->value, Role::Werewolf->value, Role::Werewolf->value, Role::Werewolf->value],
                 'users' => [$this->secondUser->id],
             ])
             ->json('data.game');
@@ -224,7 +224,7 @@ class EndGameControllerTest extends TestCase
         $this->game = $this
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
-                'roles' => [1, 2],
+                'roles' => [1, 2, 2, 2, 2],
                 'users' => [$this->secondUser->id],
             ])
             ->json('data.game');
