@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Middleware\OptionalAuthentication;
-use App\Http\Middleware\RestrictRequest;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Http\Middleware\VerifiedEmailNeeded;
 use Illuminate\Support\Facades\Route;
