@@ -47,11 +47,15 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
      * @var array<int, string>
      */
     protected $hidden = [
+		'email',
+		'email_verified_at',
         'password',
         'remember_token',
         'discord_id',
         'discord_token',
         'discord_refresh_token',
+		'discord_linked_at',
+		'current_game'
     ];
 
     public function sendPasswordResetNotification($token): void

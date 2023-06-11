@@ -15,7 +15,11 @@ class UserController extends Controller
     public function user(Request $request): JsonApiResponse
     {
         return new JsonApiResponse([
-            'user' => $request->user(),
+            'user' => $request->user()->makeVisible([
+				'email',
+				'email_verified_at',
+				'discord_linked_at'
+			]),
         ]);
     }
 
