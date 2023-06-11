@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/ping', 'PingController@ping');
 
+Route::post('/auth/register', 'Auth\RegisterController@register');
 Route::post('/auth/login', 'Auth\LoginController@login');
 Route::post('/auth/password/reset', 'Auth\PasswordController@reset');
 Route::post('/auth/password/validate', 'Auth\PasswordController@token');
@@ -87,9 +88,6 @@ Route::group(['middleware' => ['auth:api']], function () {
         ->middleware(['throttle:6,1'])
         ->name('verification.send');
 });
-
-Route::post('/auth/register', 'Auth\RegisterController@register')
-    ->middleware(RestrictRequest::class);
 
 Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/roles/assign', 'RoleController@assign');

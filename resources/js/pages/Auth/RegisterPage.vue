@@ -84,41 +84,6 @@
             </button>
           </div>
         </form>
-        <div
-          v-if="token === null"
-          class="auth-page__lock"
-        >
-          <div class="auth-page__locked-popup">
-            <div
-              class="popup__wrapper"
-              data-popup-type="warn"
-            >
-              <header class="popup__header">
-                <div class="popup__header-left">
-                  <svg class="popup__icon">
-                    <use href="/sprite.svg#warn" />
-                  </svg>
-                  <p
-                    id="modal__title"
-                    class="popup__title"
-                  >
-                    Attention
-                  </p>
-                </div>
-              </header>
-              <p class="popup__content">
-                Vous ne pouvez pas créer de compte Monody pendant la phase de beta.
-              </p>
-              <p
-                class="popup__note"
-              >
-                <router-link to="login">
-                  Se connecter
-                </router-link>
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -138,8 +103,6 @@ const password = ref("");
 const password_confirmation = ref("");
 const loading = ref(false);
 const alertStore = useStore();
-
-const token = localStorage.getItem("restricted_request_token");
 
 const errors = ref({
 	username: {
@@ -197,13 +160,6 @@ watch(email, (newEmail) => {
 });
 
 const register = async function() {
-	if (token === null) {
-		alertStore.addAlerts({
-			error: "Vous ne pouvez pas créer de compte durant la phase de bêta"
-		});
-		return;
-	}
-
 	if (checkInput()) {
 		loading.value = true;
 		const payload = {
@@ -216,14 +172,8 @@ const register = async function() {
 			payload.email = email.value;
 		}
 
-		let url = "/auth/register";
-
-		if (token !== null) {
-			url += "?token=" + token;
-		}
-
 		const res = await window
-			.JSONFetch(url, "POST", payload);
+			.JSONFetch("/auth/register", "POST", payload);
 
 		loading.value = false;
 
