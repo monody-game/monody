@@ -263,7 +263,7 @@ class VoteServiceTest extends TestCase
         $this->game = $this->actingAs($this->user, 'api')
             ->put('/api/game', [
                 'users' => [$this->user->id, $this->secondUser->id],
-                'roles' => [1, 2],
+                'roles' => [1, 2, 2, 2, 2],
             ])->json('data.game');
 
         Redis::set("game:{$this->game['id']}:state", [
@@ -276,7 +276,7 @@ class VoteServiceTest extends TestCase
         $this->secondGame = $this->actingAs($this->user, 'api')
             ->put('/api/game', [
                 'users' => [$this->user->id, $this->secondUser->id],
-                'roles' => [1, 2],
+                'roles' => [1, 2, 2, 2, 2],
             ])
             ->json('data.game');
 
@@ -291,7 +291,7 @@ class VoteServiceTest extends TestCase
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
                 'users' => [$this->secondUser->id, $this->thirdUser->id, $this->fourthUser->id],
-                'roles' => [1, 2],
+                'roles' => [1, 2, 2, 2, 2],
             ])->json('data.game');
 
         Redis::set("game:{$this->thirdGame['id']}:state", [

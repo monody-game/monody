@@ -34,7 +34,7 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [
-                    1, 1, 2,
+                    1, 1, 2, 2, 2,
                 ],
             ])
             ->assertJson(['data' => ['game' => $this->game]])
@@ -65,7 +65,7 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [
-                    1, 1, 2,
+                    1, 1, 2, 2, 2,
                 ],
             ])
             ->assertOk()
@@ -106,9 +106,9 @@ class GameControllerTest extends TestCase
     {
         $vocal = GameType::VOCAL->value;
 
-        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1]]);
-        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1], 'type' => $vocal]);
-        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1], 'type' => $vocal]);
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2]]);
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => $vocal]);
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => $vocal]);
 
         $res = $this
             ->get("/api/game/list/$vocal")
@@ -128,7 +128,7 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [
-                    1, 1, 2,
+                    1, 1, 2, 2, 2,
                 ],
             ])->json('data.game');
         Redis::set('game:1234', '');
@@ -156,7 +156,7 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [
-                    1, 1, 2,
+                    1, 1, 2, 2, 2,
                 ],
             ])->json('data.game');
 
@@ -181,7 +181,7 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [
-                    1, 1, 2,
+                    1, 1, 2, 2, 2,
                 ],
             ])->json('data.game');
 
@@ -224,7 +224,7 @@ class GameControllerTest extends TestCase
             ->put('/api/game', [
                 'users' => [],
                 'roles' => [
-                    1, 1, 2,
+                    1, 1, 2, 2, 2,
                 ],
             ])
             ->json('data.game');
@@ -241,7 +241,7 @@ class GameControllerTest extends TestCase
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
                 'users' => [],
-                'roles' => [1, 3],
+                'roles' => [1, 3, 2, 2, 2],
             ])->json('data.game');
 
         $this->user->refresh();
@@ -255,7 +255,7 @@ class GameControllerTest extends TestCase
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
                 'users' => [],
-                'roles' => [1, 3],
+                'roles' => [1, 3, 2, 2, 2],
             ])->json('data.game');
 
         $gameId = $game['id'];
@@ -279,7 +279,7 @@ class GameControllerTest extends TestCase
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
                 'users' => [],
-                'roles' => [1, 3],
+                'roles' => [1, 3, 2, 2, 2],
             ])->json('data.game');
 
         $gameId = $game['id'];
@@ -326,6 +326,7 @@ class GameControllerTest extends TestCase
                 Role::WhiteWerewolf->value,
                 Role::Werewolf->value,
                 Role::Witch->value,
+                Role::SimpleVillager->value,
             ],
         ])->json('data.game');
 
@@ -347,6 +348,7 @@ class GameControllerTest extends TestCase
                             Role::Werewolf->value => 2,
                             Role::WhiteWerewolf->value => 1,
                             Role::Witch->value => 1,
+                            Role::SimpleVillager->value => 1,
                         ],
                         'dead_users' => [],
                         'voted_users' => [],
@@ -388,7 +390,7 @@ class GameControllerTest extends TestCase
             'users' => [$this->user->id],
             'roles' => [
                 1 => 2,
-                2 => 1,
+                2 => 3,
             ],
             'assigned_roles' => [],
             'owner' => [

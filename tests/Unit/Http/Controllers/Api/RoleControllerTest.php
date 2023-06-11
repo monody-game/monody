@@ -34,6 +34,7 @@ class RoleControllerTest extends TestCase
                     'roles' => [
                         Role::Werewolf->full(),
                         Role::SimpleVillager->full(),
+                        Role::Psychic->full(),
                     ],
                 ],
             ]);
@@ -122,23 +123,26 @@ class RoleControllerTest extends TestCase
 
         $game = Redis::get("game:{$this->game['id']}");
 
-        $this->assertCount(2, $game['assigned_roles']);
+        $this->assertCount(5, $game['assigned_roles']);
         $this->assertCount(1, $game['werewolves']);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        [$user, $secondUser] = User::factory(2)->make();
+        [$user, $secondUser, $third, $fourth, $fifth] = User::factory(5)->make();
 
         $this->game = $this
             ->actingAs($user, 'api')
-            ->put('/api/game', ['roles' => [1, 2]])
+            ->put('/api/game', ['roles' => [1, 2, 2, 2, 3]])
             ->json('data.game');
 
         Redis::set("game:{$this->game['id']}:members", [
             ['user_id' => $user['id'], 'user_info' => $user],
             ['user_id' => $secondUser['id'], 'user_info' => $secondUser],
+            ['user_id' => $third['id'], 'user_info' => $third],
+            ['user_id' => $fourth['id'], 'user_info' => $fourth],
+            ['user_id' => $fifth['id'], 'user_info' => $fifth],
         ]);
     }
 }

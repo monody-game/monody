@@ -96,7 +96,7 @@ class MemberHelperTraitTest extends TestCase
         $this->game = $this
             ->actingAs($user, 'api')
             ->put('/api/game', [
-                'roles' => [Role::InfectedWerewolf->value, Role::Werewolf->value],
+                'roles' => [Role::InfectedWerewolf->value, Role::Werewolf->value, Role::SimpleVillager->value, Role::SimpleVillager->value, Role::SimpleVillager->value],
                 'users' => [$this->secondUser['id']],
             ])
             ->json('data.game');

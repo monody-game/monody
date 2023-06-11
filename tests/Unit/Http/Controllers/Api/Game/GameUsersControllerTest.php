@@ -50,7 +50,7 @@ class GameUsersControllerTest extends TestCase
         [$this->user, $this->secondUser] = User::factory(2)->create();
 
         $this->game = $this->actingAs($this->user, 'api')->put('/api/game', [
-            'roles' => [1, 2],
+            'roles' => [1, 2, 3, 4, 5],
             'users' => [],
         ])->json('data.game');
     }

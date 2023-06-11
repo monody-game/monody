@@ -16,7 +16,7 @@ class RegisterHelperTraitTest extends TestCase
         $game = $this->actingAs($user, 'api')
             ->put('/api/game', [
                 'users' => [$user->id],
-                'roles' => [1],
+                'roles' => [1, 2, 2, 2, 2],
             ])
             ->json('data.game');
 
