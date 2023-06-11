@@ -36,7 +36,7 @@ function cycle (contentList, contentDuration, spanDuration, index = 0, counterIn
 		counterIndex++;
 		if (counterIndex % 2 === 0) index++;
 
-		if (index > contentList.length) index = 0;
+		if (index > contentList.length - 1) index = 0;
 
 		out.value = counterIndex % 2 === 1;
 
