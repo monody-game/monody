@@ -29,6 +29,13 @@ const badgeStore = useBadgesStore();
 const url = new URL(window.location);
 const isDev = ref(localStorage.getItem("dev") === "true");
 
+if (url.searchParams.has("pwa")) {
+	localStorage.setItem("pwa_thanked", true);
+	alertStore.addAlerts({
+		success: "Merci d'avoir installé Monody !"
+	});
+}
+
 if (url.searchParams.has("token")) {
 	localStorage.setItem("restricted_request_token", url.searchParams.get("token"));
 

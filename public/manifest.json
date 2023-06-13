@@ -19,7 +19,7 @@
 			"size": "192x192"
 		}
 	],
-	"start_url": "/play",
+	"start_url": "/play?pwa=true",
 	"homepage_url": "/",
 	"display": "standalone",
 	"background_color": "#0f1127",
