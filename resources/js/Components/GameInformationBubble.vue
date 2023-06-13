@@ -17,7 +17,7 @@ import { useRoute } from "vue-router";
 
 const waitingContents = [
 	"Le loup hargneux s’énerve facilement et peut mordre un joueur par partie, qui succombera à ses blessures la nuit suivante !",
-	"Le loup blanc est un traitre parmis les loups, il doit gagner seul.",
+	"Le loup blanc est un traître parmi les loups, il doit gagner seul.",
 	"Le garde ne peut protéger le même joueur deux tours d'affilée.",
 	"Le loup malade ne peut infecter qu'un joueur par partie.",
 ];
