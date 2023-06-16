@@ -1,5 +1,5 @@
 import { client } from "./Connection.js";
-import {error, log} from "../Logger.js";
+import {error, info} from "../Logger.js";
 
 export class RedisSubscriber {
 	private sub: typeof client
@@ -16,9 +16,9 @@ export class RedisSubscriber {
 				const event = JSON.parse(message);
 
 				if (process.env.APP_DEBUG) {
-					log("Api emitted an event !");
-					log("Channel: " + channel);
-					log("Event: " + event.event);
+					info("Api emitted an event !");
+					info("Channel: " + channel);
+					info("Event: " + event.event);
 				}
 
 				return await callback(channel, event);

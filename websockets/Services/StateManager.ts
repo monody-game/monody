@@ -3,7 +3,7 @@ import {getRounds, Hook, HookedState, Round, StateIdentifier} from "./RoundServi
 import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
-import {error, log, warn} from "../Logger.js";
+import {error, info, warn} from "../Logger.js";
 import { GameService } from "./GameService.js";
 import {Server} from "socket.io";
 import {EventEmitter} from "node:events";
@@ -31,7 +31,7 @@ export class StateManager {
 	async setState(state: State, channel: string, isSkip = false) {
 		const id = gameId(channel);
 
-		log(`Setting state of game ${id} to ${state.status} in round ${state.round || 0} for a duration of ${state.counterDuration}`);
+		info(`Setting state of game ${id} to ${state.status} in round ${state.round || 0} for a duration of ${state.counterDuration}`);
 		await client.set(`game:${id}:state`, JSON.stringify(state));
 
 		this.io.to(channel).emit("game.state", channel, {
