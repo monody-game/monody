@@ -1,6 +1,6 @@
 import { StateManager } from "./StateManager.js";
 import { gameId } from "../Helpers/Functions.js";
-import { error, log, warn } from "../Logger.js";
+import { error, info, warn } from "../Logger.js";
 import { GameService } from "./GameService.js";
 export class CounterService {
     counterId = {};
@@ -30,7 +30,7 @@ export class CounterService {
             if (state.skipped)
                 return;
             clearTimeout(this.counterId[data.gameId]);
-            log(`Skipping time in game ${data.gameId}, in state ${state.status} to time ${data.to}`);
+            info(`Skipping time in game ${data.gameId}, in state ${state.status} to time ${data.to}`);
             await this.manager.setState({
                 status: state.status,
                 startTimestamp: Date.now(),

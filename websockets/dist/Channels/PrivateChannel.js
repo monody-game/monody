@@ -1,9 +1,9 @@
 import fetch from "../Helpers/fetch.js";
-import { error, log, warn } from "../Logger.js";
+import { error, info, warn } from "../Logger.js";
 export class PrivateChannel {
     authenticate(socket, data) {
         if (process.env.APP_DEBUG) {
-            log(`Sending auth request to: "${process.env.APP_URL}"`);
+            info(`Sending auth request to: "${process.env.APP_URL}"`);
         }
         return this.serverRequest(socket, {
             form: { channel_name: data.channel },
@@ -32,7 +32,7 @@ export class PrivateChannel {
             throw new Error();
         }
         if (process.env.APP_DEBUG) {
-            log(`${socket.id} authenticated for: ${options.form.channel_name}`);
+            info(`${socket.id} authenticated for: ${options.form.channel_name}`);
         }
         return response;
     }

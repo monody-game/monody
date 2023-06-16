@@ -1,6 +1,6 @@
 import { GameChannel } from "./GameChannel.js";
 import { PrivateChannel } from "./PrivateChannel.js";
-import { error, log } from "../Logger.js";
+import {error, info} from "../Logger.js";
 import {Server, Socket} from "socket.io";
 import {EventEmitter} from "node:events";
 import {DataPayload} from "../IoServer.js";
@@ -35,7 +35,7 @@ export class Channel {
 		socket.leave(channel);
 
 		if (process.env.APP_DEBUG) {
-			log(`${socket.id} left channel: ${channel} (${reason})`);
+			info(`${socket.id} left channel: ${channel} (${reason})`);
 		}
 	}
 
@@ -84,7 +84,7 @@ export class Channel {
 
 	onJoin(socket: Socket, channel: string) {
 		if (process.env.APP_DEBUG) {
-			log(`${socket.id} joined channel: ${channel}`);
+			info(`${socket.id} joined channel: ${channel}`);
 		}
 	}
 

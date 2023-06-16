@@ -2,7 +2,7 @@ import fetch from "../Helpers/fetch.js";
 import { GameService } from "./GameService.js";
 import { client } from "../Redis/Connection.js";
 import { gameId } from "../Helpers/Functions.js";
-import { error, log, success, warn } from "../Logger.js";
+import { error, info, success, warn } from "../Logger.js";
 export class InteractionService {
     static async openInteraction(io, channel, type) {
         const id = gameId(channel);
@@ -53,7 +53,7 @@ export class InteractionService {
             gameId: id,
             id: interactionId
         });
-        log(`Closing ${type} interaction with id ${interactionId} in game ${id}.`);
+        info(`Closing ${type} interaction with id ${interactionId} in game ${id}.`);
         if (callers !== "*") {
             callers = JSON.parse(callers);
             const members = await GameService.getMembers(id);

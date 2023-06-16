@@ -3,7 +3,7 @@ import { client } from "../Redis/Connection.js";
 import { GameService } from "../Services/GameService.js";
 import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
-import { log } from "../Logger.js";
+import { info } from "../Logger.js";
 const StartingState = (await fetch(`${process.env.API_URL}/state/1`, "GET")).json;
 const EndState = (await fetch(`${process.env.API_URL}/state/8`, "GET")).json;
 export class GameChannel {
@@ -82,7 +82,7 @@ export class GameChannel {
         if (!state)
             return;
         if (state.status === StartingState.data.state.id) {
-            log(`Stopping starting state of game ${id}`);
+            info(`Stopping starting state of game ${id}`);
             await this.gameService.stopGameLaunch(channel);
             game.is_started = false;
             await this.gameService.setGame(id, game);
@@ -157,7 +157,7 @@ export class GameChannel {
     async onDelete(id) {
         await fetch(`${process.env.API_URL}/game`, "DELETE", { gameId: id });
         this.io.to('bot.private').volatile.emit('game.share.clear', 'bot.private');
-        log(`Deleting game with id: ${id}`);
+        info(`Deleting game with id: ${id}`);
     }
     async onSubscribed(socket, channel, members) {
         this.io.to(socket.id).emit("presence:subscribed", channel, members);
