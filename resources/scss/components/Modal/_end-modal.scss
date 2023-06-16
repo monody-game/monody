@@ -1,0 +1,25 @@
+@use "../../tools/functions" as *;
+
+.end-modal__image {
+	height: 200px;
+
+	position: absolute;
+	top: -100px;
+}
+
+.end-modal__background .modal__main {
+	display: flex;
+	gap: space(1);
+	flex-direction: column;
+	align-items: center;
+	padding-top: calc(100px + space(1));
+	max-width: 500px;
+
+	h3 {
+		margin-bottom: space(.5);
+	}
+}
+
+.end-modal__background .modal__main p {
+	align-self: flex-start;
+}
