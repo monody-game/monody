@@ -11,6 +11,7 @@ import { useStore as useBadgesModalStore } from "./badges.js";
 import { useStore as useLeaderboardsModalStore } from "./leaderboards.js";
 import { useStore as useLogoutWarnPopupStore } from "./logout-warn-popup.js";
 import { useStore as useRolePresentationStore } from "./role-presentation.js";
+import { useStore as useEndGameModalStore } from "./end-game-modal.js";
 
 export const useStore = defineStore("modal", {
 	state: () => {
@@ -45,6 +46,8 @@ export const useStore = defineStore("modal", {
 				return useLogoutWarnPopupStore();
 			case "role-presentation":
 				return useRolePresentationStore();
+			case "end-game-modal":
+				return useEndGameModalStore();
 			}
 		}
 	},

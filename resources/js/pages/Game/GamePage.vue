@@ -61,6 +61,14 @@
     <Transition name="modal">
       <RolePresentationModal v-if="rolePresentationStore.isOpenned" />
     </Transition>
+    <Transition name="modal">
+      <EndGameModal
+        v-if="modalStore.opennedModal === 'end-game-modal'"
+        :win="win"
+        :winners="winners"
+        :winning-team="winningTeam"
+      />
+    </Transition>
   </div>
 </template>
 
@@ -89,6 +97,7 @@ import GameDetailsModal from "../../Components/Modal/GameDetailsModal.vue";
 import GameVocalInvitation from "../../Components/Modal/GameVocalInvitation.vue";
 import RolePresentationModal from "../../Components/Modal/RolePresentationModal.vue";
 import GameInformationBubble from "../../Components/GameInformationBubble.vue";
+import EndGameModal from "../../Components/Modal/EndGameModal.vue";
 
 const route = useRoute();
 const store = useStore();
@@ -108,6 +117,9 @@ const gameId = route.params.id;
 const loading = ref(false);
 let roles = store.roles;
 const assignedRole = ref(0);
+const win = ref(true);
+const winners = ref([]);
+const winningTeam = ref("1");
 
 const actions = await window.JSONFetch("/interactions/actions", "GET");
 store.availableActions = actions.data.actions;
@@ -216,6 +228,15 @@ window.Echo.join(`game.${gameId}`)
 	})
 	.listen(".game.couple", ({ data }) => {
 		store.couple = data.payload.pairedPlayers;
+	})
+	.listen(".game.end", ({ data }) => {
+		const payload = data.payload;
+		winners.value = Object.keys(payload.winners);
+		win.value = winners.value.includes(userStore.id);
+		winningTeam.value = payload.winningTeam;
+
+		modalStore.open("end-game-modal");
+		console.log(modalStore.opennedModal, winners.value, win.value, winningTeam.value);
 	});
 
 const leave = () => {

@@ -169,25 +169,7 @@ window.Echo.join(`game.${route.params.id}`)
 	.listen(".chat.lock", ({ data }) => {
 		isLocked.value = data.payload.lock;
 	})
-	.listen(".game.end", async (e) => {
-		const data = e.data.payload;
-		const winners = Object.keys(data.winners);
-		let message = `La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(", ")}`;
-
-		if (data.winningTeam === "couple") {
-			message += " qui étaient en couple.";
-		} else {
-			const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
-
-			if (team.data.team.name !== "loners") {
-				message += ` du camp des ${team.data.team.display_name}`;
-			} else {
-				message += ` qui était ${Object.values(data.winners)[0].display_name}`;
-			}
-		}
-
-		store.send(message, "info");
-
+	.listen(".game.end", async () => {
 		interval = setTimeout(() => {
 			useModalStore().open("activity-confirmation-modal");
 		}, 60000);

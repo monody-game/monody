@@ -45,7 +45,7 @@
         <span>du camp des <span class="bold">{{ assignedRole.team.display_name.toLowerCase() }}</span>.</span>
       </span>
       <span>
-        <span>Cliquez sur l'image pour en savoir plus</span>
+        <span class="muted">Cliquez sur l'image pour en savoir plus</span>
       </span>
     </div>
   </BaseModal>
