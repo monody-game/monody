@@ -14,76 +14,65 @@
           Retour
         </p>
       </router-link>
-      <div class="auth-page__form-wrapper">
-        <div class="auth-page__title-group">
-          <h1>S'inscrire</h1>
-          <p>Les champs marqués d'une <span class="bold">*</span> sont obligatoires</p>
-        </div>
-        <form
-          class="register-page__form"
-          method="post"
-          action=""
-          @submit.prevent
-        >
-          <div
-            v-if="loading"
-            class="auth-page__loading-group"
-          >
-            <div class="auth-page__loading-group-blur" />
-            <DotsSpinner />
-          </div>
+      <MultiStepsForm
+        :loading="loading"
+        :disabled="isDisabled"
+        pages="3"
+        @submit="register"
+        @current-page="(page) => setDisabled(page)"
+      >
+        <template #title="{ page, totalPage }">
+          Inscription <span class="steps-form__count">({{ page }}/{{ totalPage }})</span>
+        </template>
+        <template #inputs="{ page }">
           <InputComponent
+            v-if="page === 1"
             type="text"
             label="Nom d'utilisateur"
             label-note="entre 3 et 24 caractères"
             name="username"
             :errored="errors.username.errored"
             :error="errors.username.text"
-            @model="newUsername => username = newUsername"
+            @model="newUsername => { username = newUsername; setDisabled(1) }"
           />
           <InputComponent
+            v-if="page === 2"
             type="email"
             label="Email"
             name="email"
             :required="false"
             :errored="errors.email.errored"
             :error="errors.email.text"
-            @model="newEmail => email = newEmail"
+            @model="newEmail => { email = newEmail; setDisabled(2) }"
           />
           <InputComponent
+            v-if="page === 3"
             type="password"
             label="Mot de passe"
             label-note="plus de 8 caractères"
             name="password"
             :errored="errors.password.errored"
             :error="errors.password.text"
-            @model="newPassword => password = newPassword"
+            @model="newPassword => { password = newPassword; setDisabled(3) }"
           />
           <InputComponent
+            v-if="page === 3"
             type="password"
             label="Confirmez le mot de passe"
             name="password_confirmation"
             :errored="password !== password_confirmation"
             error="La confirmation du mot de passe doit être identique au mot de passe"
-            @model="newConfirmationPassword => password_confirmation = newConfirmationPassword"
+            @model="newConfirmationPassword => { password_confirmation = newConfirmationPassword; setDisabled(3) }"
           />
-          <div class="auth-page__submit-group">
-            <router-link
-              class="auth-page__link"
-              to="login"
-            >
-              Vous possédez déjà un compte ?
-            </router-link>
-            <button
-              class="btn large"
-              type="submit"
-              :disabled="username === '' || password === '' || password_confirmation === ''"
-              @click="register"
-            >
-              S'inscrire
-            </button>
-          </div>
-        </form>
+        </template>
+        <template #submit>
+          <router-link
+            class="auth-page__link"
+            to="login"
+          >
+            Vous possédez déjà un compte ?
+          </router-link>
+        </template>
         <div
           v-if="token === null"
           class="auth-page__lock"
@@ -119,7 +108,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </MultiStepsForm>
     </div>
   </div>
 </template>
@@ -128,8 +117,8 @@
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "../../stores/alerts.js";
-import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import InputComponent from "../../Components/Form/InputComponent.vue";
+import MultiStepsForm from "../../Components/Form/MultiStepsForm.vue";
 
 const router = useRouter();
 const username = ref("");
@@ -137,9 +126,23 @@ const email = ref("");
 const password = ref("");
 const password_confirmation = ref("");
 const loading = ref(false);
+const isDisabled = ref(true);
 const alertStore = useStore();
-
 const token = localStorage.getItem("restricted_request_token");
+
+const setDisabled = (page) => {
+	switch (page) {
+	case 1:
+		isDisabled.value = username.value === "";
+		break;
+	case 2:
+		isDisabled.value = false;
+		break;
+	case 3:
+		isDisabled.value = password.value === "" || password_confirmation.value === "";
+		break;
+	}
+};
 
 const errors = ref({
 	username: {
@@ -216,14 +219,8 @@ const register = async function() {
 			payload.email = email.value;
 		}
 
-		let url = "/auth/register";
-
-		if (token !== null) {
-			url += "?token=" + token;
-		}
-
 		const res = await window
-			.JSONFetch(url, "POST", payload);
+			.JSONFetch("/auth/register?token=" + token, "POST", payload);
 
 		loading.value = false;
 

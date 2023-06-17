@@ -8,12 +8,12 @@
       @mouseover="shown = true"
       @mouseout="shown = false"
     >
-      {{ props.label }}
+      {{ props.label }} {{ props.required === false ? '(facultatif)' : '' }}
       <span
         v-if="props.labelNote"
         class="auth-page__input-notice"
       >
-        ({{ props.labelNote }})
+        ({{ props.labelNote }}<span v-text="props.required === true ? ', obligatoire' : ', facultatif'" />)
       </span>
       <NoticeComponent
         v-if="props.type === 'email' && props.note"
@@ -22,10 +22,6 @@
       >
         Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody). Veillez à rentrer une adresse mail valide, vous devrez la vérifier.
       </NoticeComponent>
-      <span
-        v-if="props.required"
-        title="Ce champs est requis"
-      >*</span>
     </label>
     <input
       :id="props.name"
