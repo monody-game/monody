@@ -44,6 +44,7 @@
         </button>
       </div>
     </form>
+    <slot name="restriction" />
   </div>
 </template>
 

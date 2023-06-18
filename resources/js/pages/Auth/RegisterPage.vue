@@ -78,41 +78,43 @@
             Vous possédez déjà un compte ?
           </router-link>
         </template>
-        <div
-          v-if="token === null"
-          class="auth-page__lock"
-        >
-          <div class="auth-page__locked-popup">
-            <div
-              class="popup__wrapper"
-              data-popup-type="warn"
-            >
-              <header class="popup__header">
-                <div class="popup__header-left">
-                  <svg class="popup__icon">
-                    <use href="/sprite.svg#warn" />
-                  </svg>
-                  <p
-                    id="modal__title"
-                    class="popup__title"
-                  >
-                    Attention
-                  </p>
-                </div>
-              </header>
-              <p class="popup__content">
-                Vous ne pouvez pas créer de compte Monody pendant la phase de beta.
-              </p>
-              <p
-                class="popup__note"
+        <template #restriction>
+          <div
+            v-if="token === null"
+            class="auth-page__lock"
+          >
+            <div class="auth-page__locked-popup">
+              <div
+                class="popup__wrapper"
+                data-popup-type="warn"
               >
-                <router-link to="login">
-                  Se connecter
-                </router-link>
-              </p>
+                <header class="popup__header">
+                  <div class="popup__header-left">
+                    <svg class="popup__icon">
+                      <use href="/sprite.svg#warn" />
+                    </svg>
+                    <p
+                      id="modal__title"
+                      class="popup__title"
+                    >
+                      Attention
+                    </p>
+                  </div>
+                </header>
+                <p class="popup__content">
+                  Vous ne pouvez pas créer de compte Monody pendant la phase de beta.
+                </p>
+                <p
+                  class="popup__note"
+                >
+                  <router-link to="login">
+                    Se connecter
+                  </router-link>
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
       </MultiStepsForm>
     </div>
   </div>
