@@ -9,13 +9,13 @@
     </div>
     <span
       class="steps-form__advancement"
-      :style="'right:' + (100 - (currentPage / pages) * 100) + '%'"
+      :style="'right:' + (100 - (current / pages) * 100) + '%'"
     />
     <div class="auth-page__title-group">
       <h1>
         <slot
           name="title"
-          :page="currentPage"
+          :page="current"
           :total-page="props.pages"
         />
       </h1>
@@ -28,7 +28,7 @@
     >
       <slot
         name="inputs"
-        :page="currentPage"
+        :page="current"
       />
       <div class="auth-page__submit-group">
         <slot
@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import DotsSpinner from "../Spinners/DotsSpinner.vue";
 
 const props = defineProps({
@@ -63,13 +63,22 @@ const props = defineProps({
 	disabled: {
 		type: Boolean,
 		default: false
+	},
+	currentPage: {
+		type: Number,
+		default: 1
 	}
 });
 
 const emit = defineEmits(["submit", "currentPage"]);
+const current = ref(props.currentPage);
+
+watch(props, (value) => {
+	current.value = value.currentPage;
+});
 
 const submitContent = computed(() => {
-	switch (currentPage.value) {
+	switch (current.value) {
 	default:
 		return "Suivant";
 	case 2:
@@ -78,10 +87,9 @@ const submitContent = computed(() => {
 		return "Terminer";
 	}
 });
-const currentPage = ref(1);
 
 const next = () => {
-	currentPage.value === Number.parseInt(props.pages) ? emit("submit") : currentPage.value++;
-	emit("currentPage", currentPage.value);
+	current.value === Number.parseInt(props.pages) ? emit("submit") : current.value++;
+	emit("currentPage", current.value);
 };
 </script>

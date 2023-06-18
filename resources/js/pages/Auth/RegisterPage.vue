@@ -18,6 +18,7 @@
         :loading="loading"
         :disabled="isDisabled"
         pages="3"
+        :current-page="currentPage"
         @submit="register"
         @current-page="(page) => setDisabled(page)"
       >
@@ -31,6 +32,7 @@
             label="Nom d'utilisateur"
             label-note="entre 3 et 24 caractères"
             name="username"
+            :value="username"
             :errored="errors.username.errored"
             :error="errors.username.text"
             @model="newUsername => { username = newUsername; setDisabled(1) }"
@@ -40,6 +42,7 @@
             type="email"
             label="Email"
             name="email"
+            :value="email"
             :required="false"
             :errored="errors.email.errored"
             :error="errors.email.text"
@@ -51,6 +54,7 @@
             label="Mot de passe"
             label-note="plus de 8 caractères"
             name="password"
+            :value="password"
             :errored="errors.password.errored"
             :error="errors.password.text"
             @model="newPassword => { password = newPassword; setDisabled(3) }"
@@ -60,6 +64,7 @@
             type="password"
             label="Confirmez le mot de passe"
             name="password_confirmation"
+            :value="password_confirmation"
             :errored="password !== password_confirmation"
             error="La confirmation du mot de passe doit être identique au mot de passe"
             @model="newConfirmationPassword => { password_confirmation = newConfirmationPassword; setDisabled(3) }"
@@ -128,9 +133,13 @@ const password_confirmation = ref("");
 const loading = ref(false);
 const isDisabled = ref(true);
 const alertStore = useStore();
+const currentPage = ref(1);
 const token = localStorage.getItem("restricted_request_token");
 
+const fieldPage = { "username": 1, "email": 2, "password": 3, "password_confirmation": 3 };
+
 const setDisabled = (page) => {
+	currentPage.value = page;
 	switch (page) {
 	case 1:
 		isDisabled.value = username.value === "";
@@ -223,13 +232,14 @@ const register = async function() {
 			.JSONFetch("/auth/register?token=" + token, "POST", payload);
 
 		loading.value = false;
-
+		console.log(res);
 		if (res.status === 422) {
 			const validationErrors = res.data.errors;
 			for (const field in validationErrors) {
 				if (validationErrors[field].includes("validation.unique")) {
 					errors.value[field].text = "Un compte utilisant cette valeur existe déjà";
 					errors.value[field].errored = true;
+					currentPage.value = fieldPage[field];
 				}
 			}
 			return;
