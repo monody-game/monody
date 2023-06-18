@@ -236,7 +236,6 @@ window.Echo.join(`game.${gameId}`)
 		winningTeam.value = payload.winningTeam;
 
 		modalStore.open("end-game-modal");
-		console.log(modalStore.opennedModal, winners.value, win.value, winningTeam.value);
 	});
 
 const leave = () => {

@@ -234,7 +234,7 @@ const register = async function() {
 			.JSONFetch("/auth/register?token=" + token, "POST", payload);
 
 		loading.value = false;
-		console.log(res);
+
 		if (res.status === 422) {
 			const validationErrors = res.data.errors;
 			for (const field in validationErrors) {
