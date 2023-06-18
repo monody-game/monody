@@ -9,10 +9,8 @@ class AddTokenToRequests
 {
     /**
      * Attach cookie access token to the Authorization header in the request.
-     *
-     * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         if (!$request->bearerToken()) {
             if ($request->hasCookie('monody_access_token')) {

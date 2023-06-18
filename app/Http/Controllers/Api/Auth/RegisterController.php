@@ -22,7 +22,8 @@ class RegisterController extends Controller
 
         $user = User::create($data);
 
-        $accessToken = $user->createToken('authToken')->plainTextToken;
+        $ip = $request->getClientIp() ?? $user->id;
+        $accessToken = $user->createToken($ip)->plainTextToken;
         $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Strict');
 
         $user->sendEmailVerificationNotification();
