@@ -2,6 +2,7 @@
   <div
     class="auth-page__form-group"
     :data-is-invalid="props.errored"
+    :style="props.type === 'email' && props.note ? 'position: static;' : ''"
   >
     <label
       :for="props.name"
