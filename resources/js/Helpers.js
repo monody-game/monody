@@ -31,6 +31,7 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 		return res;
 	}
 
+
 	const content = await response.json();
 
 	if (!response.ok) {
@@ -62,7 +63,10 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 
 	res.status = response.status;
 	res.ok = response.ok;
-	res.data = res.data.data;
+
+	if ("data" in res.data) {
+		res.data = res.data.data;
+	}
 
 	return res;
 };
