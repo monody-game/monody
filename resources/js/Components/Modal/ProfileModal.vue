@@ -37,7 +37,7 @@
           type="text"
           name="username"
           label="Pseudo"
-          label-note="entre 3 et 24 caractères"
+          label-note="entre 3 et 16 caractères"
           :errored="usernameErrors.errored"
           :error="usernameErrors.text"
           :value="userStore.username"

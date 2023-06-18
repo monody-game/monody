@@ -30,7 +30,7 @@
             v-if="page === 1"
             type="text"
             label="Nom d'utilisateur"
-            label-note="entre 3 et 24 caractères"
+            label-note="entre 3 et 16 caractères"
             name="username"
             :value="username"
             :errored="errors.username.errored"
