@@ -93,7 +93,7 @@ class GameUsersController extends Controller
                     'infected' => $infected,
                 ]);
 
-                Redis::update("game:$gameId:deaths", fn (array $deaths) => array_diff($deaths, [$death]));
+                Redis::update("game:$gameId:deaths", fn (array $deaths) => array_filter($deaths, fn ($storedDeath) => $storedDeath !== $death));
 
                 break;
             }
