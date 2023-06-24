@@ -66,6 +66,6 @@ const no = () => {
 	modalStore.close();
 	clearInterval(interval);
 
-	router.push("play");
+	router.push({ name: "play" });
 };
 </script>
