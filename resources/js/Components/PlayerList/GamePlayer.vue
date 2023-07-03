@@ -344,6 +344,9 @@ window.Echo
 			votedBy.value = props.player;
 			isVoted.value = true;
 		}
+	})
+	.listen(".game.end", () => {
+		isVoted.value = false;
 	});
 
 const send = async function(votingUser, votedUser) {
