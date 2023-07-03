@@ -11,7 +11,7 @@ export default {
     async after(io, channel) {
         await InteractionService.closeInteraction(io, channel, "vote");
         const id = gameId(channel);
-        const interactions = JSON.parse(await client.get(`game:${id}:interactions`));
+        const interactions = JSON.parse((await client.get(`game:${id}:interactions`)));
         const interaction = interactions.find((interactionListItem) => interactionListItem.type === "angel");
         if (interaction) {
             await InteractionService.closeInteraction(io, channel, "angel");

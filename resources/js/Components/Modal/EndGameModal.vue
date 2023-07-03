@@ -26,7 +26,7 @@ const props = defineProps({
 	},
 	winningTeam: {
 		required: true,
-		type: String,
+		type: Number,
 	},
 	winners: {
 		required: true,

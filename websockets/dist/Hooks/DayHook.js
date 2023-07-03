@@ -7,12 +7,12 @@ export default {
     async before(io, channel) {
         const id = gameId(channel);
         const body = {
-            gameId: id
+            gameId: id,
         };
         const baseUrl = `${process.env.API_URL}/game`;
         await fetch(`${baseUrl}/chat/lock/false`, "POST", body);
         await fetch(`${baseUrl}/message/deaths`, "POST", body);
-        const interactions = JSON.parse(await client.get(`game:${id}:interactions`));
+        const interactions = JSON.parse((await client.get(`game:${id}:interactions`)));
         const interaction = interactions.find((interactionListItem) => interactionListItem.type === "angel");
         if (interaction) {
             const res = await fetch(`${process.env.API_URL}/interactions/status`, "POST", { gameId: id, type: "angel" });
@@ -21,13 +21,14 @@ export default {
                 return true;
             }
         }
-        const game = JSON.parse(await client.get(`game:${id}`));
-        const state = JSON.parse(await client.get(`game:${id}:state`));
-        if ("bitten" in game && (state.round ?? 0) - game["bitten"].round === 1) {
+        const game = JSON.parse((await client.get(`game:${id}`)));
+        const state = JSON.parse((await client.get(`game:${id}:state`)));
+        if ("bitten" in game &&
+            (state.round ?? 0) - game["bitten"].round === 1) {
             await fetch(`${baseUrl}/kill`, "POST", {
                 userId: game["bitten"].target,
                 gameId: id,
-                context: 'bitten'
+                context: "bitten",
             });
         }
         const res = await fetch(`${baseUrl}/end/check`, "POST", body);
@@ -36,5 +37,5 @@ export default {
             return true;
         }
         return false;
-    }
+    },
 };

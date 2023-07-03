@@ -8,5 +8,5 @@ export default {
     async after(io, channel) {
         await InteractionService.closeInteraction(io, channel, "mayor");
         return false;
-    }
+    },
 };

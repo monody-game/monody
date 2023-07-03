@@ -33,7 +33,7 @@ export class Channel {
     }
     isPrivate(channel) {
         let isPrivate = false;
-        this.privateChannels.forEach(privateChannel => {
+        this.privateChannels.forEach((privateChannel) => {
             const regex = new RegExp(privateChannel.replace("*", ".*"));
             if (regex.test(channel))
                 isPrivate = true;

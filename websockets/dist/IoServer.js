@@ -22,8 +22,8 @@ export class IoServer {
         });
         this.server = new Server(this.httpServer, {
             cors: {
-                credentials: true
-            }
+                credentials: true,
+            },
         });
         this.subscriber = new RedisSubscriber();
         this.emitter = new EventEmitter();
@@ -59,9 +59,13 @@ export class IoServer {
             if (!message.data.recipients)
                 return;
             for (const caller of message.data.recipients) {
-                const member = members.find(member => member.user_id === caller);
+                const member = members.find((member) => member.user_id === caller);
                 if (member && member.socketId) {
-                    this.server.to(member.socketId).emit(message.event, channel, { data: { payload: message.data.payload } });
+                    this.server
+                        .to(member.socketId)
+                        .emit(message.event, channel, {
+                        data: { payload: message.data.payload },
+                    });
                 }
             }
         });
@@ -72,15 +76,21 @@ export class IoServer {
     broadcast(channel, message) {
         if (message.data.volatile) {
             if (message.socket && this.find(message.socket)) {
-                this.find(message.socket)?.to(channel).volatile.emit(message.event, channel, message.data);
+                this.find(message.socket)
+                    ?.to(channel)
+                    .volatile.emit(message.event, channel, message.data);
             }
             else {
-                this.server.to(channel).volatile.emit(message.event, channel, message);
+                this.server
+                    .to(channel)
+                    .volatile.emit(message.event, channel, message);
             }
             return;
         }
         if (message.socket && this.find(message.socket)) {
-            this.find(message.socket)?.to(channel).emit(message.event, channel, message.data);
+            this.find(message.socket)
+                ?.to(channel)
+                .emit(message.event, channel, message.data);
         }
         else {
             this.server.to(channel).emit(message.event, channel, message);

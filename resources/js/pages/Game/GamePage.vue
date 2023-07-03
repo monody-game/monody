@@ -23,7 +23,7 @@
         </svg>
         <p>Accueil</p>
       </a>
-      <Suspense><GameCounter /></Suspense>
+      <GameCounter />
       <svg
         class="game-page__details"
         @click="modalStore.open('game-details')"
@@ -150,6 +150,7 @@ window.Echo.join(`game.${gameId}`)
 		store.contaminated = e.contaminated;
 		store.roles = roles;
 		store.type = e.type;
+		store.currentState = e.state;
 
 		if (e.type === 1 && e.discord === null) {
 			const res = await window.JSONFetch(`/game/${gameId}/discord`);
@@ -236,6 +237,9 @@ window.Echo.join(`game.${gameId}`)
 		winningTeam.value = payload.winningTeam;
 
 		modalStore.open("end-game-modal");
+	})
+	.listen(".game.state", async (data) => {
+		store.state = data.status;
 	});
 
 const leave = () => {

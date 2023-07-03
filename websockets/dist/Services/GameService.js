@@ -5,7 +5,8 @@ import { UserService } from "./UserService.js";
 import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
 import { success } from "../Logger.js";
-const WaitingState = (await fetch(`${process.env.API_URL}/state/0`)).json.data.state;
+const WaitingState = (await fetch(`${process.env.API_URL}/state/0`)).json.data
+    .state;
 export class GameService {
     emitter;
     stateManager;
@@ -15,24 +16,24 @@ export class GameService {
         this.stateManager = new StateManager(io, emitter);
         this.counterService = new CounterService(io, emitter);
         this.emitter.removeAllListeners("game.start");
-        this.emitter.on('game.start', async (data) => {
+        this.emitter.on("game.start", async (data) => {
             await this.startGame(`presence-game.${data.game.id}`, data.game, io);
         });
     }
     static async getGame(id) {
-        return JSON.parse(await client.get("game:" + id));
+        return JSON.parse((await client.get("game:" + id)));
     }
     static async exists(id) {
         return await client.exists("game:" + id);
     }
     static async getMembers(id) {
-        return JSON.parse(await client.get(`game:${id}:members`));
+        return JSON.parse((await client.get(`game:${id}:members`)));
     }
     async setGame(id, data) {
         await client.set("game:" + id, JSON.stringify(data));
     }
     async startGame(channel, game, socket) {
-        const shared = JSON.parse(await client.get("bot:game:shared") ?? "{}");
+        const shared = JSON.parse((await client.get("bot:game:shared")) ?? "{}");
         delete shared[game.id];
         await client.set("bot:game:shared", JSON.stringify(shared));
         game.is_started = true;
@@ -49,13 +50,15 @@ export class GameService {
             status: WaitingState.id,
             startTimestamp: Date.now(),
             counterDuration: WaitingState.duration,
-            round: 0
+            round: 0,
         }, channel);
     }
     static async roleManagement(io, channel) {
         const id = gameId(channel);
         const members = await GameService.getMembers(id);
-        await fetch(`${process.env.API_URL}/roles/assign`, "POST", { gameId: id });
+        await fetch(`${process.env.API_URL}/roles/assign`, "POST", {
+            gameId: id,
+        });
         const game = await GameService.getGame(id);
         for (const member of members) {
             if (!member.socketId)

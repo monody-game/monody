@@ -55,6 +55,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
+            ForceJsonResponse::class,
         ],
 
         'api' => [

@@ -2,11 +2,11 @@ import { StateManager } from "./StateManager.js";
 import { gameId } from "../Helpers/Functions.js";
 import { error, info, warn } from "../Logger.js";
 import { GameService } from "./GameService.js";
-import {Server, Socket} from "socket.io";
-import {EventEmitter} from "node:events";
+import { Server, Socket } from "socket.io";
+import { EventEmitter } from "node:events";
 
 export class CounterService {
-	private counterId: {[key: string]: number} = {};
+	private counterId: { [key: string]: number } = {};
 	private readonly io: Server;
 	private emitter: EventEmitter;
 	private manager: StateManager;
@@ -17,7 +17,11 @@ export class CounterService {
 		this.manager = new StateManager(this.io, emitter);
 	}
 
-	async cycle(channel: string, socket: Socket|Server, duration: number|null = null) {
+	async cycle(
+		channel: string,
+		socket: Socket | Server,
+		duration: number | null = null
+	) {
 		this.clearListeners();
 
 		const id = gameId(channel);
@@ -41,16 +45,22 @@ export class CounterService {
 
 			clearTimeout(this.counterId[data.gameId]);
 
-			info(`Skipping time in game ${data.gameId}, in state ${state.status} to time ${data.to}`);
+			info(
+				`Skipping time in game ${data.gameId}, in state ${state.status} to time ${data.to}`
+			);
 
-			await this.manager.setState({
-				status: state.status,
-				startTimestamp: Date.now(),
-				counterDuration: data.to,
-				counterId: this.counterId[data.gameId],
-				round: state.round,
-				skipped: true
-			}, `presence-game.${data.gameId}`, true);
+			await this.manager.setState(
+				{
+					status: state.status,
+					startTimestamp: Date.now(),
+					counterDuration: data.to,
+					counterId: this.counterId[data.gameId],
+					round: state.round,
+					skipped: true,
+				},
+				`presence-game.${data.gameId}`,
+				true
+			);
 
 			setTimeout(async () => {
 				await this.cycle(channel, socket);
@@ -61,7 +71,7 @@ export class CounterService {
 			clearTimeout(this.counterId[gameId]);
 		});
 
-		const timeoutId = counterId[Symbol.toPrimitive]()
+		const timeoutId = counterId[Symbol.toPrimitive]();
 		this.counterId[id] = timeoutId;
 
 		try {

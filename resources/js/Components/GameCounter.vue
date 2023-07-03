@@ -51,6 +51,7 @@ const sound = new Audio("../sounds/bip.mp3");
 const roundText = ref("");
 const chatStore = useChatStore();
 const modalStore = useModalStore();
+const gameStore = useStore();
 const halt = ref(false);
 
 const getState = async function(toRetrieveState = null) {
@@ -88,6 +89,7 @@ onBeforeRouteLeave(() => {
 });
 
 const setData = async function (data) {
+	gameStore.currentState = data;
 	clearInterval(counterId.value);
 	time.value = data.counterDuration === -1 ? 0 : getDuration(data.counterDuration, data.startTimestamp);
 	totalTime.value = data.counterDuration === -1 ? 0 : data.counterDuration;

@@ -4,8 +4,8 @@ import { join } from "node:path";
 
 chalk.level = 3;
 
-type LogData = (object | string | unknown)[]
-type LogLevel = "LOG" | "SUCCESS" | "INFO" | "WARN" | "ERROR"
+type LogData = (object | string | unknown)[];
+type LogLevel = "LOG" | "SUCCESS" | "INFO" | "WARN" | "ERROR";
 
 const log = (...data: LogData) => {
 	if (process.env.APP_DEBUG) {
@@ -38,7 +38,9 @@ const blank = (n = 1) => {
 
 const dataLog = (data: LogData, level: LogLevel) => {
 	for (const fragment of data) {
-		const message = chalk.gray(`${date()} | ${getLeveLColor(level).replace("%s", level)} -`);
+		const message = chalk.gray(
+			`${date()} | ${getLeveLColor(level).replace("%s", level)} -`
+		);
 
 		if (typeof fragment === "string") {
 			console.log(message + " " + chalk.white(fragment));
@@ -47,12 +49,15 @@ const dataLog = (data: LogData, level: LogLevel) => {
 		}
 
 		console.log(message + " ", fragment);
-		fileLog(`${date()} | ${level} - % NON STRING DATA FRAGMENT % ` + fragment, level);
+		fileLog(
+			`${date()} | ${level} - % NON STRING DATA FRAGMENT % ` + fragment,
+			level
+		);
 	}
 };
 
 const fileLog = (message: string, level?: LogLevel) => {
-	if(level && ['ERROR', 'WARN', 'LOG'].includes(level)) {
+	if (level && ["ERROR", "WARN", "LOG"].includes(level)) {
 		const logFile = join("./", "storage", "logs", "ws.log");
 		appendFileSync(logFile, message + "\n");
 	}
@@ -60,7 +65,14 @@ const fileLog = (message: string, level?: LogLevel) => {
 
 const date = () => {
 	const dateObject = new Date();
-	return `${String(dateObject.getDate()).padStart(2, "0")}/${String(dateObject.getMonth() + 1).padStart(2, "0")}/${dateObject.getFullYear()} ${dateObject.getHours()}:${String(dateObject.getMinutes()).padStart(2, "0")}:${String(dateObject.getSeconds()).padStart(2, "0")}`;
+	return `${String(dateObject.getDate()).padStart(2, "0")}/${String(
+		dateObject.getMonth() + 1
+	).padStart(
+		2,
+		"0"
+	)}/${dateObject.getFullYear()} ${dateObject.getHours()}:${String(
+		dateObject.getMinutes()
+	).padStart(2, "0")}:${String(dateObject.getSeconds()).padStart(2, "0")}`;
 };
 
 const getLeveLColor = (level: string): string => {
@@ -76,7 +88,7 @@ const getLeveLColor = (level: string): string => {
 		case "ERROR":
 			return chalk.red("%s");
 		default:
-			return chalk.white("%s")
+			return chalk.white("%s");
 	}
 };
 

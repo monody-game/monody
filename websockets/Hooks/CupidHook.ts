@@ -1,5 +1,5 @@
 import { InteractionService } from "../Services/InteractionService.js";
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 
 export default {
 	identifier: 15,
@@ -12,5 +12,5 @@ export default {
 		await InteractionService.closeInteraction(io, channel, "cupid");
 
 		return false;
-	}
+	},
 };
