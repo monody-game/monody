@@ -7,9 +7,9 @@ export class ChatService {
             data: {
                 payload: {
                     content: message,
-                    type
-                }
-            }
+                    type,
+                },
+            },
         });
     }
     static message = (socket, channel, message, to = null) => {

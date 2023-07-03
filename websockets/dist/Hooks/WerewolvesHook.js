@@ -8,7 +8,7 @@ export default {
         await InteractionService.openInteraction(io, channel, "werewolves");
         await fetch(`${baseURL}/chat/lock/false`, "POST", {
             gameId: gameId(channel),
-            team: "2"
+            team: "2",
         });
         return false;
     },
@@ -16,7 +16,7 @@ export default {
         await InteractionService.closeInteraction(io, channel, "werewolves");
         await fetch(`${baseURL}/chat/lock/true`, "POST", {
             gameId: gameId(channel),
-            team: "2"
+            team: "2",
         });
         return false;
     },

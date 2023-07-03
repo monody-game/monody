@@ -4,7 +4,7 @@ export const useStore = defineStore("game", {
 	state: () => {
 		return {
 			playerList: [],
-			state: 0,
+			currentState: {},
 			currentInteractionId: "",
 			availableActions: {},
 			playerRefs: [],

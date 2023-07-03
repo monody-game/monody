@@ -13,7 +13,7 @@ export class PrivateChannel {
         let response;
         const params = {
             channel_name: options.form.channel_name,
-            socket_id: socket.id
+            socket_id: socket.id,
         };
         if (process.env.APP_ENV === "local") {
             response = await fetch("https://web/broadcasting/auth", "POST", params, socket);

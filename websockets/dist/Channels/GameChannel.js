@@ -4,7 +4,8 @@ import { GameService } from "../Services/GameService.js";
 import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
 import { info } from "../Logger.js";
-const StartingState = (await fetch(`${process.env.API_URL}/state/1`, "GET")).json;
+const StartingState = (await fetch(`${process.env.API_URL}/state/1`, "GET"))
+    .json;
 const EndState = (await fetch(`${process.env.API_URL}/state/8`, "GET")).json;
 export class GameChannel {
     io;
@@ -18,7 +19,7 @@ export class GameChannel {
         this.emitter = emitter;
     }
     async getMembers(channel) {
-        const members = JSON.parse(await client.get(`game:${gameId(channel)}:members`));
+        const members = JSON.parse((await client.get(`game:${gameId(channel)}:members`)));
         if (!members)
             return [];
         return members;
@@ -26,14 +27,15 @@ export class GameChannel {
     async isMember(channel, member) {
         let members = await this.getMembers(channel);
         members = await this.removeInactive(channel, members);
-        const search = members.filter(m => m.user_id === member.user_id);
+        const search = members.filter((m) => m.user_id === member.user_id);
         return search && search.length > 0;
     }
     async removeInactive(channel, members) {
         const clients = await this.io.in(channel).fetchSockets();
-        members = members.filter(member => {
+        members = members.filter((member) => {
             if (member.socketId)
-                return clients.filter(client => client.id === member.socketId).length >= 0;
+                return (clients.filter((client) => client.id === member.socketId)
+                    .length >= 0);
             return false;
         });
         if (members.length > 0) {
@@ -54,19 +56,21 @@ export class GameChannel {
         }
         await fetch(`${process.env.API_URL}/game/join`, "POST", {
             gameId: id,
-            userId: member.user_id
+            userId: member.user_id,
         });
         const count = await this.gameService.getRolesCount(id);
         const game = await GameService.getGame(id);
         if (members.length === count && game.is_started === false) {
-            const canStart = await fetch(`${process.env.API_URL}/game/start/check`, 'POST', {
-                gameId: game.id
+            const canStart = await fetch(`${process.env.API_URL}/game/start/check`, "POST", {
+                gameId: game.id,
             });
             if (canStart.ok) {
                 await this.gameService.startGame(channel, game, socket);
                 const list = await fetch(`${process.env.API_URL}/game/list/*`, "GET");
-                socket.broadcast.to("home").volatile.emit("game-list.update", "home", {
-                    data: list.json.data
+                socket.broadcast
+                    .to("home")
+                    .volatile.emit("game-list.update", "home", {
+                    data: list.json.data,
                 });
             }
         }
@@ -87,12 +91,12 @@ export class GameChannel {
             game.is_started = false;
             await this.gameService.setGame(id, game);
         }
-        const member = members.find(m => m.socketId === socket.id);
+        const member = members.find((m) => m.socketId === socket.id);
         if (!member)
             return;
-        members = members.filter(m => m.socketId !== member.socketId);
+        members = members.filter((m) => m.socketId !== member.socketId);
         await fetch(`${process.env.API_URL}/game/leave`, "POST", {
-            userId: member.user_id
+            userId: member.user_id,
         });
         if (members.length === 0) {
             await this.onLeave(channel, member);
@@ -114,21 +118,26 @@ export class GameChannel {
             return;
         socket.broadcast.to(channel).emit("presence:joining", channel, member);
         const gameData = await fetch(`${process.env.API_URL}/game/data/${gameId(channel)}/${member.user_id}`);
-        this.io.to(member.socketId).emit("game.data", channel, { data: { payload: gameData.json.data.game } });
+        this.io
+            .to(member.socketId)
+            .emit("game.data", channel, {
+            data: { payload: gameData.json.data.game },
+        });
     }
     async onLeave(channel, member) {
         const id = gameId(channel);
-        const game = JSON.parse(await client.get(`game:${id}`));
+        const game = JSON.parse((await client.get(`game:${id}`)));
         const state = await this.stateManager.getState(id);
-        if (!game.is_started || state.status === EndState.data.state.id) {
+        if (!game.is_started ||
+            state.status === EndState.data.state.id ||
+            Object.keys(game.dead_users).includes(member.user_id)) {
             this.io.to(channel).emit("presence:leaving", channel, member);
+            return;
         }
-        else {
-            this.io.to(channel).emit("list.disconnect", channel, member);
-        }
+        this.io.to(channel).emit("list.disconnect", channel, member);
         setTimeout(async () => {
             const isMember = await this.isMember(channel, member);
-            const game = JSON.parse(await client.get(`game:${id}`));
+            const game = JSON.parse((await client.get(`game:${id}`)));
             if (!game) {
                 return;
             }
@@ -138,25 +147,29 @@ export class GameChannel {
             await fetch(`${process.env.API_URL}/game/kill`, "POST", {
                 userId: member.user_id,
                 gameId: id,
-                context: 'disconnect',
-                instant: true
+                context: "disconnect",
+                instant: true,
             });
             const canEnd = await fetch(`${process.env.API_URL}/game/end/check`, "POST", { gameId: id });
             if (canEnd.status === 204) {
-                await fetch(`${process.env.API_URL}/game/end`, "POST", { gameId: id });
+                await fetch(`${process.env.API_URL}/game/end`, "POST", {
+                    gameId: id,
+                });
                 this.emitter.emit("time.halt");
                 await this.stateManager.setState({
                     status: EndState.data.state.id,
                     round: state.round,
                     counterDuration: EndState.data.state.duration,
-                    startTimestamp: Date.now()
+                    startTimestamp: Date.now(),
                 }, channel);
             }
         }, 30_000);
     }
     async onDelete(id) {
         await fetch(`${process.env.API_URL}/game`, "DELETE", { gameId: id });
-        this.io.to('bot.private').volatile.emit('game.share.clear', 'bot.private');
+        this.io
+            .to("bot.private")
+            .volatile.emit("game.share.clear", "bot.private");
         info(`Deleting game with id: ${id}`);
     }
     async onSubscribed(socket, channel, members) {

@@ -5,7 +5,7 @@ import { readdirSync } from "node:fs";
 import { GameService } from "./GameService.js";
 import { error, log } from "../Logger.js";
 export async function getRounds(gameId = "") {
-    if (!await GameService.exists(gameId)) {
+    if (!(await GameService.exists(gameId))) {
         return [];
     }
     const apiRounds = await fetch(`${process.env.API_URL}/rounds/${gameId}`);
@@ -14,7 +14,7 @@ export async function getRounds(gameId = "") {
     }
     const __dirname = dirname(fileURLToPath(import.meta.url));
     const directory = join(__dirname, "../Hooks");
-    const files = readdirSync(directory).filter(file => file.endsWith("Hook.js"));
+    const files = readdirSync(directory).filter((file) => file.endsWith("Hook.js"));
     const hooks = [];
     const hookedStates = [];
     const rounds = [];

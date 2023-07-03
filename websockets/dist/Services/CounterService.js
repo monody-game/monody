@@ -37,7 +37,7 @@ export class CounterService {
                 counterDuration: data.to,
                 counterId: this.counterId[data.gameId],
                 round: state.round,
-                skipped: true
+                skipped: true,
             }, `presence-game.${data.gameId}`, true);
             setTimeout(async () => {
                 await this.cycle(channel, socket);

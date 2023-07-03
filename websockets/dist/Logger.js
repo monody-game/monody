@@ -38,7 +38,7 @@ const dataLog = (data, level) => {
     }
 };
 const fileLog = (message, level) => {
-    if (level && ['ERROR', 'WARN', 'LOG'].includes(level)) {
+    if (level && ["ERROR", "WARN", "LOG"].includes(level)) {
         const logFile = join("./", "storage", "logs", "ws.log");
         appendFileSync(logFile, message + "\n");
     }

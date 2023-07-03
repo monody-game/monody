@@ -1,8 +1,8 @@
 import { client } from "./Connection.js";
-import {error, info} from "../Logger.js";
+import { error, info } from "../Logger.js";
 
 export class RedisSubscriber {
-	private sub: typeof client
+	private sub: typeof client;
 
 	constructor() {
 		this.sub = client.duplicate();
@@ -23,7 +23,7 @@ export class RedisSubscriber {
 
 				return await callback(channel, event);
 			} catch (e) {
-				error(e)
+				error(e);
 			}
 		});
 	}

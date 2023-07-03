@@ -1,5 +1,5 @@
 import { client } from "../Redis/Connection.js";
-import { getRounds } from "./RoundService.js";
+import { getRounds, } from "./RoundService.js";
 import { ChatService } from "./ChatService.js";
 import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
@@ -20,7 +20,7 @@ export class StateManager {
             status: state.status,
             counterDuration: state.counterDuration,
             startTimestamp: state.startTimestamp,
-            round: state.round || 0
+            round: state.round || 0,
         });
         if (!isSkip) {
             const message = await fetch(`${process.env.API_URL}/state/${state.status}/message`);
@@ -31,7 +31,7 @@ export class StateManager {
         return this;
     }
     async getState(id) {
-        return JSON.parse(await client.get(`game:${id}:state`));
+        return JSON.parse((await client.get(`game:${id}:state`)));
     }
     async nextState(channel, counterId) {
         const id = gameId(channel);
@@ -59,8 +59,10 @@ export class StateManager {
         let currentRoundObject = rounds[currentRound];
         if (!currentRoundObject)
             return;
-        let stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
-        let currentState = typeof currentRoundObject[stateIndex] === "undefined" ? 0 : currentRoundObject[stateIndex].identifier;
+        let stateIndex = currentRoundObject.findIndex((roundState) => roundState.identifier === state["status"]) + 1;
+        let currentState = typeof currentRoundObject[stateIndex] === "undefined"
+            ? 0
+            : currentRoundObject[stateIndex].identifier;
         let isLast = stateIndex === currentRoundObject.length;
         halt = await this.handleAfter(isLast, currentRoundObject, stateIndex, channel);
         if (currentState === 6) {
@@ -68,8 +70,12 @@ export class StateManager {
             currentRoundObject = rounds[currentRound];
             if (!currentRoundObject)
                 return;
-            stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
-            currentState = typeof currentRoundObject[stateIndex] === "undefined" ? 0 : currentRoundObject[stateIndex].identifier;
+            stateIndex =
+                currentRoundObject.findIndex((roundState) => roundState.identifier === state["status"]) + 1;
+            currentState =
+                typeof currentRoundObject[stateIndex] === "undefined"
+                    ? 0
+                    : currentRoundObject[stateIndex].identifier;
         }
         if (currentRound < loopingRoundIndex &&
             !currentRoundObject[stateIndex]) {
@@ -79,7 +85,8 @@ export class StateManager {
             currentState = round[0].identifier;
             stateIndex = 0;
         }
-        else if (currentRound >= loopingRoundIndex && !currentRoundObject[stateIndex]) {
+        else if (currentRound >= loopingRoundIndex &&
+            !currentRoundObject[stateIndex]) {
             // We are at the end of the looping round
             currentRound++;
             const round = rounds[currentRound];
@@ -92,7 +99,9 @@ export class StateManager {
         const currentUsedRound = rounds[currentRound];
         const currentUsedState = currentUsedRound[stateIndex];
         let duration = currentUsedState.duration;
-        halt = halt || await this.handleBefore(currentRoundObject, stateIndex, channel);
+        halt =
+            halt ||
+                (await this.handleBefore(currentRoundObject, stateIndex, channel));
         if (halt) {
             const lastRound = rounds.at(-1);
             const endState = lastRound[0];
@@ -105,7 +114,7 @@ export class StateManager {
             startTimestamp: Date.now(),
             counterDuration: duration,
             counterId: counterId,
-            round: currentRound
+            round: currentRound,
         }, channel);
     }
     async getNextStateDuration(channel) {
@@ -120,7 +129,7 @@ export class StateManager {
             currentRound = loopingRoundIndex;
         }
         const currentRoundObject = rounds[currentRound];
-        const stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
+        const stateIndex = currentRoundObject.findIndex((roundState) => roundState.identifier === state["status"]) + 1;
         if (currentRound < loopingRoundIndex &&
             typeof currentRoundObject[stateIndex] === "undefined" &&
             typeof rounds[currentRound + 1] !== "undefined") {

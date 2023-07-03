@@ -12,7 +12,8 @@
 		"build": "vite build",
 		"tsbuild": "tsc",
 		"start": "node websockets/dist/websockets.js",
-		"serve": "tsc-watch --onSuccess \"npm run start\""
+		"serve": "tsc-watch --onSuccess \"npm run start\"",
+		"format": "prettier --write \"websockets/\""
 	},
 	"dependencies": {
 		"@grafikart/spinning-dots-element": "latest",
@@ -37,6 +38,7 @@
 		"eslint-plugin-vue": "^9.14.1",
 		"laravel-vite-plugin": "^0.7.8",
 		"postcss": "^8.4.24",
+		"prettier": "^2.8.8",
 		"sass": "^1.62.1",
 		"tsc-watch": "^6.0.4",
 		"typescript": "^5.1.3",
