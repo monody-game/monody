@@ -50,7 +50,7 @@
       <input
         ref="input"
         v-model="content"
-        :disabled="isLocked === true"
+        :disabled="isLocked"
         :class="{locked: isLocked}"
         class="chat__send-input"
         :placeholder="isLocked ? 'Chat verrouillé' : 'Envoyer un message' "
@@ -97,18 +97,14 @@ const content = ref("");
 const input = ref(null);
 const button = ref(null);
 const icon = ref(null);
+const isLocked = ref(false);
 const gameStore = useGameStore();
 const userStore = useUserStore();
 const route = useRoute();
 const store = useStore();
 let interval = null;
-const isLocked = ref(false);
 
 const chatSelected = ref("main");
-
-gameStore.$subscribe((mutation, state) => {
-	isLocked.value = state.chat_locked;
-});
 
 const sendMessage = async function() {
 	if (content.value.length < 500) {
