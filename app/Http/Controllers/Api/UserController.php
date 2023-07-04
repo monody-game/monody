@@ -43,20 +43,19 @@ class UserController extends Controller
             $user->sendEmailVerificationNotification();
 
             return JsonApiResponse::make([
-                'user' => $user
-                    ->makeVisible([
-                        'email',
-                        'email_verified_at',
-                        'discord_linked_at',
-                    ]),
-            ])
-                ->withPopup(
-                    AlertType::Info,
-                    "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
-                    "Il peut s'écouler quelques minutes avant de recevoir le mail. Si vous ne le recevez pas, cliquez ",
-                    route('verification.send', [], false),
-                    'ici pour renvoyer le lien.'
-                );
+                'user' => $user->makeVisible([
+                    'email',
+                    'email_verified_at',
+                    'discord_linked_at',
+                ]),
+            ])->withPopup(
+                AlertType::Info,
+                "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
+                "Il peut s'écouler quelques minutes avant de recevoir le mail. Si vous ne le recevez pas, cliquez ",
+                route('verification.send', [], false),
+                'ici pour renvoyer le lien.'
+            )
+                ->flushCacheFor('/user');
         }
 
         return new JsonApiResponse([
