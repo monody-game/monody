@@ -19,6 +19,7 @@ import DebugBar from "./Components/DebugBar.vue";
 import AlertList from "./Components/Alerts/AlertList.vue";
 import PopupComponent from "./Components/Alerts/PopupComponent.vue";
 import confetti from "canvas-confetti";
+import { useCache } from "./composables/cache.js";
 
 const popupStore = useStore();
 const userStore = useUserStore();
@@ -27,7 +28,7 @@ const badgeStore = useBadgesStore();
 const url = new URL(window.location);
 const isDev = ref(localStorage.getItem("dev") === "true");
 
-if (url.searchParams.has("pwa")) {
+if (url.searchParams.has("pwa") && localStorage.getItem("pwa_thanked") !== true) {
 	localStorage.setItem("pwa_thanked", true);
 	alertStore.addAlerts({
 		success: "Merci d'avoir installé Monody !",
@@ -44,7 +45,16 @@ if (url.searchParams.has("token")) {
 	location.replace(url.href);
 }
 
-if (url.searchParams.has("dev")) {
+if (url.searchParams.has("cache") || url.searchParams.has("clearCache")) {
+	useCache().clear();
+
+
+	url.searchParams.delete("cache");
+	url.searchParams.delete("clearCache");
+	location.replace(url.href);
+}
+
+if (url.searchParams.has("dev") || url.searchParams.has("debug")) {
 	if (localStorage.getItem("dev") === "true") {
 		localStorage.setItem("dev", false);
 	} else {
@@ -52,6 +62,7 @@ if (url.searchParams.has("dev")) {
 	}
 
 	url.searchParams.delete("dev");
+	url.searchParams.delete("debug");
 	location.replace(url.href);
 }
 

@@ -33,5 +33,6 @@ export function useCache() {
 		},
 		exists: (key) => exists(key, storage),
 		flush: (key) => flush(key, storage),
+		clear: () => localStorage.removeItem("cache"),
 	};
 }
