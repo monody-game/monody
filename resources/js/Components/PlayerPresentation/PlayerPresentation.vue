@@ -1,58 +1,56 @@
 <template>
-  <div class="player-presentation__container">
-    <div class="player-presentation__main">
-      <svg
-        class="player-presentation__leaderboards"
-        @click="modalStore.open('leaderboards')"
-      >
-        <use href="/sprite.svg#ranking" />
-      </svg>
-      <svg
-        class="player-presentation__badges"
-        @click="modalStore.open('badges')"
-      >
-        <use :href="'/sprite.svg#badges_' + store.theme " />
-      </svg>
-      <div class="pill pill-light player-presentation__exp">
-        {{ store.exp }}/{{ store.exp_needed }}
-      </div>
-      <ProgressBar style="position: relative;">
-        <img
-          :src="store.avatar + '?h=200&dpr=2'"
-          alt=""
-          class="player-presentation__avatar"
-        >
-        <div class="player-presentation__levels">
-          <div
-            title="Niveau"
-          >
-            <svg>
-              <use href="/sprite.svg#level" />
-            </svg>
-            <p>{{ store.level }}</p>
-          </div>
-          <div
-            title="Elo"
-          >
-            <svg>
-              <use href="/sprite.svg#elo" />
-            </svg>
-            <p>{{ store.elo }}</p>
-          </div>
-        </div>
-      </ProgressBar>
-      <span class="pill pill-light player-presentation__name">{{ store.username }}</span>
-      <UserStatistics />
-      <div class="player-presentation__footer">
-        <svg @click="modalStore.open('profile-modal')">
-          <use href="/sprite.svg#wheel" />
-        </svg>
-        <svg @click="modalStore.open('share-profile')">
-          <use href="/sprite.svg#share" />
-        </svg>
-      </div>
-    </div>
-  </div>
+	<div class="player-presentation__container">
+		<div class="player-presentation__main">
+			<svg
+				class="player-presentation__leaderboards"
+				@click="modalStore.open('leaderboards')"
+			>
+				<use href="/sprite.svg#ranking" />
+			</svg>
+			<svg
+				class="player-presentation__badges"
+				@click="modalStore.open('badges')"
+			>
+				<use :href="'/sprite.svg#badges_' + store.theme" />
+			</svg>
+			<div class="pill pill-light player-presentation__exp">
+				{{ store.exp }}/{{ store.exp_needed }}
+			</div>
+			<ProgressBar style="position: relative">
+				<img
+					:src="store.avatar + '?h=200&dpr=2'"
+					alt=""
+					class="player-presentation__avatar"
+				/>
+				<div class="player-presentation__levels">
+					<div title="Niveau">
+						<svg>
+							<use href="/sprite.svg#level" />
+						</svg>
+						<p>{{ store.level }}</p>
+					</div>
+					<div title="Elo">
+						<svg>
+							<use href="/sprite.svg#elo" />
+						</svg>
+						<p>{{ store.elo }}</p>
+					</div>
+				</div>
+			</ProgressBar>
+			<span class="pill pill-light player-presentation__name">{{
+				store.username
+			}}</span>
+			<UserStatistics />
+			<div class="player-presentation__footer">
+				<svg @click="modalStore.open('profile-modal')">
+					<use href="/sprite.svg#wheel" />
+				</svg>
+				<svg @click="modalStore.open('share-profile')">
+					<use href="/sprite.svg#share" />
+				</svg>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup>

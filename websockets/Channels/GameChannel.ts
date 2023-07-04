@@ -166,11 +166,9 @@ export class GameChannel {
 			}`
 		);
 
-		this.io
-			.to(member.socketId)
-			.emit("game.data", channel, {
-				data: { payload: gameData.json.data.game },
-			});
+		this.io.to(member.socketId).emit("game.data", channel, {
+			data: { payload: gameData.json.data.game },
+		});
 	}
 
 	async onLeave(channel: string, member: Member) {

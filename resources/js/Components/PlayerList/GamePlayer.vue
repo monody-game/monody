@@ -1,107 +1,102 @@
 <template>
-  <div
-    ref="player"
-    :data-id="props.player.id"
-    class="player__container"
-    :data-is-dead="isDead"
-    @click="send(userID, props.player.id)"
-  >
-    <PlayerInteractionBubble
-      v-if="isVoted"
-      :type="interactionType"
-      :data="votedBy"
-    />
-    <div class="player__avatar-container">
-      <img
-        :alt="props.player.username + `'s avatar`"
-        :class="isVoted === true ? 'player__is-voted' : ''"
-        :src="props.player.avatar + '?h=120&dpr=2'"
-        class="player__avatar"
-      >
-      <div
-        v-if="isDead === true"
-        class="player__is-dead"
-      >
-        <span class="player__is-dead-shadow" />
-        <svg>
-          <use href="/sprite.svg#death" />
-        </svg>
-      </div>
-      <div class="player__badges">
-        <span
-          v-if="isMayor === true"
-          title="Ce joueur est le maire"
-          class="player__is-mayor"
-        >
-          <svg>
-            <use href="/sprite.svg#mayor" />
-          </svg>
-        </span>
-        <span
-          v-if="isWerewolf === true"
-          title="Ce joueur est votre allié"
-          class="player__is-wolf"
-        />
-        <span
-          v-if="isPaired === true"
-          title="Vous êtes en couple"
-          class="player__is-paired"
-        >
-          <svg>
-            <use href="/sprite.svg#heart" />
-          </svg>
-        </span>
-        <span
-          v-if="isGuarded === true"
-          title="Vous avez protégé ce joueur"
-          class="player__is-guarded"
-        >
-          <svg>
-            <use href="/sprite.svg#guard" />
-          </svg>
-        </span>
-        <span
-          v-if="isContaminated === true"
-          title="Ce joueur est infecté"
-          class="player__is-contaminated"
-        >
-          <svg>
-            <use href="/sprite.svg#parasite" />
-          </svg>
-        </span>
-        <span
-          v-if="isTargeted === true"
-          title="Ce joueur est votre cible"
-          class="player__is-target"
-        >
-          <svg>
-            <use href="/sprite.svg#target" />
-          </svg>
-        </span>
-      </div>
-      <span
-        v-if="isDisconnected === true"
-        title="Ce joueur s'est déconnecté"
-        class="player__is-disconnected"
-      >
-        <svg>
-          <use href="/sprite.svg#websockets" />
-        </svg>
-      </span>
-    </div>
-    <p
-      class="player__username"
-      :data-is-owner="isOwner"
-      :title="isOwner ? 'Ce joueur a créé la partie' : ''"
-    >
-      <svg
-        v-if="isOwner === true"
-      >
-        <use href="/sprite.svg#crown" />
-      </svg>
-      {{ props.player.username }}
-    </p>
-  </div>
+	<div
+		ref="player"
+		:data-id="props.player.id"
+		class="player__container"
+		:data-is-dead="isDead"
+		@click="send(userID, props.player.id)"
+	>
+		<PlayerInteractionBubble
+			v-if="isVoted"
+			:type="interactionType"
+			:data="votedBy"
+		/>
+		<div class="player__avatar-container">
+			<img
+				:alt="props.player.username + `'s avatar`"
+				:class="isVoted === true ? 'player__is-voted' : ''"
+				:src="props.player.avatar + '?h=120&dpr=2'"
+				class="player__avatar"
+			/>
+			<div v-if="isDead === true" class="player__is-dead">
+				<span class="player__is-dead-shadow" />
+				<svg>
+					<use href="/sprite.svg#death" />
+				</svg>
+			</div>
+			<div class="player__badges">
+				<span
+					v-if="isMayor === true"
+					title="Ce joueur est le maire"
+					class="player__is-mayor"
+				>
+					<svg>
+						<use href="/sprite.svg#mayor" />
+					</svg>
+				</span>
+				<span
+					v-if="isWerewolf === true"
+					title="Ce joueur est votre allié"
+					class="player__is-wolf"
+				/>
+				<span
+					v-if="isPaired === true"
+					title="Vous êtes en couple"
+					class="player__is-paired"
+				>
+					<svg>
+						<use href="/sprite.svg#heart" />
+					</svg>
+				</span>
+				<span
+					v-if="isGuarded === true"
+					title="Vous avez protégé ce joueur"
+					class="player__is-guarded"
+				>
+					<svg>
+						<use href="/sprite.svg#guard" />
+					</svg>
+				</span>
+				<span
+					v-if="isContaminated === true"
+					title="Ce joueur est infecté"
+					class="player__is-contaminated"
+				>
+					<svg>
+						<use href="/sprite.svg#parasite" />
+					</svg>
+				</span>
+				<span
+					v-if="isTargeted === true"
+					title="Ce joueur est votre cible"
+					class="player__is-target"
+				>
+					<svg>
+						<use href="/sprite.svg#target" />
+					</svg>
+				</span>
+			</div>
+			<span
+				v-if="isDisconnected === true"
+				title="Ce joueur s'est déconnecté"
+				class="player__is-disconnected"
+			>
+				<svg>
+					<use href="/sprite.svg#websockets" />
+				</svg>
+			</span>
+		</div>
+		<p
+			class="player__username"
+			:data-is-owner="isOwner"
+			:title="isOwner ? 'Ce joueur a créé la partie' : ''"
+		>
+			<svg v-if="isOwner === true">
+				<use href="/sprite.svg#crown" />
+			</svg>
+			{{ props.player.username }}
+		</p>
+	</div>
 </template>
 
 <script setup>
@@ -114,8 +109,8 @@ import PlayerInteractionBubble from "./PlayerInteractionBubble.vue";
 const props = defineProps({
 	player: {
 		type: Object,
-		required: true
-	}
+		required: true,
+	},
 });
 
 const gameStore = useGameStore();
@@ -187,8 +182,7 @@ const userID = computed(() => {
 	return userStore.id;
 });
 
-window.Echo
-	.join(`game.${gameId.value}`)
+window.Echo.join(`game.${gameId.value}`)
 	.joining((user) => {
 		if (user.id === props.player.id) {
 			isDisconnected.value = false;
@@ -197,121 +191,141 @@ window.Echo
 	.listen(".list.disconnect", (user) => {
 		if (user.user_id === props.player.id) {
 			isDisconnected.value = true;
-			chatStore.send(`${user.user_info.username} s'est déconnecté, il a 30 secondes pour se reconnecter.`, "warn");
+			chatStore.send(
+				`${user.user_info.username} s'est déconnecté, il a 30 secondes pour se reconnecter.`,
+				"warn"
+			);
 		}
 	})
 	.listen(".interaction.open", ({ interaction }) => {
 		interactionType.value = interaction.type;
 		gameStore.currentInteractionId = interaction.id;
 
-		if (gameStore.dead_users.includes(userStore.id) && interaction.type !== "hunter") {
+		if (
+			gameStore.dead_users.includes(userStore.id) &&
+			interaction.type !== "hunter"
+		) {
 			return;
 		}
 
 		switch (interaction.type) {
-		case "vote":
-		case "werewolves":
-		case "white_werewolf":
-			if (isDead.value === false) {
-				player.value.classList.add("player__votable");
-			}
-			break;
-		case "hunter":
-			if (gamePlayer.role && gamePlayer.role.name === "hunter") {
-				player.value.classList.add("player__hover-disabled");
+			case "vote":
+			case "werewolves":
+			case "white_werewolf":
+				if (isDead.value === false) {
+					player.value.classList.add("player__votable");
+				}
 				break;
-			}
+			case "hunter":
+				if (gamePlayer.role && gamePlayer.role.name === "hunter") {
+					player.value.classList.add("player__hover-disabled");
+					break;
+				}
 
-			player.value.classList.add("player__votable");
-			break;
-		case "mayor":
-			if (isDead.value === false) {
-				player.value.classList.add("player__electable");
-			}
-			break;
-		case "guard":
-			isGuarded.value = false;
-
-			if (gamePlayer.role && gamePlayer.role.name === "guard") {
-				chatStore.send("Cliquez sur un joueur pour le protéger des loups.", "info");
-			}
-
-			if (isDead.value === false && props.player.id !== interaction.data) {
-				player.value.classList.add("player__guardable");
-			}
-			break;
-		case "psychic":
-			if (gamePlayer.role && gamePlayer.role.name === "psychic") {
-				chatStore.send("Cliquez sur un joueur pour en connaitre le rôle !", "info");
-				player.value.classList.add("player__hover-disabled");
-			} else {
-				player.value.classList.add("player__psychic-hover");
-			}
-			break;
-		case "witch":
-			setupWitchActions(interaction);
-			break;
-		case "infected_werewolf":
-			if (gamePlayer.role && gamePlayer.role.name === "infected_werewolf") {
-				const user = gameStore.getPlayerByID(interaction.data[0]);
-
-				chatStore.send(`Voulez-vous infecter ${user.username} ?`, "info", null, [{
-					title: "Oui",
-					async callback() {
-						await window.JSONFetch("/interactions/use", "POST", {
-							id: gameStore.currentInteractionId,
-							gameId:	gameId.value,
-							targetId: interaction.data[0],
-							action: "infected_werewolf:infect"
-						});
-					},
-					id: "infected_werewolf:infect"
-				},
-				{
-					title: "Non",
-					async callback() {
-						await window.JSONFetch("/interactions/use", "POST", {
-							id: gameStore.currentInteractionId,
-							gameId:	gameId.value,
-							action: "infected_werewolf:skip"
-						});
-					},
-					id: "infected_werewolf:skip"
-				}]);
-			}
-			break;
-		case "surly_werewolf":
-			if (isDead.value === false) {
 				player.value.classList.add("player__votable");
-			}
+				break;
+			case "mayor":
+				if (isDead.value === false) {
+					player.value.classList.add("player__electable");
+				}
+				break;
+			case "guard":
+				isGuarded.value = false;
 
-			if (gamePlayer.role && gamePlayer.role.name === "surly_werewolf") {
-				chatStore.send("Cliquez sur un joueur pour le mordre", "info", null, [
-					{
-						title: "Passer",
-						async callback() {
-							await window.JSONFetch("/interactions/use", "POST", {
-								id: gameStore.currentInteractionId,
-								gameId:	gameId.value,
-								action: "surly_werewolf:skip"
-							});
+				if (gamePlayer.role && gamePlayer.role.name === "guard") {
+					chatStore.send(
+						"Cliquez sur un joueur pour le protéger des loups.",
+						"info"
+					);
+				}
+
+				if (isDead.value === false && props.player.id !== interaction.data) {
+					player.value.classList.add("player__guardable");
+				}
+				break;
+			case "psychic":
+				if (gamePlayer.role && gamePlayer.role.name === "psychic") {
+					chatStore.send(
+						"Cliquez sur un joueur pour en connaitre le rôle !",
+						"info"
+					);
+					player.value.classList.add("player__hover-disabled");
+				} else {
+					player.value.classList.add("player__psychic-hover");
+				}
+				break;
+			case "witch":
+				setupWitchActions(interaction);
+				break;
+			case "infected_werewolf":
+				if (gamePlayer.role && gamePlayer.role.name === "infected_werewolf") {
+					const user = gameStore.getPlayerByID(interaction.data[0]);
+
+					chatStore.send(
+						`Voulez-vous infecter ${user.username} ?`,
+						"info",
+						null,
+						[
+							{
+								title: "Oui",
+								async callback() {
+									await window.JSONFetch("/interactions/use", "POST", {
+										id: gameStore.currentInteractionId,
+										gameId: gameId.value,
+										targetId: interaction.data[0],
+										action: "infected_werewolf:infect",
+									});
+								},
+								id: "infected_werewolf:infect",
+							},
+							{
+								title: "Non",
+								async callback() {
+									await window.JSONFetch("/interactions/use", "POST", {
+										id: gameStore.currentInteractionId,
+										gameId: gameId.value,
+										action: "infected_werewolf:skip",
+									});
+								},
+								id: "infected_werewolf:skip",
+							},
+						]
+					);
+				}
+				break;
+			case "surly_werewolf":
+				if (isDead.value === false) {
+					player.value.classList.add("player__votable");
+				}
+
+				if (gamePlayer.role && gamePlayer.role.name === "surly_werewolf") {
+					chatStore.send("Cliquez sur un joueur pour le mordre", "info", null, [
+						{
+							title: "Passer",
+							async callback() {
+								await window.JSONFetch("/interactions/use", "POST", {
+									id: gameStore.currentInteractionId,
+									gameId: gameId.value,
+									action: "surly_werewolf:skip",
+								});
+							},
+							id: "surly_werewolf:skip",
 						},
-						id: "surly_werewolf:skip"
-					}]);
-			}
-			break;
-		case "parasite":
-			if (isDead.value === false && userStore.id !== props.player.id) {
-				player.value.classList.add("player__parasite-hover");
-			}
+					]);
+				}
+				break;
+			case "parasite":
+				if (isDead.value === false && userStore.id !== props.player.id) {
+					player.value.classList.add("player__parasite-hover");
+				}
 
-			if (userStore.id === props.player.id) {
-				chatStore.send("Cliquez sur un joueur pour le contaminer", "info");
-				player.value.classList.add("player__hover-disabled");
-			}
-			break;
-		case "cupid":
-			player.value.classList.add("player__pairable");
+				if (userStore.id === props.player.id) {
+					chatStore.send("Cliquez sur un joueur pour le contaminer", "info");
+					player.value.classList.add("player__hover-disabled");
+				}
+				break;
+			case "cupid":
+				player.value.classList.add("player__pairable");
 		}
 	})
 	.listen(".interaction.close", () => {
@@ -349,7 +363,7 @@ window.Echo
 		isVoted.value = false;
 	});
 
-const send = async function(votingUser, votedUser) {
+const send = async function (votingUser, votedUser) {
 	if (!gameStore.currentInteractionId) {
 		return;
 	}
@@ -365,15 +379,18 @@ const send = async function(votingUser, votedUser) {
 		action = "witch:kill";
 	}
 
-	if (classList.contains("player__votable") && interactionType.value === "surly_werewolf") {
+	if (
+		classList.contains("player__votable") &&
+		interactionType.value === "surly_werewolf"
+	) {
 		action = "surly_werewolf:bite";
 	}
 
 	const res = await window.JSONFetch("/interactions/use", "POST", {
 		id: gameStore.currentInteractionId,
-		gameId:	gameId.value,
+		gameId: gameId.value,
 		targetId: votedUser,
-		action: action ?? gameStore.availableActions[interactionType.value]
+		action: action ?? gameStore.availableActions[interactionType.value],
 	});
 
 	if (res.status === 204) {
@@ -381,7 +398,10 @@ const send = async function(votingUser, votedUser) {
 	}
 
 	if (interactionType.value === "psychic") {
-		const role = await window.JSONFetch(`/roles/get/${res.data.interaction.response}`, "GET");
+		const role = await window.JSONFetch(
+			`/roles/get/${res.data.interaction.response}`,
+			"GET"
+		);
 		chatStore.send(
 			`Vous avez choisi d'espionner le rôle de ${props.player.username} qui est ${role.data.role.display_name}`,
 			"success"
@@ -419,19 +439,26 @@ const addVote = (data) => {
 };
 
 const setupWitchActions = async (interaction) => {
-	const actions = (await window.JSONFetch(`/interactions/actions/${gameId.value}/${gameStore.currentInteractionId}`, "GET")).data.actions;
+	const actions = (
+		await window.JSONFetch(
+			`/interactions/actions/${gameId.value}/${gameStore.currentInteractionId}`,
+			"GET"
+		)
+	).data.actions;
 
 	let actionList = [
 		{
 			title: "Soigner un joueur",
 			callback() {
-				const list = gameStore.playerRefs.filter(playerRef => interaction.data.includes(playerRef.value.dataset.id));
+				const list = gameStore.playerRefs.filter((playerRef) =>
+					interaction.data.includes(playerRef.value.dataset.id)
+				);
 				for (const playerRef of list) {
 					playerRef.value.classList.add("player__witch-heal");
 				}
 				chatStore.send("Cliquez sur un joueur pour le ressuciter", "info");
 			},
-			id: "witch:revive"
+			id: "witch:revive",
 		},
 		{
 			title: "Éliminer un joueur",
@@ -441,29 +468,34 @@ const setupWitchActions = async (interaction) => {
 				}
 				chatStore.send("Cliquez sur un joueur pour l'éliminer", "info");
 			},
-			id: "witch:kill"
+			id: "witch:kill",
 		},
 		{
 			title: "Ne rien faire",
 			async callback() {
 				await window.JSONFetch("/interactions/use", "POST", {
 					id: gameStore.currentInteractionId,
-					gameId:	gameId.value,
-					action: "witch:skip"
+					gameId: gameId.value,
+					action: "witch:skip",
 				});
 			},
-			id: "witch:skip"
-		}
+			id: "witch:skip",
+		},
 	];
 
 	if (interaction.data.length === 0) {
-		actionList = actionList.filter(action => action.id !== "witch:revive");
+		actionList = actionList.filter((action) => action.id !== "witch:revive");
 	}
 
 	actionList = actionList.filter((action) => actions.includes(action.id));
 
 	if (gamePlayer.role && gamePlayer.role.name === "witch") {
-		chatStore.send("Choisissez l'action à effectuer cette nuit", "info", null, actionList);
+		chatStore.send(
+			"Choisissez l'action à effectuer cette nuit",
+			"info",
+			null,
+			actionList
+		);
 	}
 };
 </script>

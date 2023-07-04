@@ -15,13 +15,14 @@
 
 		border: var(--border-secondary) 2px solid;
 		border-radius: 8px;
-		transition: background-color .2s;
+		transition: background-color 0.2s;
 
 		max-width: 230px;
 		cursor: pointer;
 	}
 
-	div:not(.disabled):hover, div.active {
+	div:not(.disabled):hover,
+	div.active {
 		background-color: var(--primary-hover);
 
 		@media (prefers-color-scheme: light) {
@@ -47,7 +48,7 @@
 }
 
 .game-type__wrapper .note {
-	font-size: .85rem;
+	font-size: 0.85rem;
 	color: #0f112780;
 
 	@media (prefers-color-scheme: dark) {

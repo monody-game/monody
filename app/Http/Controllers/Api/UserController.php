@@ -58,13 +58,13 @@ class UserController extends Controller
                 ->flushCacheFor('/user');
         }
 
-        return new JsonApiResponse([
+        return JsonApiResponse::make([
             'user' => $user->makeVisible([
                 'email',
                 'email_verified_at',
                 'discord_linked_at',
             ]),
-        ]);
+        ])->flushCacheFor('/user');
     }
 
     public function discord(string $discordId): JsonApiResponse

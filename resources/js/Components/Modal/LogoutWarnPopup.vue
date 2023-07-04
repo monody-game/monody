@@ -1,53 +1,35 @@
 <template>
-  <BaseModal
-    wrapper="popup__wrapper"
-    data-popup-type="warn"
-  >
-    <header class="popup__header">
-      <div class="popup__header-left">
-        <svg class="popup__icon">
-          <use href="/sprite.svg#warn" />
-        </svg>
-        <p
-          id="modal__title"
-          class="popup__title"
-        >
-          Attention !
-        </p>
-      </div>
-      <svg
-        class="popup__close"
-        tabindex="0"
-        @keydown.enter="no()"
-        @keydown.space="no()"
-        @click="no()"
-      >
-        <use href="/sprite.svg#cross" />
-      </svg>
-    </header>
-    <p class="popup__content">
-      Vous allez être déconnecté de tous les appareils auquel ce compte est connecté, cela comprend cet appareil
-    </p>
-    <div
-      class="modal__buttons"
-      style="margin-top: 16px"
-    >
-      <button
-        class="btn medium"
-        style="width: 47.5%;"
-        @click="no()"
-      >
-        Annuler
-      </button>
-      <button
-        class="btn medium"
-        style="width: 47.5%;"
-        @click="yes()"
-      >
-        Confirmer
-      </button>
-    </div>
-  </BaseModal>
+	<BaseModal wrapper="popup__wrapper" data-popup-type="warn">
+		<header class="popup__header">
+			<div class="popup__header-left">
+				<svg class="popup__icon">
+					<use href="/sprite.svg#warn" />
+				</svg>
+				<p id="modal__title" class="popup__title">Attention !</p>
+			</div>
+			<svg
+				class="popup__close"
+				tabindex="0"
+				@keydown.enter="no()"
+				@keydown.space="no()"
+				@click="no()"
+			>
+				<use href="/sprite.svg#cross" />
+			</svg>
+		</header>
+		<p class="popup__content">
+			Vous allez être déconnecté de tous les appareils auquel ce compte est
+			connecté, cela comprend cet appareil
+		</p>
+		<div class="modal__buttons" style="margin-top: 16px">
+			<button class="btn medium" style="width: 47.5%" @click="no()">
+				Annuler
+			</button>
+			<button class="btn medium" style="width: 47.5%" @click="yes()">
+				Confirmer
+			</button>
+		</div>
+	</BaseModal>
 </template>
 
 <script setup>

@@ -9,6 +9,6 @@ export const useStore = defineStore("end-game-modal", {
 	actions: {
 		close() {
 			this.isOpenned = false;
-		}
-	}
+		},
+	},
 });

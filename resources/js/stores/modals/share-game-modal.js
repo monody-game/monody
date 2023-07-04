@@ -10,6 +10,6 @@ export const useStore = defineStore("share-game-modal", {
 		close() {
 			localStorage.removeItem("show_share");
 			this.isOpenned = false;
-		}
-	}
+		},
+	},
 });

@@ -1,14 +1,14 @@
 <template>
-  <div
-    v-show="content !== ''"
-    class="information-bubble_main"
-    :class="{'information-bubble_main_out': out}"
-  >
-    <svg>
-      <use href="/sprite.svg#info" />
-    </svg>
-    <p>{{ content }}</p>
-  </div>
+	<div
+		v-show="content !== ''"
+		class="information-bubble_main"
+		:class="{ 'information-bubble_main_out': out }"
+	>
+		<svg>
+			<use href="/sprite.svg#info" />
+		</svg>
+		<p>{{ content }}</p>
+	</div>
 </template>
 
 <script setup>
@@ -28,20 +28,39 @@ let timeout = null;
 let halt = false;
 const route = useRoute();
 
-function cycle (contentList, contentDuration, spanDuration, index = 0, counterIndex = 0) {
+function cycle(
+	contentList,
+	contentDuration,
+	spanDuration,
+	index = 0,
+	counterIndex = 0
+) {
 	if (halt) return;
 	content.value = counterIndex % 2 === 0 ? contentList[index] : "";
 
-	timeout = setTimeout(() => {
-		counterIndex++;
-		if (counterIndex % 2 === 0) index++;
+	timeout = setTimeout(
+		() => {
+			counterIndex++;
+			if (counterIndex % 2 === 0) index++;
 
-		if (index > contentList.length - 1) index = 0;
+			if (index > contentList.length - 1) index = 0;
 
-		out.value = counterIndex % 2 === 1;
+			out.value = counterIndex % 2 === 1;
 
-		setTimeout(() => cycle(contentList, contentDuration, spanDuration, index, counterIndex), 600);
-	}, counterIndex % 2 === 0 ? contentDuration : spanDuration);
+			setTimeout(
+				() =>
+					cycle(
+						contentList,
+						contentDuration,
+						spanDuration,
+						index,
+						counterIndex
+					),
+				600
+			);
+		},
+		counterIndex % 2 === 0 ? contentDuration : spanDuration
+	);
 }
 
 const startCycle = function (status) {

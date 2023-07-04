@@ -9,6 +9,6 @@ export const useStore = defineStore("share-profile", {
 	actions: {
 		close() {
 			this.isOpenned = false;
-		}
-	}
+		},
+	},
 });

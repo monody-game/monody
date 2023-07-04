@@ -1,54 +1,66 @@
 <template>
-  <BaseModal wrapper="role-assignation__modal-background">
-    <div
-      :class="animationEnded ? 'role-assignation__wrapper ' + roleOverlay : 'role-assignation__wrapper-large ' + roleOverlay"
-    >
-      <div
-        :class="animationEnded ? 'role-assignation__roles' : 'role-assignation__roles-large'"
-      >
-        <template
-          v-for="n in 15"
-          :key="n"
-        >
-          <div
-            v-for="role in [...roles].sort(() => Math.random() - 0.5)"
-            :key="role.id"
-          >
-            <img
-              :src="role.image + '?h=200&dpr=2'"
-              :alt="role.display_name"
-            >
-          </div>
-        </template>
-        <div>
-          <img
-            class="pointer"
-            :src="assignedRole.image + '?h=200&dpr=2'"
-            :alt="assignedRole.display_name"
-            @click="present"
-          >
-        </div>
-      </div>
-    </div>
-    <div
-      v-show="animationEnded"
-      ref="roleText"
-      class="role-assignation__role-text"
-    >
-      <span>
-        <span>Vous êtes : <span class="bold">{{ assignedRole.display_name.toLowerCase() }}</span>,</span>
-      </span>
-      <span v-if="assignedRole.team.name === 'loners'">
-        <span>vous devez gagner seul.</span>
-      </span>
-      <span v-else>
-        <span>du camp des <span class="bold">{{ assignedRole.team.display_name.toLowerCase() }}</span>.</span>
-      </span>
-      <span>
-        <span class="muted">Cliquez sur l'image pour en savoir plus</span>
-      </span>
-    </div>
-  </BaseModal>
+	<BaseModal wrapper="role-assignation__modal-background">
+		<div
+			:class="
+				animationEnded
+					? 'role-assignation__wrapper ' + roleOverlay
+					: 'role-assignation__wrapper-large ' + roleOverlay
+			"
+		>
+			<div
+				:class="
+					animationEnded
+						? 'role-assignation__roles'
+						: 'role-assignation__roles-large'
+				"
+			>
+				<template v-for="n in 15" :key="n">
+					<div
+						v-for="role in [...roles].sort(() => Math.random() - 0.5)"
+						:key="role.id"
+					>
+						<img :src="role.image + '?h=200&dpr=2'" :alt="role.display_name" />
+					</div>
+				</template>
+				<div>
+					<img
+						class="pointer"
+						:src="assignedRole.image + '?h=200&dpr=2'"
+						:alt="assignedRole.display_name"
+						@click="present"
+					/>
+				</div>
+			</div>
+		</div>
+		<div
+			v-show="animationEnded"
+			ref="roleText"
+			class="role-assignation__role-text"
+		>
+			<span>
+				<span
+					>Vous êtes :
+					<span class="bold">{{ assignedRole.display_name.toLowerCase() }}</span
+					>,</span
+				>
+			</span>
+			<span v-if="assignedRole.team.name === 'loners'">
+				<span>vous devez gagner seul.</span>
+			</span>
+			<span v-else>
+				<span
+					>du camp des
+					<span class="bold">{{
+						assignedRole.team.display_name.toLowerCase()
+					}}</span
+					>.</span
+				>
+			</span>
+			<span>
+				<span class="muted">Cliquez sur l'image pour en savoir plus</span>
+			</span>
+		</div>
+	</BaseModal>
 </template>
 
 <script setup>
@@ -66,8 +78,8 @@ const props = defineProps({
 	},
 	assignedRole: {
 		type: Number,
-		required: true
-	}
+		required: true,
+	},
 });
 
 const animationEnded = ref(false);
@@ -79,7 +91,9 @@ const modalStore = useModalStore();
 const timeout = null;
 
 const roles = ref(props.roles);
-const assignedRole = roles.value.filter(role => role.id === parseInt(props.assignedRole))[0];
+const assignedRole = roles.value.filter(
+	(role) => role.id === parseInt(props.assignedRole)
+)[0];
 const roleOverlay = ref("");
 
 const present = () => {
@@ -124,5 +138,8 @@ onUnmounted(() => {
 	}
 });
 
-document.documentElement.style.setProperty("--role-assignation-transform-length", `-${roles.value.length * 15 * 100}%`);
+document.documentElement.style.setProperty(
+	"--role-assignation-transform-length",
+	`-${roles.value.length * 15 * 100}%`
+);
 </script>

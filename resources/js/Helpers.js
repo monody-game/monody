@@ -1,6 +1,9 @@
 import { useStore as useAlertStore } from "./stores/alerts.js";
 import { useStore as usePopupStore } from "./stores/modals/popup.js";
 import { useStore as useDebugStore } from "./stores/debug-bar.js";
+import { useCache } from "./composables/cache.js";
+
+const cache = useCache();
 
 /**
  * @param {String} url
@@ -8,6 +11,14 @@ import { useStore as useDebugStore } from "./stores/debug-bar.js";
  * @param {Object} body
  */
 window.JSONFetch = async (url, method = "GET", body = null) => {
+	if (
+		cache.exists(url) &&
+		Date.parse(cache.get(url).until) > Date.now() &&
+		method === "GET"
+	) {
+		return cache.get(url).response;
+	}
+
 	const params = {
 		method: method,
 		headers: {
@@ -31,7 +42,6 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 		return res;
 	}
 
-
 	const content = await response.json();
 
 	if (!response.ok) {
@@ -42,8 +52,8 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 				message: content.message,
 				exception: content.exception,
 				file: content.file,
-				line: content.line
-			}
+				line: content.line,
+			},
 		});
 	}
 
@@ -66,6 +76,17 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 
 	if ("data" in res.data) {
 		res.data = res.data.data;
+	}
+
+	if (content.meta.cache.cache === true) {
+		cache.set(url, {
+			until: content.meta.cache.until,
+			response: res,
+		});
+	}
+
+	for (const route of content.meta.cache.flush) {
+		cache.flush(route);
 	}
 
 	return res;

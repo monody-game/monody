@@ -9,6 +9,6 @@ export const useStore = defineStore("vocal-invitation", {
 	actions: {
 		close() {
 			this.isOpenned = false;
-		}
-	}
+		},
+	},
 });

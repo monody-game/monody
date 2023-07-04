@@ -84,18 +84,18 @@ body {
 :root {
 	--space: 8px;
 
-	--success: #46B800;
-	--info: #009EC0;
-	--warn: #F6970A;
-	--dark-danger: #B40000;
-	--light-danger: #FC0000;
+	--success: #46b800;
+	--info: #009ec0;
+	--warn: #f6970a;
+	--dark-danger: #b40000;
+	--light-danger: #fc0000;
 	--danger: var(--dark-danger);
-	--level: #0D58CA;
-	--pink: #FB7592;
+	--level: #0d58ca;
+	--pink: #fb7592;
 
-	--light-background: #FFFCF1;
-	--light-background-hover: #F6F3E6;
-	--light-background-muted: #FFFCF180;
+	--light-background: #fffcf1;
+	--light-background-hover: #f6f3e6;
+	--light-background-muted: #fffcf180;
 
 	--primary: var(--light-background);
 	--primary-hover: var(--light-background-hover);
@@ -103,13 +103,13 @@ body {
 
 	--dark-background: #0f1127;
 	--dark-background-hover: #151840;
-	--dark-background-muted: #0F112780;
+	--dark-background-muted: #0f112780;
 
 	--secondary: var(--dark-background);
 	--secondary-hover: var(--dark-background-hover);
 	--secondary-muted: var(--dark-background-muted);
 
-	--accent-light: #FFF5CF;
+	--accent-light: #fff5cf;
 	--accent-dark: #142868;
 
 	--accent-primary: var(--accent-light);
@@ -126,8 +126,8 @@ body {
 	--werewolf-color: #a51818;
 	--werewolf-color-darker: #811313;
 
-	--twitter-color: #1D9BF0;
-	--discord-color: #5865F2;
+	--twitter-color: #1d9bf0;
+	--discord-color: #5865f2;
 	--share-color: #505860;
 
 	--primary-disabled: #fffcf150;
@@ -154,7 +154,7 @@ body {
 
 		--border-primary: var(--border-dark);
 		--border-secondary: var(--border-light);
-		--border-danger: #FC000050;
+		--border-danger: #fc000050;
 
 		--background-image: url("../../public/images/monody_night.webp");
 		--alt-background: var(--primary-hover);

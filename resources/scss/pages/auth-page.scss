@@ -96,7 +96,7 @@
 	}
 }
 
-.auth-page__form-group[data-is-invalid=true] input {
+.auth-page__form-group[data-is-invalid="true"] input {
 	border: var(--border-danger) solid 2px;
 }
 
@@ -143,7 +143,9 @@
 		padding-block: space(1) !important;
 	}
 
-	& button:hover, button:disabled, button:disabled:hover {
+	& button:hover,
+	button:disabled,
+	button:disabled:hover {
 		background-color: var(--primary-hover) !important;
 	}
 }
@@ -159,7 +161,8 @@
 	justify-content: center;
 	align-items: center;
 
-	& .spinner__dots-container, .spinner__dots-container spinning-dots {
+	& .spinner__dots-container,
+	.spinner__dots-container spinning-dots {
 		z-index: 100;
 		margin: 0;
 		height: 48px;

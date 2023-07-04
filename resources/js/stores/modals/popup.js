@@ -9,7 +9,7 @@ export const useStore = defineStore("popup", {
 			content: "",
 			note: "",
 			link: "",
-			link_text: ""
+			link_text: "",
 		};
 	},
 	actions: {
@@ -26,6 +26,6 @@ export const useStore = defineStore("popup", {
 				this.link_text = payload[type].link_text;
 			}
 			this.isOpenned = true;
-		}
-	}
+		},
+	},
 });

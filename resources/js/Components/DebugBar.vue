@@ -1,71 +1,69 @@
 <template>
-  <div
-    class="debug-bar__wrapper"
-    :data-openned="barOpenned"
-  >
-    <div
-      v-if="barOpenned"
-      class="debug-bar__content"
-    >
-      <div title="API">
-        <svg>
-          <use href="/sprite.svg#api" />
-        </svg>
-        {{ apiLatency }}ms
-      </div>
-      <div title="Serveur websockets">
-        <svg>
-          <use href="/sprite.svg#websockets" />
-        </svg>
-        {{ wsLatency }}ms
-      </div>
-      <div title="Temps de chargement de la page">
-        <svg>
-          <use href="/sprite.svg#loading" />
-        </svg>
-        {{ loadTime }}ms
-      </div>
-      <div title="Requêtes effectuées">
-        <svg>
-          <use href="/sprite.svg#requests" />
-        </svg>
-        {{ requestCount }}
-      </div>
-      <div title="Erreurs enregistrées">
-        <svg>
-          <use href="/sprite.svg#error" />
-        </svg>
-        {{ errorCount }}
-      </div>
-      <div title="Avertissements enregistrés">
-        <svg>
-          <use href="/sprite.svg#warn" />
-        </svg>
-        {{ warnCount }}
-      </div>
-      <div
-        class="debug-bar__report"
-        title="Copier le rapport de débogage"
-        @click="copyReport"
-      >
-        <svg>
-          <use href="/sprite.svg#copy" />
-        </svg>
-        Copier le rapport
-      </div>
-    </div>
-    <div
-      :class="barOpenned ? 'debug-bar__close-icon' : ''"
-      :title="barOpenned ? 'Fermer la barre de débogage' : 'Ouvrir la barre de débogage'"
-    >
-      <svg
-        :class="barOpenned ? 'debug-bar__close-icon' : 'debug-bar__beta-icon'"
-        @click.prevent="switchState"
-      >
-        <use :href="barOpenned ? '/sprite.svg#cross' : '/sprite.svg#beta'" />
-      </svg>
-    </div>
-  </div>
+	<div class="debug-bar__wrapper" :data-openned="barOpenned">
+		<div v-if="barOpenned" class="debug-bar__content">
+			<div title="API">
+				<svg>
+					<use href="/sprite.svg#api" />
+				</svg>
+				{{ apiLatency }}ms
+			</div>
+			<div title="Serveur websockets">
+				<svg>
+					<use href="/sprite.svg#websockets" />
+				</svg>
+				{{ wsLatency }}ms
+			</div>
+			<div title="Temps de chargement de la page">
+				<svg>
+					<use href="/sprite.svg#loading" />
+				</svg>
+				{{ loadTime }}ms
+			</div>
+			<div title="Requêtes effectuées">
+				<svg>
+					<use href="/sprite.svg#requests" />
+				</svg>
+				{{ requestCount }}
+			</div>
+			<div title="Erreurs enregistrées">
+				<svg>
+					<use href="/sprite.svg#error" />
+				</svg>
+				{{ errorCount }}
+			</div>
+			<div title="Avertissements enregistrés">
+				<svg>
+					<use href="/sprite.svg#warn" />
+				</svg>
+				{{ warnCount }}
+			</div>
+			<div
+				class="debug-bar__report"
+				title="Copier le rapport de débogage"
+				@click="copyReport"
+			>
+				<svg>
+					<use href="/sprite.svg#copy" />
+				</svg>
+				Copier le rapport
+			</div>
+		</div>
+		<div
+			:class="barOpenned ? 'debug-bar__close-icon' : ''"
+			:title="
+				barOpenned
+					? 'Fermer la barre de débogage'
+					: 'Ouvrir la barre de débogage'
+			"
+		>
+			<svg
+				:class="barOpenned ? 'debug-bar__close-icon' : 'debug-bar__beta-icon'"
+				@click.prevent="switchState"
+			>
+				<use :href="barOpenned ? '/sprite.svg#cross' : '/sprite.svg#beta'" />
+			</svg>
+		</div>
+	</div>
 </template>
 
 <script setup>
@@ -101,7 +99,7 @@ const copyReport = () => {
 	if (userStore.id !== 0) {
 		user = {
 			id: userStore.id,
-			username: userStore.username
+			username: userStore.username,
 		};
 	}
 
@@ -110,7 +108,7 @@ const copyReport = () => {
 			name: "Monody",
 			maintainer: "moon250",
 			url: document.URL,
-			version: import.meta.env.VITE_APP_VERSION
+			version: import.meta.env.VITE_APP_VERSION,
 		},
 		user,
 		apiLatency: apiLatency.value,
@@ -118,11 +116,13 @@ const copyReport = () => {
 		loadTime: loadTime.value,
 		requestCount: requestCount.value,
 		errors: store.errors,
-		warns: store.warns
+		warns: store.warns,
 	};
 
 	navigator.clipboard.writeText(JSON.stringify(report, null, "\t"));
-	alertStore.addAlerts({ "info": "Le rapport a été copié dans le presse-papiers" });
+	alertStore.addAlerts({
+		info: "Le rapport a été copié dans le presse-papiers",
+	});
 };
 
 async function profile() {
@@ -135,7 +135,9 @@ async function profile() {
 		wsLatency.value = Date.now() - start;
 	});
 
-	loadTime.value = Math.floor(performance.getEntriesByType("navigation")[0].duration);
+	loadTime.value = Math.floor(
+		performance.getEntriesByType("navigation")[0].duration
+	);
 
 	await window.JSONFetch("/ping", "GET");
 	const resources = performance.getEntriesByType("resource");
@@ -145,7 +147,9 @@ async function profile() {
 		apiProfiling = resources.pop();
 	}
 
-	apiLatency.value = Math.floor(apiProfiling.responseEnd - apiProfiling.requestStart);
+	apiLatency.value = Math.floor(
+		apiProfiling.responseEnd - apiProfiling.requestStart
+	);
 }
 
 onUpdated(async () => {
