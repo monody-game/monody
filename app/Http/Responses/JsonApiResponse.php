@@ -19,24 +19,27 @@ class JsonApiResponse implements Responsable
         public ?array $popups = null,
         public array $cookies = [],
         public array $headers = [],
-        public array $cache = []
+        public array $cache = [
+            'cache' => true,
+            'until' => Carbon::now()->addDay(),
+            'flush' => [],
+        ]
     ) {
     }
 
     public function toResponse($request): JsonResponse
     {
-        $cache = [
-            'cache' => array_key_exists('cache', $this->cache) ? $this->cache['cache'] : true,
-            'until' => array_key_exists('until', $this->cache) ? $this->cache['until'] : Carbon::now()->addDay(),
-        ];
-
         $response = new JsonResponse(
             data: [
                 'status' => $this->status->statusify(),
                 'meta' => [
                     'name' => config('app.name'),
                     'version' => config('app.version'),
-                    'cache' => $cache,
+                    'cache' => [
+                        'cache' => $this->cache['cache'],
+                        'until' => $this->cache['until'],
+                        'flush' => $this->cache['flush'],
+                    ],
                 ],
                 'data' => $this->data,
                 'alerts' => $this->alerts,
@@ -58,6 +61,9 @@ class JsonApiResponse implements Responsable
         return $response;
     }
 
+    /**
+     * Create a JsonApiResponse statically, allowing easier use of helper methods (with[...])
+     */
     public static function make(?array $data = null, Status $status = Status::OK, array $headers = []): self
     {
         return new self($data, $status, headers: $headers);
@@ -89,6 +95,9 @@ class JsonApiResponse implements Responsable
         return $this;
     }
 
+    /**
+     * Tell the client that this route should not be cached locally, mainly because its content may change without the url changing
+     */
     public function withoutCache(): self
     {
         $this->cache['cache'] = false;
@@ -96,10 +105,27 @@ class JsonApiResponse implements Responsable
         return $this;
     }
 
+    /**
+     * Tell the client that this route should be cached locally until given timestamp ($until)
+     */
     public function withCache(CarbonInterface $until): self
     {
         $this->cache['cache'] = true;
         $this->cache['until'] = $until;
+
+        return $this;
+    }
+
+    /**
+     * Tell client to flush cache for specified routes
+     */
+    public function flushCacheFor(string ...$route): self
+    {
+        if (array_key_exists('flush', $this->cache)) {
+            $route = array_merge($route, $this->cache);
+        }
+
+        $this->cache['flush'] = $route;
 
         return $this;
     }
