@@ -19,27 +19,25 @@ class JsonApiResponse implements Responsable
         public ?array $popups = null,
         public array $cookies = [],
         public array $headers = [],
-        public array $cache = [
-            'cache' => true,
-            'until' => Carbon::now()->addDay(),
-            'flush' => [],
-        ]
+        public array $cache = []
     ) {
     }
 
     public function toResponse($request): JsonResponse
     {
+		$cache = [
+			'cache' => array_key_exists('cache', $this->cache) ? $this->cache['cache'] : true,
+			'until' => array_key_exists('until', $this->cache) ? $this->cache['until'] : Carbon::now()->addDay(),
+			'flush' => array_key_exists('flush', $this->cache) ? $this->cache['flush'] : [],
+		];
+
         $response = new JsonResponse(
             data: [
                 'status' => $this->status->statusify(),
                 'meta' => [
                     'name' => config('app.name'),
                     'version' => config('app.version'),
-                    'cache' => [
-                        'cache' => $this->cache['cache'],
-                        'until' => $this->cache['until'],
-                        'flush' => $this->cache['flush'],
-                    ],
+                    'cache' => $cache,
                 ],
                 'data' => $this->data,
                 'alerts' => $this->alerts,
