@@ -25,11 +25,11 @@ class JsonApiResponse implements Responsable
 
     public function toResponse($request): JsonResponse
     {
-		$cache = [
-			'cache' => array_key_exists('cache', $this->cache) ? $this->cache['cache'] : true,
-			'until' => array_key_exists('until', $this->cache) ? $this->cache['until'] : Carbon::now()->addDay(),
-			'flush' => array_key_exists('flush', $this->cache) ? $this->cache['flush'] : [],
-		];
+        $cache = [
+            'cache' => array_key_exists('cache', $this->cache) ? $this->cache['cache'] : true,
+            'until' => array_key_exists('until', $this->cache) ? $this->cache['until'] : Carbon::now()->addDay(),
+            'flush' => array_key_exists('flush', $this->cache) ? $this->cache['flush'] : [],
+        ];
 
         $response = new JsonResponse(
             data: [
