@@ -78,15 +78,15 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 		res.data = res.data.data;
 	}
 
-	if (content.meta.cache.cache === true) {
+	if (res.ok && content.meta.cache.cache === true) {
 		cache.set(url, {
 			until: content.meta.cache.until,
 			response: res,
 		});
-	}
 
-	for (const route of content.meta.cache.flush) {
-		cache.flush(route);
+		for (const route of content.meta.cache.flush) {
+			cache.flush(route);
+		}
 	}
 
 	return res;
