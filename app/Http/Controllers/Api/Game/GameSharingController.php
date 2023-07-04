@@ -32,6 +32,6 @@ class GameSharingController extends Controller
 
         broadcast(new CreateGameInvitation($game));
 
-        return new JsonApiResponse(['message' => 'Game successfully shared.']);
+        return JsonApiResponse::make(['message' => 'Game successfully shared.'])->withoutCache();
     }
 }

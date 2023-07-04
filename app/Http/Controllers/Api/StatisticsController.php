@@ -9,6 +9,7 @@ use App\Http\Responses\JsonApiResponse;
 use App\Models\GameOutcome;
 use App\Models\Statistic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class StatisticsController extends Controller
 {
@@ -77,6 +78,6 @@ class StatisticsController extends Controller
         $stats['win_streak'] = $userStats['win_streak'];
         $stats['longest_streak'] = $userStats['longest_streak'];
 
-        return new JsonApiResponse(['statistics' => $stats]);
+        return JsonApiResponse::make(['statistics' => $stats])->withCache(Carbon::now()->addMinutes(10));
     }
 }

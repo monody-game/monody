@@ -40,6 +40,7 @@ class LoginController extends Controller
 
         return JsonApiResponse::make()
             ->withAlert(AlertType::Success, 'Bon jeu !')
-            ->withCookie($cookie);
+            ->withCookie($cookie)
+            ->withoutCache();
     }
 }

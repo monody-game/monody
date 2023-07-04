@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
 use App\Models\Elo;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -25,9 +26,9 @@ class LeaderboardController extends Controller
         }
 
         return match ($leaderboard) {
-            'elo' => new JsonApiResponse(['board' => $this->byElo()]),
-            'level' => new JsonApiResponse(['board' => $this->byLevel()]),
-            'wins' => new JsonApiResponse(['board' => $this->byWins()]),
+            'elo' => JsonApiResponse::make(['board' => $this->byElo()])->withCache(Carbon::now()->addMinutes(5)),
+            'level' => JsonApiResponse::make(['board' => $this->byLevel()])->withCache(Carbon::now()->addMinutes(5)),
+            'wins' => JsonApiResponse::make(['board' => $this->byWins()])->withCache(Carbon::now()->addMinutes(5)),
         };
     }
 

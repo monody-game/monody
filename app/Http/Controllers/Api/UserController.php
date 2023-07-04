@@ -9,18 +9,19 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class UserController extends Controller
 {
     public function user(Request $request): JsonApiResponse
     {
-        return new JsonApiResponse([
+        return JsonApiResponse::make([
             'user' => $request->user()?->makeVisible([
                 'email',
                 'email_verified_at',
                 'discord_linked_at',
             ]),
-        ]);
+        ])->withCache(Carbon::now()->addHour());
     }
 
     public function update(UserUpdateRequest $request): JsonApiResponse
