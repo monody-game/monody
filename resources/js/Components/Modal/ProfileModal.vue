@@ -64,8 +64,9 @@
 				"
 				class="auth-page__link"
 				@click.prevent="notify"
-				>Renvoyer le mail de vérification</a
 			>
+				Renvoyer le mail de vérification
+			</a>
 			<div class="profile-modal__connections">
 				<label for="connections">Connexions</label>
 				<div
@@ -112,6 +113,9 @@
 				>
 					Se déconnecter de tous les appareils
 				</button>
+				<button class="btn medium btn-danger" @click="flushCache()">
+					Vider le cache (peut résoudre des bugs)
+				</button>
 			</div>
 		</div>
 		<div class="modal__buttons">
@@ -137,10 +141,12 @@ import { useStore } from "../../stores/user.js";
 import BaseModal from "./BaseModal.vue";
 import InputComponent from "../Form/InputComponent.vue";
 import LogoutWarnPopup from "./LogoutWarnPopup.vue";
+import { useCache } from "../../composables/cache.js";
 
 const userStore = useStore();
 const modalStore = useModalStore();
 const alertStore = useAlertStore();
+const cache = useCache();
 const warnPopupStore = useWarnPopupStore();
 
 const avatarInput = ref(null);
@@ -153,6 +159,15 @@ const discordInfos = async () => {
 	const res = await window.JSONFetch("/oauth/user/discord");
 
 	return res.data.user;
+};
+
+const flushCache = () => {
+	cache.clear();
+
+	alertStore.addAlerts({
+		success: "Cache vidé avec succès",
+	});
+	modalStore.close();
 };
 
 const discordUsername = ref("n/a");

@@ -34,8 +34,6 @@
 		"@types/node": "^20.2.5",
 		"@vitejs/plugin-vue": "^4.2.3",
 		"autoprefixer": "^10.4.14",
-		"eslint": "^8.42.0",
-		"eslint-plugin-vue": "^9.14.1",
 		"laravel-vite-plugin": "^0.7.8",
 		"postcss": "^8.4.24",
 		"prettier": "^2.8.8",
