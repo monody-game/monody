@@ -20,6 +20,7 @@ function flush(key, storage) {
 	if (exists(key, storage)) {
 		delete storage[key];
 	}
+	return storage;
 }
 
 export function useCache() {
@@ -32,7 +33,9 @@ export function useCache() {
 			localStorage.setItem("cache", JSON.stringify(set(key, value, storage)));
 		},
 		exists: (key) => exists(key, storage),
-		flush: (key) => flush(key, storage),
+		flush: (key) => {
+			localStorage.setItem("cache", JSON.stringify(flush(key, storage)));
+		},
 		clear: () => localStorage.removeItem("cache"),
 	};
 }

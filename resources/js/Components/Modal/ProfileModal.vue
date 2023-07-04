@@ -164,6 +164,8 @@ const discordInfos = async () => {
 const flushCache = () => {
 	cache.clear();
 
+	location.reload();
+
 	alertStore.addAlerts({
 		success: "Cache vidé avec succès",
 	});
