@@ -22,14 +22,14 @@ class RoundController extends Controller
             $rounds[] = $this->getRound($round->value, $gameId);
         }
 
-        return new JsonApiResponse(['rounds' => $rounds]);
+        return JsonApiResponse::make(['rounds' => $rounds])->withoutCache();
     }
 
     public function get(int $round, ?string $gameId = null): JsonApiResponse
     {
-        return new JsonApiResponse([
+        return JsonApiResponse::make([
             'round' => $this->getRound($round, $gameId),
-        ]);
+        ])->withoutCache();
     }
 
     private function getRound(int $round, ?string $gameId = null): array

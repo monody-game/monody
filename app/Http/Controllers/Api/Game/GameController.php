@@ -105,7 +105,7 @@ class GameController extends Controller
             $list[] = $gameData;
         }
 
-        return new JsonApiResponse(['games' => $list]);
+        return JsonApiResponse::make(data: ['games' => $list])->withoutCache();
     }
 
     public function new(CreateGameRequest $request): JsonApiResponse
@@ -166,7 +166,7 @@ class GameController extends Controller
         ]);
         Redis::set("game:$id:votes", []);
 
-        return new JsonApiResponse(['game' => $data]);
+        return JsonApiResponse::make(['game' => $data])->withoutCache();
     }
 
     public function delete(GameIdRequest $request): JsonApiResponse
@@ -310,9 +310,9 @@ class GameController extends Controller
 
     public function discord(string $gameId): JsonApiResponse
     {
-        return new JsonApiResponse([
+        return JsonApiResponse::make([
             'data' => Redis::get("game:$gameId:discord"),
-        ]);
+        ])->withoutCache();
     }
 
     /**

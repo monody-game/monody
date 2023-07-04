@@ -49,7 +49,7 @@ class GameUsersController extends Controller
     {
         $game = $this->getGame($gameId);
 
-        return new JsonApiResponse(['users' => $game['users']]);
+        return JsonApiResponse::make(['users' => $game['users']])->withoutCache();
     }
 
     public function role(UserRoleRequest $request, string $gameId): JsonApiResponse

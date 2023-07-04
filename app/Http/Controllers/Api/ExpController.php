@@ -8,6 +8,7 @@ use App\Models\Exp;
 use App\Models\User;
 use App\Services\ExpService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class ExpController extends Controller
 {
@@ -18,10 +19,10 @@ class ExpController extends Controller
 
         $exp = Exp::firstOrCreate(['user_id' => $user->id]);
 
-        return new JsonApiResponse(['exp' => [
+        return JsonApiResponse::make(['exp' => [
             'user_id' => $exp->user_id,
             'exp' => $exp->exp ?? 0,
             'next_level' => $service->nextLevelExp($user->level),
-        ]]);
+        ]])->withCache(Carbon::now()->addMinutes(10));
     }
 }

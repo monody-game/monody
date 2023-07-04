@@ -56,13 +56,13 @@ final class DiscordOauthController extends Controller
             $user = $driver->userFromToken($payload['access_token']);
         }
 
-        return new JsonApiResponse([
+        return JsonApiResponse::make([
             'user' => [
                 'id' => $user->getId(),
                 'username' => $user->getNickname(),
                 'avatar' => $user->getAvatar(),
             ],
-        ]);
+        ])->withCache(Carbon::now()->addHour());
     }
 
     public function check(Request $request): RedirectResponse|JsonApiResponse

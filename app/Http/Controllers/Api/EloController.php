@@ -8,6 +8,7 @@ use App\Http\Responses\JsonApiResponse;
 use App\Models\Elo;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class EloController extends Controller
 {
@@ -27,8 +28,8 @@ class EloController extends Controller
             'user_id' => $userId,
         ]);
 
-        return new JsonApiResponse([
+        return JsonApiResponse::make([
             'elo' => $elo,
-        ]);
+        ])->withCache(Carbon::now()->addMinutes(10));
     }
 }
