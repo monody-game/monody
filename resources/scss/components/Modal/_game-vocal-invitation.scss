@@ -8,7 +8,7 @@
 
 		cursor: pointer;
 		width: max-content;
-		transition: all .2s;
+		transition: all 0.2s;
 
 		background-color: var(--discord-color);
 		color: var(--light-background);
@@ -19,7 +19,7 @@
 	}
 
 	p a:hover {
-		background-color: darken(#5865F2, 3%);
+		background-color: darken(#5865f2, 3%);
 		text-decoration: none;
 	}
 }

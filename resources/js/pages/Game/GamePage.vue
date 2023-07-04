@@ -1,75 +1,73 @@
 <template>
-  <div class="game-page__container day">
-    <div class="game-page__header">
-      <a
-        class="game-page__home-link"
-        @click.prevent="disconnect()"
-      >
-        <svg
-          fill="none"
-          height="40"
-          viewBox="0 0 40 40"
-          width="40"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M37.4556 19.2111L20.789 2.54445C20.5808 2.3375 20.2992 2.22134 20.0056 2.22134C19.7121 2.22134 19.4305 2.3375 19.2223 2.54445L2.55563 19.2111C2.3736 19.4237 2.27848 19.6971 2.28928 19.9767C2.30008 20.2564 2.41601 20.5216 2.61389 20.7195C2.81177 20.9174 3.07704 21.0333 3.35668 21.0441C3.63632 21.0549 3.90974 20.9598 4.12229 20.7778L20.0001 4.9L35.8778 20.7889C36.0904 20.9709 36.3638 21.066 36.6435 21.0552C36.9231 21.0444 37.1884 20.9285 37.3862 20.7306C37.5841 20.5327 37.7001 20.2675 37.7109 19.9878C37.7217 19.7082 37.6265 19.4348 37.4445 19.2222L37.4556 19.2111Z"
-            fill="currentColor"
-          />
-          <path
-            d="M31.1111 35.5556H25.5555V24.4444H14.4444V35.5556H8.88885V20L6.66663 22.2222V35.5556C6.66663 36.1449 6.90075 36.7102 7.3175 37.1269C7.73425 37.5437 8.29948 37.7778 8.88885 37.7778H16.6666V26.6667H23.3333V37.7778H31.1111C31.7004 37.7778 32.2657 37.5437 32.6824 37.1269C33.0992 36.7102 33.3333 36.1449 33.3333 35.5556V21.9556L31.1111 19.7333V35.5556Z"
-            fill="currentColor"
-          />
-        </svg>
-        <p>Accueil</p>
-      </a>
-      <GameCounter />
-      <svg
-        class="game-page__details"
-        @click="modalStore.open('game-details')"
-      >
-        <use href="/sprite.svg#question" />
-      </svg>
-    </div>
-    <div class="game-page__main">
-      <Transition name="modal">
-        <RoleAssignationPopup
-          v-if="assignationPopupStore.isOpenned"
-          :roles="store.roles"
-          :assigned-role="assignedRole"
-        />
-      </Transition>
-      <Chat />
-      <LogoSpinner v-if="loading" />
-      <div class="game-page__side">
-        <PlayerList />
-        <GameInformationBubble />
-      </div>
-    </div>
-    <Transition name="modal">
-      <ShareGameModal v-if="shareModalStore.isOpenned" />
-    </Transition>
-    <Transition name="modal">
-      <ActivityConfirmationModal v-if="activityConfirmationModalStore.isOpenned" />
-    </Transition>
-    <Transition name="modal">
-      <GameDetailsModal v-if="gameDetailsStore.isOpenned" />
-    </Transition>
-    <Transition name="modal">
-      <GameVocalInvitation v-if="store.type === 1 && vocalInvitationStore.isOpenned === true" />
-    </Transition>
-    <Transition name="modal">
-      <RolePresentationModal v-if="rolePresentationStore.isOpenned" />
-    </Transition>
-    <Transition name="modal">
-      <EndGameModal
-        v-if="modalStore.opennedModal === 'end-game-modal'"
-        :win="win"
-        :winners="winners"
-        :winning-team="winningTeam"
-      />
-    </Transition>
-  </div>
+	<div class="game-page__container day">
+		<div class="game-page__header">
+			<a class="game-page__home-link" @click.prevent="disconnect()">
+				<svg
+					fill="none"
+					height="40"
+					viewBox="0 0 40 40"
+					width="40"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M37.4556 19.2111L20.789 2.54445C20.5808 2.3375 20.2992 2.22134 20.0056 2.22134C19.7121 2.22134 19.4305 2.3375 19.2223 2.54445L2.55563 19.2111C2.3736 19.4237 2.27848 19.6971 2.28928 19.9767C2.30008 20.2564 2.41601 20.5216 2.61389 20.7195C2.81177 20.9174 3.07704 21.0333 3.35668 21.0441C3.63632 21.0549 3.90974 20.9598 4.12229 20.7778L20.0001 4.9L35.8778 20.7889C36.0904 20.9709 36.3638 21.066 36.6435 21.0552C36.9231 21.0444 37.1884 20.9285 37.3862 20.7306C37.5841 20.5327 37.7001 20.2675 37.7109 19.9878C37.7217 19.7082 37.6265 19.4348 37.4445 19.2222L37.4556 19.2111Z"
+						fill="currentColor"
+					/>
+					<path
+						d="M31.1111 35.5556H25.5555V24.4444H14.4444V35.5556H8.88885V20L6.66663 22.2222V35.5556C6.66663 36.1449 6.90075 36.7102 7.3175 37.1269C7.73425 37.5437 8.29948 37.7778 8.88885 37.7778H16.6666V26.6667H23.3333V37.7778H31.1111C31.7004 37.7778 32.2657 37.5437 32.6824 37.1269C33.0992 36.7102 33.3333 36.1449 33.3333 35.5556V21.9556L31.1111 19.7333V35.5556Z"
+						fill="currentColor"
+					/>
+				</svg>
+				<p>Accueil</p>
+			</a>
+			<GameCounter />
+			<svg class="game-page__details" @click="modalStore.open('game-details')">
+				<use href="/sprite.svg#question" />
+			</svg>
+		</div>
+		<div class="game-page__main">
+			<Transition name="modal">
+				<RoleAssignationPopup
+					v-if="assignationPopupStore.isOpenned"
+					:roles="store.roles"
+					:assigned-role="assignedRole"
+				/>
+			</Transition>
+			<Chat />
+			<LogoSpinner v-if="loading" />
+			<div class="game-page__side">
+				<PlayerList />
+				<GameInformationBubble />
+			</div>
+		</div>
+		<Transition name="modal">
+			<ShareGameModal v-if="shareModalStore.isOpenned" />
+		</Transition>
+		<Transition name="modal">
+			<ActivityConfirmationModal
+				v-if="activityConfirmationModalStore.isOpenned"
+			/>
+		</Transition>
+		<Transition name="modal">
+			<GameDetailsModal v-if="gameDetailsStore.isOpenned" />
+		</Transition>
+		<Transition name="modal">
+			<GameVocalInvitation
+				v-if="store.type === 1 && vocalInvitationStore.isOpenned === true"
+			/>
+		</Transition>
+		<Transition name="modal">
+			<RolePresentationModal v-if="rolePresentationStore.isOpenned" />
+		</Transition>
+		<Transition name="modal">
+			<EndGameModal
+				v-if="modalStore.opennedModal === 'end-game-modal'"
+				:win="win"
+				:winners="winners"
+				:winning-team="winningTeam"
+			/>
+		</Transition>
+	</div>
 </template>
 
 <script setup>
@@ -133,7 +131,10 @@ window.Echo.join(`game.${gameId}`)
 		const e = data.payload;
 		store.owner = e.owner;
 
-		if (Object.keys(e.roles) !== roles.map(role => role.id) || roles.length === 0) {
+		if (
+			Object.keys(e.roles) !== roles.map((role) => role.id) ||
+			roles.length === 0
+		) {
 			roles = [];
 			for (const role in e.roles) {
 				const res = await window.JSONFetch(`/roles/get/${role}`);
@@ -197,28 +198,30 @@ window.Echo.join(`game.${gameId}`)
 	})
 	.listen(".interaction.open", ({ interaction }) => {
 		switch (interaction.type) {
-		case "angel":
-			store.angel_target = interaction.data;
-			chatStore.send(
-				`Votre cible est : ${store.getPlayerByID(interaction.data).username}. Si votre cible vient à mourir avant la prochaine nuit, vous gagnerez la partie instantanément.`,
-				"info"
-			);
-			break;
-		case "cupid":
-			chatStore.send(
-				"Cliquez sur deux joueurs afin de les mettre en couple.",
-				"info"
-			);
-			break;
-		case "hunter":
-			chatStore.send(
-				"Cliquez sur un joueur afin de vous venger.",
-				"info"
-			);
+			case "angel":
+				store.angel_target = interaction.data;
+				chatStore.send(
+					`Votre cible est : ${
+						store.getPlayerByID(interaction.data).username
+					}. Si votre cible vient à mourir avant la prochaine nuit, vous gagnerez la partie instantanément.`,
+					"info"
+				);
+				break;
+			case "cupid":
+				chatStore.send(
+					"Cliquez sur deux joueurs afin de les mettre en couple.",
+					"info"
+				);
+				break;
+			case "hunter":
+				chatStore.send("Cliquez sur un joueur afin de vous venger.", "info");
 		}
 	})
 	.listen(".interaction.surly_werewolf:bite", () => {
-		chatStore.send("Vous avez été mordu par le loup hargneux. Vos blessures semblent graves et vous survivrez pas à la prochaine nuit.", "warn");
+		chatStore.send(
+			"Vous avez été mordu par le loup hargneux. Vos blessures semblent graves et vous survivrez pas à la prochaine nuit.",
+			"warn"
+		);
 	})
 	.listen(".interaction.parasite:contaminate", ({ data }) => {
 		if (store.contaminated.length === 0) {
@@ -257,8 +260,8 @@ const disconnect = async function () {
 			content: "Voulez-vous vraiment quitter la partie ?",
 			note: "Si oui, ",
 			link: "/play",
-			link_text: "cliquez ici."
-		}
+			link_text: "cliquez ici.",
+		},
 	});
 };
 </script>

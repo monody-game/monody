@@ -1,79 +1,71 @@
 <template>
-  <div class="play-page">
-    <div class="play-page__wrapper">
-      <header
-        v-once
-        class="play-page__header"
-      >
-        <div class="play-page__header-title">
-          <svg>
-            <use href="/sprite.svg#monody" />
-          </svg>
-          <h2>Monody</h2>
-        </div>
-        <button
-          @click="logout()"
-        >
-          Se déconnecter
-          <svg class="icon">
-            <use href="/sprite.svg#logout" />
-          </svg>
-        </button>
-      </header>
-      <div class="play-page__container">
-        <div class="play-page__games">
-          <header>
-            <p>Liste des parties :</p>
-            <button
-              class="play-page__button btn large"
-              @click="openModal()"
-            >
-              <svg
-                width="25"
-                height="25"
-                viewBox="0 0 35 35"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M17.5 17.5H5.83337M17.5 29.1666V17.5V29.1666ZM17.5 17.5V5.83331V17.5ZM17.5 17.5H29.1667H17.5Z"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                />
-              </svg>
-              Créer
-            </button>
-          </header>
-          <div class="play-page__game-list">
-            <GamePresentation
-              v-for="game in games"
-              :key="game.id"
-              :game="game"
-              :roles="roles"
-            />
-          </div>
-        </div>
-        <PlayerPresentation />
-      </div>
-      <Transition name="modal">
-        <GameCreationModal v-if="store.isOpenned" />
-      </Transition>
-      <Transition name="modal">
-        <ProfileModal v-if="profileModalStore.isOpenned" />
-      </Transition>
-      <Transition name="modal">
-        <ShareProfileModal v-if="shareProfileModalStore.isOpenned" />
-      </Transition>
-      <Transition name="modal">
-        <BadgesModal v-if="badgesModalStore.isOpenned" />
-      </Transition>
-      <Transition name="modal">
-        <LeaderboardsModal v-if="leaderboardsModalStore.isOpenned" />
-      </Transition>
-      <Footer />
-    </div>
-  </div>
+	<div class="play-page">
+		<div class="play-page__wrapper">
+			<header v-once class="play-page__header">
+				<div class="play-page__header-title">
+					<svg>
+						<use href="/sprite.svg#monody" />
+					</svg>
+					<h2>Monody</h2>
+				</div>
+				<button @click="logout()">
+					Se déconnecter
+					<svg class="icon">
+						<use href="/sprite.svg#logout" />
+					</svg>
+				</button>
+			</header>
+			<div class="play-page__container">
+				<div class="play-page__games">
+					<header>
+						<p>Liste des parties :</p>
+						<button class="play-page__button btn large" @click="openModal()">
+							<svg
+								width="25"
+								height="25"
+								viewBox="0 0 35 35"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M17.5 17.5H5.83337M17.5 29.1666V17.5V29.1666ZM17.5 17.5V5.83331V17.5ZM17.5 17.5H29.1667H17.5Z"
+									stroke="currentColor"
+									stroke-width="3"
+									stroke-linecap="round"
+								/>
+							</svg>
+							Créer
+						</button>
+					</header>
+					<div class="play-page__game-list">
+						<GamePresentation
+							v-for="game in games"
+							:key="game.id"
+							:game="game"
+							:roles="roles"
+						/>
+					</div>
+				</div>
+				<PlayerPresentation />
+			</div>
+			<Transition name="modal">
+				<GameCreationModal v-if="store.isOpenned" />
+			</Transition>
+			<Transition name="modal">
+				<ProfileModal v-if="profileModalStore.isOpenned" />
+			</Transition>
+			<Transition name="modal">
+				<ShareProfileModal v-if="shareProfileModalStore.isOpenned" />
+			</Transition>
+			<Transition name="modal">
+				<BadgesModal v-if="badgesModalStore.isOpenned" />
+			</Transition>
+			<Transition name="modal">
+				<LeaderboardsModal v-if="leaderboardsModalStore.isOpenned" />
+			</Transition>
+			<Footer />
+		</div>
+	</div>
 </template>
 
 <script setup>

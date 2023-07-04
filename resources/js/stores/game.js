@@ -23,12 +23,12 @@ export const useStore = defineStore("game", {
 				voice_channel: "",
 			},
 			chat_locked: false,
-			couple: []
+			couple: [],
 		};
 	},
 	actions: {
 		setRole(userId, role) {
-			const player = this.playerList.find(listItem => listItem.id === userId);
+			const player = this.playerList.find((listItem) => listItem.id === userId);
 			if (player) {
 				const index = this.playerList.indexOf(player);
 				player.role = {
@@ -38,12 +38,12 @@ export const useStore = defineStore("game", {
 				};
 				this.playerList[index] = player;
 			}
-		}
+		},
 	},
 	getters: {
 		getPlayerByID: (state) => (playerID) => {
 			const list = state.playerList;
 			return list.filter((player) => player.id === playerID)[0] ?? {};
-		}
+		},
 	},
 });

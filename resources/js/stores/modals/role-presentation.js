@@ -6,7 +6,7 @@ export const useStore = defineStore("role-presentation", {
 		return {
 			isOpenned: false,
 			opennedModal: "",
-			role: {}
+			role: {},
 		};
 	},
 	actions: {
@@ -18,6 +18,6 @@ export const useStore = defineStore("role-presentation", {
 			this.opennedModal = "";
 
 			return false;
-		}
-	}
+		},
+	},
 });

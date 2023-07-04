@@ -1,61 +1,52 @@
 <template>
-  <BaseModal>
-    <header>
-      <h3>Création d'une partie</h3>
-      <p class="modal__page-status">
-        ({{ currentPage }}/{{ totalPage }})
-      </p>
-    </header>
-    <div class="modal__page">
-      <RolesModalPage v-if="currentPage === 1" />
-      <GameTypeSelectionModalPage
-        v-if="currentPage === 2"
-        :has-linked="userStore.discord_linked_at !== null"
-      />
-    </div>
-    <div class="modal__buttons">
-      <button
-        class="btn medium"
-        @click="modalStore.close()"
-      >
-        Annuler
-      </button>
-      <div class="modal__buttons-right">
-        <button
-          class="btn medium"
-          :class="currentPage === 1 ? 'disabled' : ''"
-          :disabled="currentPage === 1"
-          @click.prevent="previous"
-        >
-          Précédent
-        </button>
-        <button
-          v-if="currentPage !== totalPage"
-          class="btn medium"
-          :class="notEnoughSelectedRoles() === true ? 'disabled' : ''"
-          :disabled="notEnoughSelectedRoles()"
-          @click.prevent="next"
-        >
-          Suivant
-        </button>
-        <button
-          v-if="currentPage === totalPage"
-          :class="notEnoughSelectedRoles() === true ? 'disabled' : ''"
-          :disabled="notEnoughSelectedRoles()"
-          class="btn medium"
-          @click="finish()"
-        >
-          Terminer
-        </button>
-      </div>
-    </div>
+	<BaseModal>
+		<header>
+			<h3>Création d'une partie</h3>
+			<p class="modal__page-status">({{ currentPage }}/{{ totalPage }})</p>
+		</header>
+		<div class="modal__page">
+			<RolesModalPage v-if="currentPage === 1" />
+			<GameTypeSelectionModalPage
+				v-if="currentPage === 2"
+				:has-linked="userStore.discord_linked_at !== null"
+			/>
+		</div>
+		<div class="modal__buttons">
+			<button class="btn medium" @click="modalStore.close()">Annuler</button>
+			<div class="modal__buttons-right">
+				<button
+					class="btn medium"
+					:class="currentPage === 1 ? 'disabled' : ''"
+					:disabled="currentPage === 1"
+					@click.prevent="previous"
+				>
+					Précédent
+				</button>
+				<button
+					v-if="currentPage !== totalPage"
+					class="btn medium"
+					:class="notEnoughSelectedRoles() === true ? 'disabled' : ''"
+					:disabled="notEnoughSelectedRoles()"
+					@click.prevent="next"
+				>
+					Suivant
+				</button>
+				<button
+					v-if="currentPage === totalPage"
+					:class="notEnoughSelectedRoles() === true ? 'disabled' : ''"
+					:disabled="notEnoughSelectedRoles()"
+					class="btn medium"
+					@click="finish()"
+				>
+					Terminer
+				</button>
+			</div>
+		</div>
 
-    <Transition name="modal">
-      <RolePresentationModal
-        v-if="rolePresentationStore.isOpenned"
-      />
-    </Transition>
-  </BaseModal>
+		<Transition name="modal">
+			<RolePresentationModal v-if="rolePresentationStore.isOpenned" />
+		</Transition>
+	</BaseModal>
 </template>
 
 <script setup>
@@ -93,11 +84,13 @@ const notEnoughSelectedRoles = function () {
 
 	// return selectedIds.length < 5;
 	// TODO: replace line below with line above
-	return selectedIds.length < 2 ||
+	return (
+		selectedIds.length < 2 ||
 		!(
-			selectedRoles.filter(role => role.team.id === 1).length >= 1 &&
-			selectedRoles.filter(role => role.team.id === 2).length >= 1
-		);
+			selectedRoles.filter((role) => role.team.id === 1).length >= 1 &&
+			selectedRoles.filter((role) => role.team.id === 2).length >= 1
+		)
+	);
 };
 
 const previous = function () {
@@ -112,10 +105,10 @@ const next = function () {
 	}
 };
 
-const finish = async function() {
+const finish = async function () {
 	const res = await window.JSONFetch("/game", "PUT", {
 		roles: store.selectedRoles,
-		type: store.type
+		type: store.type,
 	});
 
 	gameId.value = res.data.game.id;

@@ -41,7 +41,8 @@
 	color: var(--light-background);
 	background-color: var(--discord-color);
 
-	button, a {
+	button,
+	a {
 		background-color: var(--light-background);
 		color: var(--dark-background);
 		text-align: center;
@@ -97,7 +98,7 @@
 		cursor: pointer;
 		display: grid;
 		place-items: center;
-		transition: background-color .2s, opacity .2s;
+		transition: background-color 0.2s, opacity 0.2s;
 
 		position: absolute;
 		inset: 0;
@@ -106,7 +107,7 @@
 	}
 
 	.profile-modal__avatar-shadow {
-		transition: background-color .2s, opacity .2s;
+		transition: background-color 0.2s, opacity 0.2s;
 		border-radius: 50%;
 		cursor: pointer;
 		opacity: 0;

@@ -32,7 +32,7 @@
 	padding-bottom: space(1);
 
 	@media screen and (max-width: 960px) {
-		padding-inline: space(.5);
+		padding-inline: space(0.5);
 	}
 
 	@media screen and (max-width: 600px) {
@@ -57,7 +57,7 @@
 
 .play-page__header {
 	display: grid;
-	grid-template-columns: 1fr .75fr;
+	grid-template-columns: 1fr 0.75fr;
 	place-items: center flex-end;
 	padding: space(4) space(4);
 	color: var(--secondary);

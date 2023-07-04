@@ -1,36 +1,27 @@
 <template>
-  <div
-    class="message__main"
-    :class="message.type === 'werewolf' ? 'message__werewolf' : ''"
-  >
-    <div class="message__avatar">
-      <span
-        v-if="props.message.type === 'dead'"
-        class="message__avatar-dead"
-      >
-        <span />
-        <svg>
-          <use href="/sprite.svg#death" />
-        </svg>
-      </span>
-      <span
-        v-if="isWerewolf === true"
-        class="message__is-wolf"
-      />
-      <img
-        :src="avatar"
-        alt=""
-      >
-    </div>
-    <div class="message__texts">
-      <p class="message__author">
-        {{ props.message.author.username }}
-      </p>
-      <p class="message__content">
-        {{ props.message.content }}
-      </p>
-    </div>
-  </div>
+	<div
+		class="message__main"
+		:class="message.type === 'werewolf' ? 'message__werewolf' : ''"
+	>
+		<div class="message__avatar">
+			<span v-if="props.message.type === 'dead'" class="message__avatar-dead">
+				<span />
+				<svg>
+					<use href="/sprite.svg#death" />
+				</svg>
+			</span>
+			<span v-if="isWerewolf === true" class="message__is-wolf" />
+			<img :src="avatar" alt="" />
+		</div>
+		<div class="message__texts">
+			<p class="message__author">
+				{{ props.message.author.username }}
+			</p>
+			<p class="message__content">
+				{{ props.message.content }}
+			</p>
+		</div>
+	</div>
 </template>
 
 <script setup>
@@ -40,8 +31,8 @@ import { ref } from "vue";
 const props = defineProps({
 	message: {
 		type: Object,
-		required: true
-	}
+		required: true,
+	},
 });
 
 const store = useStore();

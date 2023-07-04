@@ -13,7 +13,7 @@
 		"tsbuild": "tsc",
 		"start": "node websockets/dist/websockets.js",
 		"serve": "tsc-watch --onSuccess \"npm run start\"",
-		"format": "prettier --write \"websockets/\""
+		"format": "prettier --write \"websockets/\" --write \"resources/\""
 	},
 	"dependencies": {
 		"@grafikart/spinning-dots-element": "latest",

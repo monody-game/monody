@@ -32,7 +32,7 @@
 
 .role-assignation__roles-large {
 	display: flex;
-	animation: slideRoles 2s cubic-bezier(.65, .05, .36, 1) both;
+	animation: slideRoles 2s cubic-bezier(0.65, 0.05, 0.36, 1) both;
 }
 
 .role-assignation__modal-background {
@@ -63,17 +63,17 @@
 }
 
 .role-assignation__role-text > span:nth-child(2) {
-	margin-bottom: space(.5);
+	margin-bottom: space(0.5);
 }
 
 .role-assignation__role-text > span:last-of-type {
 	color: var(--primary-hover);
-	font-size: .9rem;
+	font-size: 0.9rem;
 }
 
 .role-assignation__role-text span span:not(.bold) {
 	opacity: 0;
-	animation: revealText .7s both;
+	animation: revealText 0.7s both;
 	transform: translateY(100%);
 }
 

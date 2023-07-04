@@ -118,9 +118,7 @@ export class GameChannel {
             return;
         socket.broadcast.to(channel).emit("presence:joining", channel, member);
         const gameData = await fetch(`${process.env.API_URL}/game/data/${gameId(channel)}/${member.user_id}`);
-        this.io
-            .to(member.socketId)
-            .emit("game.data", channel, {
+        this.io.to(member.socketId).emit("game.data", channel, {
             data: { payload: gameData.json.data.game },
         });
     }

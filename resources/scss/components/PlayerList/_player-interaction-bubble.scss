@@ -1,6 +1,6 @@
 .player-interaction-bubble__container {
-  z-index: 10;
-  width: min-content;
+	z-index: 10;
+	width: min-content;
 
 	display: flex;
 	justify-content: center;
@@ -31,14 +31,14 @@
 }
 
 .player-interaction-bubble__content {
-  height: 26px;
-  width: 26px;
-  border-radius: 100%;
-  margin-right: space(0.5);
+	height: 26px;
+	width: 26px;
+	border-radius: 100%;
+	margin-right: space(0.5);
 
-  &:first-child {
-    margin-left: space(0.5);
-  }
+	&:first-child {
+		margin-left: space(0.5);
+	}
 }
 
 .player-interaction-bubble__arrow {
@@ -87,13 +87,13 @@
 }
 
 @keyframes floating {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(3px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+	0% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(3px);
+	}
+	100% {
+		transform: translateY(0px);
+	}
 }

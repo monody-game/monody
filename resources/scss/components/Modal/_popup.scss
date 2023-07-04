@@ -1,4 +1,5 @@
-$popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'error' var(--danger), 'level' var(--level);
+$popups: "success" var(--success), "info" var(--info), "warn" var(--warn),
+	"error" var(--danger), "level" var(--level);
 
 .popup__wrapper {
 	color: var(--secondary);
@@ -9,12 +10,12 @@ $popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 
 	padding: space(3);
 
-	box-shadow: 0 0 10px 2px rgba(0, 0, 0, .25);
+	box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.25);
 }
 
 @each $popup in $popups {
-	.modal__background[data-popup-type=#{nth($popup, 1)}] .popup__icon,
-	.popup__wrapper[data-popup-type=#{nth($popup, 1)}] .popup__icon {
+	.modal__background[data-popup-type="#{nth($popup, 1)}"] .popup__icon,
+	.popup__wrapper[data-popup-type="#{nth($popup, 1)}"] .popup__icon {
 		color: nth($popup, 2);
 	}
 }
@@ -60,7 +61,7 @@ $popups: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 	width: 16px;
 	cursor: pointer;
 	color: #0f112740;
-	transition: color .2s;
+	transition: color 0.2s;
 
 	&:hover {
 		color: #0f112780;

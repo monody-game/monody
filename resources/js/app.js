@@ -10,10 +10,7 @@ customElements.define("spinning-dots", SpinningDots);
 
 window.pinia = createPinia();
 
-createApp(App)
-	.use(window.pinia)
-	.use(router)
-	.mount("#app");
+createApp(App).use(window.pinia).use(router).mount("#app");
 
 import "./Helpers.js";
 import { useStore } from "./stores/debug-bar.js";
@@ -21,9 +18,14 @@ import { useStore } from "./stores/debug-bar.js";
 const store = useStore();
 
 function proxy(context, method, message) {
-	return function() {
-		store[method.name + "s"].push(Object.values(arguments).filter(value => value !== "\n"));
-		method.apply(context, [message].concat(Array.prototype.slice.apply(arguments)));
+	return function () {
+		store[method.name + "s"].push(
+			Object.values(arguments).filter((value) => value !== "\n")
+		);
+		method.apply(
+			context,
+			[message].concat(Array.prototype.slice.apply(arguments))
+		);
 	};
 }
 
@@ -33,8 +35,8 @@ window.addEventListener("error", (e) => {
 		source: {
 			file: e.filename,
 			col: e.colno,
-			line: e.lineno
-		}
+			line: e.lineno,
+		},
 	});
 });
 

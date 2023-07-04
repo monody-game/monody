@@ -1,23 +1,20 @@
 <template>
-  <div
-    ref="playerListNode"
-    class="player-list__wrapper"
-  >
-    <LogoSpinner v-if="loading.value === true" />
-    <GamePlayer
-      v-for="player in playerList"
-      :key="player.id"
-      :player="player"
-    />
-    <img
-      v-if="typeof gameStore.assignedRole.id !== 'undefined'"
-      :src="gameStore.assignedRole.image"
-      :alt="gameStore.assignedRole.display_name"
-      :title="gameStore.assignedRole.display_name"
-      class="game-page__role pointer"
-      @click="present()"
-    >
-  </div>
+	<div ref="playerListNode" class="player-list__wrapper">
+		<LogoSpinner v-if="loading.value === true" />
+		<GamePlayer
+			v-for="player in playerList"
+			:key="player.id"
+			:player="player"
+		/>
+		<img
+			v-if="typeof gameStore.assignedRole.id !== 'undefined'"
+			:src="gameStore.assignedRole.image"
+			:alt="gameStore.assignedRole.display_name"
+			:title="gameStore.assignedRole.display_name"
+			class="game-page__role pointer"
+			@click="present()"
+		/>
+	</div>
 </template>
 
 <script setup>
@@ -62,7 +59,7 @@ const present = () => {
 const addUser = function (player) {
 	player = injectPlayersProperties([player])[0];
 
-	if (playerList.value.filter(user => user.id === player.id).length < 1) {
+	if (playerList.value.filter((user) => user.id === player.id).length < 1) {
 		playerList.value.push(player);
 	} else {
 		console.warn(`User ${player.id} was already shown in game`);
@@ -79,8 +76,13 @@ const removeUser = function (player) {
 	const children = playerListNode.value.children;
 
 	for (const playerNode of children) {
-		if (playerNode.dataset.id === player.id && playerNode.dataset.isDead !== "true") {
-			gameStore.playerList = gameStore.playerList.filter((p) => p.id !== player.id);
+		if (
+			playerNode.dataset.id === player.id &&
+			playerNode.dataset.isDead !== "true"
+		) {
+			gameStore.playerList = gameStore.playerList.filter(
+				(p) => p.id !== player.id
+			);
 			playerList.value = playerList.value.filter((p) => p.id !== player.id);
 			playerNode.remove();
 		}

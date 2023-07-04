@@ -1,4 +1,5 @@
-$alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'error' var(--danger), 'level' var(--level);
+$alerts: "success" var(--success), "info" var(--info), "warn" var(--warn),
+	"error" var(--danger), "level" var(--level);
 
 .alert__container {
 	position: relative;
@@ -27,7 +28,7 @@ $alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 	height: 16px;
 	width: 16px;
 	cursor: pointer;
-	transition: color .2s;
+	transition: color 0.2s;
 	color: #0f112740;
 
 	&:hover {
@@ -48,7 +49,7 @@ $alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 		background-color: nth($alert, 2);
 	}
 
-	.alert__container[data-alert-type=#{nth($alert, 1)}] .alert__icon {
+	.alert__container[data-alert-type="#{nth($alert, 1)}"] .alert__icon {
 		color: nth($alert, 2);
 	}
 }
@@ -71,7 +72,7 @@ $alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 }
 
 .alert__out {
-	animation: alertOut .5s both;
+	animation: alertOut 0.5s both;
 }
 
 @keyframes alertOut {

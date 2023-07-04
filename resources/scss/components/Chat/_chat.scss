@@ -1,14 +1,14 @@
 .chat__main {
-  background: var(--chat-background);
-  overflow: hidden;
-  height: 95%;
-  margin: space(3) space(4) 0 space(4);
+	background: var(--chat-background);
+	overflow: hidden;
+	height: 95%;
+	margin: space(3) space(4) 0 space(4);
 	width: 30vw;
-  border-radius: 10px;
+	border-radius: 10px;
 	display: flex;
 	flex-direction: column;
 
-	@media screen and (max-width: 1350px){
+	@media screen and (max-width: 1350px) {
 		width: 50vw;
 	}
 }
@@ -31,7 +31,7 @@
 	}
 
 	> div[data-unread="true"]::after {
-		content: '!';
+		content: "!";
 		background-color: var(--danger);
 		height: 16px;
 		width: 16px;
@@ -64,7 +64,7 @@
 		display: grid;
 		place-items: center;
 
-		transition: background-color .2s;
+		transition: background-color 0.2s;
 	}
 
 	> div[data-selected="true"] {
@@ -74,53 +74,54 @@
 }
 
 .chat__messages {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	flex: 1;
-  padding-top: space(2);
-  padding-left: space(2);
-  padding-right: space(2);
-  overflow-y: scroll;
+	padding-top: space(2);
+	padding-left: space(2);
+	padding-right: space(2);
+	overflow-y: scroll;
 	overflow-anchor: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--light-scrollbar-color) var(--light-scrollbar-background);
+	scrollbar-width: thin;
+	scrollbar-color: var(--light-scrollbar-color)
+		var(--light-scrollbar-background);
 
-  & > .time-separator__main {
-    margin-top: space(2);
-    margin-bottom: space(2);
-  }
+	& > .time-separator__main {
+		margin-top: space(2);
+		margin-bottom: space(2);
+	}
 
-  & > p {
-    color: var(--dark-background);
-  }
+	& > p {
+		color: var(--dark-background);
+	}
 }
 
 .chat__submit-form {
-  height: 60px;
-  display: flex;
-  border-top: solid 2px rgba(var(--unchanged-color), 10%);
-  justify-content: space-between;
-  background: var(--chat-send-background);
+	height: 60px;
+	display: flex;
+	border-top: solid 2px rgba(var(--unchanged-color), 10%);
+	justify-content: space-between;
+	background: var(--chat-send-background);
 
-  & input {
-    font-family: inherit;
-    height: inherit;
-    background: inherit;
-    border: none;
-    font-size: 16px;
-    padding-left: space(2);
-    width: 100%;
+	& input {
+		font-family: inherit;
+		height: inherit;
+		background: inherit;
+		border: none;
+		font-size: 16px;
+		padding-left: space(2);
+		width: 100%;
 
-    &:focus {
-      outline: none;
-    }
+		&:focus {
+			outline: none;
+		}
 
-    &::placeholder {
-      opacity: 1;
-      color: var(--chat-send-text);
-    }
-  }
+		&::placeholder {
+			opacity: 1;
+			color: var(--chat-send-text);
+		}
+	}
 }
 
 .night .chat__submit-form input {
@@ -128,30 +129,30 @@
 }
 
 .locked {
-  cursor: not-allowed;
+	cursor: not-allowed;
 }
 
 .chat__send-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	flex-direction: column;
 
-  height: inherit;
-  width: 100px;
-  background: inherit;
-  border: none;
-  border-left: solid 2px rgba(var(--unchanged-color), 10%);
-  cursor: pointer;
+	height: inherit;
+	width: 100px;
+	background: inherit;
+	border: none;
+	border-left: solid 2px rgba(var(--unchanged-color), 10%);
+	cursor: pointer;
 	color: rgba(var(--unchanged-color), 60%);
-	transition: all .2s;
+	transition: all 0.2s;
 
-  &.locked {
-    cursor: not-allowed;
-  }
+	&.locked {
+		cursor: not-allowed;
+	}
 
 	& span {
-		font-size: .8rem;
+		font-size: 0.8rem;
 	}
 }
 
@@ -166,8 +167,8 @@
 }
 
 .chat__submit-icon {
-  height: 40px;
-  width: 40px;
+	height: 40px;
+	width: 40px;
 }
 
 @media screen and (max-width: 700px) {

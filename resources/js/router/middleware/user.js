@@ -6,7 +6,11 @@ export default async function user({ router }) {
 
 	if (!status) {
 		router.push("/login");
-	} else if (!document.cookie.split(";").some((item) => item.trim().startsWith("XSRF-TOKEN"))) {
+	} else if (
+		!document.cookie
+			.split(";")
+			.some((item) => item.trim().startsWith("XSRF-TOKEN"))
+	) {
 		setTimeout(() => location.reload());
 	}
 }

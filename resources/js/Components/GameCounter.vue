@@ -1,35 +1,24 @@
 <template>
-  <div class="counter__main">
-    <span class="counter__icon-container">
-      <svg
-        class="counter__icon-circle"
-        height="45"
-        viewBox="0 0 45 45"
-        width="45"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle
-          cx="22.5"
-          cy="22.5"
-          fill="none"
-          r="21.5"
-          stroke="white"
-        />
-      </svg>
-      <svg
-        ref="counterIcon"
-        class="counter__icon"
-      >
-        <use :href="'/sprite.svg#' + icon" />
-      </svg>
-    </span>
-    <p class="counter__seconds">
-      {{ new Date(time * 1000).toISOString().substr(14, 5) }}
-    </p>
-    <p class="counter__round">
-      &nbsp;- {{ roundText }}
-    </p>
-  </div>
+	<div class="counter__main">
+		<span class="counter__icon-container">
+			<svg
+				class="counter__icon-circle"
+				height="45"
+				viewBox="0 0 45 45"
+				width="45"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<circle cx="22.5" cy="22.5" fill="none" r="21.5" stroke="white" />
+			</svg>
+			<svg ref="counterIcon" class="counter__icon">
+				<use :href="'/sprite.svg#' + icon" />
+			</svg>
+		</span>
+		<p class="counter__seconds">
+			{{ new Date(time * 1000).toISOString().substr(14, 5) }}
+		</p>
+		<p class="counter__round">&nbsp;- {{ roundText }}</p>
+	</div>
 </template>
 
 <script setup>
@@ -54,13 +43,13 @@ const modalStore = useModalStore();
 const gameStore = useStore();
 const halt = ref(false);
 
-const getState = async function(toRetrieveState = null) {
+const getState = async function (toRetrieveState = null) {
 	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
 	const state = await window.JSONFetch(`/state/${parameter}`, "GET");
 	return state.data.state;
 };
 
-onMounted(() =>	updateCircle());
+onMounted(() => updateCircle());
 
 let state = await getState();
 sound.load();
@@ -91,7 +80,10 @@ onBeforeRouteLeave(() => {
 const setData = async function (data) {
 	gameStore.currentState = data;
 	clearInterval(counterId.value);
-	time.value = data.counterDuration === -1 ? 0 : getDuration(data.counterDuration, data.startTimestamp);
+	time.value =
+		data.counterDuration === -1
+			? 0
+			: getDuration(data.counterDuration, data.startTimestamp);
 	totalTime.value = data.counterDuration === -1 ? 0 : data.counterDuration;
 
 	if (status.value !== data.status.value) {
@@ -149,17 +141,17 @@ const decount = function () {
 
 const soundManagement = function () {
 	switch (time.value) {
-	case 120:
-	case 60:
-	case 30:
-	case 10:
-	case 5:
-	case 3:
-	case 2:
-	case 1:
-		sound.currentTime = 0;
-		sound.play();
-		break;
+		case 120:
+		case 60:
+		case 30:
+		case 10:
+		case 5:
+		case 3:
+		case 2:
+		case 1:
+			sound.currentTime = 0;
+			sound.play();
+			break;
 	}
 };
 
@@ -182,22 +174,22 @@ const updateCircle = function () {
 
 const updateOverlay = function () {
 	switch (status.value) {
-	default:
-		break;
-	case 2:
-		chatStore.send("Tombée de la nuit", "time_separator");
-		break;
-	case 6:
-		chatStore.send("Lever du jour", "time_separator");
-		break;
+		default:
+			break;
+		case 2:
+			chatStore.send("Tombée de la nuit", "time_separator");
+			break;
+		case 6:
+			chatStore.send("Lever du jour", "time_separator");
+			break;
 	}
 
 	switch (icon.value) {
-	default:
-		counterIcon.value.classList.remove("counter__icon-rotate");
-		break;
-	case "day":
-		counterIcon.value.classList.add("counter__icon-rotate");
+		default:
+			counterIcon.value.classList.remove("counter__icon-rotate");
+			break;
+		case "day":
+			counterIcon.value.classList.add("counter__icon-rotate");
 	}
 };
 

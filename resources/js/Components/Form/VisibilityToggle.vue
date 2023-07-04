@@ -1,16 +1,14 @@
 <template>
-  <svg ref="svg">
-    <use
-      :href="'/sprite.svg#' + icon"
-    />
-  </svg>
+	<svg ref="svg">
+		<use :href="'/sprite.svg#' + icon" />
+	</svg>
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
 
 const props = defineProps({
-	field: String
+	field: String,
 });
 const svg = ref(null);
 const icon = ref("closed_eye");

@@ -7,33 +7,35 @@ export const useStore = defineStore("chat", {
 		return {
 			messages: {
 				main: [],
-				couple: []
+				couple: [],
 			},
 			unread: {
 				main: false,
-				couple: true
-			}
+				couple: true,
+			},
 		};
 	},
 	actions: {
 		send(content, type, author = null, actionList = []) {
 			if (type === "couple") {
-				this.unread.couple = author !== null ? author.id !== useUserStore.id : false;
+				this.unread.couple =
+					author !== null ? author.id !== useUserStore.id : false;
 				this.messages.couple.push({
 					content,
 					type: "message",
 					author: author,
 					actionList: actionList,
-					timestamp: Date.now()
+					timestamp: Date.now(),
 				});
 			} else {
-				this.unread.main = author !== null ? author.id !== useUserStore.id : false;
+				this.unread.main =
+					author !== null ? author.id !== useUserStore.id : false;
 				this.messages.main.push({
 					content,
 					type,
 					author: author,
 					actionList: actionList,
-					timestamp: Date.now()
+					timestamp: Date.now(),
 				});
 			}
 
@@ -42,6 +44,6 @@ export const useStore = defineStore("chat", {
 				if (!messageContainer) return;
 				messageContainer.scrollTo(0, messageContainer.scrollHeight);
 			});
-		}
-	}
+		},
+	},
 });

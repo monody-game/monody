@@ -4,7 +4,7 @@ export const useStore = defineStore("debug-bar", {
 	state: () => {
 		return {
 			errors: [],
-			warns: []
+			warns: [],
 		};
-	}
+	},
 });

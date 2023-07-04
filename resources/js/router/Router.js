@@ -15,49 +15,49 @@ const routes = [
 	{
 		path: "/",
 		name: "home_page",
-		component: HomePage
+		component: HomePage,
 	},
 	{
 		path: "/login",
 		name: "login",
-		component: LoginPage
+		component: LoginPage,
 	},
 	{
 		path: "/register",
 		name: "register",
-		component: RegisterPage
+		component: RegisterPage,
 	},
 	{
 		path: "/forgot/:token?",
 		name: "forgot",
-		component: ForgotPasswordPage
+		component: ForgotPasswordPage,
 	},
 	{
 		path: "/play",
 		name: "play",
 		component: PlayPage,
 		meta: {
-			middleware: [user]
-		}
+			middleware: [user],
+		},
 	},
 	{
 		path: "/game/:id",
 		name: "game",
 		component: GamePage,
 		meta: {
-			middleware: [user, exists, canJoin]
-		}
+			middleware: [user, exists, canJoin],
+		},
 	},
 	{
 		path: "/:pathMatch(.*)*",
 		name: "e404",
-		component: NotFoundPage
-	}
+		component: NotFoundPage,
+	},
 ];
 
 const router = createRouter({
 	history: createWebHistory(),
-	routes
+	routes,
 });
 
 router.beforeEach(async (to, from) => {

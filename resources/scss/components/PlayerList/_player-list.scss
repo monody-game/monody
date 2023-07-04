@@ -1,6 +1,6 @@
 .player-list__wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(171px, 1fr));
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(171px, 1fr));
 	gap: space(2);
 	height: 100%;
 	width: 100%;
