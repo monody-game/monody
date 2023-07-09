@@ -38,16 +38,17 @@ const totalTime = ref(0);
 const counterId = ref(0);
 const counterIcon = ref(null);
 const status = ref(0);
-const bip = new Howl({
-	src: ["../sounds/ding.mp3"],
-	volume: store.volumes.ambient,
-});
 const roundText = ref("");
 const chatStore = useChatStore();
 const modalStore = useModalStore();
 const gameStore = useStore();
 const audioStore = useAudioStore();
 const halt = ref(false);
+
+const bip = new Howl({
+	src: ["../sounds/ding.mp3"],
+	volume: audioStore.volumes.ambient,
+});
 
 audioStore.$subscribe((mutation, state) => {
 	bip.volume(state.volumes.ambient * 0.1);
