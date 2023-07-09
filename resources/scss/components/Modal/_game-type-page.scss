@@ -1,3 +1,5 @@
+@use "../../tools/functions" as *;
+
 .game-type__wrapper {
 	display: flex;
 	justify-content: space-around;
@@ -64,4 +66,15 @@
 .game-type__monody-icon {
 	width: 48px;
 	height: 54px;
+}
+
+@media screen and (max-width: 700px) {
+	.game-type__wrapper {
+		flex-direction: column;
+		gap: space(2);
+
+		div {
+			max-width: unset;
+		}
+	}
 }
