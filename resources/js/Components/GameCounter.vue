@@ -22,11 +22,13 @@
 </template>
 
 <script setup>
+import { Howl } from "howler";
 import { onMounted, ref } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useStore } from "../stores/game.js";
 import { useStore as useChatStore } from "../stores/chat.js";
 import { useStore as useModalStore } from "../stores/modals/modal.js";
+import { useStore as useAudioStore } from "../stores/modals/audio-modal.js";
 
 const route = useRoute();
 const round = ref(0);
@@ -36,12 +38,20 @@ const totalTime = ref(0);
 const counterId = ref(0);
 const counterIcon = ref(null);
 const status = ref(0);
-const sound = new Audio("../sounds/bip.mp3");
+const bip = new Howl({
+	src: ["../sounds/ding.mp3"],
+	volume: store.volumes.ambient,
+});
 const roundText = ref("");
 const chatStore = useChatStore();
 const modalStore = useModalStore();
 const gameStore = useStore();
+const audioStore = useAudioStore();
 const halt = ref(false);
+
+audioStore.$subscribe((mutation, state) => {
+	bip.volume(state.volumes.ambient * 0.1);
+});
 
 const getState = async function (toRetrieveState = null) {
 	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
@@ -52,7 +62,6 @@ const getState = async function (toRetrieveState = null) {
 onMounted(() => updateCircle());
 
 let state = await getState();
-sound.load();
 roundText.value = state.name;
 icon.value = state.icon;
 
@@ -149,8 +158,7 @@ const soundManagement = function () {
 		case 3:
 		case 2:
 		case 1:
-			sound.currentTime = 0;
-			sound.play();
+			bip.play();
 			break;
 	}
 };

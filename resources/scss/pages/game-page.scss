@@ -36,9 +36,11 @@
 }
 
 .game-page__header {
-	display: flex;
+	display: grid;
 	align-items: center;
-	justify-content: space-between;
+	justify-items: center;
+	grid-template-columns: 120px 1fr repeat(2, 28px);
+	gap: space(3);
 	margin-top: space(3);
 	margin-inline: space(4);
 }
@@ -93,6 +95,8 @@
 	}
 
 	.game-page__header {
+		grid-template-columns: 40px 1fr repeat(2, 28px);
 		margin-inline: space(2);
+		gap: space(1);
 	}
 }

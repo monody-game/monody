@@ -21,6 +21,7 @@
 				<p>Accueil</p>
 			</a>
 			<GameCounter />
+			<AudioManager />
 			<svg class="game-page__details" @click="modalStore.open('game-details')">
 				<use href="/sprite.svg#question" />
 			</svg>
@@ -67,6 +68,12 @@
 				:winning-team="winningTeam"
 			/>
 		</Transition>
+
+		<Transition name="modal">
+			<AudioManagementModal
+				v-if="modalStore.opennedModal === 'audio-management'"
+			></AudioManagementModal>
+		</Transition>
 	</div>
 </template>
 
@@ -96,6 +103,8 @@ import GameVocalInvitation from "../../Components/Modal/GameVocalInvitation.vue"
 import RolePresentationModal from "../../Components/Modal/RolePresentationModal.vue";
 import GameInformationBubble from "../../Components/GameInformationBubble.vue";
 import EndGameModal from "../../Components/Modal/EndGameModal.vue";
+import AudioManager from "../../Components/AudioManager.vue";
+import AudioManagementModal from "../../Components/Modal/AudioManagementModal.vue";
 
 const route = useRoute();
 const store = useStore();
@@ -152,6 +161,7 @@ window.Echo.join(`game.${gameId}`)
 		store.roles = roles;
 		store.type = e.type;
 		store.currentState = e.state;
+		store.mayor = e.mayor;
 
 		if (e.type === 1 && e.discord === null) {
 			const res = await window.JSONFetch(`/game/${gameId}/discord`);

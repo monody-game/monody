@@ -12,6 +12,7 @@ import { useStore as useLeaderboardsModalStore } from "./leaderboards.js";
 import { useStore as useLogoutWarnPopupStore } from "./logout-warn-popup.js";
 import { useStore as useRolePresentationStore } from "./role-presentation.js";
 import { useStore as useEndGameModalStore } from "./end-game-modal.js";
+import { useStore as useAudioManagementModalStore } from "./audio-modal.js";
 
 export const useStore = defineStore("modal", {
 	state: () => {
@@ -48,6 +49,8 @@ export const useStore = defineStore("modal", {
 					return useRolePresentationStore();
 				case "end-game-modal":
 					return useEndGameModalStore();
+				case "audio-management":
+					return useAudioManagementModalStore();
 			}
 		},
 	},

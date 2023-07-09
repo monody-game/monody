@@ -299,6 +299,7 @@ class GameController extends Controller
             'type' => $game['type'],
             'chat_locked' => $chatLocked,
             'contaminated' => $contaminated,
+            'mayor' => array_key_exists('mayor', $game) ? $game['mayor'] : null,
         ];
 
         if ($game['type'] === GameType::VOCAL->value) {
