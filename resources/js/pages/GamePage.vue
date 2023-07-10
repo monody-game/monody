@@ -54,7 +54,7 @@
 		</Transition>
 		<Transition name="modal">
 			<GameVocalInvitation
-				v-if="store.type === 1 && vocalInvitationStore.isOpenned === true"
+				v-if="store.type === 0b00010 && vocalInvitationStore.isOpenned === true"
 			/>
 		</Transition>
 		<Transition name="modal">
@@ -163,7 +163,7 @@ window.Echo.join(`game.${gameId}`)
 		store.currentState = e.state;
 		store.mayor = e.mayor;
 
-		if (e.type === 1 && e.discord === null) {
+		if (e.type === 0b00010 && e.discord === null) {
 			const res = await window.JSONFetch(`/game/${gameId}/discord`);
 			store.discord = res.data.data;
 		} else {
