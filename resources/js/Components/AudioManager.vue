@@ -37,6 +37,12 @@ const night = new Howl({
 store.$subscribe((mutation, state) => {
 	localStorage.setItem("volume", JSON.stringify(state.volumes));
 
+	if (state.volumes.music === 0) {
+		night.mute();
+		day.mute();
+		rooster.mute();
+	}
+
 	night.volume(state.volumes.music * 0.1);
 	day.volume(state.volumes.music * 0.1);
 	rooster.volume(state.volumes.ambient * 0.1);
