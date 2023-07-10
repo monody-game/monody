@@ -56,7 +56,7 @@ class GameController extends Controller
         $list = [];
 
         if ($games === []) {
-            return new JsonApiResponse(['games' => []]);
+            return JsonApiResponse::make(['games' => []])->withoutCache();
         }
 
         foreach ($games as $game) {
