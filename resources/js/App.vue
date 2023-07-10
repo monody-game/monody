@@ -30,7 +30,7 @@ const isDev = ref(localStorage.getItem("dev") === "true");
 
 if (
 	url.searchParams.has("pwa") &&
-	localStorage.getItem("pwa_thanked") !== true
+	localStorage.getItem("pwa_thanked") !== "true"
 ) {
 	localStorage.setItem("pwa_thanked", true);
 	alertStore.addAlerts({
