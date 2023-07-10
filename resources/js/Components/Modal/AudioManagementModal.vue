@@ -72,7 +72,7 @@ const store = useStore();
 const modalStore = useModalStore();
 
 const storage = JSON.parse(
-	localStorage.getItem("volume") ?? "{ ambient: 5, music: 7 }"
+	localStorage.getItem("volume") ?? JSON.stringify({ ambient: 5, music: 7 })
 );
 
 const music = ref(storage.music);
