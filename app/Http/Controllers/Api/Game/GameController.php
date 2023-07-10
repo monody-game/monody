@@ -50,7 +50,7 @@ class GameController extends Controller
             ->withAlert(AlertType::Error, "La partie demandée n'existe pas (ou plus) ...");
     }
 
-    public function list(?string $type = null): JsonApiResponse
+    public function list(?string $type = '*'): JsonApiResponse
     {
         $games = $this->getGames();
         $list = [];
@@ -78,11 +78,11 @@ class GameController extends Controller
                 continue;
             }
 
-            if ($this->fromLocalNetwork() && $gameData['type'] !== (int) $type && $type !== '*') {
+            if ($type !== '*' && $this->fromLocalNetwork() && !($gameData['type'] & (int) decbin((int) $type))) {
                 continue;
             }
 
-            if ($type !== null && $gameData['type'] !== (int) $type && $type !== '*') {
+            if ($type !== '*' && $type !== null && !($gameData['type'] & (int) decbin((int) $type))) {
                 continue;
             }
 
@@ -130,7 +130,7 @@ class GameController extends Controller
         $data['id'] = $id;
         $data['type'] = $request->get('type') ?: GameType::NORMAL->value;
 
-        if ($data['type'] & GameType::VOCAL->value) {
+        if (GameType::VOCAL->value & $data['type']) {
             $size = array_reduce($data['roles'], fn ($previous, $role) => $previous + $role, 0);
 
             broadcast(new CreateVoiceChannel(

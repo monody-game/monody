@@ -1,11 +1,11 @@
 <template>
 	<div class="game-type__wrapper">
 		<div
-			:class="store.type === 0x00000 ? 'active' : ''"
+			:class="store.type === 0b00001 ? 'active' : ''"
 			tabindex="0"
-			@click="store.type = 0x00000"
-			@keydown.enter="store.type = 0x00000"
-			@keydown.space="store.type = 0x00000"
+			@click="store.type = 0b00001"
+			@keydown.enter="store.type = 0b00001"
+			@keydown.space="store.type = 0b00001"
 		>
 			<svg class="game-type__monody-icon">
 				<use href="/sprite.svg#monody" />
@@ -15,7 +15,7 @@
 		</div>
 		<div
 			:class="{
-				active: store.type === 0x00001,
+				active: store.type === 0b00010,
 				disabled: props.hasLinked === false,
 			}"
 			:title="
@@ -24,9 +24,9 @@
 					: ''
 			"
 			tabindex="0"
-			@click="store.type = props.hasLinked === true ? 0x00001 : 0x00000"
-			@keydown.enter="store.type = props.hasLinked === true ? 0x00001 : 0x00000"
-			@keydown.space="store.type = props.hasLinked === true ? 0x00001 : 0x00000"
+			@click="store.type = props.hasLinked === true ? 0b00010 : 0b00001"
+			@keydown.enter="store.type = props.hasLinked === true ? 0b00010 : 0b00001"
+			@keydown.space="store.type = props.hasLinked === true ? 0b00010 : 0b00001"
 		>
 			<svg class="game-type__vocal-icon">
 				<use href="/sprite.svg#vocal" />
@@ -44,8 +44,8 @@
 import { useStore } from "../../../stores/modals/game-creation-modal.js";
 
 /**
- * Normal (site only): 0x00000
- * Voice: 0x00001
+ * Normal (site only): 0b00001
+ * Voice: 0b00010
  */
 const props = defineProps({
 	hasLinked: {
