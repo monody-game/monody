@@ -20,11 +20,11 @@ class StartGameController extends Controller
             return new JsonApiResponse(['message' => 'You cannot start an already started game.'], Status::FORBIDDEN);
         }
 
-        if ($game['type'] === GameType::NORMAL->value && $this->isFull($game)) {
+        if ($game['type'] & GameType::NORMAL->value && $this->isFull($game)) {
             return new JsonApiResponse(status: Status::NO_CONTENT);
         }
 
-        if ($game['type'] === GameType::VOCAL->value && $this->isFull($game) && $this->allUsersJoinedVoiceChannel($game)) {
+        if ($game['type'] & GameType::VOCAL->value && $this->isFull($game) && $this->allUsersJoinedVoiceChannel($game)) {
             return new JsonApiResponse(status: Status::NO_CONTENT);
         }
 

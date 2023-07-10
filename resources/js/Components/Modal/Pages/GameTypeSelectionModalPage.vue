@@ -1,11 +1,11 @@
 <template>
 	<div class="game-type__wrapper">
 		<div
-			:class="store.type === 0 ? 'active' : ''"
+			:class="store.type === 0x00000 ? 'active' : ''"
 			tabindex="0"
-			@click="store.type = 0"
-			@keydown.enter="store.type = 0"
-			@keydown.space="store.type = 0"
+			@click="store.type = 0x00000"
+			@keydown.enter="store.type = 0x00000"
+			@keydown.space="store.type = 0x00000"
 		>
 			<svg class="game-type__monody-icon">
 				<use href="/sprite.svg#monody" />
@@ -14,16 +14,19 @@
 			<p>Une partie Monody classique se déroulant entièrement sur le site</p>
 		</div>
 		<div
-			:class="{ active: store.type === 1, disabled: props.hasLinked === false }"
+			:class="{
+				active: store.type === 0x00001,
+				disabled: props.hasLinked === false,
+			}"
 			:title="
 				props.hasLinked === false
 					? 'Vous devez lier un compte Discord à Monody afin d\'utiliser cette fonctionnalité'
 					: ''
 			"
 			tabindex="0"
-			@click="store.type = props.hasLinked === true ? 1 : 0"
-			@keydown.enter="store.type = props.hasLinked === true ? 1 : 0"
-			@keydown.space="store.type = props.hasLinked === true ? 1 : 0"
+			@click="store.type = props.hasLinked === true ? 0x00001 : 0x00000"
+			@keydown.enter="store.type = props.hasLinked === true ? 0x00001 : 0x00000"
+			@keydown.space="store.type = props.hasLinked === true ? 0x00001 : 0x00000"
 		>
 			<svg class="game-type__vocal-icon">
 				<use href="/sprite.svg#vocal" />
@@ -40,6 +43,10 @@
 <script setup>
 import { useStore } from "../../../stores/modals/game-creation-modal.js";
 
+/**
+ * Normal (site only): 0x00000
+ * Voice: 0x00001
+ */
 const props = defineProps({
 	hasLinked: {
 		type: Boolean,
