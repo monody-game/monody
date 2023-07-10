@@ -3,12 +3,12 @@
 		tabindex="0"
 		class="game-show__container"
 		:class="
-			userStore.discord_linked_at === null && props.game.type === 1
+			userStore.discord_linked_at === null && props.game.type === 0b00010
 				? 'game-show__container-disabled'
 				: ''
 		"
 		:title="
-			userStore.discord_linked_at === null && props.game.type === 1
+			userStore.discord_linked_at === null && props.game.type === 0b00010
 				? 'Vous devez lier votre compte Discord à Monody pour rejoindre cette partie'
 				: ''
 		"
@@ -49,7 +49,7 @@
 				</div>
 			</div>
 		</div>
-		<svg v-if="props.game.type === 1" title="Cette partie se déroule en vocal">
+		<svg v-if="props.game.type === 0b00010" title="Cette partie se déroule en vocal">
 			<use href="/sprite.svg#vocal" />
 		</svg>
 		<p>{{ props.game.users.length }} / {{ getUserCount() }}</p>
@@ -86,9 +86,9 @@ const getUserCount = function () {
 };
 
 const openGame = async function () {
-	if (props.game.type === 1 && userStore.discord_linked_at === null) return;
+	if (props.game.type === 0b00010 && userStore.discord_linked_at === null) return;
 
-	if (props.game.type === 1) {
+	if (props.game.type === 0b00010) {
 		popupStore.setPopup({
 			warn: {
 				content:
