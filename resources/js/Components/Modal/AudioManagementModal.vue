@@ -64,7 +64,7 @@
 
 <script setup>
 import BaseModal from "./BaseModal.vue";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useStore } from "../../stores/modals/audio-modal.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
 
@@ -77,6 +77,14 @@ const storage = JSON.parse(
 
 const music = ref(storage.music);
 const ambient = ref(storage.ambient);
+
+watch(music, (newVolume) => {
+	store.volumes.music = newVolume;
+});
+
+watch(ambient, (newVolume) => {
+	store.volumes.ambient = newVolume;
+});
 
 const save = () => {
 	store.volumes.music = music.value;
