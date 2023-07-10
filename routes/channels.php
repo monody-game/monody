@@ -22,7 +22,7 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
         return false;
     }
 
-    if ($game['type'] === GameType::VOCAL->value && $user->discord_linked_at === null) {
+    if ($game['type'] & GameType::VOCAL->value && $user->discord_linked_at === null) {
         return false;
     }
 

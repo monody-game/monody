@@ -107,7 +107,7 @@ class GameChatController extends Controller
             broadcast(new ChatLock($gameId, ['lock' => $lock]));
             $game = Redis::get("game:$gameId");
 
-            if ($game['type'] === GameType::VOCAL->value) {
+            if ($game['type'] & GameType::VOCAL->value) {
                 broadcast(new TogglePlayersVoice([
                     'game_id' => $game['id'],
                 ]));

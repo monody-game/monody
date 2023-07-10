@@ -5,7 +5,7 @@ import RegisterPage from "../pages/Auth/RegisterPage.vue";
 import ForgotPasswordPage from "../pages/Auth/ForgotPasswordPage.vue";
 import PlayPage from "../pages/PlayPage.vue";
 import NotFoundPage from "../pages/NotFoundPage.vue";
-import GamePage from "../pages/Game/GamePage.vue";
+import GamePage from "../pages/GamePage.vue";
 
 import exists from "./middleware/gameExists.js";
 import user from "./middleware/user.js";
