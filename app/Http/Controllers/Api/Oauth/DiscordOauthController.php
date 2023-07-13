@@ -107,7 +107,8 @@ final class DiscordOauthController extends Controller
         if ($res->successful()) {
             Auth::login($user);
 
-            return new RedirectResponse('/play');
+            // We force a cache flush for endpoint /user
+            return new RedirectResponse('/play?flush=/user');
         }
 
         return new JsonApiResponse([
@@ -146,7 +147,8 @@ final class DiscordOauthController extends Controller
         $user->discord_linked_at = null;
         $user->save();
 
-        return new JsonApiResponse(status: Status::NO_CONTENT);
+        return JsonApiResponse::make(status: Status::NO_CONTENT)
+            ->flushCacheFor('/user');
     }
 
     private function refreshToken(string $refreshToken): array
