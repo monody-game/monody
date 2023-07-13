@@ -56,6 +56,13 @@ if (url.searchParams.has("cache") || url.searchParams.has("clearCache")) {
 	location.replace(url.href);
 }
 
+if (url.searchParams.has("flush")) {
+	useCache().flush(url.searchParams.get("flush"));
+
+	url.searchParams.delete("flush");
+	location.replace(url.href);
+}
+
 if (url.searchParams.has("dev") || url.searchParams.has("debug")) {
 	if (localStorage.getItem("dev") === "true") {
 		localStorage.setItem("dev", false);
