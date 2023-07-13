@@ -316,7 +316,7 @@ class GameController extends Controller
     {
         return JsonApiResponse::make([
             'data' => Redis::get("game:$gameId:discord"),
-        ])->withoutCache();
+        ]);
     }
 
     /**
