@@ -9,6 +9,7 @@
 	<meta name="title" content="Monody">
 	<meta name="description"
 		  content="Monody est un jeu du loup-garou en ligne ! Jouez avec vos amis, débusquez les traîtres ou éliminez le village afin de remporter la partie !">
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website">
