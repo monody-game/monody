@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.14.1.
+ * Generated for Laravel 10.15.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -5910,6 +5910,17 @@
                         return $instance->getQueryLog();
         }
                     /**
+         * Get the connection query log with embedded bindings.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getRawQueryLog()
+        {            //Method inherited from \Illuminate\Database\Connection         
+                        /** @var \Illuminate\Database\MySqlConnection $instance */
+                        return $instance->getRawQueryLog();
+        }
+                    /**
          * Clear the query log.
          *
          * @return void 
@@ -8890,6 +8901,42 @@
         {
                         /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
                         $instance->assertNothingQueued();
+        }
+                    /**
+         * Assert the total number of mailables that were sent.
+         *
+         * @param int $count
+         * @return void 
+         * @static 
+         */ 
+        public static function assertSentCount($count)
+        {
+                        /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+                        $instance->assertSentCount($count);
+        }
+                    /**
+         * Assert the total number of mailables that were queued.
+         *
+         * @param int $count
+         * @return void 
+         * @static 
+         */ 
+        public static function assertQueuedCount($count)
+        {
+                        /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+                        $instance->assertQueuedCount($count);
+        }
+                    /**
+         * Assert the total number of mailables that were sent or queued.
+         *
+         * @param int $count
+         * @return void 
+         * @static 
+         */ 
+        public static function assertOutgoingCount($count)
+        {
+                        /** @var \Illuminate\Support\Testing\Fakes\MailFake $instance */
+                        $instance->assertOutgoingCount($count);
         }
                     /**
          * Get all of the mailables matching a truth-test callback.
@@ -14993,7 +15040,7 @@
                     /**
          * Get a default cloud filesystem instance.
          *
-         * @return \Illuminate\Filesystem\FilesystemAdapter 
+         * @return \Illuminate\Contracts\Filesystem\Cloud 
          * @static 
          */ 
         public static function cloud()
@@ -21666,6 +21713,18 @@ namespace  {
             }
              
                 /**
+             * Get the raw SQL representation of the query with embedded bindings.
+             *
+             * @return string 
+             * @static 
+             */ 
+            public static function toRawSql()
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->toRawSql();
+            }
+             
+                /**
              * Get a single expression value from the first result of a query.
              *
              * @param string $expression
@@ -22178,6 +22237,18 @@ namespace  {
             }
              
                 /**
+             * Dump the raw current SQL with embedded bindings.
+             *
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */ 
+            public static function dumpRawSql()
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->dumpRawSql();
+            }
+             
+                /**
              * Die and dump the current SQL and bindings.
              *
              * @return \Illuminate\Database\Query\never 
@@ -22187,6 +22258,18 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Query\Builder $instance */
                                 return $instance->dd();
+            }
+             
+                /**
+             * Die and dump the current SQL with embedded bindings.
+             *
+             * @return \Illuminate\Database\Query\never 
+             * @static 
+             */ 
+            public static function ddRawSql()
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->ddRawSql();
             }
              
                 /**
