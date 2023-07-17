@@ -14,7 +14,7 @@ class RoundController extends Controller
 {
     use MemberHelperTrait;
 
-    public function all(?string $gameId = null): JsonApiResponse
+    public function all(string $gameId = null): JsonApiResponse
     {
         $rounds = [];
 
@@ -25,14 +25,14 @@ class RoundController extends Controller
         return JsonApiResponse::make(['rounds' => $rounds])->withoutCache();
     }
 
-    public function get(int $round, ?string $gameId = null): JsonApiResponse
+    public function get(int $round, string $gameId = null): JsonApiResponse
     {
         return JsonApiResponse::make([
             'round' => $this->getRound($round, $gameId),
         ])->withoutCache();
     }
 
-    private function getRound(int $round, ?string $gameId = null): array
+    private function getRound(int $round, string $gameId = null): array
     {
         $round = Round::tryFrom($round);
         $removedStates = [];

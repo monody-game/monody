@@ -13,7 +13,7 @@ use Illuminate\Support\Carbon;
 
 class StatisticsController extends Controller
 {
-    public function show(Request $request, ?string $userId = null): JsonApiResponse
+    public function show(Request $request, string $userId = null): JsonApiResponse
     {
         if ($userId === null && $request->user() === null) {
             return new JsonApiResponse(['userId' => 'Field required.'], Status::UNPROCESSABLE_ENTITY);
