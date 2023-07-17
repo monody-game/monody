@@ -19,7 +19,7 @@ class VoteService
     /**
      * @return array<string, array<string>>
      */
-    public function vote(string $userId, string $gameId, ?string $votingUser = null): array
+    public function vote(string $userId, string $gameId, string $votingUser = null): array
     {
         if (!$this->alive($userId, $gameId)) {
             return [];
@@ -45,7 +45,7 @@ class VoteService
     /**
      * @return array<string, array<string>>
      */
-    public function unvote(string $userId, string $gameId, ?string $votingUser = null): array
+    public function unvote(string $userId, string $gameId, string $votingUser = null): array
     {
         $votes = self::getVotes($gameId);
         $authUserId = $votingUser ?? Auth::user()?->getAuthIdentifier();

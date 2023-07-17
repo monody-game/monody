@@ -76,7 +76,7 @@ class InteractionService
     /**
      * @param  string  $id Interaction id
      */
-    public function close(string $gameId, string $id): int|null
+    public function close(string $gameId, string $id): ?int
     {
         if (!Redis::exists("game:$gameId:interactions")) {
             return self::NOT_ANY_INTERACTION_STARTED;

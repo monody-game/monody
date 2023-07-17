@@ -31,7 +31,7 @@ class EndGameService
     /**
      * @param  string[]|null  $winners
      */
-    public function end(string $gameId, ?array $winners = null): void
+    public function end(string $gameId, array $winners = null): void
     {
         $winningTeam = $this->getWinningTeam($gameId);
         $winners = $winners ?? $this->getWinningUsers($gameId, $winningTeam);

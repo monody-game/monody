@@ -62,7 +62,7 @@ class JsonApiResponse implements Responsable
     /**
      * Create a JsonApiResponse statically, allowing easier use of helper methods (with[...])
      */
-    public static function make(?array $data = null, Status $status = Status::OK, array $headers = []): self
+    public static function make(array $data = null, Status $status = Status::OK, array $headers = []): self
     {
         return new self($data, $status, headers: $headers);
     }
@@ -74,7 +74,7 @@ class JsonApiResponse implements Responsable
         return $this;
     }
 
-    public function withPopup(AlertType $type, string $content, ?string $note = null, ?string $link = null, ?string $linkText = null): self
+    public function withPopup(AlertType $type, string $content, string $note = null, string $link = null, string $linkText = null): self
     {
         $this->popups[$type->value] = [
             'content' => $content,
