@@ -31,6 +31,7 @@ class VerifyEmailController extends Controller
                 AlertType::Info,
                 "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
                 'Pensez à vérifier vos spams !'
-            );
+            )
+            ->withoutCache();
     }
 }

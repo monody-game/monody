@@ -10,6 +10,7 @@ use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -40,6 +41,14 @@ class UserController extends Controller
 
         $user->save();
 
+        $userResponse = $user->makeVisible([
+            'email',
+            'email_verified_at',
+            'discord_linked_at',
+        ])->toArray();
+
+        $userResponse['email'] = Str::obfuscateEmail($user->email ?? $request->get('email'));
+
         if ($request->has('email') && $user->hasVerifiedEmail() === false) {
             $user->sendEmailVerificationNotification();
 
@@ -51,7 +60,7 @@ class UserController extends Controller
                 ]),
             ])->withPopup(
                 AlertType::Info,
-                "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
+                "Un mail de vérification vient de vous être envoyé à l'adresse {$userResponse['email']}. Veuillez vérifier votre email en cliquant sur le lien",
                 "Il peut s'écouler quelques minutes avant de recevoir le mail. Si vous ne le recevez pas, cliquez ",
                 route('verification.send', [], false),
                 'ici pour renvoyer le lien.'
@@ -60,11 +69,7 @@ class UserController extends Controller
         }
 
         return JsonApiResponse::make([
-            'user' => $user->makeVisible([
-                'email',
-                'email_verified_at',
-                'discord_linked_at',
-            ]),
+            'user' => $user,
         ])->flushCacheFor('/user');
     }
 

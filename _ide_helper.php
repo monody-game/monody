@@ -17787,6 +17787,18 @@
      *
      */ 
         class Str {
+                    /**
+         * 
+         *
+         * @see \App\Providers\MacroServiceProvider::register()
+         * @param string $email
+         * @param int $stars
+         * @static 
+         */ 
+        public static function obfuscateEmail($email, $stars = 3)
+        {
+                        return \Illuminate\Support\Str::obfuscateEmail($email, $stars);
+        }
          
     }
      
