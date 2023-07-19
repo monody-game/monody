@@ -263,6 +263,9 @@ const updateProfile = async () => {
 		level: res.level,
 		exp: userStore.exp,
 		exp_needed: userStore.exp_needed,
+		discord_linked_at: res.discord_linked_at,
+		email_verified_at: res.email_verified_at,
+		elo: userStore.elo,
 	});
 
 	alertStore.addAlerts({
