@@ -67,136 +67,26 @@
 					</div>
 				</div>
 			</section>
-			<table class="leaderboards__board">
-				<tr>
-					<td>
-						<div class="leaderboards__cell-content">
-							<div class="leaderboards__board-right">
-								<span class="bold">4</span>
-								<img
-									:src="
-										board[3].user.avatar
-											? board[3].user.avatar + '?w=40&dpr=2'
-											: ''
-									"
-									alt=""
-								/>
-								<p>{{ board[3].user.username }}</p>
-							</div>
-							<span class="bold">{{ board[3].information }}</span>
-						</div>
-					</td>
-					<td>
-						<div class="leaderboards__cell-content">
-							<div class="leaderboards__board-right">
-								<span class="bold">8</span>
-								<img
-									:src="
-										board[7].user.avatar
-											? board[7].user.avatar + '?w=40&dpr=2'
-											: ''
-									"
-									alt=""
-								/>
-								<p>{{ board[7].user.username }}</p>
-							</div>
-							<span class="bold">{{ board[7].information }}</span>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div class="leaderboards__cell-content">
-							<div class="leaderboards__board-right">
-								<span class="bold">5</span>
-								<img
-									:src="
-										board[4].user.avatar
-											? board[4].user.avatar + '?w=40&dpr=2'
-											: ''
-									"
-									alt=""
-								/>
-								<p>{{ board[4].user.username }}</p>
-							</div>
-							<span class="bold">{{ board[4].information }}</span>
-						</div>
-					</td>
-					<td>
-						<div class="leaderboards__cell-content">
-							<div class="leaderboards__board-right">
-								<span class="bold">9</span>
-								<img
-									:src="
-										board[8].user.avatar
-											? board[8].user.avatar + '?w=40&dpr=2'
-											: ''
-									"
-									alt=""
-								/>
-								<p>{{ board[8].user.username }}</p>
-							</div>
-							<span class="bold">{{ board[8].information }}</span>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div class="leaderboards__cell-content">
-							<div class="leaderboards__board-right">
-								<span class="bold">6</span>
-								<img
-									:src="
-										board[5].user.avatar
-											? board[5].user.avatar + '?w=40&dpr=2'
-											: ''
-									"
-									alt=""
-								/>
-								<p>{{ board[5].user.username }}</p>
-							</div>
-							<span class="bold">{{ board[5].information }}</span>
-						</div>
-					</td>
-					<td>
-						<div class="leaderboards__cell-content">
-							<div class="leaderboards__board-right">
-								<span class="bold">10</span>
-								<img
-									:src="
-										board[9].user.avatar
-											? board[9].user.avatar + '?w=40&dpr=2'
-											: ''
-									"
-									alt=""
-								/>
-								<p>{{ board[9].user.username }}</p>
-							</div>
-							<span class="bold">{{ board[9].information }}</span>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div class="leaderboards__cell-content">
-							<div class="leaderboards__board-right">
-								<span class="bold">7</span>
-								<img
-									:src="
-										board[6].user.avatar
-											? board[6].user.avatar + '?w=40&dpr=2'
-											: ''
-									"
-									alt=""
-								/>
-								<p>{{ board[6].user.username }}</p>
-							</div>
-							<span class="bold">{{ board[6].information }}</span>
-						</div>
-					</td>
-					<td class="bold">...</td>
-				</tr>
-			</table>
+			<div class="leaderboards__board" role="table">
+				<div v-for="i in 9" class="leaderboards__cell" role="cell">
+					<div class="leaderboards__cell-content">
+						<span class="bold">{{ i }}</span>
+						<img
+							:src="
+								board[i - 1].user.avatar
+									? board[i - 1].user.avatar + '?w=40&dpr=2'
+									: ''
+							"
+							alt=""
+						/>
+						<p>{{ board[i - 1].user.username }}</p>
+					</div>
+					<span class="bold">{{ board[i - 1].information }}</span>
+				</div>
+				<div class="leaderboards__cell" role="cell">
+					<p class="bold">...</p>
+				</div>
+			</div>
 		</div>
 		<div class="modal__buttons">
 			<div class="modal__buttons-right">
@@ -213,7 +103,7 @@ import { useStore } from "../../stores/modals/modal.js";
 
 const modalStore = useStore();
 const selected = ref("elo");
-const placeholder = { user: { username: "/", avatar: "" }, information: "/" };
+const placeholder = { user: { username: "N/A", avatar: "" }, information: "" };
 const res = (await window.JSONFetch(`/leaderboard/${selected.value}`)).data
 	.board;
 const board = ref([]);
