@@ -31,6 +31,7 @@ class UserController extends Controller
 
         if ($request->has('email') && $request->get('email') !== $user->email) {
             $user->email_verified_at = null;
+            $user->clearDiscord();
         }
 
         foreach ($request->validated() as $field => $value) {
