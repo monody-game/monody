@@ -7,9 +7,9 @@
 			<div class="profile-modal__side-group">
 				<div class="profile-modal__avatar-group" :data-edited="hasUploaded">
 					<div class="profile-modal__avatar-shadow" />
-					<label for="profile-modal__avatar"
-						><svg><use href="/sprite.svg#edit" /></svg
-					></label>
+					<label for="profile-modal__avatar">
+						<svg><use href="/sprite.svg#edit" /></svg>
+					</label>
 					<div v-if="hasUploaded" class="profile-modal__avatar-success">
 						<svg>
 							<use href="/sprite.svg#success" />

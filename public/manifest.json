@@ -21,12 +21,6 @@
 			"purpose": "any maskable"
 		},
 		{
-			"src": "/images/monody_x128.png",
-			"type": "image/png",
-			"sizes": "128x128",
-			"purpose": "any maskable"
-		},
-		{
 			"src": "/images/monody_x72.png",
 			"type": "image/png",
 			"sizes": "72x72",
