@@ -78,6 +78,6 @@ class StatisticsController extends Controller
         $stats['win_streak'] = $userStats['win_streak'];
         $stats['longest_streak'] = $userStats['longest_streak'];
 
-        return JsonApiResponse::make(['statistics' => $stats])->withCache(Carbon::now()->addMinutes(10));
+        return JsonApiResponse::make(['statistics' => $stats])->withCache(Carbon::now()->addMinutes(5));
     }
 }
