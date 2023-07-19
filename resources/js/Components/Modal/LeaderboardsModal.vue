@@ -68,21 +68,23 @@
 				</div>
 			</section>
 			<div class="leaderboards__board" role="table">
-				<div v-for="i in 9" class="leaderboards__cell" role="cell">
-					<div class="leaderboards__cell-content">
-						<span class="bold">{{ i }}</span>
-						<img
-							:src="
-								board[i - 1].user.avatar
-									? board[i - 1].user.avatar + '?w=40&dpr=2'
-									: ''
-							"
-							alt=""
-						/>
-						<p>{{ board[i - 1].user.username }}</p>
+				<template v-for="i in 10">
+					<div class="leaderboards__cell" role="cell" v-if="i > 3">
+						<div class="leaderboards__cell-content">
+							<span class="bold">{{ i }}</span>
+							<img
+								:src="
+									board[i - 1].user.avatar
+										? board[i - 1].user.avatar + '?w=40&dpr=2'
+										: ''
+								"
+								alt=""
+							/>
+							<p>{{ board[i - 1].user.username }}</p>
+						</div>
+						<span class="bold">{{ board[i - 1].information }}</span>
 					</div>
-					<span class="bold">{{ board[i - 1].information }}</span>
-				</div>
+				</template>
 				<div class="leaderboards__cell" role="cell">
 					<p class="bold">...</p>
 				</div>
