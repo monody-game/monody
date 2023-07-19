@@ -62,4 +62,13 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     {
         $this->notify(new ResetPassword($token));
     }
+
+    public function clearDiscord(): void
+    {
+        $this->discord_id = null;
+        $this->discord_token = null;
+        $this->discord_refresh_token = null;
+        $this->discord_linked_at = null;
+        $this->save();
+    }
 }
