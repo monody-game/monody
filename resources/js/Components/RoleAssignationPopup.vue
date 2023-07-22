@@ -38,26 +38,28 @@
 			class="role-assignation__role-text"
 		>
 			<span>
-				<span
-					>Vous êtes :
-					<span class="bold">{{ assignedRole.display_name.toLowerCase() }}</span
-					>,</span
-				>
+				<span>
+					{{ $t("game.you_are") }}
+					<span class="bold">{{
+						assignedRole.display_name.toLowerCase()
+					}}</span>
+					,
+				</span>
 			</span>
 			<span v-if="assignedRole.team.name === 'loners'">
-				<span>vous devez gagner seul.</span>
+				<span>{{ $t("game.loner_goal") }}</span>
 			</span>
 			<span v-else>
-				<span
-					>du camp des
+				<span>
+					{{ $t("game.of_team") }}
 					<span class="bold">{{
 						assignedRole.team.display_name.toLowerCase()
-					}}</span
-					>.</span
-				>
+					}}</span>
+					.
+				</span>
 			</span>
 			<span>
-				<span class="muted">Cliquez sur l'image pour en savoir plus</span>
+				<span class="muted">{{ $t("game.role_see_more") }}</span>
 			</span>
 		</div>
 	</BaseModal>

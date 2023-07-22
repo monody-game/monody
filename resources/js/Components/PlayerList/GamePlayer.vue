@@ -27,7 +27,7 @@
 			<div class="player__badges">
 				<span
 					v-if="isMayor === true"
-					title="Ce joueur est le maire"
+					:title="$t('player.mayor')"
 					class="player__is-mayor"
 				>
 					<svg>
@@ -36,12 +36,12 @@
 				</span>
 				<span
 					v-if="isWerewolf === true"
-					title="Ce joueur est votre allié"
+					:title="$t('player.werewolf')"
 					class="player__is-wolf"
 				/>
 				<span
 					v-if="isPaired === true"
-					title="Vous êtes en couple"
+					:title="$t('player.couple')"
 					class="player__is-paired"
 				>
 					<svg>
@@ -50,7 +50,7 @@
 				</span>
 				<span
 					v-if="isGuarded === true"
-					title="Vous avez protégé ce joueur"
+					:title="$t('player.guarded')"
 					class="player__is-guarded"
 				>
 					<svg>
@@ -59,7 +59,7 @@
 				</span>
 				<span
 					v-if="isContaminated === true"
-					title="Ce joueur est infecté"
+					:title="$t('player.contaminated')"
 					class="player__is-contaminated"
 				>
 					<svg>
@@ -68,7 +68,7 @@
 				</span>
 				<span
 					v-if="isTargeted === true"
-					title="Ce joueur est votre cible"
+					:title="$t('player.target')"
 					class="player__is-target"
 				>
 					<svg>
@@ -78,7 +78,7 @@
 			</div>
 			<span
 				v-if="isDisconnected === true"
-				title="Ce joueur s'est déconnecté"
+				:title="$t('player.disconnected')"
 				class="player__is-disconnected"
 			>
 				<svg>
@@ -89,7 +89,7 @@
 		<p
 			class="player__username"
 			:data-is-owner="isOwner"
-			:title="isOwner ? 'Ce joueur a créé la partie' : ''"
+			:title="isOwner ? $t('player.owner') : ''"
 		>
 			<svg v-if="isOwner === true">
 				<use href="/sprite.svg#crown" />
@@ -105,6 +105,7 @@ import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useChatStore } from "../../stores/chat.js";
 import PlayerInteractionBubble from "./PlayerInteractionBubble.vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
 	player: {
@@ -116,6 +117,7 @@ const props = defineProps({
 const gameStore = useGameStore();
 const userStore = useUserStore();
 const chatStore = useChatStore();
+const { t } = useI18n();
 
 const isVoted = ref(false);
 const isDead = ref(false);
@@ -192,7 +194,7 @@ window.Echo.join(`game.${gameId.value}`)
 		if (user.user_id === props.player.id) {
 			isDisconnected.value = true;
 			chatStore.send(
-				`${user.user_info.username} s'est déconnecté, il a 30 secondes pour se reconnecter.`,
+				t("player.disconnect_warn", [user.user_info.username]),
 				"warn"
 			);
 		}
@@ -233,10 +235,7 @@ window.Echo.join(`game.${gameId.value}`)
 				isGuarded.value = false;
 
 				if (gamePlayer.role && gamePlayer.role.name === "guard") {
-					chatStore.send(
-						"Cliquez sur un joueur pour le protéger des loups.",
-						"info"
-					);
+					chatStore.send(t("player.guard"), "info");
 				}
 
 				if (isDead.value === false && props.player.id !== interaction.data) {
@@ -245,10 +244,7 @@ window.Echo.join(`game.${gameId.value}`)
 				break;
 			case "psychic":
 				if (gamePlayer.role && gamePlayer.role.name === "psychic") {
-					chatStore.send(
-						"Cliquez sur un joueur pour en connaitre le rôle !",
-						"info"
-					);
+					chatStore.send(t("player.spec"), "info");
 					player.value.classList.add("player__hover-disabled");
 				} else {
 					player.value.classList.add("player__psychic-hover");
@@ -261,36 +257,31 @@ window.Echo.join(`game.${gameId.value}`)
 				if (gamePlayer.role && gamePlayer.role.name === "infected_werewolf") {
 					const user = gameStore.getPlayerByID(interaction.data[0]);
 
-					chatStore.send(
-						`Voulez-vous infecter ${user.username} ?`,
-						"info",
-						null,
-						[
-							{
-								title: "Oui",
-								async callback() {
-									await window.JSONFetch("/interactions/use", "POST", {
-										id: gameStore.currentInteractionId,
-										gameId: gameId.value,
-										targetId: interaction.data[0],
-										action: "infected_werewolf:infect",
-									});
-								},
-								id: "infected_werewolf:infect",
+					chatStore.send(t("player.infect", [user.username]), "info", null, [
+						{
+							title: t("player.yes"),
+							async callback() {
+								await window.JSONFetch("/interactions/use", "POST", {
+									id: gameStore.currentInteractionId,
+									gameId: gameId.value,
+									targetId: interaction.data[0],
+									action: "infected_werewolf:infect",
+								});
 							},
-							{
-								title: "Non",
-								async callback() {
-									await window.JSONFetch("/interactions/use", "POST", {
-										id: gameStore.currentInteractionId,
-										gameId: gameId.value,
-										action: "infected_werewolf:skip",
-									});
-								},
-								id: "infected_werewolf:skip",
+							id: "infected_werewolf:infect",
+						},
+						{
+							title: t("player.no"),
+							async callback() {
+								await window.JSONFetch("/interactions/use", "POST", {
+									id: gameStore.currentInteractionId,
+									gameId: gameId.value,
+									action: "infected_werewolf:skip",
+								});
 							},
-						]
-					);
+							id: "infected_werewolf:skip",
+						},
+					]);
 				}
 				break;
 			case "surly_werewolf":
@@ -299,9 +290,9 @@ window.Echo.join(`game.${gameId.value}`)
 				}
 
 				if (gamePlayer.role && gamePlayer.role.name === "surly_werewolf") {
-					chatStore.send("Cliquez sur un joueur pour le mordre", "info", null, [
+					chatStore.send(t("player.bite"), "info", null, [
 						{
-							title: "Passer",
+							title: t("modal.skip"),
 							async callback() {
 								await window.JSONFetch("/interactions/use", "POST", {
 									id: gameStore.currentInteractionId,
@@ -320,7 +311,7 @@ window.Echo.join(`game.${gameId.value}`)
 				}
 
 				if (userStore.id === props.player.id) {
-					chatStore.send("Cliquez sur un joueur pour le contaminer", "info");
+					chatStore.send(t("player.contaminate"), "info");
 					player.value.classList.add("player__hover-disabled");
 				}
 				break;
@@ -403,14 +394,17 @@ const send = async function (votingUser, votedUser) {
 			"GET"
 		);
 		chatStore.send(
-			`Vous avez choisi d'espionner le rôle de ${props.player.username} qui est ${role.data.role.display_name}`,
+			t("player.spec_response", {
+				username: props.player.username,
+				role: role.data.role.display_name,
+			}),
 			"success"
 		);
 	}
 
 	if (interactionType.value === "surly_werewolf") {
 		chatStore.send(
-			`Vous avez choisi de mordre ${props.player.username}. Il succombera à ses blessures la prochaine nuit.`,
+			t("player.bite_response", [props.player.username]),
 			"success"
 		);
 	}
@@ -448,7 +442,7 @@ const setupWitchActions = async (interaction) => {
 
 	let actionList = [
 		{
-			title: "Soigner un joueur",
+			title: t("player.revive"),
 			callback() {
 				const list = gameStore.playerRefs.filter((playerRef) =>
 					interaction.data.includes(playerRef.value.dataset.id)
@@ -456,22 +450,22 @@ const setupWitchActions = async (interaction) => {
 				for (const playerRef of list) {
 					playerRef.value.classList.add("player__witch-heal");
 				}
-				chatStore.send("Cliquez sur un joueur pour le ressuciter", "info");
+				chatStore.send(t("player.revive_desc"), "info");
 			},
 			id: "witch:revive",
 		},
 		{
-			title: "Éliminer un joueur",
+			title: t("player.kill"),
 			callback() {
 				for (const playerRef of gameStore.playerRefs) {
 					playerRef.value.classList.add("player__witch-kill");
 				}
-				chatStore.send("Cliquez sur un joueur pour l'éliminer", "info");
+				chatStore.send(t("player.kill_desc"), "info");
 			},
 			id: "witch:kill",
 		},
 		{
-			title: "Ne rien faire",
+			title: t("player.skip"),
 			async callback() {
 				await window.JSONFetch("/interactions/use", "POST", {
 					id: gameStore.currentInteractionId,
@@ -490,12 +484,7 @@ const setupWitchActions = async (interaction) => {
 	actionList = actionList.filter((action) => actions.includes(action.id));
 
 	if (gamePlayer.role && gamePlayer.role.name === "witch") {
-		chatStore.send(
-			"Choisissez l'action à effectuer cette nuit",
-			"info",
-			null,
-			actionList
-		);
+		chatStore.send(t("choose_action"), "info", null, actionList);
 	}
 };
 </script>

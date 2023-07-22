@@ -43,15 +43,15 @@ const title = computed(() => {
 
 	switch (store.type) {
 		case "success":
-			return "Succès !";
+			return t("popup.success");
 		case "info":
-			return "Information";
+			return t("popup.info");
 		case "warn":
-			return "Attention";
+			return t("popup.warn");
 		case "error":
-			return "Erreur";
+			return t("popup.error");
 		default:
-			return "Erreur";
+			return t("popup.error");
 	}
 });
 </script>

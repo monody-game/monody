@@ -12,7 +12,9 @@
 		</div>
 		<div class="modal__buttons">
 			<div class="modal__buttons-right">
-				<button class="btn medium" @click="close">Fermer</button>
+				<button class="btn medium" @click="close">
+					{{ $t("modal.close") }}
+				</button>
 			</div>
 		</div>
 	</BaseModal>

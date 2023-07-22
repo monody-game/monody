@@ -186,10 +186,10 @@ const updateOverlay = function () {
 		default:
 			break;
 		case 2:
-			chatStore.send("Tombée de la nuit", "time_separator");
+			chatStore.send(t("chat.night_separator"), "time_separator");
 			break;
 		case 6:
-			chatStore.send("Lever du jour", "time_separator");
+			chatStore.send(t("chat.day_separator"), "time_separator");
 			break;
 	}
 

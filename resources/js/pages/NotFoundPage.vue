@@ -10,9 +10,9 @@
 				/>
 			</svg>
 			<aside>
-				<h1>Oh non !</h1>
-				<h2>Page introuvable ...</h2>
-				<a @click="$router.back()"> Retourner en arrière </a>
+				<h1>{{ $t("404.title") }}</h1>
+				<h2>{{ $t("404.content") }}</h2>
+				<a @click="$router.back()">{{ $t("404.back") }}</a>
 			</aside>
 		</main>
 	</div>

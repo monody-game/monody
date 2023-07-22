@@ -5,10 +5,10 @@
 				<svg>
 					<use href="/sprite.svg#back_chevron" />
 				</svg>
-				<p>Retour</p>
+				<p>{{ $t("modal.back") }}</p>
 			</router-link>
 			<div class="auth-page__form-wrapper">
-				<h1>Se connecter</h1>
+				<h1>{{ $t("auth.signin") }}</h1>
 				<form action="" method="post" @submit.prevent>
 					<div v-if="loading" class="auth-page__loading-group">
 						<div class="auth-page__loading-group-blur" />
@@ -19,7 +19,7 @@
 						name="username"
 						:errored="error.errored"
 						:error="error.text"
-						label="Email ou nom d'utilisateur"
+						:label="$t('auth.identifier')"
 						@model="(newUsername) => (username = newUsername)"
 					/>
 					<InputComponent
@@ -27,15 +27,15 @@
 						name="password"
 						:errored="error.errored"
 						:error="error.text"
-						label="Mot de passe"
+						:label="$t('auth.password')"
 						@model="(newPassword) => (password = newPassword)"
 					/>
 					<router-link class="auth-page__link" to="forgot">
-						Mot de passe oublié ?
+						{{ $t("auth.forgot_password") }}
 					</router-link>
 					<div class="auth-page__submit-group">
 						<router-link class="auth-page__link" to="register">
-							Pas encore de compte ?
+							{{ $t("auth.no_account") }}
 						</router-link>
 						<button
 							class="btn large"
@@ -43,7 +43,7 @@
 							:disabled="username === '' || password === ''"
 							@click="login"
 						>
-							Se connecter
+							{{ $t("auth.signin") }}
 						</button>
 					</div>
 				</form>
@@ -56,8 +56,11 @@ import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import InputComponent from "../../Components/Form/InputComponent.vue";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
+const { t } = useI18n();
+
 const username = ref("");
 const password = ref("");
 const loading = ref(false);
@@ -70,7 +73,7 @@ const error = reactive({
 const login = async function () {
 	if (username.value === "" || password.value === "") {
 		error.errored = true;
-		error.text = "Vous devez rentrer vos identifiants";
+		error.text = t("auth.errors.fields_empty");
 		return;
 	}
 
@@ -85,7 +88,7 @@ const login = async function () {
 
 	if (!res.ok) {
 		error.errored = true;
-		error.text = "Identifiant ou mot de passe invalide";
+		error.text = t("auth.errors.invalid_credentials");
 		return;
 	}
 

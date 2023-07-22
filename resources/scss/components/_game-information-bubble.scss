@@ -25,6 +25,12 @@
 	}
 }
 
+@media screen and (max-width: 750px) {
+	.information-bubble_main {
+		display: none;
+	}
+}
+
 .information-bubble_main_out {
 	animation: informationBubbleOut 0.6s;
 }

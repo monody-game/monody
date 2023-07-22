@@ -34,6 +34,7 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import DotsSpinner from "../Spinners/DotsSpinner.vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
 	loading: {
@@ -56,6 +57,7 @@ const props = defineProps({
 
 const emit = defineEmits(["submit", "currentPage"]);
 const current = ref(props.currentPage);
+const { t } = useI18n();
 
 watch(props, (value) => {
 	current.value = value.currentPage;
@@ -64,11 +66,11 @@ watch(props, (value) => {
 const submitContent = computed(() => {
 	switch (current.value) {
 		default:
-			return "Suivant";
+			return t("modal.next");
 		case 2:
-			return "Passer";
+			return t("modal.pass");
 		case 3:
-			return "Terminer";
+			return t("modal.finish");
 	}
 });
 

@@ -18,11 +18,11 @@
 					<h3>{{ store.role.display_name }}</h3>
 					<div>
 						<p>
-							<span class="bold">Camp : </span>
+							<span class="bold">{{ $t("role.team") }}</span>
 							{{ store.role.team.display_name }}
 						</p>
 						<p>
-							<span class="bold">Limite par partie : </span>
+							<span class="bold">{{ $t("role.limit") }}</span>
 							{{
 								"limit" in store.role && store.role.limit !== -1
 									? store.role.limit

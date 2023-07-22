@@ -1,7 +1,7 @@
 <template>
 	<BaseModal>
 		<header>
-			<h3>Partagez votre profil</h3>
+			<h3>{{ $t("share.title") }}</h3>
 		</header>
 		<div v-if="loading" class="auth-page__loading-group">
 			<div class="auth-page__loading-group-blur" />
@@ -30,7 +30,7 @@
 								<svg>
 									<use href="/sprite.svg#level" />
 								</svg>
-								<p>Niveau : N/A</p>
+								<p>{{ $t("share.level") }} : N/A</p>
 							</div>
 							<div title="Elo">
 								<svg>
@@ -46,7 +46,7 @@
 					</div>
 				</section>
 				<footer>
-					&copy; Monody {{ new Date().getFullYear() }} — Tous droits réservés
+					{{ $t("footer.copyright", [new Date().getFullYear()]) }}
 				</footer>
 			</article>
 		</div>
@@ -69,13 +69,13 @@
 				<svg>
 					<use href="/sprite.svg#image" />
 				</svg>
-				Copier l'image
+				{{ $t("share.copy_image") }}
 			</a>
 			<a class="share-profile__link" href="#" @click="link()">
 				<svg>
 					<use href="/sprite.svg#chain" />
 				</svg>
-				Copier le lien
+				{{ $t("share.copy_link") }}
 			</a>
 		</div>
 	</BaseModal>
@@ -87,8 +87,10 @@ import { useStore } from "../../stores/user.js";
 import { useStore as useAlertStore } from "../../stores/alerts.js";
 import BaseModal from "./BaseModal.vue";
 import DotsSpinner from "../Spinners/DotsSpinner.vue";
+import { useI18n } from "vue-i18n";
 
 const store = useStore();
+const { t } = useI18n();
 const alertStore = useAlertStore();
 const theme = ref("dark");
 const loading = ref(false);
@@ -116,7 +118,7 @@ const link = async () => {
 		`${location.origin}/assets/profiles/${store.id}.png`
 	);
 	alertStore.addAlerts({
-		info: "Le lien vers le profil a été copié dans le presse-papiers",
+		info: t("share.link_copied"),
 	});
 };
 
@@ -130,10 +132,10 @@ const image = async () => {
 			`${location.origin}/assets/profiles/${store.id}.png`
 		);
 		alertStore.addAlerts({
-			warn: "Votre navigateur ne supporte pas cette fonctionnalité",
+			warn: t("share.unsupported_fonctionnality"),
 		});
 		alertStore.addAlerts({
-			info: "Le lien vers le profil a été copié dans le presse-papiers",
+			info: t("share.link_copied"),
 		});
 		return;
 	}
@@ -145,7 +147,7 @@ const image = async () => {
 	]);
 
 	alertStore.addAlerts({
-		info: "Le profil a été copié dans le presse-papiers",
+		info: t("profile.profile_copied"),
 	});
 };
 

@@ -1,9 +1,11 @@
 <template>
 	<div v-once class="home-page">
 		<header class="home-page__header">
-			<router-link :to="{ name: 'home_page' }"> Comment jouer </router-link>
+			<router-link :to="{ name: 'home_page' }">{{
+				$t("home.howtoplay")
+			}}</router-link>
 			<router-link :to="{ name: 'login' }" class="btn large btn-primary">
-				Se connecter
+				{{ $t("auth.signin") }}
 			</router-link>
 		</header>
 		<div class="home-page__main">
@@ -15,7 +17,7 @@
 					</svg>
 					<p>dy</p>
 				</div>
-				<p class="home-page__play-text">Jouer</p>
+				<p class="home-page__play-text">{{ $t("home.play") }}</p>
 			</router-link>
 		</div>
 		<Footer />

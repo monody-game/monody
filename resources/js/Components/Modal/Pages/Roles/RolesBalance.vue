@@ -2,7 +2,7 @@
 	<div class="roles-balance__container">
 		<div
 			class="roles-balance__balance"
-			:title="'La partie est ' + currentStatus"
+			:title="$t('new_game.balance', [currentStatus])"
 		>
 			<span class="roles-balance__villagers" />
 			<span class="roles-balance__bubble">{{ roleCount }}</span>
@@ -39,13 +39,13 @@ const getCurrentStatus = function () {
 		werewolfWidth.value >= 40 &&
 		werewolfWidth.value <= 50
 	) {
-		return "équilibrée";
+		return t("new_game.balanced");
 	}
 	if (werewolfWidth.value >= 40) {
-		return "avantagée aux loups-garous";
+		return t("new_game.werewolves_advantage");
 	}
 	if (villagerWidth.value >= 60) {
-		return "avantagée aux villageois";
+		return t("new_game.werewolves_advantage");
 	}
 };
 

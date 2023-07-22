@@ -1,7 +1,7 @@
 <template>
 	<BaseModal>
 		<header>
-			<h3>Création d'une partie</h3>
+			<h3>{{ $t("new_game.title") }}</h3>
 			<p class="modal__page-status">({{ currentPage }}/{{ totalPage }})</p>
 		</header>
 		<div class="modal__page">
@@ -12,7 +12,9 @@
 			/>
 		</div>
 		<div class="modal__buttons">
-			<button class="btn medium" @click="modalStore.close()">Annuler</button>
+			<button class="btn medium" @click="modalStore.close()">
+				{{ $t("modal.cancel") }}
+			</button>
 			<div class="modal__buttons-right">
 				<button
 					class="btn medium"
@@ -20,7 +22,7 @@
 					:disabled="currentPage === 1"
 					@click.prevent="previous"
 				>
-					Précédent
+					{{ $t("modal.previous") }}
 				</button>
 				<button
 					v-if="currentPage !== totalPage"
@@ -29,7 +31,7 @@
 					:disabled="notEnoughSelectedRoles()"
 					@click.prevent="next"
 				>
-					Suivant
+					{{ $t("modal.next") }}
 				</button>
 				<button
 					v-if="currentPage === totalPage"
@@ -38,7 +40,7 @@
 					class="btn medium"
 					@click="finish()"
 				>
-					Terminer
+					{{ $t("modal.finish") }}
 				</button>
 			</div>
 		</div>
