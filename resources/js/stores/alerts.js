@@ -20,7 +20,7 @@ export const useStore = defineStore("alerts", {
 		dropAlert(id) {
 			setTimeout(() => {
 				delete this.alerts[id];
-			}, 1000);
+			}, 500);
 		},
 	},
 });
