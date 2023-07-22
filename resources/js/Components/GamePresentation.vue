@@ -9,7 +9,7 @@
 		"
 		:title="
 			userStore.discord_linked_at === null && props.game.type === 0b00010
-				? 'Vous devez lier votre compte Discord à Monody pour rejoindre cette partie'
+				? $t('play.no_linked_discord')
 				: ''
 		"
 		@click="openGame()"
@@ -49,10 +49,7 @@
 				</div>
 			</div>
 		</div>
-		<svg
-			v-if="props.game.type === 0b00010"
-			title="Cette partie se déroule en vocal"
-		>
+		<svg v-if="props.game.type === 0b00010" :title="$t('play.vocal_game')">
 			<use href="/sprite.svg#vocal" />
 		</svg>
 		<p>{{ props.game.users.length }} / {{ getUserCount() }}</p>
@@ -60,10 +57,10 @@
 </template>
 
 <script setup>
-import { useStore } from "../stores/game.js";
 import { useStore as usePopupStore } from "../stores/modals/popup.js";
 import { useStore as useUserStore } from "../stores/user.js";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
 	game: {
@@ -76,6 +73,7 @@ const props = defineProps({
 	},
 });
 
+const { t } = useI18n();
 const router = useRouter();
 const popupStore = usePopupStore();
 const userStore = useUserStore();
@@ -95,11 +93,10 @@ const openGame = async function () {
 	if (props.game.type === 0b00010) {
 		popupStore.setPopup({
 			warn: {
-				content:
-					"Cette partie est une partie vocale. Vous devrez rejoindre un salon vocal sur Discord, continuer ?",
-				note: "Si oui, ",
+				content: t("play.vocal_game_popup"),
+				note: t("modal.if_yes"),
 				link: { name: "game", params: { id: props.game.id } },
-				link_text: "cliquez ici.",
+				link_text: t("modal.click_here"),
 			},
 		});
 

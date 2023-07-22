@@ -5,14 +5,14 @@
 				<use href="/sprite.svg#enter" />
 			</svg>
 			<span class="bold">{{ props.username }}</span
-			>&nbsp;a rejoint la partie !
+			>&nbsp;{{ $t("chat.join") }}
 		</p>
 		<p v-else>
 			<svg>
 				<use href="/sprite.svg#leave" />
 			</svg>
 			<span class="bold">{{ props.username }}</span
-			>&nbsp;a quitté la partie
+			>&nbsp;{{ $t("chat.leave") }}
 		</p>
 	</div>
 </template>

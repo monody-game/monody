@@ -7,6 +7,7 @@
 				@click="
 					chatSelected = 'main';
 					store.unread.main = false;
+					messagesContainer.scrollTo(0, messagesContainer.scrollHeight);
 				"
 			>
 				Main
@@ -18,12 +19,13 @@
 				@click="
 					chatSelected = 'couple';
 					store.unread.couple = false;
+					messagesContainer.scrollTo(0, messagesContainer.scrollHeight);
 				"
 			>
 				Couple
 			</div>
 		</div>
-		<div class="chat__messages">
+		<div class="chat__messages" ref="messagesContainer">
 			<template
 				v-for="message in store.messages[chatSelected]"
 				:key="message.content + message.timestamp"
@@ -61,7 +63,7 @@
 				:disabled="isLocked"
 				:class="{ locked: isLocked }"
 				class="chat__send-input"
-				:placeholder="isLocked ? 'Chat verrouillé' : 'Envoyer un message'"
+				:placeholder="isLocked ? $t('chat.locked') : $t('chat.send')"
 				type="text"
 				@keyup.enter="sendMessage()"
 			/>
@@ -113,8 +115,10 @@ const userStore = useUserStore();
 const route = useRoute();
 const store = useStore();
 let interval = null;
+const { t } = ref(null);
 
 const chatSelected = ref("main");
+const messagesContainer = ref(null);
 
 const sendMessage = async function () {
 	if (content.value.length < 500) {
@@ -143,12 +147,9 @@ window.Echo.join(`game.${route.params.id}`)
 
 		if (killed === null) {
 			if (context === "vote") {
-				store.send(
-					"Le village a décidé de ne tuer personne aujourd'hui !",
-					"death"
-				);
+				store.send(t("chat.no_voted"), "death");
 			} else {
-				store.send("Personne n'a été tué cette nuit !", "death");
+				store.send(t("chat.no_killed_night"), "death");
 			}
 			return;
 		}
@@ -161,39 +162,21 @@ window.Echo.join(`game.${route.params.id}`)
 		role = role.data.role.display_name;
 
 		if (payload.infected && payload.infected === true) {
-			role = role + " (infecté)";
+			role = role + ` (${t("chat.infected")})`;
 		}
 
 		if (context === "vote") {
-			store.send(
-				`Le village a décidé de tuer ${user.username} qui était ${role}`,
-				"death"
-			);
+			store.send(t("chat.vote", { user: user.username, role }), "death");
 		} else if (context === "bitten") {
-			store.send(
-				`${user.username} a succombé à ses blessures. Il était ${role}`,
-				"death"
-			);
+			store.send(t("chat.bitten", { user: user.username, role }), "death");
 		} else if (context === "couple") {
-			store.send(
-				`Dans un élan de chagrin amoureux, ${user.username} rejoint son âme-soeur dans sa tombe, il était ${role}.`,
-				"death"
-			);
+			store.send(t("chat.couple", { user: user.username, role }), "death");
 		} else if (context === "hunter") {
-			store.send(
-				`Le chasseur à décider de tirer sa dernière balle sur ${user.username} qui était ${role}.`,
-				"death"
-			);
+			store.send(t("chat.hunter", { user: user.username, role }), "death");
 		} else if (context === "disconnect") {
-			store.send(
-				`${user.username} s'est déconnecté, il était ${role}`,
-				"death"
-			);
+			store.send(t("chat.disconnect", { user: user.username, role }), "death");
 		} else {
-			store.send(
-				`${user.username} a été tué cette nuit, il était ${role} !`,
-				"death"
-			);
+			store.send(t("chat.death", { user: user.username, role }), "death");
 		}
 	})
 	.listen(".chat.lock", ({ data }) => {

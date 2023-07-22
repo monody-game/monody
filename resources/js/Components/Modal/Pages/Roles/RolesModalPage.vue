@@ -1,7 +1,7 @@
 <template>
 	<div class="roles__page">
-		<span class="bold">Selection des rôles :</span>
-		<span class="roles__note">(Cliquez sur un rôle pour en savoir plus)</span>
+		<span class="bold">{{ $t("new_game.roles_selection") }}</span>
+		<span class="roles__note">{{ $t("new_game.roles_note") }}</span>
 		<div v-if="loading === true" class="roles__loader">
 			<LogoSpinner />
 		</div>
@@ -11,7 +11,7 @@
 					<svg>
 						<use href="/sprite.svg#villager" />
 					</svg>
-					<span class="bold"> Villageois </span>
+					<span class="bold">{{ $t("new_game.villagers") }}</span>
 				</div>
 				<div class="roles__list">
 					<RoleSelector
@@ -29,7 +29,7 @@
 					<svg>
 						<use href="/sprite.svg#werewolves" />
 					</svg>
-					<span class="bold"> Loup-garous </span>
+					<span class="bold">{{ $t("new_game.werewolves") }}</span>
 				</div>
 				<div class="roles__list">
 					<RoleSelector
@@ -47,7 +47,7 @@
 					<svg>
 						<use href="/sprite.svg#loners" />
 					</svg>
-					<span class="bold"> Solitaires </span>
+					<span class="bold">{{ $t("new_game.loners") }}</span>
 				</div>
 				<div class="roles__list">
 					<RoleSelector

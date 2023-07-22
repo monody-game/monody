@@ -9,22 +9,24 @@
 			@mouseover="shown = true"
 			@mouseout="shown = false"
 		>
-			{{ props.label }} {{ props.required === false ? "(facultatif)" : "" }}
+			{{ props.label }}
+			{{ props.required === false ? "(" + $t("auth.optional") + ")" : "" }}
 			<span v-if="props.labelNote" class="auth-page__input-notice">
 				({{ props.labelNote
 				}}<span
-					v-text="props.required === true ? ', obligatoire' : ', facultatif'"
+					v-text="
+						props.required === true
+							? ', ' + $t('auth.mandatory')
+							: ', ' + $t('auth.optional')
+					"
 				/>)
 			</span>
 			<NoticeComponent
 				v-if="props.type === 'email' && props.note"
-				title="Pourquoi dois-je donner cette information ?"
+				:title="$t('auth.email_popup.title')"
 				:shown="shown"
 			>
-				Votre email nous est utile lorsque vous perdez votre mot de passe. C’est
-				également un moyen d’identification (connection, connection de votre
-				compte Discord à Monody). Veillez à rentrer une adresse mail valide,
-				vous devrez la vérifier.
+				{{ $t("auth.email_popup.content") }}
 			</NoticeComponent>
 		</label>
 		<input

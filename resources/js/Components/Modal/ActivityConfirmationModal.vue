@@ -5,7 +5,7 @@
 				<svg class="popup__icon">
 					<use href="/sprite.svg#info" />
 				</svg>
-				<p id="modal__title" class="popup__title">Êtes-vous encore là ?</p>
+				<p id="modal__title" class="popup__title">{{ $t("modal.activity") }}</p>
 			</div>
 			<svg
 				class="popup__close"
@@ -20,10 +20,10 @@
 
 		<div class="modal__buttons popup__content">
 			<button class="btn medium" style="width: 47.5%" @click="no()">
-				Quitter
+				{{ $t("modal.leave") }}
 			</button>
 			<button class="btn medium" style="width: 47.5%" @click="yes()">
-				Oui
+				{{ $t("modal.yes") }}
 			</button>
 		</div>
 	</BaseModal>

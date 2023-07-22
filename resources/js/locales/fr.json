@@ -1,0 +1,231 @@
+{
+	"home": {
+		"howtoplay": "Comment jouer",
+		"play": "Jouer"
+	},
+	"auth": {
+		"signin": "Se connecter",
+		"signup": "Inscription",
+		"logout": "Se déconnecter",
+		"identifier": "Email ou nom d'utilisateur",
+		"linked_email": "Email lié à votre compte",
+		"username": "Nom d'utilisateur",
+		"username_limitations": "entre 3 et 16 caractères",
+		"mandatory": "obligatoire",
+		"optional": "facultatif",
+		"password": "Mot de passe",
+		"password_confirmation": "Confirmez le mot de passe",
+		"password_limitations": "plus de 8 caractères",
+		"forgot_password": "Mot de passe oublié ?",
+		"no_account": "Pas encore de compte ?",
+		"have_account": "Vous possédez déjà un compte ?",
+		"remind_password": "Je me souviens de mon mot de passe !",
+		"submit": "Soumettre la demande",
+		"email_popup": {
+			"title": "Pourquoi dois-je donner cette information ?",
+			"content": "Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody). Veillez à rentrer une adresse mail valide, vous devrez la vérifier."
+		},
+		"errors": {
+			"invalid_credentials": "Identifiant ou mot de passe invalide",
+			"fields_empty": "Vous devez rentrer vos identifiants",
+			"field_too_short": "Votre {field} doit faire plus de {length} caractères",
+			"field_too_long": "Votre {field} doit faire moins de {length} caractères",
+			"password_confirmation": "La confirmation du mot de passe doit être identique au mot de passe",
+			"username_no_spaces": "Il ne doit pas y avoir d'espaces dans votre pseudo",
+			"valid_email": "Veuillez rentrer un email valide",
+			"account_exists": "Un compte utilisant cette valeur existe déjà"
+		}
+	},
+	"play": {
+		"list": "Liste des parties :",
+		"create": "Créer",
+		"vocal_game": "Cette partie se déroule en vocal",
+		"vocal_game_popup": "Cette partie est une partie vocale. Vous devrez rejoindre un salon vocal sur Discord, continuer ?",
+		"no_linked_discord": "Vous devez lier votre compte Discord à Monody pour rejoindre cette partie"
+	},
+	"leaderboards": {
+		"leaderboards": "Classements",
+		"select": "Choix du classement :"
+	},
+	"modal": {
+		"close": "Fermer",
+		"back": "Retour",
+		"previous": "Précédent",
+		"next": "Suivant",
+		"pass": "Passer",
+		"confirm": "Confirmer",
+		"if_yes": "Si oui, ",
+		"click_here": "cliquez ici.",
+		"finish": "Terminer",
+		"cancel": "Annuler",
+		"update": "Mettre à jour",
+		"no_changes_made": "Aucun changement effectué",
+		"yes": "Oui",
+		"leave": "Quitter",
+		"activity": "Êtes-vous encore là ?"
+	},
+	"new_game": {
+		"balance": "La partie est {0}",
+		"balanced": "équilibrée",
+		"werewolves_advantage": "avantagée aux loups-garous",
+		"villagers_advantage": "avantagée aux villageois",
+		"title": "Création d'une partie",
+		"roles_selection": "Selection des rôles : ",
+		"roles_note": "(Cliquez sur un rôle pour en savoir plus)",
+		"villagers": "Villageois",
+		"werewolves": "Loups-garous",
+		"loners": "Solitaires",
+		"classic_game": "Partie classique",
+		"classic_game_desc": "Une partie Monody classique se déroulant entièrement sur le site",
+		"vocal_game": "Partie vocale",
+		"vocal_game_desc": "Une partie Monody se déroulant sur le site et en vocal sur Discord",
+		"vocal_game_note": "Nécessite un compte Discord lié pour rejoindre la partie",
+		"no_linked_discord": "Vous devez lier un compte Discord à Monody afin d'utiliser cette fonctionnalité"
+	},
+	"vocal_invitation": {
+		"title": "Veuillez rejoindre le salon vocal",
+		"content": "Rendez vous dans le serveur Discord de Monody, et rejoignez le salon vocal :",
+		"note": "ce popup se fermera tout seul une fois le salon rejoint"
+	},
+	"share": {
+		"title": "Partagez votre profil",
+		"level": "Niveau",
+		"copy_link": "Copier le lien",
+		"copy_image": "Copier l'image",
+		"link_copied": "Le lien vers le profil a été copié dans le presse-papiers",
+		"profile_copied": "Le profil a été copié dans le presse-papiers",
+		"unsupported_fonctionnality": "Votre navigateur ne supporte pas cette fonctionnalité"
+	},
+	"popup": {
+		"warn": "Attention !",
+		"info": "Information",
+		"success": "Succès !",
+		"error": "Erreur",
+		"logout_warn_content": "Vous allez être déconnecté de tous les appareils auquel ce compte est connecté, cela comprend cet appareil"
+	},
+	"profile": {
+		"title": "Modification du profil",
+		"verified": "Vérifiée le {0}",
+		"unverified": "Non vérifiée",
+		"connections": "Connexions",
+		"send_mail": "Renvoyer le mail de vérification",
+		"verified_email_needed": "Vous devez posséder une email vérifiée",
+		"discord_account": "Compte Discord",
+		"linked": "Associé",
+		"unlinked": "Dissocié",
+		"link": "Associer",
+		"unlink": "Dissocier",
+		"discord_unlink_success": "Compte Discord dissocié avec succès !",
+		"discord_unlink_error": "Une erreur inattendue est survenue en dissociant votre compte Discord",
+		"global_logout": "Se déconnecter de tous les appareils",
+		"empty_cache": "Vider le cache (peut résoudre des bugs)",
+		"empty_cache_successful": "Cache vidé avec succès",
+		"avatar_upload_failure": "Echec de l'upload de l'avatar, erreur : ",
+		"profile_edit_success": "Profil modifié avec succès !"
+	},
+	"footer": {
+		"copyright": "© Monody {0} — Tous droits réservés."
+	},
+	"game": {
+		"you_are": "Vous êtes :",
+		"loner_goal": "vous devez gagner seul.",
+		"role_see_more": "Cliquez sur l'image pour en savoir plus",
+		"of_team": "du camp des",
+		"home": "Accueil",
+		"leave": "Voulez-vous vraiment quitter la partie ?"
+	},
+	"game_info_bubble": {
+		"first": "Le loup hargneux s’énerve facilement et peut mordre un joueur par partie, qui succombera à ses blessures la nuit suivante !",
+		"second": "Le loup blanc est un traître parmi les loups, il doit gagner seul.",
+		"third": "Le garde ne peut protéger le même joueur deux tours d'affilée.",
+		"fourth": "Le loup malade ne peut infecter qu'un joueur par partie.",
+		"fifth": "En cas d'égalité pendant le vote, le joueur voté par le maire est désigné."
+	},
+	"audio_management": {
+		"title": "Gestion de l'audio",
+		"sounds_volume": "Volume des sons",
+		"music_volume": "Volume de la musique"
+	},
+	"share_game": {
+		"title": "Partagez votre partie !",
+		"twitter": "Partager sur Twitter",
+		"discord": "Partager sur Discord",
+		"link": "Copier le lien",
+		"copied": "Le lien a été copié dans le presse-papiers",
+		"shared": "Votre partie a été partagée sur Discord !",
+		"share_error": "Une erreur est survenue... La partie a-t-elle déjà été partagée ?",
+		"twitter_content": "Rejoignez%20moi%20dans%20ma%20partie%20Monody%20!%20%F0%9F%8C%99%0A"
+	},
+	"game_details": {
+		"title": "Détails de la partie",
+		"owner": "Créateur de la partie :",
+		"roles": "Liste des rôles :"
+	},
+	"chat": {
+		"locked": "Chat verrouilé",
+		"send": "Envoyer un message",
+		"no_voted": "Le village a décidé de ne tuer personne aujourd'hui !",
+		"no_killed_night": "Personne n'a été tué cette nuit !",
+		"infected": "infecté",
+		"vote": "Le village a décidé de tuer {user} qui était {role}",
+		"bitten": "{user} a succombé à ses blessures. Il était {role}",
+		"couple": "Dans un élan de chagrin amoureux, {user} rejoint son âme-soeur dans sa tombe, il était {role}.",
+		"hunter": "Le chasseur à décider de tirer sa dernière balle sur {user} qui était {role}.",
+		"disconnect": "{user} s'est déconnecté, il était {role}",
+		"death": "{user} a été tué cette nuit, il était {role} !",
+		"join": " a rejoint la partie !",
+		"leave": " a quitté la partie",
+		"night_separator": "Tombée de la nuit",
+		"day_separator": "Lever du jour",
+		"cupid": "Cliquez sur deux joueurs afin de les mettre en couple.",
+		"hunter_action": "Cliquez sur un joueur afin de vous venger.",
+		"angel_desc": "Votre cible est : {0}. Si votre cible vient à mourir avant la prochaine nuit, vous gagnerez la partie instantanément.",
+		"been_bitten": "Vous avez été mordu par le loup hargneux. Vos blessures semblent graves et vous survivrez pas à la prochaine nuit.",
+		"contaminated": "Vous avez été contaminé par le parasite."
+	},
+	"end_game": {
+		"victory": "Victoire",
+		"defeat": "Défaite",
+		"content": "La victoire a été remportée par",
+		"close": "Cliquez n'importe où pour fermer cette fenêtre",
+		"couple": "le couple.",
+		"le": "le",
+		"les": "les"
+	},
+	"role": {
+		"none": "Aucune",
+		"limit": "Limite par partie : ",
+		"team": "Camp : "
+	},
+	"player": {
+		"yes": "Oui",
+		"no": "Non",
+		"mayor": "Ce joueur est le maire",
+		"werewolf": "Ce joueur est votre allié",
+		"couple": "Vous êtes en couple",
+		"guarded": "Vous avez protégé ce joueur",
+		"contaminated": "Ce joueur est contaminé",
+		"target": "Ce joueur est votre cible",
+		"disconnected": "Ce joueur s'est déconnecté",
+		"owner": "Ce joueur a créé la partie",
+		"disconnect_warn": "{0} s'est déconnecté, il a 30 secondes pour se reconnecter.",
+		"guard": "Cliquez sur un joueur pour le protéger des loups.",
+		"spec": "Cliquez sur un joueur pour en connaitre le rôle !",
+		"spec_response": "Vous avez choisi d'espionner le rôle de {username} qui est {role}",
+		"infect": "Voulez-vous infecter {0} ?",
+		"bite": "Cliquez sur un joueur pour le mordre",
+		"bite_response": "Vous avez choisi de mordre {0}. Il succombera à ses blessures la prochaine nuit.",
+		"contaminate": "Cliquez sur un joueur pour le contaminer",
+		"revive": "Soigner un joueur",
+		"revive_desc": "Cliquez sur un joueur pour le ressuciter",
+		"kill": "Éliminer un joueur",
+		"kill_desc": "Cliquez sur un joueur pour l'éliminer",
+		"skip": "Ne rien faire",
+		"choose_action": "Choisissez l'action à effectuer cette nuit"
+	},
+	"404": {
+		"title": "Oh non !",
+		"content": "Page introuvable ...",
+		"back": "Retourner en arrière"
+	}
+}

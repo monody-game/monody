@@ -5,7 +5,9 @@
 				<svg class="popup__icon">
 					<use href="/sprite.svg#warn" />
 				</svg>
-				<p id="modal__title" class="popup__title">Attention !</p>
+				<p id="modal__title" class="popup__title bold">
+					{{ $t("popup.warn") }}
+				</p>
 			</div>
 			<svg
 				class="popup__close"
@@ -17,16 +19,13 @@
 				<use href="/sprite.svg#cross" />
 			</svg>
 		</header>
-		<p class="popup__content">
-			Vous allez être déconnecté de tous les appareils auquel ce compte est
-			connecté, cela comprend cet appareil
-		</p>
+		<p class="popup__content">{{ $t("popup.logout_warn_content") }}</p>
 		<div class="modal__buttons" style="margin-top: 16px">
 			<button class="btn medium" style="width: 47.5%" @click="no()">
-				Annuler
+				{{ $t("modal.cancel") }}
 			</button>
 			<button class="btn medium" style="width: 47.5%" @click="yes()">
-				Confirmer
+				{{ $t("modal.confirm") }}
 			</button>
 		</div>
 	</BaseModal>

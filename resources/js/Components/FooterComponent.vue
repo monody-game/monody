@@ -1,6 +1,8 @@
 <template>
 	<footer v-once class="footer__main">
-		<p>&copy; Monody {{ new Date().getFullYear() }} — Tous droits réservés.</p>
+		<p>
+			{{ $t("footer.copyright", [new Date().getFullYear()]) }}
+		</p>
 		<div class="footer__socials">
 			<a
 				href="https://www.instagram.com/monody_game"

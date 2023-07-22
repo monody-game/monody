@@ -5,7 +5,7 @@
 				<svg>
 					<use href="/sprite.svg#back_chevron" />
 				</svg>
-				<p>Retour</p>
+				<p>{{ $t("modal.back") }}</p>
 			</router-link>
 			<MultiStepsForm
 				:loading="loading"
@@ -16,15 +16,15 @@
 				@current-page="(page) => setDisabled(page)"
 			>
 				<template #title="{ page, totalPage }">
-					Inscription
+					{{ $t("auth.signup") }}
 					<span class="steps-form__count">({{ page }}/{{ totalPage }})</span>
 				</template>
 				<template #inputs="{ page }">
 					<InputComponent
 						v-if="page === 1"
 						type="text"
-						label="Nom d'utilisateur"
-						label-note="entre 3 et 16 caractères"
+						:label="$t('auth.username')"
+						:label-note="$t('auth.username_limitations')"
 						name="username"
 						:value="username"
 						:errored="errors.username.errored"
@@ -45,48 +45,36 @@
 						:required="false"
 						:errored="errors.email.errored"
 						:error="errors.email.text"
-						@model="
-							(newEmail) => {
-								email = newEmail;
-								setDisabled(2);
-							}
-						"
+						@model="(newEmail) => (email = newEmail)"
 					/>
 					<InputComponent
 						v-if="page === 3"
 						type="password"
-						label="Mot de passe"
-						label-note="plus de 8 caractères"
+						:label="$t('auth.password')"
+						:label-note="$t('auth.password_limitations')"
 						name="password"
 						:value="password"
 						:errored="errors.password.errored"
 						:error="errors.password.text"
-						@model="
-							(newPassword) => {
-								password = newPassword;
-								setDisabled(3);
-							}
-						"
+						@model="(newPassword) => (password = newPassword)"
 					/>
 					<InputComponent
 						v-if="page === 3"
 						type="password"
-						label="Confirmez le mot de passe"
+						:label="$t('auth.password_confirmation')"
 						name="password_confirmation"
 						:value="password_confirmation"
 						:errored="password !== password_confirmation"
-						error="La confirmation du mot de passe doit être identique au mot de passe"
+						:error="$t('auth.errors.password_confirmation')"
 						@model="
-							(newConfirmationPassword) => {
-								password_confirmation = newConfirmationPassword;
-								setDisabled(3);
-							}
+							(newConfirmationPassword) =>
+								(password_confirmation = newConfirmationPassword)
 						"
 					/>
 				</template>
 				<template #submit>
 					<router-link class="auth-page__link" to="login">
-						Vous possédez déjà un compte ?
+						{{ $t("auth.have_account") }}
 					</router-link>
 				</template>
 				<template #restriction>
@@ -123,6 +111,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "../../stores/alerts.js";
 import InputComponent from "../../Components/Form/InputComponent.vue";
 import MultiStepsForm from "../../Components/Form/MultiStepsForm.vue";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
 const username = ref("");
@@ -134,28 +123,13 @@ const isDisabled = ref(true);
 const alertStore = useStore();
 const currentPage = ref(1);
 const token = localStorage.getItem("restricted_request_token");
+const { t } = useI18n();
 
 const fieldPage = {
 	username: 1,
 	email: 2,
 	password: 3,
 	password_confirmation: 3,
-};
-
-const setDisabled = (page) => {
-	currentPage.value = page;
-	switch (page) {
-		case 1:
-			isDisabled.value = username.value === "";
-			break;
-		case 2:
-			isDisabled.value = false;
-			break;
-		case 3:
-			isDisabled.value =
-				password.value === "" || password_confirmation.value === "";
-			break;
-	}
 };
 
 const errors = ref({
@@ -177,15 +151,39 @@ const errors = ref({
 	},
 });
 
+const setDisabled = (page) => {
+	currentPage.value = page;
+	switch (page) {
+		case 1:
+			isDisabled.value = errors.value.username.errored;
+			break;
+		case 2:
+			isDisabled.value = errors.value.email.errored;
+			break;
+		case 3:
+			console.log(
+				password.value !== password_confirmation.value,
+				password.value,
+				password_confirmation.value
+			);
+			isDisabled.value = password.value !== password_confirmation.value;
+			break;
+	}
+};
+
 watch(username, (newUsername) => {
-	if (newUsername.length > 24) {
+	if (newUsername.length > 16) {
 		errors.value.username.errored = true;
-		errors.value.username.text =
-			"Votre nom d'utilsateur doit faire moins de 24 caractères";
+		errors.value.username.text = t("auth.errors.field_too_long", {
+			field: t("auth.username").toLowerCase(),
+			length: 16,
+		});
 	} else if (newUsername.length < 3) {
 		errors.value.username.errored = true;
-		errors.value.username.text =
-			"Votre nom d'utilsateur doit faire plus de 3 caractères";
+		errors.value.username.text = t("auth.errors.field_too_short", {
+			field: t("auth.username").toLowerCase(),
+			length: 3,
+		});
 	} else if (newUsername.includes(" ")) {
 		errors.value.username.errored = true;
 		errors.value.username.text =
@@ -194,17 +192,26 @@ watch(username, (newUsername) => {
 		errors.value.username.errored = false;
 		errors.value.username.text = "";
 	}
+
+	setDisabled(1);
 });
 
+watch(password_confirmation, (newConfirmation) => {
+	setDisabled(3);
+});
 watch(password, (newPassword) => {
 	if (newPassword.length < 8) {
 		errors.value.password.errored = true;
-		errors.value.password.text =
-			"Votre mot de passe doit faire plus de 8 caractères";
+		errors.value.password.text = t("auth.errors.field_too_short", {
+			field: t("auth.password").toLowerCase(),
+			length: 8,
+		});
 	} else {
 		errors.value.password.errored = false;
 		errors.value.password.text = "";
 	}
+
+	setDisabled(3);
 });
 
 watch(email, (newEmail) => {
@@ -213,11 +220,13 @@ watch(email, (newEmail) => {
 		newEmail.match(/^([a-z.0-9]+)@([a-z]+)\.([a-z]+)$/gm) === null
 	) {
 		errors.value.email.errored = true;
-		errors.value.email.text = "Veuillez rentrer un email valide";
+		errors.value.email.text = t("auth.errors.valid_email");
 	} else {
 		errors.value.email.errored = false;
 		errors.value.email.text = "";
 	}
+
+	setDisabled(2);
 });
 
 const register = async function () {
@@ -252,8 +261,7 @@ const register = async function () {
 			const validationErrors = res.data.errors;
 			for (const field in validationErrors) {
 				if (validationErrors[field].includes("validation.unique")) {
-					errors.value[field].text =
-						"Un compte utilisant cette valeur existe déjà";
+					errors.value[field].text = t("auth.errors.account_exists");
 					errors.value[field].errored = true;
 					currentPage.value = fieldPage[field];
 				}

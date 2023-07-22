@@ -18,7 +18,7 @@
 						fill="currentColor"
 					/>
 				</svg>
-				<p>Accueil</p>
+				<p>{{ $t("game.home") }}</p>
 			</a>
 			<GameCounter />
 			<AudioManager />
@@ -80,6 +80,7 @@
 <script setup>
 import { ref } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { useStore } from "../stores/game.js";
 import { useStore as usePopupStore } from "../stores/modals/popup.js";
 import { useStore as useAssignationPopupStore } from "../stores/modals/role-assignation.js";
@@ -108,6 +109,7 @@ import AudioManagementModal from "../Components/Modal/AudioManagementModal.vue";
 
 const route = useRoute();
 const store = useStore();
+const { t } = useI18n();
 
 const chatStore = useChatStore();
 const shareModalStore = useShareModalStore();
@@ -211,31 +213,25 @@ window.Echo.join(`game.${gameId}`)
 			case "angel":
 				store.angel_target = interaction.data;
 				chatStore.send(
-					`Votre cible est : ${
-						store.getPlayerByID(interaction.data).username
-					}. Si votre cible vient à mourir avant la prochaine nuit, vous gagnerez la partie instantanément.`,
+					t("chat.angel_desc", [
+						store.getPlayerByID(interaction.data).username,
+					]),
 					"info"
 				);
 				break;
 			case "cupid":
-				chatStore.send(
-					"Cliquez sur deux joueurs afin de les mettre en couple.",
-					"info"
-				);
+				chatStore.send(t("chat.cupid"), "info");
 				break;
 			case "hunter":
-				chatStore.send("Cliquez sur un joueur afin de vous venger.", "info");
+				chatStore.send(t("chat.hunter_action"), "info");
 		}
 	})
 	.listen(".interaction.surly_werewolf:bite", () => {
-		chatStore.send(
-			"Vous avez été mordu par le loup hargneux. Vos blessures semblent graves et vous survivrez pas à la prochaine nuit.",
-			"warn"
-		);
+		chatStore.send(t("chat.been_bitten"), "warn");
 	})
 	.listen(".interaction.parasite:contaminate", ({ data }) => {
 		if (store.contaminated.length === 0) {
-			chatStore.send("Vous avez été contaminé par le parasite.", "warn");
+			chatStore.send(t("chat.contaminated"), "warn");
 		}
 
 		store.contaminated = data.payload.contaminated;
@@ -267,10 +263,10 @@ window.addEventListener("unload", leave);
 const disconnect = async function () {
 	popupStore.setPopup({
 		warn: {
-			content: "Voulez-vous vraiment quitter la partie ?",
-			note: "Si oui, ",
+			content: t("game.leave"),
+			note: t("modal.if_yes"),
 			link: "/play",
-			link_text: "cliquez ici.",
+			link_text: t("modal.click_here"),
 		},
 	});
 };

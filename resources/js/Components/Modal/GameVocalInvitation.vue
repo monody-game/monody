@@ -1,12 +1,11 @@
 <template>
 	<BaseModal>
 		<header>
-			<h3>Veuillez rejoindre le salon vocal</h3>
+			<h3>{{ $t("vocal_invitation.title") }}</h3>
 		</header>
 		<div class="game-vocal__invitation">
 			<p>
-				Rendez vous dans le serveur Discord de Monody, et rejoignez le salon
-				vocal :
+				{{ $t("vocal_invitation.content") }}
 				<a :href="voiceChannelLink" target="_blank">
 					<svg width="24" height="24" viewBox="0 0 24 24">
 						<path
@@ -23,9 +22,7 @@
 					Partie de {{ gameStore.owner.username }}
 				</a>
 			</p>
-			<p class="popup__note">
-				Note: ce popup se fermera tout seul une fois le salon rejoint
-			</p>
+			<p class="popup__note">Note: {{ $t("vocal_invitation.note") }}</p>
 		</div>
 	</BaseModal>
 </template>

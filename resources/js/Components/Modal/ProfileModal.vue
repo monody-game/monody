@@ -1,7 +1,7 @@
 <template>
 	<BaseModal>
 		<header>
-			<h3>Modification du profil</h3>
+			<h3>{{ $t("profile.title") }}</h3>
 		</header>
 		<div class="profile-modal__wrapper">
 			<div class="profile-modal__side-group">
@@ -32,8 +32,8 @@
 				<InputComponent
 					type="text"
 					name="username"
-					label="Pseudo"
-					label-note="entre 3 et 16 caractères"
+					:label="$t('auth.username')"
+					:label-note="$t('auth.username_limitations')"
 					:errored="usernameErrors.errored"
 					:error="usernameErrors.text"
 					:value="userStore.username"
@@ -45,11 +45,11 @@
 				name="email"
 				:label="`Email ${
 					userStore.email_verified_at === null
-						? '(Non vérifiée)'
-						: `(Vérifiée le ${formattedDate})`
+						? `(${$t('profile.unverified')})`
+						: `(${$t('profile.verified', [formattedDate])})`
 				}`"
 				:required="false"
-				error="Veuillez rentrer un email valide"
+				:error="$t('auth.errors.valid_email')"
 				:errored="
 					email !== null &&
 					email !== '' &&
@@ -68,12 +68,12 @@
 				Renvoyer le mail de vérification
 			</a>
 			<div class="profile-modal__connections">
-				<label for="connections">Connexions</label>
+				<label for="connections">{{ $t("profile.connections") }}</label>
 				<div
 					class="profile-modal__connections-discord"
 					:title="
 						userStore.email_verified_at === null
-							? 'Vous devez posséder une email vérifiée'
+							? $t('profile.verified_email_needed')
 							: ''
 					"
 				>
@@ -82,11 +82,11 @@
 							<use href="/sprite.svg#discord" />
 						</svg>
 						<p>
-							Compte discord:
+							{{ $t("profile.discord_account") }}:
 							<span class="bold">{{
 								userStore.discord_linked_at === null
-									? "Déconnecté"
-									: `Connecté (${discordUsername})`
+									? $t("profile.unlinked")
+									: `${$t("profile.linked")} (${discordUsername})`
 							}}</span>
 						</p>
 					</div>
@@ -96,7 +96,7 @@
 						:class="userStore.email_verified_at === null ? 'disabled' : ''"
 						href="/api/oauth/link/discord"
 					>
-						Connecter
+						{{ $t("profile.link") }}
 					</a>
 					<button
 						v-else
@@ -104,25 +104,27 @@
 						:disabled="userStore.email_verified_at === null"
 						@click="unlink"
 					>
-						Déconnecter
+						{{ $t("profile.unlink") }}
 					</button>
 				</div>
 				<button
 					class="btn medium btn-danger"
 					@click="modalStore.open('logout-warn-popup')"
 				>
-					Se déconnecter de tous les appareils
+					{{ $t("profile.global_logout") }}
 				</button>
 				<button class="btn medium btn-danger" @click="flushCache()">
-					Vider le cache (peut résoudre des bugs)
+					{{ $t("profile.empty_cache") }}
 				</button>
 			</div>
 		</div>
 		<div class="modal__buttons">
-			<button class="btn medium" @click="modalStore.close()">Annuler</button>
+			<button class="btn medium" @click="modalStore.close()">
+				{{ $t("modal.cancel") }}
+			</button>
 			<div class="modal__buttons-right">
 				<button :disabled="false" class="btn medium" @click="updateProfile">
-					Mettre à jour
+					{{ $t("modal.update") }}
 				</button>
 			</div>
 		</div>
@@ -142,12 +144,14 @@ import BaseModal from "./BaseModal.vue";
 import InputComponent from "../Form/InputComponent.vue";
 import LogoutWarnPopup from "./LogoutWarnPopup.vue";
 import { useCache } from "../../composables/cache.js";
+import { useI18n } from "vue-i18n";
 
 const userStore = useStore();
 const modalStore = useModalStore();
 const alertStore = useAlertStore();
 const cache = useCache();
 const warnPopupStore = useWarnPopupStore();
+const { t } = useI18n();
 
 const avatarInput = ref(null);
 const username = ref(userStore.username);
@@ -167,7 +171,7 @@ const flushCache = () => {
 	location.reload();
 
 	alertStore.addAlerts({
-		success: "Cache vidé avec succès",
+		success: t("profile.empty_cache_successful"),
 	});
 	modalStore.close();
 };
@@ -195,16 +199,19 @@ nextTick(() => {
 watch(username, (newUsername) => {
 	if (newUsername.length > 24) {
 		usernameErrors.value.errored = true;
-		usernameErrors.value.text =
-			"Votre nom d'utilsateur doit faire moins de 24 caractères";
+		usernameErrors.value.text = t("auth.errors.field_too_long", {
+			field: t("auth.username").toLowerCase(),
+			length: 24,
+		});
 	} else if (newUsername.length < 3) {
 		usernameErrors.value.errored = true;
-		usernameErrors.value.text =
-			"Votre nom d'utilsateur doit faire plus de 3 caractères";
+		usernameErrors.value.text = t("auth.errors.field_too_short", {
+			field: t("auth.username").toLowerCase(),
+			length: 3,
+		});
 	} else if (newUsername.includes(" ")) {
 		usernameErrors.value.errored = true;
-		usernameErrors.value.text =
-			"Il ne doit pas y avoir d'espaces dans votre pseudo";
+		usernameErrors.value.text = t("auth.errors.username_no_spaces");
 	} else {
 		usernameErrors.value.errored = false;
 		usernameErrors.value.text = "";
@@ -235,8 +242,7 @@ const updateProfile = async () => {
 
 		if (!res.ok) {
 			alertStore.addAlerts({
-				error:
-					"Echec de l'upload de l'avatar, erreur : " + responseContent.message,
+				error: t("profile.avatar_upload_failure") + responseContent.message,
 			});
 
 			return;
@@ -246,7 +252,7 @@ const updateProfile = async () => {
 	if (Object.keys(modifiedFields).length === 0 && hasUploaded.value === false) {
 		modalStore.close();
 		alertStore.addAlerts({
-			info: "Aucun changement effectué",
+			info: t("modal.no_changes_made"),
 		});
 
 		return;
@@ -269,7 +275,7 @@ const updateProfile = async () => {
 	});
 
 	alertStore.addAlerts({
-		success: "Profil modifié avec succès !",
+		success: t("profile.profile_edit_success"),
 	});
 
 	if (hasUploaded.value) {
@@ -285,12 +291,11 @@ const unlink = async () => {
 	if (res.ok === true) {
 		userStore.discord_linked_at = null;
 		alertStore.addAlerts({
-			success: "Compte Discord déconnecté avec succès !",
+			success: t("profile.discord_unlink_success"),
 		});
 	} else {
 		alertStore.addAlerts({
-			error:
-				"Une erreur inattendue est survenue en déconnectant votre compte Discord",
+			error: t("profile.discord_unlink_error"),
 		});
 	}
 };

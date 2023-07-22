@@ -1,11 +1,11 @@
 <template>
 	<BaseModal class="game-details">
 		<header>
-			<h3>Détails de la partie</h3>
+			<h3>{{ $t("game_details.title") }}</h3>
 		</header>
 		<div class="modal__page game-details__wrapper">
 			<div class="game-details__group">
-				Créateur de la partie :
+				{{ $t("game_details.owner") }}
 				<div class="game-details__owner">
 					<img
 						:src="gameStore.owner.avatar + '?w=50&dpr=2'"
@@ -31,7 +31,7 @@
 				</div>
 			</div>
 			<div class="game-details__roles">
-				Liste des rôles :
+				{{ $t("game_details.roles") }}
 				<div class="roles__list">
 					<RoleSelector
 						v-for="role in roles"
@@ -48,7 +48,9 @@
 		</div>
 		<div class="modal__buttons">
 			<div class="modal__buttons-right">
-				<button class="btn medium" @click="store.close()">Fermer</button>
+				<button class="btn medium" @click="store.close()">
+					{{ $t("modal.close") }}
+				</button>
 			</div>
 		</div>
 	</BaseModal>

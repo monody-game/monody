@@ -1,11 +1,11 @@
 <template>
 	<BaseModal>
 		<header>
-			<h3>Classements</h3>
+			<h3>{{ $t("leaderboards.leaderboards") }}</h3>
 		</header>
 		<div class="leaderboards__wrapper">
 			<section class="leaderboards__selection">
-				<p>Choix du classement :</p>
+				<p>{{ $t("leaderboards.select") }}</p>
 				<div class="leaderboards__dropdown">
 					<select v-model.lazy="selected">
 						<option class="option" selected value="elo">Elo</option>
@@ -92,7 +92,9 @@
 		</div>
 		<div class="modal__buttons">
 			<div class="modal__buttons-right">
-				<button class="btn medium" @click="modalStore.close()">Fermer</button>
+				<button class="btn medium" @click="modalStore.close()">
+					{{ $t("modal.close") }}
+				</button>
 			</div>
 		</div>
 	</BaseModal>

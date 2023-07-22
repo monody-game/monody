@@ -1,14 +1,14 @@
 <template>
 	<BaseModal>
 		<div class="audio-manager__content">
-			<h3>Gestion de l'audio</h3>
+			<h3>{{ $t("audio_management.title") }}</h3>
 			<div class="audio-manager__sliders">
 				<div class="audio-manager__slider-group">
-					<label for="manager__ambient"
-						>Volume des sons ({{
+					<label for="manager__ambient">
+						{{ $t("audio_management.sounds_volume") }} ({{
 							(ambient * 0.1).toString().slice(0, 3)
-						}}/1)</label
-					>
+						}}/1)
+					</label>
 					<div class="audio-manager__side-group">
 						<svg
 							class="pointer"
@@ -30,11 +30,11 @@
 					</div>
 				</div>
 				<div class="audio-manager__slider-group">
-					<label for="manager__music"
-						>Volume de la musique ({{
+					<label for="manager__music">
+						{{ $t("audio_management.music_volume") }} ({{
 							(music * 0.1).toString().slice(0, 3)
-						}}/1)</label
-					>
+						}}/1)
+					</label>
 					<div class="audio-manager__side-group">
 						<svg
 							class="pointer"
@@ -56,7 +56,9 @@
 					</div>
 				</div>
 
-				<button class="btn large" @click="save()">Valider</button>
+				<button class="btn large" @click="save()">
+					{{ $t("modal.confirm") }}
+				</button>
 			</div>
 		</div>
 	</BaseModal>

@@ -14,12 +14,16 @@
 <script setup>
 import { onDeactivated, ref } from "vue";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const waitingContents = [
-	"Le loup hargneux s’énerve facilement et peut mordre un joueur par partie, qui succombera à ses blessures la nuit suivante !",
-	"Le loup blanc est un traître parmi les loups, il doit gagner seul.",
-	"Le garde ne peut protéger le même joueur deux tours d'affilée.",
-	"Le loup malade ne peut infecter qu'un joueur par partie.",
+	t("game_info_bubble.first"),
+	t("game_info_bubble.second"),
+	t("game_info_bubble.third"),
+	t("game_info_bubble.fourth"),
+	t("game_info_bubble.fifth"),
 ];
 
 const content = ref("");

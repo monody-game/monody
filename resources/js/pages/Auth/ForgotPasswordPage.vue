@@ -5,10 +5,10 @@
 				<svg>
 					<use href="/sprite.svg#back_chevron" />
 				</svg>
-				<p>Retour</p>
+				<p>{{ $t("modal.back") }}</p>
 			</router-link>
 			<div class="auth-page__form-wrapper">
-				<h1>Mot de passe oublié ?</h1>
+				<h1>{{ $t("auth.forgot_password") }}</h1>
 				<form action="" method="post" @submit.prevent>
 					<div v-if="loading" class="auth-page__loading-group">
 						<div class="auth-page__loading-group-blur" />
@@ -17,7 +17,7 @@
 					<InputComponent
 						type="email"
 						name="email"
-						label="Email lié à votre compte"
+						:label="$t('auth.linked_email')"
 						:errored="errors.email.errored"
 						:error="errors.email.text"
 						:note="false"
@@ -27,7 +27,7 @@
 						v-if="route.params.token !== ''"
 						type="password"
 						label="Mot de passe"
-						label_note="plus de 8 caractères"
+						:label_note="$t('auth.password_limitations')"
 						name="password"
 						:errored="errors.password.errored"
 						:error="errors.password.text"
@@ -36,21 +36,21 @@
 					<InputComponent
 						v-if="route.params.token !== ''"
 						type="password"
-						label="Confirmez le mot de passe"
+						:label="$t('auth.password_confirmation')"
 						name="password_confirmation"
 						:errored="password !== password_confirmation"
-						error="La confirmation du mot de passe doit être identique au mot de passe"
+						:error="$t('auth.errors.password_confirmation')"
 						@model="
 							(newConfirmationPassword) =>
 								(password_confirmation = newConfirmationPassword)
 						"
 					/>
 					<router-link class="auth-page__link" :to="{ name: 'login' }">
-						Vous vous souvenez de votre mot de passe ?
+						{{ $t("auth.remind_password") }}
 					</router-link>
 					<div class="auth-page__submit-group">
 						<router-link class="auth-page__link" :to="{ name: 'register' }">
-							Pas encore de compte ?
+							{{ $t("auth.no_account") }}
 						</router-link>
 						<button
 							class="btn large"
@@ -58,7 +58,7 @@
 							type="submit"
 							@click="submit"
 						>
-							Soumettre la demande
+							{{ $t("auth.submit") }}
 						</button>
 					</div>
 				</form>

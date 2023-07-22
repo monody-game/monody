@@ -9,7 +9,7 @@
 					<h2>Monody</h2>
 				</div>
 				<button @click="logout()">
-					Se déconnecter
+					{{ $t("auth.logout") }}
 					<svg class="icon">
 						<use href="/sprite.svg#logout" />
 					</svg>
@@ -18,7 +18,7 @@
 			<div class="play-page__container">
 				<div class="play-page__games">
 					<header>
-						<p>Liste des parties :</p>
+						<p>{{ $t("play.list") }}</p>
 						<button class="play-page__button btn large" @click="openModal()">
 							<svg
 								width="25"
@@ -34,7 +34,7 @@
 									stroke-linecap="round"
 								/>
 							</svg>
-							Créer
+							{{ $t("play.create") }}
 						</button>
 					</header>
 					<div class="play-page__game-list">
