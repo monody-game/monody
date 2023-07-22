@@ -22,6 +22,7 @@ $alerts: "success" var(--success), "info" var(--info), "warn" var(--warn),
 
 .alert__content {
 	min-width: 125px;
+	flex: 1;
 }
 
 .alert__close {
