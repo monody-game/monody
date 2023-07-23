@@ -15,6 +15,7 @@ return [
         'owner' => [
             'name' => 'L\'Originel',
             'describe' => 'Créateur de Monody !',
+            'description' => 'moon250',
         ],
         'wins' => [
             'name' => 'Gagnant inarrêtable',
