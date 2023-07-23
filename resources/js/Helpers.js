@@ -4,6 +4,7 @@ import { useStore as useDebugStore } from "./stores/debug-bar.js";
 import { useCache } from "./composables/cache.js";
 
 const cache = useCache();
+const lang = localStorage.getItem("lang");
 
 /**
  * @param {String} url
@@ -19,11 +20,17 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 		return cache.get(url).response;
 	}
 
+	const headers = {
+		"Content-type": "application/json; charset=UTF-8",
+	};
+
+	if (lang !== null) {
+		headers["X-App-Locale"] = lang;
+	}
+
 	const params = {
 		method: method,
-		headers: {
-			"Content-type": "application/json; charset=UTF-8",
-		},
+		headers,
 		credentials: "include",
 	};
 	const res = {};

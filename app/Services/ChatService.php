@@ -71,7 +71,7 @@ class ChatService
         if ($littleGirl !== []) {
             $message->set('author', [
                 'id' => '',
-                'username' => 'Loup-garou',
+                'username' => __('game.werewolf'),
                 'avatar' => '/assets/roles/werewolf.png',
             ]);
 

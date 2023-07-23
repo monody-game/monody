@@ -17,6 +17,7 @@
 		"password_confirmation": "Confirmez le mot de passe",
 		"password_limitations": "plus de 8 caractères",
 		"forgot_password": "Mot de passe oublié ?",
+		"forgot_success": "Veuillez vous reconnecter afin de confirmer le changement",
 		"no_account": "Pas encore de compte ?",
 		"have_account": "Vous possédez déjà un compte ?",
 		"remind_password": "Je me souviens de mon mot de passe !",
@@ -27,7 +28,7 @@
 		},
 		"errors": {
 			"invalid_credentials": "Identifiant ou mot de passe invalide",
-			"fields_empty": "Vous devez rentrer vos identifiants",
+			"fields_empty": "Merci de remplir tous les champs",
 			"field_too_short": "Votre {field} doit faire plus de {length} caractères",
 			"field_too_long": "Votre {field} doit faire moins de {length} caractères",
 			"password_confirmation": "La confirmation du mot de passe doit être identique au mot de passe",

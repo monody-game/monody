@@ -47,7 +47,7 @@ class GameController extends Controller
         }
 
         return JsonApiResponse::make(['message' => "Game {$request->get('gameId')} not found"], Status::NOT_FOUND)
-            ->withAlert(AlertType::Error, "La partie demandée n'existe pas (ou plus) ...");
+            ->withAlert(AlertType::Error, __('errors.game_not_found'));
     }
 
     public function list(?string $type = '*'): JsonApiResponse

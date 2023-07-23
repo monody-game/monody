@@ -13,11 +13,11 @@ enum Rank
     public function stringify(): string
     {
         return match ($this) {
-            self::Villager => 'Villageois',
-            self::Healer => 'Guérisseur',
-            self::Oracle => 'Oracle',
-            self::Elder => 'Ancien',
-            self::Archbishop => 'Archevêque'
+            self::Villager => __('enums.rank.villager'),
+            self::Healer => __('enums.rank.healer'),
+            self::Oracle => __('enums.rank.oracle'),
+            self::Elder => __('enums.rank.elder'),
+            self::Archbishop => __('enums.rank.archbishop'),
         };
     }
 

@@ -60,10 +60,10 @@ class UserController extends Controller
                 ]),
             ])->withPopup(
                 AlertType::Info,
-                "Un mail de vérification vient de vous être envoyé à l'adresse {$userResponse['email']}. Veuillez vérifier votre email en cliquant sur le lien",
-                "Il peut s'écouler quelques minutes avant de recevoir le mail. Si vous ne le recevez pas, cliquez ",
+                __('mail.sent', ['email' => $userResponse['email']]),
+                __('mail.wait'),
                 route('verification.send', [], false),
-                'ici pour renvoyer le lien.'
+                __('mail.send_link')
             )
                 ->flushCacheFor('/user');
         }

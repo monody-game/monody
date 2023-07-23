@@ -145,8 +145,8 @@
 .leaderboards__cell-content {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	gap: space(2);
+	gap: space(1);
+	flex: 1;
 
 	img {
 		height: 42px;

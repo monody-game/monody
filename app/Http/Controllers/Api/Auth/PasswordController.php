@@ -23,12 +23,12 @@ class PasswordController extends Controller
             ? JsonApiResponse::make()
                 ->withPopup(
                     AlertType::Success,
-                    'Un email vient de vous être envoyé avec un lien pour changer votre mot de passe !',
-                    'le mail peut mettre quelques minutes à arriver, veillez à regarder dans vos spams également. Vous pouvez fermer cette page'
+                    __('passwords.sent'),
+                    __('passwords.wait')
                 )
                 ->withoutCache()
             : JsonApiResponse::make(status: Status::BAD_REQUEST)
-                ->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status))
+                ->withAlert(AlertType::Error, __('errors.error', ['error' => __($status)]))
                 ->withoutCache();
     }
 
@@ -54,7 +54,7 @@ class PasswordController extends Controller
         return $status === Password::PASSWORD_RESET
             ? new JsonApiResponse()
             : JsonApiResponse::make(status: Status::BAD_REQUEST)
-                ->withAlert(AlertType::Error, 'Une erreur est survenue : ' . __($status))
+                ->withAlert(AlertType::Error, __('errors.error', ['error' => __($status)]))
                 ->withoutCache();
     }
 }

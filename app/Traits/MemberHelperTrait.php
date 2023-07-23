@@ -137,7 +137,7 @@ trait MemberHelperTrait
                 'gameId' => $gameId,
                 'author' => '',
                 'type' => 'warn',
-                'content' => 'Vous venez de revenir à la vie. Vous pouvez plus ressuciter.',
+                'content' => __('game.elder'),
             ]);
 
             broadcast(new MessageSent($content, true, [$userId]));

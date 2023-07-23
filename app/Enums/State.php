@@ -62,24 +62,24 @@ enum State: int
     public function readeableStringify(): string
     {
         return match ($this) {
-            self::Waiting => 'Attente',
-            self::Starting => 'Démarrage',
-            self::Roles => 'Distribution des rôles',
-            self::Night => 'Nuit',
-            self::Cupid => 'Tour du cupidon',
-            self::Guard => 'Tour du garde',
-            self::Psychic => 'Tour de la voyante',
-            self::Werewolf => 'Tour des loups-garous',
-            self::InfectedWerewolf => 'Tour du loup malade',
-            self::WhiteWerewolf => 'Tour du loup blanc',
-            self::SurlyWerewolf => 'Tour du loup hargneux',
-            self::Witch => 'Tour de la sorcière',
-            self::Parasite => 'Tour du parasite',
-            self::Day => 'Jour',
-            self::Mayor => 'Élection du maire',
-            self::Vote => 'Vote',
-            self::End => 'Fin de la partie',
-            self::Hunter => 'Tour du chasseur',
+            self::Waiting => __('enums.state.waiting'),
+            self::Starting => __('enums.state.starting'),
+            self::Roles => __('enums.state.roles'),
+            self::Night => __('enums.state.night'),
+            self::Cupid => __('enums.state.cupid'),
+            self::Guard => __('enums.state.guard'),
+            self::Psychic => __('enums.state.psychic'),
+            self::Werewolf => __('enums.state.werewolf'),
+            self::InfectedWerewolf => __('enums.state.infected_werewolf'),
+            self::WhiteWerewolf => __('enums.state.white_werewolf'),
+            self::SurlyWerewolf => __('enums.state.surly_werewolf'),
+            self::Witch => __('enums.state.witch'),
+            self::Parasite => __('enums.state.parasite'),
+            self::Day => __('enums.state.day'),
+            self::Mayor => __('enums.state.mayor'),
+            self::Vote => __('enums.state.vote'),
+            self::End => __('enums.state.end'),
+            self::Hunter => __('enums.state.hunter'),
         };
     }
 
@@ -129,9 +129,9 @@ enum State: int
     {
         return match ($this) {
             self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch, self::Parasite, self::Cupid, self::Guard => self::readeableStringify(),
-            self::Vote => 'Début du ' . mb_strtolower(self::readeableStringify()),
-            self::Mayor => 'Début de l\'' . mb_strtolower(self::readeableStringify()) . '. Présentez vous !',
-            self::Hunter => 'Le chasseur va tirer sur un joueur pour se venger !',
+            self::Vote => __('enums.state.vote_message'),
+            self::Mayor => __('enums.state.mayor_message'),
+            self::Hunter => __('enums.state.hunter_message'),
             default => null
         };
     }

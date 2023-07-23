@@ -17,7 +17,7 @@ class VerifyEmailController extends Controller
         $request->fulfill();
 
         return JsonApiResponse::make(status: Status::TEMPORARY_REDIRECT, headers: ['Location' => '/play'])
-            ->withAlert(AlertType::Success, 'Email vérifié avec succès !');
+            ->withAlert(AlertType::Success, __('mail.verified'));
     }
 
     public function notice(Request $request): JsonApiResponse
@@ -29,8 +29,8 @@ class VerifyEmailController extends Controller
         return JsonApiResponse::make()
             ->withPopup(
                 AlertType::Info,
-                "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
-                'Pensez à vérifier vos spams !'
+                __('mail.sent', ['email' => $user['email']]),
+                __('mail.spam_notice')
             )
             ->withoutCache();
     }
