@@ -93,14 +93,21 @@
 						</p>
 					</div>
 					<a
-						v-if="userStore.discord_linked_at === null"
-						class="btn medium"
-						:class="userStore.email_verified_at === null ? 'disabled' : ''"
-						:href="
+						v-if="
+							userStore.discord_linked_at === null &&
 							userStore.email_verified_at === null
-								? ''
-								: '/api/oauth/link/discord'
 						"
+						class="btn medium disabled"
+					>
+						{{ $t("profile.link") }}
+					</a>
+					<a
+						v-if="
+							userStore.discord_linked_at === null &&
+							userStore.email_verified_at !== null
+						"
+						class="btn medium"
+						href="/api/oauth/link/discord"
 					>
 						{{ $t("profile.link") }}
 					</a>
