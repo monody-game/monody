@@ -23,7 +23,10 @@
 				</svg>
 			</a>
 		</div>
+		<LangSwitcher />
 	</footer>
 </template>
 
-<script setup></script>
+<script setup>
+import LangSwitcher from "./LangSwitcher.vue";
+</script>
