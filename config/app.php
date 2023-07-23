@@ -21,7 +21,9 @@ return [
 
     'locale' => env('APP_LOCALE', 'fr'),
 
-    'fallback_locale' => 'fr',
+    'fallback_locale' => 'en',
+
+    'supported_locales' => ['en', 'fr'],
 
     'faker_locale' => 'fr_FR',
 
