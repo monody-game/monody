@@ -125,7 +125,7 @@ enum State: int
     /**
      * Return the message that should be sent just before the state begins
      */
-    public function message(): ?string
+    public function message(): array|string|null
     {
         return match ($this) {
             self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch, self::Parasite, self::Cupid, self::Guard => self::readeableStringify(),

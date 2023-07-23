@@ -65,11 +65,11 @@ enum Badge: int
         };
     }
 
-    public function description(): ?string
+    public function description(): string
     {
         return match ($this) {
-            default => null,
             self::Graphist => __('enums.badges.graphist.description'),
+            self::Owner => __('enums.badges.owner.description'),
             self::Beta => __('enums.badges.beta.description'),
             self::Wins => __('enums.badges.wins.description'),
             self::Losses => __('enums.badges.losses.description'),
