@@ -28,7 +28,7 @@ class LogoutController extends Controller
         Cookie::expire('monody_access_token');
 
         return JsonApiResponse::make()
-            ->withAlert(AlertType::Success, 'À bientôt !')
+            ->withAlert(AlertType::Success, __('auth.bye'))
             ->flushCacheFor('/user');
     }
 
@@ -39,7 +39,7 @@ class LogoutController extends Controller
         Cookie::expire('monody_access_token');
 
         return JsonApiResponse::make()
-            ->withAlert(AlertType::Success, 'À bientôt !')
+            ->withAlert(AlertType::Success, __('auth.bye'))
             ->flushCacheFor('/user');
     }
 }

@@ -22,7 +22,7 @@ class LeaderboardController extends Controller
         ];
 
         if (!in_array($leaderboard, $leaderboards, true)) {
-            return new JsonApiResponse(['message' => "The leaderboard {$leaderboard} is not valid."], Status::UNPROCESSABLE_ENTITY);
+            return new JsonApiResponse(['message' => "The leaderboard $leaderboard is not valid."], Status::UNPROCESSABLE_ENTITY);
         }
 
         return match ($leaderboard) {

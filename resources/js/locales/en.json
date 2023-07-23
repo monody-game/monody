@@ -17,6 +17,7 @@
 		"password_confirmation": "Confirm your password",
 		"password_limitations": "more than 8 characters",
 		"forgot_password": "Forgot password ?",
+		"forgot_success": "Please log in again to confirm the change",
 		"no_account": "New here ? Create an account.",
 		"have_account": "Already have an account ?",
 		"remind_password": "Nevermind, I remember my password !",
@@ -27,7 +28,7 @@
 		},
 		"errors": {
 			"invalid_credentials": "Invalid credentials",
-			"fields_empty": "Please enter your credentials",
+			"fields_empty": "Please fill in all fields",
 			"field_too_short": "Your {field} must be longer than {length} characters",
 			"field_too_long": "Your {field} must be less than {length} characters long",
 			"password_confirmation": "Password confirmation must be identical to password",
@@ -138,7 +139,7 @@
 		"first": "The surly werewolf is easily angered and can bite one player per game, who will succumb to his wounds the following night!",
 		"second": "The white wolf is a traitor among wolves, he must win alone.",
 		"third": "The guard cannot protect the same player two rounds in a row.",
-		"fourth": "The sick werewolf can only infect one player per game.",
+		"fourth": "The infected werewolf can only infect one player per game.",
 		"fifth": "In the event of a tie during the vote, the player voted by the mayor is designated."
 	},
 	"audio_management": {

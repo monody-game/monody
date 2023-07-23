@@ -26,8 +26,8 @@
 					<InputComponent
 						v-if="route.params.token !== ''"
 						type="password"
-						label="Mot de passe"
-						:label_note="$t('auth.password_limitations')"
+						:label="$t('auth.password')"
+						:label-note="$t('auth.password_limitations')"
 						name="password"
 						:errored="errors.password.errored"
 						:error="errors.password.text"
@@ -73,9 +73,11 @@ import { useRoute, useRouter } from "vue-router";
 import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import InputComponent from "../../Components/Form/InputComponent.vue";
 import { useStore } from "../../stores/alerts.js";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const router = useRouter();
+const { t } = useI18n();
 const alertStore = useStore();
 const loading = ref(false);
 const email = ref("");
@@ -118,7 +120,7 @@ const submit = async () => {
 			await router.replace({ name: "login" });
 
 			alertStore.addAlerts({
-				info: "Veuillez vous reconnecter afin de confirmer le changement",
+				info: t("auth.forgot_success"),
 			});
 		}
 	}
@@ -127,8 +129,10 @@ const submit = async () => {
 watch(password, (newPassword) => {
 	if (newPassword.length < 8) {
 		errors.value.password.errored = true;
-		errors.value.password.text =
-			"Votre mot de passe doit faire plus de 8 caractères";
+		errors.value.password.text = t("auth.field_too_short", {
+			field: t("auth.password"),
+			length: 8,
+		});
 	} else {
 		errors.value.password.errored = false;
 		errors.value.password.text = "";
@@ -138,7 +142,7 @@ watch(password, (newPassword) => {
 watch(email, (newEmail) => {
 	if (newEmail.match(/^([a-z.0-9]+)@([a-z]+)\.([a-z]+)$/gm) === null) {
 		errors.value.email.errored = true;
-		errors.value.email.text = "Veuillez rentrer un email valide";
+		errors.value.email.text = t("auth.errors.valid_email");
 	} else {
 		errors.value.email.errored = false;
 		errors.value.email.text = "";
@@ -155,7 +159,7 @@ const checkInput = function () {
 		((password.value === "" || password_confirmation.value === "") &&
 			route.params.token !== "")
 	) {
-		errors.value.email.text = "Merci de remplir tous les champs";
+		errors.value.email.text = t("auth.errors.fields_empty");
 		loading.value = false;
 		return false;
 	}

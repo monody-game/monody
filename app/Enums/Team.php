@@ -29,9 +29,9 @@ enum Team: int
     public function goal(): string
     {
         return match ($this) {
-            self::Villagers => "Votre but est **d'éliminer les loups et rôles solitaires** afin de remporter la partie.",
-            self::Werewolves => "Votre but est **d'éliminer les villageois et rôles solitaires** afin de remporter la partie.",
-            self::Loners => 'Vous devez gagner seul'
+            self::Villagers => __('enums.team.villagers.desc'),
+            self::Werewolves => __('enums.team.werewolves.desc'),
+            self::Loners => __('enums.team.loners.desc')
         };
     }
 
@@ -49,9 +49,9 @@ enum Team: int
     public function stringify(): string
     {
         return match ($this) {
-            self::Werewolves => 'Loups-garous',
-            self::Villagers => 'Villageois',
-            self::Loners => 'Solitaires',
+            self::Werewolves => __('enums.team.werewolves.name'),
+            self::Villagers => __('enums.team.villagers.name'),
+            self::Loners => __('enums.team.loners.name'),
         };
     }
 

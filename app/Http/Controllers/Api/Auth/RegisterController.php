@@ -33,16 +33,16 @@ class RegisterController extends Controller
         $stats->save();
 
         $response = JsonApiResponse::make(status: Status::CREATED)
-            ->withAlert(AlertType::Success, 'Votre compte a bien été créé');
+            ->withAlert(AlertType::Success, __('auth.created'));
 
         if ($request->has('email')) {
             $response = $response
                 ->withPopup(
                     AlertType::Info,
-                    "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
-                    "Il peut s'écouler quelques minutes avant de recevoir le mail. Si vous ne le recevez pas, cliquez ",
+                    __('mail.sent', ['email' => $user['email']]),
+                    __('mail.wait'),
                     route('verification.send', [], false),
-                    'ici pour renvoyer le lien.'
+                    __('mail.send_link')
                 );
         }
 

@@ -14,7 +14,7 @@ class VerifiedEmailNeeded
     {
         if (!$request->user() || $request->user()->hasVerifiedEmail() === false) {
             return JsonApiResponse::make(['message' => 'You must verify your email in order to perform this action.'], Status::UNAUTHORIZED)
-                ->withAlert(AlertType::Error, 'Vous devez lier une email à votre compte et la vérifier.');
+                ->withAlert(AlertType::Error, __('errors.mail'));
         }
 
         return $next($request);

@@ -39,7 +39,7 @@ class LoginController extends Controller
         $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Strict');
 
         return JsonApiResponse::make()
-            ->withAlert(AlertType::Success, 'Bon jeu !')
+            ->withAlert(AlertType::Success, __('auth.hi'))
             ->withCookie($cookie)
             ->withoutCache();
     }

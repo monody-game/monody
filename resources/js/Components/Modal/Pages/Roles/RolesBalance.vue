@@ -13,6 +13,7 @@
 
 <script setup>
 import { computed, nextTick, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
 	selectedRoles: {
@@ -27,6 +28,7 @@ const roleCount = ref(
 		0
 	)
 );
+const { t } = useI18n();
 const werewolfWidth = ref(50);
 const villagerWidth = ref(50);
 const varContainer = computed(() => document.documentElement.style);

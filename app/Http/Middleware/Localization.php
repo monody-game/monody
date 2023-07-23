@@ -11,6 +11,13 @@ class Localization
 {
     public function handle(Request $request, Closure $next): Response
     {
+        if ($locale = $request->header('X-App-Locale')) {
+            App::setLocale($locale);
+
+            return $next($request)
+                ->header('X-App-Locale', $locale);
+        }
+
         if ($request->header('Accept-Language') !== null) {
             foreach (explode(';', $request->header('Accept-Language')) as $langugage) {
                 if (in_array($langugage, config('app.supported_locales'), true)) {

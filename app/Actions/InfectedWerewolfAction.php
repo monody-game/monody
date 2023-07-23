@@ -86,7 +86,7 @@ class InfectedWerewolfAction implements ActionInterface
         $game['infected'] = $targetId;
 
         $chat = new ChatService();
-        $chat->alert('Vous avez été infecté ! Vous devez désormais gagner avec les loup-garous', 'info', $this->gameId, [$targetId]);
+        $chat->alert(__('game.infected'), 'info', $this->gameId, [$targetId]);
 
         broadcast(
             new WerewolvesList(

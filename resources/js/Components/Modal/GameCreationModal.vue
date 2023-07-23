@@ -110,7 +110,7 @@ const next = function () {
 const finish = async function () {
 	const res = await window.JSONFetch("/game", "PUT", {
 		roles: store.selectedRoles,
-		type: store.type,
+		type: store.gameType,
 	});
 
 	gameId.value = res.data.game.id;
