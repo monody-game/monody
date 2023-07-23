@@ -106,11 +106,11 @@ return [
             'describe' => ' You get a **second life** when you die at night.',
         ],
         'infected_werewolf' => [
-            'name' => 'Infected wolf',
+            'name' => 'Infected werewolf',
             'describe' => ' You can **infect** a player killed by wolves, once per game. The infected player will **become a wolf**, while retaining his powers.',
         ],
         'white_werewolf' => [
-            'name' => 'White wolf',
+            'name' => 'White werewolf',
             'describe' => 'You win the game when **no other player** is left. You have an extra turn, every other night, to **kill** a player. This player cannot be resurrected, regardless of his or her role.',
         ],
         'angel' => [
