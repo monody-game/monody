@@ -47,9 +47,9 @@ class UserController extends Controller
             'discord_linked_at',
         ])->toArray();
 
-        $userResponse['email'] = Str::obfuscateEmail($user->email ?? $request->get('email'));
+        $userResponse['email'] = $user->email !== null ? Str::obfuscateEmail($user->email ?? $request->get('email')) : '';
 
-        if ($request->has('email') && $user->hasVerifiedEmail() === false) {
+        if ($request->has('email') && $user->hasVerifiedEmail() === false && $user->email !== null) {
             $user->sendEmailVerificationNotification();
 
             return JsonApiResponse::make([
