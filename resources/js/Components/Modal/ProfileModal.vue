@@ -65,7 +65,7 @@
 				class="auth-page__link"
 				@click.prevent="notify"
 			>
-				Renvoyer le mail de vérification
+				{{ $t("profile.send_mail") }}
 			</a>
 			<div class="profile-modal__connections">
 				<label for="connections">{{ $t("profile.connections") }}</label>
