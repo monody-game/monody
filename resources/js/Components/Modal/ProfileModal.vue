@@ -44,7 +44,9 @@
 				type="email"
 				name="email"
 				:label="`Email ${
-					userStore.email_verified_at === null
+					userStore.email === null
+						? ''
+						: userStore.email_verified_at === null
 						? `(${$t('profile.unverified')})`
 						: `(${$t('profile.verified', [formattedDate])})`
 				}`"
@@ -94,7 +96,11 @@
 						v-if="userStore.discord_linked_at === null"
 						class="btn medium"
 						:class="userStore.email_verified_at === null ? 'disabled' : ''"
-						href="/api/oauth/link/discord"
+						:href="
+							userStore.email_verified_at === null
+								? ''
+								: '/api/oauth/link/discord'
+						"
 					>
 						{{ $t("profile.link") }}
 					</a>
