@@ -114,7 +114,7 @@ class GameController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        if ($request->get('type') & GameType::VOCAL->value && ($user->discord_id === null || $user->discord_linked_at === null)) {
+        if (($request->get('type') & GameType::VOCAL->value) === GameType::VOCAL->value && ($user->discord_id === null || $user->discord_linked_at === null)) {
             return new JsonApiResponse([
                 'message' => 'You must link your Discord account to Monody in order to create a vocal game.',
             ], Status::BAD_REQUEST);
@@ -130,7 +130,7 @@ class GameController extends Controller
         $data['id'] = $id;
         $data['type'] = $request->get('type') ?: GameType::NORMAL->value;
 
-        if (GameType::VOCAL->value & $data['type']) {
+        if (($data['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
             $size = array_reduce($data['roles'], fn ($previous, $role) => $previous + $role, 0);
 
             broadcast(new CreateVoiceChannel(
@@ -180,7 +180,7 @@ class GameController extends Controller
 
         $game = Redis::get("game:$gameId");
 
-        if ($game['type'] & GameType::VOCAL->value) {
+        if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
             $discordData = Redis::get("game:$gameId:discord");
 
             if ($discordData) {
@@ -225,7 +225,7 @@ class GameController extends Controller
 
         broadcast(new ClearGameInvitations);
 
-        if ($game['type'] & GameType::VOCAL->value) {
+        if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
             broadcast(new UpdateVoiceChannelPermissions([
                 'game_id' => $gameId,
                 'discord_id' => $user->discord_id ?? '',
@@ -305,7 +305,7 @@ class GameController extends Controller
             'mayor' => array_key_exists('mayor', $game) ? $game['mayor'] : null,
         ];
 
-        if ($game['type'] & GameType::VOCAL->value) {
+        if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
             $payload['discord'] = Redis::get("game:$gameId:discord");
         }
 
