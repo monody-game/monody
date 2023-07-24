@@ -8,9 +8,13 @@
 				<p>{{ $t("leaderboards.select") }}</p>
 				<div class="leaderboards__dropdown">
 					<select v-model.lazy="selected">
-						<option class="option" selected value="elo">Elo</option>
-						<option class="option" value="level">Niveau</option>
-						<option class="option" value="wins">Victoires</option>
+						<option class="option" selected value="elo">ELO</option>
+						<option class="option" value="level">
+							{{ $t("leaderboards.level") }}
+						</option>
+						<option class="option" value="wins">
+							{{ $t("leaderboards.wins") }}
+						</option>
 					</select>
 					<svg viewBox="0 0 16 17">
 						<path
