@@ -26,7 +26,7 @@
 							{{
 								"limit" in store.role && store.role.limit !== -1
 									? store.role.limit
-									: "Aucune"
+									: $t("role.none")
 							}}
 						</p>
 					</div>

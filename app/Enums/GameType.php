@@ -4,7 +4,9 @@ namespace App\Enums;
 
 enum GameType: int
 {
-    case NORMAL = 0b00001;
-    case VOCAL = 0b00010;
-    case DISCORD = 0b00100;
+    case NORMAL = 1 << 0;
+    case VOCAL = 1 << 1;
+
+    case PRIVATE_GAME = 1 << 2;
+    case HIDDEN_COMP = 1 << 3;
 }

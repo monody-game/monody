@@ -17,7 +17,7 @@ export const useStore = defineStore("game", {
 			werewolves: [],
 			contaminated: [],
 			angel_target: "",
-			type: 0,
+			type: 0x01,
 			discord: {
 				guild: "",
 				voice_channel: "",
