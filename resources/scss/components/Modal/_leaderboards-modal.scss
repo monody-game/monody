@@ -143,10 +143,12 @@
 }
 
 .leaderboards__cell-content {
-	display: flex;
+	display: grid;
+	grid-template-columns: 2em 42px 1fr;
+	flex: 1;
+	justify-items: start;
 	align-items: center;
 	gap: space(1);
-	flex: 1;
 
 	img {
 		height: 42px;

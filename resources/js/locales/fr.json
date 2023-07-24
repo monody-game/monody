@@ -46,7 +46,9 @@
 	},
 	"leaderboards": {
 		"leaderboards": "Classements",
-		"select": "Choix du classement :"
+		"select": "Choix du classement :",
+		"level": "Niveau",
+		"wins": "Victoires"
 	},
 	"modal": {
 		"close": "Fermer",

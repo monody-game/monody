@@ -46,7 +46,9 @@
 	},
 	"leaderboards": {
 		"leaderboards": "Leaderboards",
-		"select": "Select leaderboard:"
+		"select": "Select leaderboard:",
+		"level": "Level",
+		"wins": "Wins"
 	},
 	"modal": {
 		"if_yes": "If yes, ",
