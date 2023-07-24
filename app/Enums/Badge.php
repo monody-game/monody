@@ -59,7 +59,7 @@ enum Badge: int
             self::Beta => __('enums.badges.beta.describe'),
             self::Owner => __('enums.badges.owner.describe'),
             self::Wins => __('enums.badges.wins.describe'),
-            self::Losses => __('enums.badges.lossses.describe'),
+            self::Losses => __('enums.badges.losses.describe'),
             self::Level => __('enums.badges.level.describe'),
             self::Rank => __('enums.badges.rank.describe'),
         };
