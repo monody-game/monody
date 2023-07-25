@@ -3,7 +3,6 @@
 namespace Tests\Unit\Http\Controllers\Api\Auth;
 
 use App\Http\Middleware\RestrictRequest;
-use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -56,21 +55,20 @@ class LoginControllerTest extends TestCase
 
     public function testLogout()
     {
-        $response = $this->post('/api/auth/login', [
-            'username' => 'JohnTest',
-            'password' => 'johntest',
-        ]);
-
-        $response->assertCookie('monody_access_token');
-
-        $user = User::where('username', 'JohnTest')->get()->first();
-
         $response = $this
-            ->actingAs($user, 'api')
-            ->post('/api/auth/logout')
-            ->assertOk();
+            ->post('/api/auth/login', [
+                'username' => 'JohnTest',
+                'password' => 'johntest',
+            ])
+            ->assertCookie('monody_access_token');
 
-        $response->assertCookieMissing('monody_access_token');
+        $cookie = $response->getCookie('monody_access_token', false, true);
+
+        $this
+            ->withCookie($cookie->getName(), $cookie->getValue())
+            ->post('/api/auth/logout')
+            ->assertOk()
+            ->assertCookieMissing('monody_access_token');
     }
 
     public function testLoginWhileAlreadyBeingLoggedIn()
