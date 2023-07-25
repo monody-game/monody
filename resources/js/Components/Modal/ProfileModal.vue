@@ -112,7 +112,7 @@
 						{{ $t("profile.link") }}
 					</a>
 					<button
-						v-else
+						v-else-if="userStore.discord_linked_at !== null"
 						class="btn medium"
 						:disabled="userStore.email_verified_at === null"
 						@click="unlink"

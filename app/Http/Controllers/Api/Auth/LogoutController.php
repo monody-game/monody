@@ -34,7 +34,7 @@ class LogoutController extends Controller
 
         return JsonApiResponse::make()
             ->withAlert(AlertType::Success, __('auth.bye'))
-            ->flushCacheFor('/user');
+            ->flushCache();
     }
 
     public function all(Request $request): JsonApiResponse
@@ -45,6 +45,6 @@ class LogoutController extends Controller
 
         return JsonApiResponse::make()
             ->withAlert(AlertType::Success, __('auth.bye'))
-            ->flushCacheFor('/user');
+            ->flushCache();
     }
 }

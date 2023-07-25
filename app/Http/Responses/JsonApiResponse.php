@@ -127,4 +127,11 @@ class JsonApiResponse implements Responsable
 
         return $this;
     }
+
+    public function flushCache(): self
+    {
+        $this->cache['flush'] = true;
+
+        return $this;
+    }
 }

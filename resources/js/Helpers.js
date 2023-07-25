@@ -91,6 +91,11 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 			response: res,
 		});
 
+		if (content.meta.cache.flush === true) {
+			cache.clear();
+			return res;
+		}
+
 		for (const route of content.meta.cache.flush) {
 			cache.flush(route);
 		}

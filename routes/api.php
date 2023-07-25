@@ -4,6 +4,7 @@ use App\Http\Middleware\OptionalAuthentication;
 use App\Http\Middleware\RestrictRequest;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Http\Middleware\VerifiedEmailNeeded;
+use App\Http\Responses\JsonApiResponse;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/ping', 'PingController@ping');
@@ -60,6 +61,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/avatars', 'AvatarController@upload');
     Route::delete('/avatars', 'AvatarController@delete');
 
+    Route::post('/auth/logged', function () {
+        return JsonApiResponse::make()->withoutCache();
+    });
     Route::post('/auth/logout', 'Auth\LogoutController@index');
     Route::post('/auth/logout/all', 'Auth\LogoutController@all');
 
