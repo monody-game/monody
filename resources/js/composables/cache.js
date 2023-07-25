@@ -24,18 +24,18 @@ function flush(key, storage) {
 }
 
 export function useCache() {
-	let storage = localStorage.getItem("cache") ?? "{}";
+	let storage = sessionStorage.getItem("cache") ?? "{}";
 	storage = JSON.parse(storage);
 
 	return {
 		get: (key) => get(key, storage),
 		set: (key, value) => {
-			localStorage.setItem("cache", JSON.stringify(set(key, value, storage)));
+			sessionStorage.setItem("cache", JSON.stringify(set(key, value, storage)));
 		},
 		exists: (key) => exists(key, storage),
 		flush: (key) => {
-			localStorage.setItem("cache", JSON.stringify(flush(key, storage)));
+			sessionStorage.setItem("cache", JSON.stringify(flush(key, storage)));
 		},
-		clear: () => localStorage.removeItem("cache"),
+		clear: () => sessionStorage.removeItem("cache"),
 	};
 }

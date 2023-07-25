@@ -86,11 +86,13 @@ import ProfileModal from "../Components/Modal/ProfileModal.vue";
 import ShareProfileModal from "../Components/Modal/ShareProfileModal.vue";
 import BadgesModal from "../Components/Modal/BadgesModal.vue";
 import LeaderboardsModal from "../Components/Modal/LeaderboardsModal.vue";
+import { useCache } from "../composables/cache.js";
 
 const games = ref([]);
 const roles = ref([]);
 const store = useStore();
 const router = useRouter();
+const cache = useCache();
 
 const profileModalStore = useProfileModalStore();
 const shareProfileModalStore = useShareProfileModalStore();

@@ -5,6 +5,12 @@ export default class AuthService {
 		this.store = useStore();
 	}
 
+	async isLoggedIn() {
+		let res = await window.JSONFetch("/auth/logged", "POST");
+
+		return res.ok;
+	}
+
 	async getUser() {
 		let res = await window.JSONFetch("/user", "GET");
 
