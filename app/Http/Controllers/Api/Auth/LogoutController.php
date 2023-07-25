@@ -21,7 +21,12 @@ class LogoutController extends Controller
         /** @var Collection<int, Model> $tokens User must be connected to access this route */
         $tokens = $user->tokens()->where('name', $request->getClientIp() ?? $user->id)->get();
 
+        if ($tokens->count() < 1) {
+            $tokens = [$user->tokens()->orderByDesc('created_at')->first()];
+        }
+
         foreach ($tokens as $token) {
+            /** @var Model $token */
             $token->delete();
         }
 
