@@ -161,11 +161,6 @@ const setDisabled = (page) => {
 			isDisabled.value = errors.value.email.errored;
 			break;
 		case 3:
-			console.log(
-				password.value !== password_confirmation.value,
-				password.value,
-				password_confirmation.value
-			);
 			isDisabled.value = password.value !== password_confirmation.value;
 			break;
 	}
