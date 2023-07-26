@@ -255,7 +255,11 @@ const register = async function () {
 		if (res.status === 422) {
 			const validationErrors = res.data.errors;
 			for (const field in validationErrors) {
-				if (validationErrors[field].includes("validation.unique")) {
+				if (
+					validationErrors[field].includes(
+						"The username has already been taken."
+					)
+				) {
 					errors.value[field].text = t("auth.errors.account_exists");
 					errors.value[field].errored = true;
 					currentPage.value = fieldPage[field];

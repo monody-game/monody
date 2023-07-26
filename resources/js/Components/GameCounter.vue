@@ -45,7 +45,7 @@ const modalStore = useModalStore();
 const gameStore = useStore();
 const audioStore = useAudioStore();
 const halt = ref(false);
-const { t } = useI18n()
+const { t } = useI18n();
 
 const bip = new Howl({
 	src: ["../sounds/ding.mp3"],
