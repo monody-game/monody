@@ -330,7 +330,8 @@ window.Echo.join(`game.${gameId.value}`)
 				"player__parasite-hover",
 				"player__pairable",
 				"player__guardable",
-				"player__disabled"
+				"player__disabled",
+				"player__hover-disabled"
 			);
 		}
 
