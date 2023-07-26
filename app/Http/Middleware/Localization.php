@@ -19,9 +19,9 @@ class Localization
         }
 
         if ($request->header('Accept-Language') !== null) {
-            foreach (explode(';', $request->header('Accept-Language')) as $langugage) {
-                if (in_array($langugage, config('app.supported_locales'), true)) {
-                    App::setLocale($langugage);
+            foreach (explode(';', str_replace(',', ';', $request->header('Accept-Language'))) as $language) {
+                if (in_array($language, config('app.supported_locales'), true)) {
+                    App::setLocale($language);
                     break;
                 }
             }
