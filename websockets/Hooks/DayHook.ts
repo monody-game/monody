@@ -19,18 +19,18 @@ export default {
 		await fetch(`${baseUrl}/message/deaths`, "POST", body);
 
 		const interactions = JSON.parse(
-			(await client.get(`game:${id}:interactions`)) as string
+			(await client.get(`game:${id}:interactions`)) as string,
 		);
 		const interaction = interactions.find(
 			(interactionListItem: { type: string }) =>
-				interactionListItem.type === "angel"
+				interactionListItem.type === "angel",
 		);
 
 		if (interaction) {
 			const res = await fetch(
 				`${process.env.API_URL}/interactions/status`,
 				"POST",
-				{ gameId: id, type: "angel" }
+				{ gameId: id, type: "angel" },
 			);
 
 			if (res.json.data.status === true) {
@@ -41,7 +41,7 @@ export default {
 
 		const game = JSON.parse((await client.get(`game:${id}`)) as string);
 		const state: State = JSON.parse(
-			(await client.get(`game:${id}:state`)) as string
+			(await client.get(`game:${id}:state`)) as string,
 		);
 
 		if (

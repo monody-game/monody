@@ -40,7 +40,7 @@ export class StateManager {
 		info(
 			`Setting state of game ${id} to ${state.status} in round ${
 				state.round || 0
-			} for a duration of ${state.counterDuration}`
+			} for a duration of ${state.counterDuration}`,
 		);
 		await client.set(`game:${id}:state`, JSON.stringify(state));
 
@@ -53,14 +53,14 @@ export class StateManager {
 
 		if (!isSkip) {
 			const message = await fetch(
-				`${process.env.API_URL}/state/${state.status}/message`
+				`${process.env.API_URL}/state/${state.status}/message`,
 			);
 
 			if (state.status > 1 && message.status !== 404) {
 				ChatService.info(
 					this.io,
 					channel,
-					message.json.data.state_message
+					message.json.data.state_message,
 				);
 			}
 		}
@@ -109,7 +109,7 @@ export class StateManager {
 
 		let stateIndex =
 			currentRoundObject.findIndex(
-				(roundState) => roundState.identifier === state["status"]
+				(roundState) => roundState.identifier === state["status"],
 			) + 1;
 		let currentState: StateIdentifier =
 			typeof currentRoundObject[stateIndex] === "undefined"
@@ -121,7 +121,7 @@ export class StateManager {
 			isLast,
 			currentRoundObject,
 			stateIndex,
-			channel
+			channel,
 		);
 
 		if (currentState === 6) {
@@ -132,7 +132,7 @@ export class StateManager {
 
 			stateIndex =
 				currentRoundObject.findIndex(
-					(roundState) => roundState.identifier === state["status"]
+					(roundState) => roundState.identifier === state["status"],
 				) + 1;
 			currentState =
 				typeof currentRoundObject[stateIndex] === "undefined"
@@ -189,7 +189,7 @@ export class StateManager {
 				counterId: counterId,
 				round: currentRound,
 			},
-			channel
+			channel,
 		);
 	}
 
@@ -209,7 +209,7 @@ export class StateManager {
 		const currentRoundObject = rounds[currentRound] as Round;
 		const stateIndex =
 			currentRoundObject.findIndex(
-				(roundState) => roundState.identifier === state["status"]
+				(roundState) => roundState.identifier === state["status"],
 			) + 1;
 
 		if (
@@ -238,7 +238,7 @@ export class StateManager {
 		isLast: boolean,
 		currentRoundObject: Round,
 		stateIndex: number,
-		channel: string
+		channel: string,
 	) {
 		let halt = false;
 
@@ -264,7 +264,7 @@ export class StateManager {
 	private async handleBefore(
 		currentRoundObject: Round,
 		stateIndex: number,
-		channel: string
+		channel: string,
 	) {
 		let halt = false;
 

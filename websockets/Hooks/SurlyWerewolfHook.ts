@@ -12,7 +12,7 @@ export default {
 		await InteractionService.closeInteraction(
 			io,
 			channel,
-			"surly_werewolf"
+			"surly_werewolf",
 		);
 
 		return false;

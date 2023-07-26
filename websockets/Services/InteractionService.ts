@@ -25,7 +25,7 @@ export class InteractionService {
 			}
 
 			success(
-				`Created ${type} interaction with id ${interactionId} in game ${id}.`
+				`Created ${type} interaction with id ${interactionId} in game ${id}.`,
 			);
 
 			if (callers !== "*") {
@@ -35,7 +35,7 @@ export class InteractionService {
 
 				for (let caller of callers) {
 					caller = members.find(
-						(member) => member.user_id === caller
+						(member) => member.user_id === caller,
 					);
 					io.to(caller.socketId).emit("interaction.open", channel, {
 						interaction: { id: interactionId, type, data },
@@ -58,7 +58,7 @@ export class InteractionService {
 		const id = gameId(channel);
 
 		const interactions = JSON.parse(
-			(await client.get(`game:${id}:interactions`)) as string
+			(await client.get(`game:${id}:interactions`)) as string,
 		);
 
 		if (interactions.length === 0) {
@@ -67,12 +67,12 @@ export class InteractionService {
 
 		const interaction = interactions.find(
 			(interactionListItem: { type: string }) =>
-				interactionListItem.type === type
+				interactionListItem.type === type,
 		);
 
 		if (!interaction) {
 			warn(
-				`Unable to find interaction with type ${type} on game ${id}, aborting.`
+				`Unable to find interaction with type ${type} on game ${id}, aborting.`,
 			);
 			return;
 		}
@@ -86,7 +86,7 @@ export class InteractionService {
 		});
 
 		info(
-			`Closing ${type} interaction with id ${interactionId} in game ${id}.`
+			`Closing ${type} interaction with id ${interactionId} in game ${id}.`,
 		);
 
 		if (callers !== "*") {

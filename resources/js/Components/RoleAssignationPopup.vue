@@ -92,7 +92,7 @@ const timeout = null;
 
 const roles = ref(props.roles);
 const assignedRole = roles.value.filter(
-	(role) => role.id === parseInt(props.assignedRole)
+	(role) => role.id === parseInt(props.assignedRole),
 )[0];
 const roleOverlay = ref("");
 
@@ -140,6 +140,6 @@ onUnmounted(() => {
 
 document.documentElement.style.setProperty(
 	"--role-assignation-transform-length",
-	`-${roles.value.length * 15 * 100}%`
+	`-${roles.value.length * 15 * 100}%`,
 );
 </script>

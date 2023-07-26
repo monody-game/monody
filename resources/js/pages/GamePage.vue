@@ -216,7 +216,7 @@ window.Echo.join(`game.${gameId}`)
 					t("chat.angel_desc", [
 						store.getPlayerByID(interaction.data).username,
 					]),
-					"info"
+					"info",
 				);
 				break;
 			case "cupid":

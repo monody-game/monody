@@ -40,11 +40,11 @@ const store = useStore();
 function proxy(context, method, message) {
 	return function () {
 		store[method.name + "s"].push(
-			Object.values(arguments).filter((value) => value !== "\n")
+			Object.values(arguments).filter((value) => value !== "\n"),
 		);
 		method.apply(
 			context,
-			[message].concat(Array.prototype.slice.apply(arguments))
+			[message].concat(Array.prototype.slice.apply(arguments)),
 		);
 	};
 }

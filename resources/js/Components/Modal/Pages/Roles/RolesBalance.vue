@@ -25,8 +25,8 @@ const props = defineProps({
 const roleCount = ref(
 	props.selectedRoles.reduce(
 		(accumulator, current) => accumulator + current.count,
-		0
-	)
+		0,
+	),
 );
 const { t } = useI18n();
 const werewolfWidth = ref(50);
@@ -57,7 +57,7 @@ const render = (roles) => {
 
 	roleCount.value = roles.reduce(
 		(accumulator, current) => accumulator + current.count,
-		0
+		0,
 	);
 
 	if (roles.length === 0) {
@@ -92,12 +92,12 @@ const render = (roles) => {
 
 	varContainer.value.setProperty(
 		"--villager-balance-width",
-		villagerWidth.value + "%"
+		villagerWidth.value + "%",
 	);
 
 	varContainer.value.setProperty(
 		"--werewolf-balance-width",
-		werewolfWidth.value + "%"
+		werewolfWidth.value + "%",
 	);
 };
 
@@ -105,6 +105,6 @@ nextTick(() => render(props.selectedRoles));
 
 watch(
 	() => props.selectedRoles,
-	(roles) => render(roles)
+	(roles) => render(roles),
 );
 </script>

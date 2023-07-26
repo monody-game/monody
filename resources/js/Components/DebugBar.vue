@@ -136,7 +136,7 @@ async function profile() {
 	});
 
 	loadTime.value = Math.floor(
-		performance.getEntriesByType("navigation")[0].duration
+		performance.getEntriesByType("navigation")[0].duration,
 	);
 
 	await window.JSONFetch("/ping", "GET");
@@ -148,7 +148,7 @@ async function profile() {
 	}
 
 	apiLatency.value = Math.floor(
-		apiProfiling.responseEnd - apiProfiling.requestStart
+		apiProfiling.responseEnd - apiProfiling.requestStart,
 	);
 }
 

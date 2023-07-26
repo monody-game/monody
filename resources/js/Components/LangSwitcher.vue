@@ -14,7 +14,7 @@ const cache = useCache();
 const currentLang = ref(
 	localStorage.hasOwnProperty("lang")
 		? localStorage.getItem("lang")
-		: navigator.language.split("-")[0]
+		: navigator.language.split("-")[0],
 );
 
 function switchLanguage() {

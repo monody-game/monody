@@ -35,14 +35,14 @@
 					<img
 						:src="
 							props.roles.find(
-								(role) => parseInt(role.id) === parseInt(role_id)
+								(role) => parseInt(role.id) === parseInt(role_id),
 							).image + '?h=30&dpr=2'
 						"
 						alt=""
 						class="game-show__role-image"
 						:title="
 							props.roles.find(
-								(role) => parseInt(role.id) === parseInt(role_id)
+								(role) => parseInt(role.id) === parseInt(role_id),
 							).display_name
 						"
 					/>
