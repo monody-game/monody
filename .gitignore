@@ -15,6 +15,8 @@ yarn-error.log
 .php_cs.cache
 /public/css/style.css
 /public/js/app.js
+
 /public/build
+/websockets/dist
 
 cert.*
