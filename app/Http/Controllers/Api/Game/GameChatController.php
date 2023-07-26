@@ -77,6 +77,15 @@ class GameChatController extends Controller
             ]);
         }
 
+        if (count($deaths) === 0) {
+            GameKill::broadcast([
+                'gameId' => $gameId,
+                'killedUser' => null,
+                'context' => '',
+                'infected' => false,
+            ]);
+        }
+
         Redis::set("game:$gameId:deaths", []);
 
         return new JsonApiResponse(status: Status::NO_CONTENT);
