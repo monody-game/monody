@@ -93,6 +93,7 @@ export class StateManager {
 
 		if (roundList.length === 0) {
 			error(`Round list is empty for game ${id}`);
+			return;
 		}
 
 		let rounds: Round[] = roundList;
@@ -126,6 +127,12 @@ export class StateManager {
 
 		if (currentState === 6) {
 			rounds = await getRounds(id);
+
+			if (rounds.length === 0) {
+				error(`Round list is empty for game ${id}`);
+				return;
+			}
+
 			currentRoundObject = rounds[currentRound];
 
 			if (!currentRoundObject) return;
