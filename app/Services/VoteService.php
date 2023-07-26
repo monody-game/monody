@@ -67,7 +67,7 @@ class VoteService
     public function elect(string $gameId): string
     {
         $game = Redis::get("game:$gameId");
-        $gameUsers = $game['users'];
+        $gameUsers = array_diff($game['users'], array_keys($game['dead_users']));
         $votes = self::getVotes($gameId);
 
         if ($votes === []) {
