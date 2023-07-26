@@ -37,7 +37,7 @@ function cycle(
 	contentDuration,
 	spanDuration,
 	index = 0,
-	counterIndex = 0
+	counterIndex = 0,
 ) {
 	if (halt) return;
 	content.value = counterIndex % 2 === 0 ? contentList[index] : "";
@@ -58,12 +58,12 @@ function cycle(
 						contentDuration,
 						spanDuration,
 						index,
-						counterIndex
+						counterIndex,
 					),
-				600
+				600,
 			);
 		},
-		counterIndex % 2 === 0 ? contentDuration : spanDuration
+		counterIndex % 2 === 0 ? contentDuration : spanDuration,
 	);
 }
 

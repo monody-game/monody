@@ -42,7 +42,7 @@ export async function getRounds(gameId = ""): Promise<RoundList | []> {
 	const __dirname = dirname(fileURLToPath(import.meta.url));
 	const directory = join(__dirname, "../Hooks");
 	const files = readdirSync(directory).filter((file) =>
-		file.endsWith("Hook.js")
+		file.endsWith("Hook.js"),
 	);
 	const hooks = [];
 	const hookedStates = [];

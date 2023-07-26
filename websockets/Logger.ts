@@ -39,7 +39,7 @@ const blank = (n = 1) => {
 const dataLog = (data: LogData, level: LogLevel) => {
 	for (const fragment of data) {
 		const message = chalk.gray(
-			`${date()} | ${getLeveLColor(level).replace("%s", level)} -`
+			`${date()} | ${getLeveLColor(level).replace("%s", level)} -`,
 		);
 
 		if (typeof fragment === "string") {
@@ -51,7 +51,7 @@ const dataLog = (data: LogData, level: LogLevel) => {
 		console.log(message + " ", fragment);
 		fileLog(
 			`${date()} | ${level} - % NON STRING DATA FRAGMENT % ` + fragment,
-			level
+			level,
 		);
 	}
 };
@@ -66,12 +66,12 @@ const fileLog = (message: string, level?: LogLevel) => {
 const date = () => {
 	const dateObject = new Date();
 	return `${String(dateObject.getDate()).padStart(2, "0")}/${String(
-		dateObject.getMonth() + 1
+		dateObject.getMonth() + 1,
 	).padStart(
 		2,
-		"0"
+		"0",
 	)}/${dateObject.getFullYear()} ${dateObject.getHours()}:${String(
-		dateObject.getMinutes()
+		dateObject.getMinutes(),
 	).padStart(2, "0")}:${String(dateObject.getSeconds()).padStart(2, "0")}`;
 };
 

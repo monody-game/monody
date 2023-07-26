@@ -17,7 +17,9 @@
 	padding: space(1) space(2);
 	margin-top: space(3);
 
-	transition: background-color 0.2s, outline-width 0.2s;
+	transition:
+		background-color 0.2s,
+		outline-width 0.2s;
 	border-radius: 6px;
 	border: var(--border-secondary) 2px solid;
 

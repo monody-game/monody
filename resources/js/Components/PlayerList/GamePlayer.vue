@@ -195,7 +195,7 @@ window.Echo.join(`game.${gameId.value}`)
 			isDisconnected.value = true;
 			chatStore.send(
 				t("player.disconnect_warn", [user.user_info.username]),
-				"warn"
+				"warn",
 			);
 		}
 	})
@@ -331,7 +331,7 @@ window.Echo.join(`game.${gameId.value}`)
 				"player__pairable",
 				"player__guardable",
 				"player__disabled",
-				"player__hover-disabled"
+				"player__hover-disabled",
 			);
 		}
 
@@ -392,21 +392,21 @@ const send = async function (votingUser, votedUser) {
 	if (interactionType.value === "psychic") {
 		const role = await window.JSONFetch(
 			`/roles/get/${res.data.interaction.response}`,
-			"GET"
+			"GET",
 		);
 		chatStore.send(
 			t("player.spec_response", {
 				username: props.player.username,
 				role: role.data.role.display_name,
 			}),
-			"success"
+			"success",
 		);
 	}
 
 	if (interactionType.value === "surly_werewolf") {
 		chatStore.send(
 			t("player.bite_response", [props.player.username]),
-			"success"
+			"success",
 		);
 	}
 
@@ -437,7 +437,7 @@ const setupWitchActions = async (interaction) => {
 	const actions = (
 		await window.JSONFetch(
 			`/interactions/actions/${gameId.value}/${gameStore.currentInteractionId}`,
-			"GET"
+			"GET",
 		)
 	).data.actions;
 
@@ -446,7 +446,7 @@ const setupWitchActions = async (interaction) => {
 			title: t("player.revive"),
 			callback() {
 				const list = gameStore.playerRefs.filter((playerRef) =>
-					interaction.data.includes(playerRef.value.dataset.id)
+					interaction.data.includes(playerRef.value.dataset.id),
 				);
 				for (const playerRef of list) {
 					playerRef.value.classList.add("player__witch-heal");

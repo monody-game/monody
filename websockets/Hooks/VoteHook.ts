@@ -15,11 +15,11 @@ export default {
 		const id = gameId(channel);
 
 		const interactions = JSON.parse(
-			(await client.get(`game:${id}:interactions`)) as string
+			(await client.get(`game:${id}:interactions`)) as string,
 		);
 		const interaction = interactions.find(
 			(interactionListItem: { type: string }) =>
-				interactionListItem.type === "angel"
+				interactionListItem.type === "angel",
 		);
 
 		if (interaction) {

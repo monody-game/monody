@@ -26,7 +26,7 @@ export class GameChannel {
 
 	async getMembers(channel: string): Promise<MemberList> {
 		const members = JSON.parse(
-			(await client.get(`game:${gameId(channel)}:members`)) as string
+			(await client.get(`game:${gameId(channel)}:members`)) as string,
 		);
 		if (!members) return [];
 		return members;
@@ -53,7 +53,7 @@ export class GameChannel {
 		if (members.length > 0) {
 			await client.set(
 				`game:${gameId(channel)}:members`,
-				JSON.stringify(members)
+				JSON.stringify(members),
 			);
 		}
 
@@ -90,7 +90,7 @@ export class GameChannel {
 				"POST",
 				{
 					gameId: game.id,
-				}
+				},
 			);
 
 			if (canStart.ok) {
@@ -98,7 +98,7 @@ export class GameChannel {
 
 				const list = await fetch(
 					`${process.env.API_URL}/game/list/*`,
-					"GET"
+					"GET",
 				);
 
 				socket.broadcast
@@ -142,7 +142,7 @@ export class GameChannel {
 		} else {
 			await client.set(`game:${id}:members`, JSON.stringify(members));
 			game.users = game.users.filter(
-				(userId: string) => userId !== member.user_id
+				(userId: string) => userId !== member.user_id,
 			);
 			await this.gameService.setGame(id, game);
 
@@ -163,7 +163,7 @@ export class GameChannel {
 		const gameData = await fetch(
 			`${process.env.API_URL}/game/data/${gameId(channel)}/${
 				member.user_id
-			}`
+			}`,
 		);
 
 		this.io.to(member.socketId).emit("game.data", channel, {
@@ -209,7 +209,7 @@ export class GameChannel {
 			const canEnd = await fetch(
 				`${process.env.API_URL}/game/end/check`,
 				"POST",
-				{ gameId: id }
+				{ gameId: id },
 			);
 
 			if (canEnd.status === 204) {
@@ -224,7 +224,7 @@ export class GameChannel {
 						counterDuration: EndState.data.state.duration,
 						startTimestamp: Date.now(),
 					},
-					channel
+					channel,
 				);
 			}
 		}, 30_000);

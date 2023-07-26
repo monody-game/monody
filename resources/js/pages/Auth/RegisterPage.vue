@@ -247,7 +247,7 @@ const register = async function () {
 		const res = await window.JSONFetch(
 			"/auth/register?token=" + token,
 			"POST",
-			payload
+			payload,
 		);
 
 		loading.value = false;
@@ -257,7 +257,7 @@ const register = async function () {
 			for (const field in validationErrors) {
 				if (
 					validationErrors[field].includes(
-						"The username has already been taken."
+						"The username has already been taken.",
 					)
 				) {
 					errors.value[field].text = t("auth.errors.account_exists");

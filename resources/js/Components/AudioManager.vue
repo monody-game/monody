@@ -71,7 +71,7 @@ window.Echo.join(`game.${route.params.id}`).listen(
 				setTimeout(() => night.stop(), 2000);
 				setTimeout(() => day.stop(), 2000);
 		}
-	}
+	},
 );
 
 onBeforeRouteLeave(() => {

@@ -1,4 +1,4 @@
-import got from "got";
+import { got } from "got";
 import { Socket } from "socket.io";
 import { Agent } from "node:https";
 
@@ -12,7 +12,7 @@ export default async function (
 	uri: string,
 	method: HttpMethod = "GET",
 	params: object = {},
-	socket: Socket | null = null
+	socket: Socket | null = null,
 ) {
 	let body = undefined;
 

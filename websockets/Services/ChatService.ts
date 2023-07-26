@@ -1,32 +1,32 @@
-import { BroadcastOperator } from "socket.io/dist/broadcast-operator";
-import {
-	DecorateAcknowledgementsWithMultipleResponses,
-	DefaultEventsMap,
-} from "socket.io/dist/typed-events";
 import { Server } from "socket.io";
 
-type Socket = BroadcastOperator<
-	DecorateAcknowledgementsWithMultipleResponses<DefaultEventsMap>,
-	DefaultEventsMap
->;
-
 type MessageType = (
-	socket: Socket | Server,
+	socket: Server,
 	channel: string,
 	message: string,
-	to?: string | null
+	type?: string | null,
+	to?: string | null,
 ) => void;
 
 export class ChatService {
-	static send(
-		socket: Socket | Server,
-		channel: string,
-		message: string,
+	public static send: MessageType = (
+		socket,
+		channel,
+		message,
 		type = "message",
-		to: string | null = null
-	) {
+		to = null,
+	) => {
 		if (to) {
-			socket = socket.to(to);
+			socket.to(to).emit("chat.send", channel, {
+				data: {
+					payload: {
+						content: message,
+						type,
+					},
+				},
+			});
+
+			return;
 		}
 
 		socket.emit("chat.send", channel, {
@@ -37,13 +37,13 @@ export class ChatService {
 				},
 			},
 		});
-	}
+	};
 
 	public static message: MessageType = (
 		socket,
 		channel,
 		message,
-		to = null
+		to = null,
 	) => {
 		this.send(socket, channel, message, undefined, to);
 	};
@@ -56,7 +56,7 @@ export class ChatService {
 		socket,
 		channel,
 		message,
-		to = null
+		to = null,
 	) => {
 		this.send(socket, channel, message, "error", to);
 	};

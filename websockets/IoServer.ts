@@ -9,7 +9,7 @@ import { gameId } from "./Helpers/Functions.js";
 import { handle } from "./PrivateEventHandler.js";
 import { info, success, warn, blank } from "./Logger.js";
 
-type EventPayload = {
+export type EventPayload = {
 	data: {
 		recipients?: string[];
 		private?: boolean;
@@ -20,7 +20,7 @@ type EventPayload = {
 	socket: string;
 };
 
-type DataPayload = {
+export type DataPayload = {
 	channel: string;
 	auth: {
 		headers: {
@@ -42,7 +42,12 @@ export class IoServer {
 			cert: readFileSync(process.env.CERT_PATH as string),
 			key: readFileSync(process.env.CERT_PRIVATE_KEY_PATH as string),
 		});
-		this.server = new Server(this.httpServer, {
+		this.server = new Server<
+			EventPayload,
+			EventPayload,
+			EventPayload,
+			DataPayload
+		>(this.httpServer, {
 			cors: {
 				credentials: true,
 			},
@@ -68,7 +73,7 @@ export class IoServer {
 		success(
 			`Successfully started websockets server in ${
 				endTime - startTime
-			}ms!`
+			}ms!`,
 		);
 	}
 
@@ -95,7 +100,7 @@ export class IoServer {
 
 				for (const caller of message.data.recipients) {
 					const member = members.find(
-						(member) => member.user_id === caller
+						(member) => member.user_id === caller,
 					);
 
 					if (member && member.socketId) {
@@ -106,7 +111,7 @@ export class IoServer {
 							});
 					}
 				}
-			}
+			},
 		);
 	}
 
@@ -173,5 +178,3 @@ export class IoServer {
 		});
 	}
 }
-
-export { DataPayload };

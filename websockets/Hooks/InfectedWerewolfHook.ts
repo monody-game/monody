@@ -7,7 +7,7 @@ export default {
 		await InteractionService.openInteraction(
 			io,
 			channel,
-			"infected_werewolf"
+			"infected_werewolf",
 		);
 
 		return false;
@@ -16,7 +16,7 @@ export default {
 		await InteractionService.closeInteraction(
 			io,
 			channel,
-			"infected_werewolf"
+			"infected_werewolf",
 		);
 
 		return false;

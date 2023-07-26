@@ -27,14 +27,14 @@ export class PrivateChannel {
 				"https://web/broadcasting/auth",
 				"POST",
 				params,
-				socket
+				socket,
 			);
 		} else {
 			response = await fetch(
 				`${process.env.APP_URL}/broadcasting/auth`,
 				"POST",
 				params,
-				socket
+				socket,
 			);
 		}
 
@@ -44,7 +44,7 @@ export class PrivateChannel {
 		if (status !== 200) {
 			if (process.env.APP_DEBUG) {
 				warn(
-					`${socket.id} could not be authenticated to ${options.form.channel_name}`
+					`${socket.id} could not be authenticated to ${options.form.channel_name}`,
 				);
 				warn(response);
 			}
@@ -56,7 +56,7 @@ export class PrivateChannel {
 
 		if (process.env.APP_DEBUG) {
 			info(
-				`${socket.id} authenticated for: ${options.form.channel_name}`
+				`${socket.id} authenticated for: ${options.form.channel_name}`,
 			);
 		}
 

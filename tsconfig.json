@@ -10,7 +10,7 @@
 
 		"module": "ESNext",
 		"esModuleInterop": true,
-		"moduleResolution": "node",
+		"moduleResolution": "nodenext",
 		"skipLibCheck": true, // Fix 'resolution-mode' assertions are only supported when moduleResolution is node16 or nodenext
 
 		"strict": true,

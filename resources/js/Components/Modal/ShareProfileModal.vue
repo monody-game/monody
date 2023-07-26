@@ -115,7 +115,7 @@ const link = async () => {
 	await generate();
 
 	await navigator.clipboard.writeText(
-		`${location.origin}/assets/profiles/${store.id}.png`
+		`${location.origin}/assets/profiles/${store.id}.png`,
 	);
 	alertStore.addAlerts({
 		info: t("share.link_copied"),
@@ -129,7 +129,7 @@ const image = async () => {
 
 	if (typeof ClipboardItem === "undefined") {
 		await navigator.clipboard.writeText(
-			`${location.origin}/assets/profiles/${store.id}.png`
+			`${location.origin}/assets/profiles/${store.id}.png`,
 		);
 		alertStore.addAlerts({
 			warn: t("share.unsupported_fonctionnality"),

@@ -20,7 +20,7 @@ export class CounterService {
 	async cycle(
 		channel: string,
 		socket: Socket | Server,
-		duration: number | null = null
+		duration: number | null = null,
 	) {
 		this.clearListeners();
 
@@ -34,9 +34,13 @@ export class CounterService {
 			return;
 		}
 
-		const counterId = setTimeout(async () => {
-			await this.cycle(channel, socket);
-		}, duration ?? ((await this.manager.getNextStateDuration(channel)) + 1) * 1000);
+		const counterId = setTimeout(
+			async () => {
+				await this.cycle(channel, socket);
+			},
+			duration ??
+				((await this.manager.getNextStateDuration(channel)) + 1) * 1000,
+		);
 
 		this.emitter.on("time.skip", async (data) => {
 			const state = await this.manager.getState(data.gameId);
@@ -46,7 +50,7 @@ export class CounterService {
 			clearTimeout(this.counterId[data.gameId]);
 
 			info(
-				`Skipping time in game ${data.gameId}, in state ${state.status} to time ${data.to}`
+				`Skipping time in game ${data.gameId}, in state ${state.status} to time ${data.to}`,
 			);
 
 			await this.manager.setState(
@@ -59,12 +63,15 @@ export class CounterService {
 					skipped: true,
 				},
 				`presence-game.${data.gameId}`,
-				true
+				true,
 			);
 
-			setTimeout(async () => {
-				await this.cycle(channel, socket);
-			}, (data.to + 2) * 1000);
+			setTimeout(
+				async () => {
+					await this.cycle(channel, socket);
+				},
+				(data.to + 2) * 1000,
+			);
 		});
 
 		this.emitter.on("time.halt", async (gameId) => {

@@ -9,7 +9,7 @@ export default {
 	async before(io: Server, channel: string) {
 		await GameService.roleManagement(io, channel);
 		const game = JSON.parse(
-			(await client.get(`game:${gameId(channel)}`)) as string
+			(await client.get(`game:${gameId(channel)}`)) as string,
 		);
 
 		// If there is an angel in the game

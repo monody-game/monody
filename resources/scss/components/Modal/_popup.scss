@@ -1,5 +1,9 @@
-$popups: "success" var(--success), "info" var(--info), "warn" var(--warn),
-	"error" var(--danger), "level" var(--level);
+$popups:
+	"success" var(--success),
+	"info" var(--info),
+	"warn" var(--warn),
+	"error" var(--danger),
+	"level" var(--level);
 
 .popup__wrapper {
 	color: var(--secondary);

@@ -53,7 +53,7 @@ export class Channel {
 	async joinPrivate(socket: Socket, data: DataPayload) {
 		try {
 			const res = JSON.parse(
-				await this.private.authenticate(socket, data)
+				await this.private.authenticate(socket, data),
 			);
 			socket.join(data.channel);
 

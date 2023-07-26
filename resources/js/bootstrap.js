@@ -30,7 +30,7 @@ console.log(
 		"font-size: 6em",
 		"font-family: Sen, Montserrat, sans-serif",
 		"font-weight: bold",
-	].join(";")
+	].join(";"),
 );
 
 console.log("%c Version %s", textStyles, import.meta.env.VITE_APP_VERSION);

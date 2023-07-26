@@ -158,7 +158,7 @@ window.Echo.join(`game.${route.params.id}`)
 		const user = gameStore.getPlayerByID(killed);
 		let role = await window.JSONFetch(
 			`/game/${route.params.id}/user/${user.id}/role`,
-			"GET"
+			"GET",
 		);
 		role = role.data.role.display_name;
 

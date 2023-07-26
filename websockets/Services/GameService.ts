@@ -35,7 +35,7 @@ export class GameService {
 			await this.startGame(
 				`presence-game.${data.game.id}`,
 				data.game,
-				io
+				io,
 			);
 		});
 	}
@@ -59,10 +59,10 @@ export class GameService {
 	async startGame(
 		channel: string,
 		game: { [key: string]: boolean | object | string },
-		socket: Socket | Server
+		socket: Socket | Server,
 	) {
 		const shared = JSON.parse(
-			(await client.get("bot:game:shared")) ?? "{}"
+			(await client.get("bot:game:shared")) ?? "{}",
 		);
 		delete shared[game.id as string];
 		await client.set("bot:game:shared", JSON.stringify(shared));
@@ -87,7 +87,7 @@ export class GameService {
 				counterDuration: WaitingState.duration,
 				round: 0,
 			},
-			channel
+			channel,
 		);
 	}
 
@@ -106,14 +106,14 @@ export class GameService {
 			const user = UserService.getUserBySocket(member.socketId, members);
 			const roleId = game.assigned_roles[user.user_id];
 			let role = await fetch(
-				`${process.env.API_URL}/roles/get/${roleId}`
+				`${process.env.API_URL}/roles/get/${roleId}`,
 			);
 
 			role = role.json.role;
 			io.to(member.socketId).emit(
 				"game.role-assign",
 				channel,
-				game.assigned_roles[user.user_id]
+				game.assigned_roles[user.user_id],
 			);
 		}
 	}
