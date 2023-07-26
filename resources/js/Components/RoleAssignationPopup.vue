@@ -39,11 +39,9 @@
 		>
 			<span>
 				<span>
-					{{ $t("game.you_are") }}
-					<span class="bold">{{
+					{{ $t("game.you_are")}} <span class="bold">{{
 						assignedRole.display_name.toLowerCase()
-					}}</span>
-					,
+					}}</span>,
 				</span>
 			</span>
 			<span v-if="assignedRole.team.name === 'loners'">
@@ -54,8 +52,8 @@
 					{{ $t("game.of_team") }}
 					<span class="bold">{{
 						assignedRole.team.display_name.toLowerCase()
-					}}</span>
-					.
+					}}</span
+					>.
 				</span>
 			</span>
 			<span>
