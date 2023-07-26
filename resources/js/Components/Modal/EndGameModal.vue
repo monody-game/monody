@@ -26,8 +26,10 @@
 <script setup>
 import BaseModal from "./BaseModal.vue";
 import { useStore } from "../../stores/game.js";
+import { useI18n } from "vue-i18n";
 
 const gameStore = useStore();
+const { t } = useI18n();
 
 const props = defineProps({
 	win: {
