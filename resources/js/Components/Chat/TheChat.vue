@@ -104,6 +104,7 @@ import ChatAlert from "./ChatAlert.vue";
 import ChatMessage from "./ChatMessage.vue";
 import TimeSeparator from "./TimeSeparator.vue";
 import InAndOutMessage from "./InAndOutMessage.vue";
+import { useI18n } from "vue-i18n";
 
 const content = ref("");
 const input = ref(null);
@@ -115,7 +116,7 @@ const userStore = useUserStore();
 const route = useRoute();
 const store = useStore();
 let interval = null;
-const { t } = ref(null);
+const { t } = useI18n();
 
 const chatSelected = ref("main");
 const messagesContainer = ref(null);
