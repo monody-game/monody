@@ -71,7 +71,7 @@ class RoundController extends Controller
                 if (
                     !in_array(
                         array_search($role->value, $game['assigned_roles'], true),
-                        $game['users'], true
+                        array_diff($game['users'], array_keys($game['dead_users'])), true
                     ) &&
                     $state !== State::Werewolf
                 ) {
