@@ -73,7 +73,8 @@ class RoundController extends Controller
                         array_search($role->value, $game['assigned_roles'], true),
                         array_diff($game['users'], array_keys($game['dead_users'])), true
                     ) &&
-                    $state !== State::Werewolf
+                    $state !== State::Werewolf &&
+                    $state !== State::Hunter
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
