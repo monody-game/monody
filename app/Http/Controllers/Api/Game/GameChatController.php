@@ -120,6 +120,7 @@ class GameChatController extends Controller
             if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
                 broadcast(new TogglePlayersVoice([
                     'game_id' => $game['id'],
+					'lock' => $lock
                 ]));
             }
         }
