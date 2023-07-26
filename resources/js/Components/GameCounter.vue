@@ -29,6 +29,7 @@ import { useStore } from "../stores/game.js";
 import { useStore as useChatStore } from "../stores/chat.js";
 import { useStore as useModalStore } from "../stores/modals/modal.js";
 import { useStore as useAudioStore } from "../stores/modals/audio-modal.js";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const round = ref(0);
@@ -44,6 +45,7 @@ const modalStore = useModalStore();
 const gameStore = useStore();
 const audioStore = useAudioStore();
 const halt = ref(false);
+const { t } = useI18n()
 
 const bip = new Howl({
 	src: ["../sounds/ding.mp3"],
