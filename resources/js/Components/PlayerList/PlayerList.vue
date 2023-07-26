@@ -78,7 +78,9 @@ const removeUser = function (player) {
 	for (const playerNode of children) {
 		if (
 			playerNode.dataset.id === player.id &&
-			playerNode.dataset.isDead !== "true"
+			(playerNode.dataset.isDead !== "true" ||
+				(playerNode.dataset.isDead === "true" &&
+					gameStore.currentState.status === 8))
 		) {
 			gameStore.playerList = gameStore.playerList.filter(
 				(p) => p.id !== player.id,
