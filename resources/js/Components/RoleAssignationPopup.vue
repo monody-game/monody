@@ -39,9 +39,9 @@
 		>
 			<span>
 				<span>
-					{{ $t("game.you_are")}} <span class="bold">{{
-						assignedRole.display_name.toLowerCase()
-					}}</span>,
+					{{ $t("game.you_are") }}
+					<span class="bold">{{ assignedRole.display_name.toLowerCase() }}</span
+					>,
 				</span>
 			</span>
 			<span v-if="assignedRole.team.name === 'loners'">
