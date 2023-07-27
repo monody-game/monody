@@ -28,7 +28,7 @@
 				<div class="leaderboards__second">
 					<img
 						:src="
-							board[1].user.avatar ? board[1].user.avatar + '?w=40&dpr=2' : ''
+							board[1].user.avatar ? board[1].user.avatar + '?w=110&dpr=2' : ''
 						"
 						alt=""
 					/>
@@ -43,7 +43,7 @@
 				<div class="leaderboards__first">
 					<img
 						:src="
-							board[0].user.avatar ? board[0].user.avatar + '?w=40&dpr=2' : ''
+							board[0].user.avatar ? board[0].user.avatar + '?w=110&dpr=2' : ''
 						"
 						alt=""
 					/>
@@ -58,7 +58,7 @@
 				<div class="leaderboards__third">
 					<img
 						:src="
-							board[2].user.avatar ? board[2].user.avatar + '?w=40&dpr=2' : ''
+							board[2].user.avatar ? board[2].user.avatar + '?w=110&dpr=2' : ''
 						"
 						alt=""
 					/>
