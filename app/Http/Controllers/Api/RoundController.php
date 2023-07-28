@@ -145,7 +145,6 @@ class RoundController extends Controller
                 'identifier' => $state->value,
                 'raw_name' => $state->stringify(),
                 'duration' => $state->duration(),
-				'message' => $state->message()
             ];
         }, $round);
     }
