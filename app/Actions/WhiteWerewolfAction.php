@@ -18,7 +18,7 @@ class WhiteWerewolfAction implements ActionInterface
 
     public function isSingleUse(): bool
     {
-        return false;
+        return true;
     }
 
     public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
