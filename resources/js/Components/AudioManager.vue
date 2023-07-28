@@ -63,21 +63,21 @@ window.Echo.join(`game.${route.params.id}`).listen(
 	async (data) => {
 		switch (data.status) {
 			case 6:
-				night.fade(store.volumes.music, 0, 500);
+				night.fade(store.volumes.music * 0.1, 0, 500);
 				setTimeout(() => night.stop(), 2000);
 				rooster.play();
 				day.play();
-				day.fade(0, store.volumes.music, 2000);
+				day.fade(0, store.volumes.music * 0.1, 2000);
 				break;
 			case 2:
-				day.fade(store.volumes.music, 0, 500);
+				day.fade(store.volumes.music * 0.1, 0, 500);
 				setTimeout(() => day.stop(), 2000);
 				night.play();
-				night.fade(0, store.volumes.music, 2000);
+				night.fade(0, store.volumes.music * 0.1, 2000);
 				break;
 			case 8:
-				night.fade(store.volumes.music, 0, 500);
-				day.fade(store.volumes.music, 0, 500);
+				night.fade(store.volumes.music * 0.1, 0, 500);
+				day.fade(store.volumes.music * 0.1, 0, 500);
 				setTimeout(() => night.stop(), 2000);
 				setTimeout(() => day.stop(), 2000);
 		}
