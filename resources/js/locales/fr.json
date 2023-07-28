@@ -184,7 +184,8 @@
 		"hunter_action": "Cliquez sur un joueur afin de vous venger.",
 		"angel_desc": "Votre cible est : {0}. Si votre cible vient à mourir avant la prochaine nuit, vous gagnerez la partie instantanément.",
 		"been_bitten": "Vous avez été mordu par le loup hargneux. Vos blessures semblent graves et vous survivrez pas à la prochaine nuit.",
-		"contaminated": "Vous avez été contaminé par le parasite."
+		"contaminated": "Vous avez été contaminé par le parasite.",
+		"role": "Votre rôle est : {0}"
 	},
 	"end_game": {
 		"victory": "Victoire",

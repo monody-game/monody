@@ -70,6 +70,7 @@ import { useStore } from "../stores/chat.js";
 import { useStore as useGameStore } from "../stores/game.js";
 import { useStore as useRolePresentationStore } from "../stores/modals/role-presentation.js";
 import { useStore as useModalStore } from "../stores/modals/modal.js";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
 	roles: {
@@ -88,6 +89,7 @@ const chatStore = useStore();
 const gameStore = useGameStore();
 const rolePresentationStore = useRolePresentationStore();
 const modalStore = useModalStore();
+const { t } = useI18n();
 const timeout = null;
 
 const roles = ref(props.roles);
@@ -125,7 +127,7 @@ nextTick(() => {
 	document.addEventListener("animationend", onAnimationEnd);
 
 	setTimeout(() => {
-		chatStore.send(`Votre rôle est : ${assignedRole.display_name}`, "info");
+		chatStore.send(t("chat.role", [assignedRole.display_name]), "info");
 		gameStore.assignedRole = assignedRole;
 	}, 5000);
 });

@@ -184,7 +184,8 @@
 		"hunter_action": "Click on one player to take your revenge.",
 		"angel_desc": "Your target is: {0}. If your target dies before the next night, you'll win the game instantly.",
 		"been_bitten": "You've been bitten by the surly werewolf. Your wounds look serious and you won't survive the next night.",
-		"contaminated": "You've been contaminated by the parasite."
+		"contaminated": "You've been contaminated by the parasite.",
+		"role": "Your role is: {0}"
 	},
 	"end_game": {
 		"victory": "Victory",

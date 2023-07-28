@@ -19,6 +19,7 @@ class StateController extends Controller
                 'icon' => $stateDetails->iconify(),
                 'raw_name' => $stateDetails->stringify(),
                 'name' => $stateDetails->readeableStringify(),
+				'message' => $stateDetails->message(),
                 'duration' => $stateDetails->duration(),
                 'background' => $stateDetails->background(),
             ],
@@ -35,8 +36,6 @@ class StateController extends Controller
             ], Status::NOT_FOUND);
         }
 
-        return new JsonApiResponse([
-            'state_message' => $message,
-        ]);
+        return new JsonApiResponse();
     }
 }
