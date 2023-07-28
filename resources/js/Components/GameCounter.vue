@@ -103,6 +103,10 @@ const setData = async function (data) {
 		state = await getState(data.status.value);
 	}
 
+	if (state.message !== null) {
+		chatStore.send(state.message, "info");
+	}
+
 	status.value = data.status;
 	round.value = data.round;
 	roundText.value = state.name;

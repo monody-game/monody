@@ -6,8 +6,6 @@ import {
 	Round,
 	StateIdentifier,
 } from "./RoundService.js";
-import { ChatService } from "./ChatService.js";
-import fetch from "../Helpers/fetch.js";
 import { gameId } from "../Helpers/Functions.js";
 import { error, info, warn } from "../Logger.js";
 import { GameService } from "./GameService.js";
@@ -50,20 +48,6 @@ export class StateManager {
 			startTimestamp: state.startTimestamp,
 			round: state.round || 0,
 		});
-
-		if (!isSkip) {
-			const message = await fetch(
-				`${process.env.API_URL}/state/${state.status}/message`,
-			);
-
-			if (state.status > 1 && message.status !== 404) {
-				ChatService.info(
-					this.io,
-					channel,
-					message.json.data.state_message,
-				);
-			}
-		}
 
 		return this;
 	}
