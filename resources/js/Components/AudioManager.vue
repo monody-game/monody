@@ -14,10 +14,20 @@ import { Howl, Howler } from "howler";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useStore } from "../stores/modals/audio-modal.js";
 import { useStore as useModalStore } from "../stores/modals/modal.js";
+import { onMounted } from "vue";
 
 const store = useStore();
 const modalStore = useModalStore();
 const route = useRoute();
+
+onMounted(() => {
+	const storage = JSON.parse(
+		localStorage.getItem("volume") ?? JSON.stringify({ ambient: 5, music: 7 }),
+	);
+
+	store.volumes.ambient = storage.ambient;
+	store.volumes.music = storage.music;
+});
 
 const rooster = new Howl({
 	src: ["../sounds/rooster.webm", "../sounds/rooster.mp3"],
