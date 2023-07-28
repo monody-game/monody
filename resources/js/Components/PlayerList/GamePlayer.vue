@@ -485,7 +485,7 @@ const setupWitchActions = async (interaction) => {
 	actionList = actionList.filter((action) => actions.includes(action.id));
 
 	if (gamePlayer.role && gamePlayer.role.name === "witch") {
-		chatStore.send(t("choose_action"), "info", null, actionList);
+		chatStore.send(t("player.choose_action"), "info", null, actionList);
 	}
 };
 </script>
