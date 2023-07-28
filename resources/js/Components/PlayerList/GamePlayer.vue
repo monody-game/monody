@@ -292,7 +292,7 @@ window.Echo.join(`game.${gameId.value}`)
 				if (gamePlayer.role && gamePlayer.role.name === "surly_werewolf") {
 					chatStore.send(t("player.bite"), "info", null, [
 						{
-							title: t("modal.skip"),
+							title: t("player.skip"),
 							async callback() {
 								await window.JSONFetch("/interactions/use", "POST", {
 									id: gameStore.currentInteractionId,
