@@ -125,13 +125,14 @@ class EndGameControllerTest extends TestCase
 
     public function testCheckingIfTheGameShouldEndWithTheWhiteWerewolf()
     {
+		$third = User::factory()->create();
         Event::fake();
 
         $game = $this
             ->actingAs($this->user, 'api')
             ->put('/api/game', [
-                'roles' => [Role::WhiteWerewolf->value, Role::Werewolf->value],
-                'users' => [$this->secondUser->id],
+                'roles' => [Role::WhiteWerewolf->value, Role::Werewolf->value, Role::SimpleVillager->value],
+                'users' => [$this->secondUser->id, $third->id, $this->user->id],
             ])
             ->json('data.game');
 
@@ -141,6 +142,7 @@ class EndGameControllerTest extends TestCase
             'assigned_roles' => [
                 $this->secondUser->id => Role::WhiteWerewolf->value,
                 $this->user->id => Role::Werewolf->value,
+				$third->id => Role::SimpleVillager->value
             ],
             'is_started' => true,
             'werewolves' => [
@@ -158,7 +160,12 @@ class EndGameControllerTest extends TestCase
             ])
             ->assertForbidden();
 
-        Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), ['dead_users' => [$this->user->id => ['round' => 1, 'context' => 'white_werewolf']]]));
+        Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), [
+			'dead_users' => [
+				$this->user->id => ['round' => 1, 'context' => 'white_werewolf'],
+				$third->id => ['round' => 1, 'context' => 'null']
+			]
+		]));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
@@ -198,13 +205,13 @@ class EndGameControllerTest extends TestCase
             ];
         });
 
-        Event::assertDispatched(function (GameLoose $event) use ($gameId) {
-            return (array) $event === [
+        Event::assertDispatched(function (GameLoose $event) use ($gameId, $third) {
+			return (array) $event === [
                 'payload' => [
                     'gameId' => $gameId,
                 ],
                 'private' => true,
-                'recipients' => [$this->user->id],
+                'recipients' => [$third->id, $this->user->id],
                 'socket' => null,
             ];
         });
