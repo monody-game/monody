@@ -5,12 +5,6 @@ export default async function user({ router }) {
 
 	if (!(await service.isLoggedIn())) {
 		router.push("/login");
-	} else if (
-		!document.cookie
-			.split(";")
-			.some((item) => item.trim().startsWith("XSRF-TOKEN"))
-	) {
-		setTimeout(() => location.reload());
 	} else {
 		await service.getUser();
 	}

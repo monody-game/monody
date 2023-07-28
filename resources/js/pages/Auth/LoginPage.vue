@@ -93,6 +93,6 @@ const login = async function () {
 	}
 
 	await router.push("play");
-	location.reload();
+	//location.reload();
 };
 </script>

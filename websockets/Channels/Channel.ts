@@ -77,6 +77,8 @@ export class Channel {
 				error(`Error during user joining channel ${data.channel}`);
 				error(e);
 			}
+
+			socket.emit("subscription_error", data.channel, e);
 		}
 	}
 
