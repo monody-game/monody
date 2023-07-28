@@ -56,9 +56,14 @@ if (props.winningTeam === "couple") {
 	if (team.data.team.name !== "loners") {
 		stringifiedTeam += `${t("end_game.les")} ${team.data.team.display_name}`;
 	} else {
-		stringifiedTeam += `${t("end_game.le")} ${
-			Object.values(props.winners)[0].display_name
-		}`;
+		const winner = Object.values(props.winners)[0];
+		let role = await window.JSONFetch(
+			`/game/${route.params.id}/user/${winner}/role`,
+			"GET",
+		);
+		role = role.data.role.display_name;
+
+		stringifiedTeam += `${t("end_game.le")} ${role}`;
 	}
 }
 </script>
