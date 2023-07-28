@@ -249,6 +249,9 @@ window.Echo.join(`game.${gameId}`)
 	})
 	.listen(".game.state", async (data) => {
 		store.state = data.status;
+	})
+	.listen(".subscription_error", () => {
+		location.reload();
 	});
 
 const leave = () => {

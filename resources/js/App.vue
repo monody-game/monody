@@ -101,8 +101,8 @@ const subscribeToChannel = () => {
 	)
 		return;
 
-	window.Echo.private("App.Models.User." + userStore.id).notification(
-		(notification) => {
+	window.Echo.private("App.Models.User." + userStore.id)
+		.notification((notification) => {
 			switch (notification.data.type) {
 				case "exp.earn":
 					if (
@@ -156,8 +156,10 @@ const subscribeToChannel = () => {
 						startParty();
 					}
 			}
-		},
-	);
+		})
+		.listen(".subscription_error", () => {
+			location.reload();
+		});
 };
 
 const startParty = () => {
