@@ -14,34 +14,31 @@ import { Howl, Howler } from "howler";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useStore } from "../stores/modals/audio-modal.js";
 import { useStore as useModalStore } from "../stores/modals/modal.js";
-import { onMounted } from "vue";
 
 const store = useStore();
 const modalStore = useModalStore();
 const route = useRoute();
 
+const storage = JSON.parse(
+	localStorage.getItem("volume") ?? JSON.stringify({ ambient: 5, music: 7 }),
+);
+
+store.volumes.ambient = storage.ambient;
+store.volumes.music = storage.music;
+
 const rooster = new Howl({
 	src: ["../sounds/rooster.webm", "../sounds/rooster.mp3"],
-	volume: store.volumes.ambient * 0.1,
+	volume: storage.ambient * 0.1,
 });
 
 const day = new Howl({
 	src: ["../sounds/day.webm", "../sounds/day.mp3"],
-	volume: store.volumes.music * 0.1,
+	volume: storage.music * 0.1,
 });
 
 const night = new Howl({
 	src: ["../sounds/night.webm", "../sounds/night.mp3"],
-	volume: store.volumes.music * 0.1,
-});
-
-onMounted(() => {
-	const storage = JSON.parse(
-		localStorage.getItem("volume") ?? JSON.stringify({ ambient: 5, music: 7 }),
-	);
-
-	store.volumes.ambient = storage.ambient;
-	store.volumes.music = storage.music;
+	volume: storage.music * 0.1,
 });
 
 store.$subscribe((mutation, state) => {
