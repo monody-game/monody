@@ -54,12 +54,14 @@ class GameUsersController extends Controller
 
     public function role(UserRoleRequest $request, string $gameId): JsonApiResponse
     {
-        if ($this->alive($request->input('id'), $gameId)) {
+        $game = $this->getGame($gameId);
+
+        if (
+            $this->alive($request->input('id'), $gameId) &&
+            (array_key_exists('ended', $game) && $game['ended'] === false)
+        ) {
             return new JsonApiResponse(data: ['message' => 'Player is alive'], status: Status::BAD_REQUEST);
         }
-
-        /** @var string[] $game */
-        $game = $this->getGame($gameId);
 
         $userRole = $game['assigned_roles'][$request->validated('id')];
         $role = Role::from($userRole)->full();

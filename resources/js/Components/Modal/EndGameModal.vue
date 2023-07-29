@@ -27,9 +27,11 @@
 import BaseModal from "./BaseModal.vue";
 import { useStore } from "../../stores/game.js";
 import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 
 const gameStore = useStore();
 const { t } = useI18n();
+const route = useRoute();
 
 const props = defineProps({
 	win: {
@@ -61,7 +63,11 @@ if (props.winningTeam === "couple") {
 			`/game/${route.params.id}/user/${winner}/role`,
 			"GET",
 		);
-		role = role.data.role.display_name;
+		role = role.data.role.display_name.toLowerCase();
+
+		if (role[0] === "a") {
+			stringifiedTeam += `${t("end_game.l")}${role}`;
+		}
 
 		stringifiedTeam += `${t("end_game.le")} ${role}`;
 	}
