@@ -20,15 +20,6 @@ const store = useStore();
 const modalStore = useModalStore();
 const route = useRoute();
 
-onMounted(() => {
-	const storage = JSON.parse(
-		localStorage.getItem("volume") ?? JSON.stringify({ ambient: 5, music: 7 }),
-	);
-
-	store.volumes.ambient = storage.ambient;
-	store.volumes.music = storage.music;
-});
-
 const rooster = new Howl({
 	src: ["../sounds/rooster.webm", "../sounds/rooster.mp3"],
 	volume: store.volumes.ambient * 0.1,
@@ -42,6 +33,15 @@ const day = new Howl({
 const night = new Howl({
 	src: ["../sounds/night.webm", "../sounds/night.mp3"],
 	volume: store.volumes.music * 0.1,
+});
+
+onMounted(() => {
+	const storage = JSON.parse(
+		localStorage.getItem("volume") ?? JSON.stringify({ ambient: 5, music: 7 }),
+	);
+
+	store.volumes.ambient = storage.ambient;
+	store.volumes.music = storage.music;
 });
 
 store.$subscribe((mutation, state) => {
