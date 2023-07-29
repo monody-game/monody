@@ -49,7 +49,7 @@ const { t } = useI18n();
 
 const bip = new Howl({
 	src: ["../sounds/ding.mp3"],
-	volume: audioStore.volumes.ambient,
+	volume: audioStore.volumes.ambient * 0.1,
 });
 
 audioStore.$subscribe((mutation, state) => {
