@@ -103,7 +103,7 @@ const setData = async function (data) {
 		state = await getState(data.status.value);
 	}
 
-	if (state.message !== null) {
+	if (state.message !== null && data.skipped !== true) {
 		chatStore.send(state.message, "info");
 	}
 
