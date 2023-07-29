@@ -125,7 +125,7 @@ class EndGameControllerTest extends TestCase
 
     public function testCheckingIfTheGameShouldEndWithTheWhiteWerewolf()
     {
-		$third = User::factory()->create();
+        $third = User::factory()->create();
         Event::fake();
 
         $game = $this
@@ -142,7 +142,7 @@ class EndGameControllerTest extends TestCase
             'assigned_roles' => [
                 $this->secondUser->id => Role::WhiteWerewolf->value,
                 $this->user->id => Role::Werewolf->value,
-				$third->id => Role::SimpleVillager->value
+                $third->id => Role::SimpleVillager->value,
             ],
             'is_started' => true,
             'werewolves' => [
@@ -161,11 +161,11 @@ class EndGameControllerTest extends TestCase
             ->assertForbidden();
 
         Redis::set("game:$gameId", array_merge(Redis::get("game:$gameId"), [
-			'dead_users' => [
-				$this->user->id => ['round' => 1, 'context' => 'white_werewolf'],
-				$third->id => ['round' => 1, 'context' => 'null']
-			]
-		]));
+            'dead_users' => [
+                $this->user->id => ['round' => 1, 'context' => 'white_werewolf'],
+                $third->id => ['round' => 1, 'context' => 'null'],
+            ],
+        ]));
 
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
@@ -206,7 +206,7 @@ class EndGameControllerTest extends TestCase
         });
 
         Event::assertDispatched(function (GameLoose $event) use ($gameId, $third) {
-			return (array) $event === [
+            return (array) $event === [
                 'payload' => [
                     'gameId' => $gameId,
                 ],

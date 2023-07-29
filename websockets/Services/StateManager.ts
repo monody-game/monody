@@ -47,6 +47,7 @@ export class StateManager {
 			counterDuration: state.counterDuration,
 			startTimestamp: state.startTimestamp,
 			round: state.round || 0,
+			skipped: isSkip,
 		});
 
 		return this;
