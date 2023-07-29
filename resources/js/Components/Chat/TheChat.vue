@@ -121,6 +121,22 @@ const { t } = useI18n();
 const chatSelected = ref("main");
 const messagesContainer = ref(null);
 
+const messagesHistory = JSON.parse(localStorage.getItem("messages"));
+
+if (messagesHistory) {
+	for (const gameId in messagesHistory) {
+		if (gameId !== route.params.id) {
+			delete messagesHistory[gameId];
+		}
+	}
+
+	localStorage.setItem("messages", JSON.stringify(messagesHistory));
+}
+
+if (messagesHistory && route.params.id in messagesHistory) {
+	store.messages = messagesHistory[route.params.id];
+}
+
 const sendMessage = async function () {
 	if (content.value.length < 500) {
 		await send(content.value, chatSelected.value);
