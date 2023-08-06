@@ -124,7 +124,8 @@
 		"empty_cache": "Clear cache (may resolve bugs)",
 		"empty_cache_successful": "Successfully emptied cache",
 		"avatar_upload_failure": "Avatar upload failed, error : ",
-		"profile_edit_success": "Profile successfully modified!"
+		"profile_edit_success": "Profile successfully modified!",
+		"avatar_too_large": "Your avatar must be less than 4Mb (actual size: {0}Mb)"
 	},
 	"footer": {
 		"copyright": "© Monody {0} — All rights reserved"
