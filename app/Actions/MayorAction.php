@@ -6,11 +6,10 @@ use App\Enums\InteractionAction;
 use App\Events\InteractionUpdate;
 use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
-use App\Traits\RegisterHelperTrait;
 
 class MayorAction implements ActionInterface
 {
-    use MemberHelperTrait, RegisterHelperTrait;
+    use MemberHelperTrait;
 
     public function __construct(
         private readonly VoteService $service,
@@ -42,17 +41,17 @@ class MayorAction implements ActionInterface
         ]));
     }
 
-    public function additionnalData(string $gameId): null
+    public function additionnalData(): null
     {
         return null;
     }
 
-    public function close(string $gameId): void
+    public function close(): void
     {
-        $this->service->elect($gameId);
+        $this->service->elect($this->gameId);
     }
 
-    public function status(string $gameId): null
+    public function status(): null
     {
         return null;
     }

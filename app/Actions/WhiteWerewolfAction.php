@@ -35,16 +35,16 @@ class WhiteWerewolfAction implements ActionInterface
     {
     }
 
-    public function additionnalData(string $gameId): null
+    public function additionnalData(): null
     {
         return null;
     }
 
-    public function close(string $gameId): void
+    public function close(): void
     {
     }
 
-    public function status(string $gameId): null
+    public function status(): null
     {
         return null;
     }
