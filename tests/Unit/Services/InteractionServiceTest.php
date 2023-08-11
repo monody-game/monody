@@ -14,6 +14,7 @@ use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Lottery;
 use Tests\TestCase;
 
 class InteractionServiceTest extends TestCase
@@ -249,6 +250,35 @@ class InteractionServiceTest extends TestCase
         $this->assertNotSame($this->angel->id, $interaction['data']);
         $this->assertContains($interaction['data'], $this->game['users']);
         $this->assertSame(Redis::get("game:$gameId")['angel_target'], $interaction['data']);
+    }
+
+    public function testCreatingPsychicInteractionWithoutPassivePower()
+    {
+        Lottery::alwaysLose();
+        $gameId = $this->game['id'];
+        $interaction = $this->service->create($gameId, Interaction::Psychic, $this->getUserIdByRole(Role::Psychic, $gameId));
+
+        $this->assertSame([
+            'gameId' => $gameId,
+            'id' => $interaction['id'],
+            'authorizedCallers' => json_encode([$this->psychic->id]),
+            'type' => Interaction::Psychic->value,
+        ], $interaction);
+    }
+
+    public function testCreatingPsychicInteractionWithPassivePower()
+    {
+        Lottery::alwaysWin();
+        $gameId = $this->game['id'];
+        $interaction = $this->service->create($gameId, Interaction::Psychic, $this->getUserIdByRole(Role::Psychic, $gameId));
+
+        $this->assertSame([
+            'gameId' => $gameId,
+            'id' => $interaction['id'],
+            'authorizedCallers' => json_encode([$this->psychic->id]),
+            'type' => Interaction::Psychic->value,
+            'data' => $this->user->id,
+        ], $interaction);
     }
 
     protected function setUp(): void
