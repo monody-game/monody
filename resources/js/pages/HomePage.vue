@@ -1,9 +1,15 @@
 <template>
 	<div v-once class="home-page">
 		<header class="home-page__header">
-			<router-link :to="{ name: 'home_page' }">{{
-				$t("home.howtoplay")
-			}}</router-link>
+			<a
+				href="https://monody.notion.site/monody/687a32def57740ddab27fa81124a6456"
+				target="_blank"
+			>
+				{{ $t("home.howtoplay") }}
+				<svg class="link__external">
+					<use href="/sprite.svg#external" />
+				</svg>
+			</a>
 			<router-link :to="{ name: 'login' }" class="btn large btn-primary">
 				{{ $t("auth.signin") }}
 			</router-link>
