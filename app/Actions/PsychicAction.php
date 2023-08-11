@@ -44,7 +44,7 @@ class PsychicAction implements ActionInterface
         ], true, [$userId]));
     }
 
-    public function close(string $gameId): void
+    public function close(): void
     {
     }
 
@@ -53,12 +53,12 @@ class PsychicAction implements ActionInterface
         return true;
     }
 
-    public function additionnalData(string $gameId): null
+    public function additionnalData(): ?string
     {
         return null;
     }
 
-    public function status(string $gameId): null
+    public function status(): null
     {
         return null;
     }

@@ -56,7 +56,7 @@ class WitchAction implements ActionInterface
 
     private function killPotion(string $targetId): void
     {
-        if ($this->isUsed(InteractionAction::KillPotion, $this->gameId)) {
+        if ($this->isUsed(InteractionAction::KillPotion)) {
             return;
         }
 
@@ -67,7 +67,7 @@ class WitchAction implements ActionInterface
     {
         $game = Redis::get("game:$this->gameId");
 
-        if ($this->isUsed(InteractionAction::RevivePotion, $this->gameId)) {
+        if ($this->isUsed(InteractionAction::RevivePotion)) {
             return;
         }
 
@@ -94,7 +94,7 @@ class WitchAction implements ActionInterface
     {
     }
 
-    public function close(string $gameId): void
+    public function close(): void
     {
     }
 
@@ -103,21 +103,21 @@ class WitchAction implements ActionInterface
         return true;
     }
 
-    public function additionnalData(string $gameId): array
+    public function additionnalData(): array
     {
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+        $deaths = Redis::get("game:$this->gameId:deaths") ?? [];
 
         return array_map(fn ($death) => $death['user'], $deaths);
     }
 
-    private function isUsed(InteractionAction $action, string $gameId): bool
+    private function isUsed(InteractionAction $action): bool
     {
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+        $usedActions = Redis::get("game:$this->gameId:interactions:usedActions") ?? [];
 
         return in_array($action->value, $usedActions, true);
     }
 
-    public function status(string $gameId): null
+    public function status(): null
     {
         return null;
     }

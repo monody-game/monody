@@ -21,7 +21,6 @@ use App\Enums\InteractionAction;
 use App\Enums\State;
 use App\Events\Websockets\TimeSkip;
 use App\Facades\Redis;
-use App\Traits\RegisterHelperTrait;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 
@@ -34,8 +33,6 @@ class InteractionService
     const USER_CANNOT_USE_THIS_INTERACTION = 3000;
 
     const INVALID_ACTION_ON_INTERACTION = 4000;
-
-    use RegisterHelperTrait;
 
     public function __construct(private readonly VoteService $voteService)
     {
@@ -62,7 +59,7 @@ class InteractionService
         ];
 
         $action = $this->getService($type, $gameId);
-        $data = $action->additionnalData($gameId);
+        $data = $action->additionnalData();
 
         if ($data !== null) {
             $interaction['data'] = $data;
@@ -91,7 +88,7 @@ class InteractionService
 
         $service = $this->getService($interactions[$interaction]['type'], $gameId);
 
-        $service->close($gameId);
+        $service->close();
 
         array_splice($interactions, $interaction, 1);
 
@@ -134,9 +131,8 @@ class InteractionService
     /**
      * @param  string  $id Interaction id
      */
-    public function call(InteractionAction $action, string $id, string $emitterId, string $targetId): mixed
+    public function call(InteractionAction $action, string $id, string $gameId, string $emitterId, string $targetId): mixed
     {
-        $gameId = $this->getCurrentUserGameActivity($emitterId);
         $interaction = $this->getInteraction($gameId, $id);
         $type = explode(':', $action->value)[0];
 
@@ -214,7 +210,7 @@ class InteractionService
     {
         $service = $this->getService($type, $gameId);
 
-        return $service->status($gameId);
+        return $service->status();
     }
 
     /**

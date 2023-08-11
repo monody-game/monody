@@ -24,7 +24,6 @@ use App\Models\Elo;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
-use App\Traits\RegisterHelperTrait;
 use function array_key_exists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -32,7 +31,7 @@ use Illuminate\Support\Str;
 
 class GameController extends Controller
 {
-    use RegisterHelperTrait, GameHelperTrait, MemberHelperTrait;
+    use GameHelperTrait, MemberHelperTrait;
 
     public function check(Request $request): JsonApiResponse
     {
@@ -60,7 +59,7 @@ class GameController extends Controller
         }
 
         foreach ($games as $game) {
-            if (!(bool) preg_match('/^game:[^:]+$/', $game)) {
+            if (!preg_match('/^game:[^:]+$/', $game)) {
                 continue;
             }
 

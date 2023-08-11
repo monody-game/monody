@@ -40,15 +40,15 @@ interface ActionInterface
      *
      * @return mixed Could be array, string, null, bool, ...
      */
-    public function additionnalData(string $gameId): mixed;
+    public function additionnalData(): mixed;
 
     /**
      * Actions when closing the interaction
      */
-    public function close(string $gameId): void;
+    public function close(): void;
 
     /**
      * Status of the interaction (e.g. angel's interaction returns a "true" status if the angel has won)
      */
-    public function status(string $gameId): mixed;
+    public function status(): mixed;
 }
