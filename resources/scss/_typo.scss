@@ -25,6 +25,15 @@ p {
 
 a {
 	color: #0066ff;
+	position: relative;
+
+	.link__external {
+		position: absolute;
+		height: 12px;
+		width: 12px;
+		top: calc((1rem - 12px) / 2);
+		margin-left: space(1);
+	}
 
 	&:hover {
 		text-decoration: underline;

@@ -200,12 +200,14 @@ const formattedDate = computed(() => {
 });
 
 const addFile = () => {
-	if ((avatarInput.value.files[0].size / 1000) >= 4096) {
+	if (avatarInput.value.files[0].size / 1000 >= 4096) {
 		alertStore.addAlerts({
-			error: t('profile.avatar_too_large', [Math.floor(avatarInput.value.files[0].size / 1_000_000)])
-		})
+			error: t("profile.avatar_too_large", [
+				Math.floor(avatarInput.value.files[0].size / 1_000_000),
+			]),
+		});
 
-		return
+		return;
 	}
 
 	if (avatarInput.value.files.length > 0) {
