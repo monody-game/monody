@@ -167,9 +167,7 @@ class InteractionService
 
         $skipDuration = $state->getTimeSkip();
 
-        /**
-         * Should not happen in production. Used to patch test cases
-         */
+        // Should not happen in production. Used to patch test cases
         if ($skipDuration === null) {
             return $status;
         }
@@ -191,7 +189,12 @@ class InteractionService
         $game = Redis::get("game:$gameId");
         $state = Redis::get("game:$gameId:state");
 
-        if ($service->isSingleUse() || (array_key_exists('used', $interaction) && $interaction['used']) && $state['startTimestamp'] - (Date::now()->timestamp - $state['counterDuration']) > 30) {
+        // Skip the time if the interaction has already been used, and if the time remaining is greater than 30s
+        if (
+            $service->isSingleUse() ||
+            (array_key_exists('used', $interaction) && $interaction['used']) &&
+            $state['startTimestamp'] - (Date::now()->timestamp - $state['counterDuration']) > 30
+        ) {
             return true;
         }
 
