@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.17.1.
+ * Generated for Laravel 10.18.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -17700,6 +17700,20 @@
         {
                         /** @var \Illuminate\Foundation\Vite $instance */
                         return $instance->asset($asset, $buildDirectory);
+        }
+                    /**
+         * Get the content of a given asset.
+         *
+         * @param string $asset
+         * @param string|null $buildDirectory
+         * @return string 
+         * @throws \Exception
+         * @static 
+         */ 
+        public static function content($asset, $buildDirectory = null)
+        {
+                        /** @var \Illuminate\Foundation\Vite $instance */
+                        return $instance->content($asset, $buildDirectory);
         }
                     /**
          * Get a unique hash representing the current manifest, or null if there is no manifest.
