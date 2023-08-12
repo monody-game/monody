@@ -48,6 +48,7 @@
 					</div>
 				</form>
 			</div>
+			<FooterComponent />
 		</div>
 	</div>
 </template>
@@ -57,6 +58,7 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import InputComponent from "../../Components/Form/InputComponent.vue";
 import { useI18n } from "vue-i18n";
+import FooterComponent from "../../Components/FooterComponent.vue";
 
 const router = useRouter();
 const { t } = useI18n();
