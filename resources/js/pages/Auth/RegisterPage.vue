@@ -101,6 +101,7 @@
 					</div>
 				</template>
 			</MultiStepsForm>
+			<FooterComponent />
 		</div>
 	</div>
 </template>
@@ -112,6 +113,7 @@ import { useStore } from "../../stores/alerts.js";
 import InputComponent from "../../Components/Form/InputComponent.vue";
 import MultiStepsForm from "../../Components/Form/MultiStepsForm.vue";
 import { useI18n } from "vue-i18n";
+import FooterComponent from "../../Components/FooterComponent.vue";
 
 const router = useRouter();
 const username = ref("");

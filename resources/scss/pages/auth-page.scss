@@ -9,13 +9,11 @@
 .auth-page__wrapper {
 	display: grid;
 	place-items: center;
-	position: relative;
+	grid-template-rows: 32px 1fr 32px;
 
 	height: 100%;
 	width: 100%;
 	backdrop-filter: blur(7.5px);
-
-	padding-inline: space(8);
 
 	@media screen and (max-width: 630px) {
 		padding-inline: 0;
@@ -25,12 +23,12 @@
 .auth-page__home-link {
 	display: flex;
 	align-items: center;
+	justify-self: flex-start;
 	gap: space(1);
 	color: var(--secondary);
 
-	position: absolute;
-	top: space(3);
-	left: space(3);
+	margin-top: space(6);
+	margin-left: space(3);
 }
 
 .auth-page__home-link svg {

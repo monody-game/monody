@@ -63,6 +63,7 @@
 					</div>
 				</form>
 			</div>
+			<FooterComponent />
 		</div>
 	</div>
 </template>
@@ -74,6 +75,7 @@ import DotsSpinner from "../../Components/Spinners/DotsSpinner.vue";
 import InputComponent from "../../Components/Form/InputComponent.vue";
 import { useStore } from "../../stores/alerts.js";
 import { useI18n } from "vue-i18n";
+import FooterComponent from "../../Components/FooterComponent.vue";
 
 const route = useRoute();
 const router = useRouter();
