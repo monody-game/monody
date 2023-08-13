@@ -14,11 +14,9 @@
 	background-color: var(--accent-primary);
 }
 
-@media (prefers-color-scheme: dark) {
-	.badge-presentation__wrapper[data-owned="true"],
-	.badge-presentation__wrapper[data-owned="true"] > div {
-		background-color: var(--primary-hover);
-	}
+html.dark .badge-presentation__wrapper[data-owned="true"],
+html.dark .badge-presentation__wrapper[data-owned="true"] > div {
+	background-color: var(--primary-hover);
 }
 
 .badge-presentation__wrapper {

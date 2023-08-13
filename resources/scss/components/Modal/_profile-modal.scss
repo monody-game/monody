@@ -78,8 +78,15 @@
 
 .profile-modal__side-group {
 	display: flex;
+	justify-content: stretch;
 	align-items: center;
 	gap: space(2);
+}
+
+.profile-modal__danger-buttons {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: space(1);
 }
 
 .profile-modal__avatar-group {
@@ -149,4 +156,53 @@
 .profile-modal__avatar-group label svg {
 	height: 40px;
 	width: 40px;
+}
+
+.profile-modal__switch-container {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	flex: 1;
+
+	height: 32px;
+	outline: var(--border-secondary) 2px solid;
+
+	div {
+		position: relative;
+		display: grid;
+		place-items: center;
+		height: 32px;
+	}
+
+	div input {
+		position: absolute;
+		cursor: pointer;
+		margin: 0;
+		appearance: none;
+		height: 32px;
+		width: 100%;
+		border-right: var(--border-secondary) 2px solid;
+	}
+
+	div:last-child input {
+		border-right: none;
+	}
+
+	div input:focus,
+	div input:checked,
+	div input.checked {
+		background-color: var(--accent-primary);
+	}
+
+	div svg {
+		position: absolute;
+		height: 24px;
+		width: 24px;
+		pointer-events: none;
+	}
+}
+
+.profile-modal__switchers > div {
+	display: flex;
+	align-items: center;
+	gap: space(2);
 }

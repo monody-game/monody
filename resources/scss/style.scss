@@ -82,7 +82,7 @@ body {
 	}
 }
 
-:root {
+html {
 	--space: 8px;
 
 	--success: #46b800;
@@ -138,29 +138,27 @@ body {
 	--alt-background: var(--primary);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		--danger: var(--light-danger);
+html.dark {
+	--danger: var(--light-danger);
 
-		--primary: var(--dark-background);
-		--primary-hover: var(--dark-background-hover);
-		--primary-muted: var(--dark-background-muted);
+	--primary: var(--dark-background);
+	--primary-hover: var(--dark-background-hover);
+	--primary-muted: var(--dark-background-muted);
 
-		--secondary: var(--light-background);
-		--secondary-hover: var(--light-background-hover);
-		--secondary-muted: var(--light-background-muted);
+	--secondary: var(--light-background);
+	--secondary-hover: var(--light-background-hover);
+	--secondary-muted: var(--light-background-muted);
 
-		--accent-primary: var(--accent-dark);
-		--accent-secondary: var(--accent-light);
+	--accent-primary: var(--accent-dark);
+	--accent-secondary: var(--accent-light);
 
-		--border-primary: var(--border-dark);
-		--border-secondary: var(--border-light);
-		--border-danger: #fc000050;
+	--border-primary: var(--border-dark);
+	--border-secondary: var(--border-light);
+	--border-danger: #fc000050;
 
-		--background-image: url("../../public/images/monody_night.webp");
-		--alt-background: var(--primary-hover);
+	--background-image: url("../../public/images/monody_night.webp");
+	--alt-background: var(--primary-hover);
 
-		--primary-disabled: #0f112750;
-		--secondary-disabled: #fffcf150;
-	}
+	--primary-disabled: #0f112750;
+	--secondary-disabled: #fffcf150;
 }

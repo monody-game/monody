@@ -34,18 +34,19 @@ $alerts:
 	width: 16px;
 	cursor: pointer;
 	transition: color 0.2s;
+
+	color: #fffcf140;
+
+	&:hover {
+		color: #fffcf180;
+	}
+}
+
+html.light .alert__close {
 	color: #0f112740;
 
 	&:hover {
 		color: #0f112780;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		color: #fffcf140;
-
-		&:hover {
-			color: #fffcf180;
-		}
 	}
 }
 

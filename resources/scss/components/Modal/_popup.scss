@@ -47,12 +47,12 @@ $popups:
 	font-size: 1.125em;
 }
 
-.popup__note {
+html.light .popup__note {
 	color: #0f112780;
+}
 
-	@media (prefers-color-scheme: dark) {
-		color: #fffcf180;
-	}
+html.dark .popup__note {
+	color: #fffcf180;
 }
 
 .popup__icon {
@@ -64,19 +64,19 @@ $popups:
 	height: 16px;
 	width: 16px;
 	cursor: pointer;
-	color: #0f112740;
 	transition: color 0.2s;
+	color: #0f112740;
 
 	&:hover {
 		color: #0f112780;
 	}
+}
 
-	@media (prefers-color-scheme: dark) {
-		color: #fffcf140;
+.html.dark .popup__close {
+	color: #fffcf140;
 
-		&:hover {
-			color: #fffcf180;
-		}
+	&:hover {
+		color: #fffcf180;
 	}
 }
 

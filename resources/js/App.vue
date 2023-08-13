@@ -28,6 +28,28 @@ const badgeStore = useBadgesStore();
 const url = new URL(window.location);
 const isDev = ref(localStorage.getItem("dev") === "true");
 
+const theme = ref(localStorage.getItem("theme") ?? "system");
+
+if (theme.value === "system") {
+	if (
+		window.matchMedia("(prefers-color-scheme: dark)") === false ||
+		window.matchMedia("(prefers-color-scheme: dark)").matches === false
+	) {
+		theme.value = "light";
+	}
+
+	theme.value = "dark";
+}
+
+userStore.theme = theme.value;
+
+document.documentElement.classList.remove(
+	theme.value === "light" ? "dark" : "light",
+);
+document.documentElement.classList.add(
+	theme.value === "light" ? "light" : "dark",
+);
+
 if (
 	url.searchParams.has("pwa") &&
 	localStorage.getItem("pwa_thanked") !== "true"
@@ -77,17 +99,17 @@ if (url.searchParams.has("dev") || url.searchParams.has("debug")) {
 
 const colorSchemeMedia = window.matchMedia("(prefers-color-scheme: dark)");
 
-if (colorSchemeMedia === false || colorSchemeMedia.matches === false) {
-	userStore.theme = "light";
-}
-
 colorSchemeMedia.addEventListener("change", () => {
 	if (colorSchemeMedia === false || colorSchemeMedia.matches === false) {
 		userStore.theme = "light";
+		document.documentElement.classList.remove("dark");
+		document.documentElement.classList.add("light");
 		return;
 	}
 
 	userStore.theme = "dark";
+	document.documentElement.classList.remove("light");
+	document.documentElement.classList.add("dark");
 });
 
 watch(userStore, () => subscribeToChannel());
