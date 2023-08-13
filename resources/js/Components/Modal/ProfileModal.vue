@@ -120,6 +120,61 @@
 						{{ $t("profile.unlink") }}
 					</button>
 				</div>
+			</div>
+			<div class="profile-modal__switchers grid-3-7">
+				<div>
+					<label for="lang_switcher">Langue :</label>
+					<LangSwitcher />
+				</div>
+				<div class="profile-modal__theme-switcher">
+					<label for="theme_switcher">Thème :</label>
+					<div class="profile-modal__switch-container">
+						<div>
+							<input
+								type="radio"
+								name="theme"
+								id="light"
+								value="light"
+								:title="$t('profile.theme_light')"
+								@click.prevent="setTheme('light')"
+								:class="{ checked: storedTheme === 'light' }"
+							/>
+							<svg>
+								<use href="/sprite.svg#day" />
+							</svg>
+						</div>
+						<div>
+							<input
+								type="radio"
+								name="theme"
+								id="dark"
+								value="dark"
+								:title="$t('profile.theme_dark')"
+								@click.prevent="setTheme('dark')"
+								:class="{ checked: storedTheme === 'dark' }"
+							/>
+							<svg>
+								<use href="/sprite.svg#night" />
+							</svg>
+						</div>
+						<div>
+							<input
+								type="radio"
+								name="theme"
+								id="system"
+								value="system"
+								:title="$t('profile.theme_sync')"
+								@click.prevent="setTheme('system')"
+								:class="{ checked: storedTheme === 'system' }"
+							/>
+							<svg>
+								<use href="/sprite.svg#wheel" />
+							</svg>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="profile-modal__danger-buttons">
 				<button
 					class="btn medium btn-danger"
 					@click="modalStore.open('logout-warn-popup')"
@@ -158,6 +213,7 @@ import InputComponent from "../Form/InputComponent.vue";
 import LogoutWarnPopup from "./LogoutWarnPopup.vue";
 import { useCache } from "../../composables/cache.js";
 import { useI18n } from "vue-i18n";
+import LangSwitcher from "../LangSwitcher.vue";
 
 const userStore = useStore();
 const modalStore = useModalStore();
@@ -171,6 +227,29 @@ const username = ref(userStore.username);
 const email = ref(userStore.email);
 const usernameErrors = ref({});
 const hasUploaded = ref(false);
+const storedTheme = ref(localStorage.getItem("theme") ?? "system");
+
+const setTheme = (theme) => {
+	localStorage.setItem("theme", theme);
+	storedTheme.value = theme;
+
+	if (theme === "system") {
+		if (
+			window.matchMedia("(prefers-color-scheme: dark)") === false ||
+			window.matchMedia("(prefers-color-scheme: dark)").matches === false
+		) {
+			theme = "light";
+		}
+
+		theme = "dark";
+	}
+
+	userStore.theme = theme;
+	document.documentElement.classList.remove(
+		theme === "light" ? "dark" : "light",
+	);
+	document.documentElement.classList.add(theme === "light" ? "light" : "dark");
+};
 
 const discordInfos = async () => {
 	const res = await window.JSONFetch("/oauth/user/discord");

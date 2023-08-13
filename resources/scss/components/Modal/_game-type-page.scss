@@ -49,13 +49,13 @@
 	}
 }
 
-.game-type__wrapper .note {
+html.light .game-type__wrapper .note {
 	font-size: 0.85rem;
 	color: #0f112780;
+}
 
-	@media (prefers-color-scheme: dark) {
-		color: #fffcf180;
-	}
+html.dark .game-type__wrapper .note {
+	color: #fffcf180;
 }
 
 .game-type__vocal-icon {

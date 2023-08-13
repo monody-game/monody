@@ -2,10 +2,10 @@
 	transform: translateX(100%);
 	animation: animateCloud 5s alternate infinite ease-in-out;
 	fill: var(--light-background);
+}
 
-	@media screen and (prefers-color-scheme: dark) {
-		fill: var(--dark-background);
-	}
+html.dark .spinner #cloud {
+	fill: var(--dark-background);
 }
 
 .spinner #moon {

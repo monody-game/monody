@@ -125,7 +125,12 @@
 		"empty_cache_successful": "Cache vidé avec succès",
 		"avatar_upload_failure": "Echec de l'upload de l'avatar, erreur : ",
 		"profile_edit_success": "Profil modifié avec succès !",
-		"avatar_too_large": "Votre avatar doit faire moins de 4Mo (taille actuelle : {0}Mo)"
+		"avatar_too_large": "Votre avatar doit faire moins de 4Mo (taille actuelle : {0}Mo)",
+		"language": "Langue :",
+		"theme": "Thème :",
+		"theme_sync": "Synchronisé avec l'ordinateur",
+		"theme_dark": "Thème sombre",
+		"theme_light": "Thème clair"
 	},
 	"footer": {
 		"copyright": "© Monody {0} — Tous droits réservés."
