@@ -49,7 +49,7 @@ final class DiscordOauthController extends Controller
         try {
             $user = $driver->userFromToken($user->discord_token);
         } catch (ClientException $e) {
-            $payload = $this->refreshToken($user->discord_refresh_token);
+            $payload = $this->refreshAccessToken($user->discord_refresh_token);
             $user->discord_token = $payload['access_token'];
             $user->discord_refresh_token = $payload['refresh_token'];
             $user->save();
@@ -151,7 +151,7 @@ final class DiscordOauthController extends Controller
             ->flushCacheFor('/user');
     }
 
-    private function refreshToken(string $refreshToken): array
+    private function refreshAccessToken(string $refreshToken): array
     {
         $url = self::API_ENDPOINT . '/oauth2/token';
         $data = [
