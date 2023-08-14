@@ -36,9 +36,9 @@ if (theme.value === "system") {
 		window.matchMedia("(prefers-color-scheme: dark)").matches === false
 	) {
 		theme.value = "light";
+	} else {
+		theme.value = "dark";
 	}
-
-	theme.value = "dark";
 }
 
 userStore.theme = theme.value;
