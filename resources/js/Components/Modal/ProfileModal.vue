@@ -239,9 +239,9 @@ const setTheme = (theme) => {
 			window.matchMedia("(prefers-color-scheme: dark)").matches === false
 		) {
 			theme = "light";
+		} else {
+			theme = "dark";
 		}
-
-		theme = "dark";
 	}
 
 	userStore.theme = theme;
