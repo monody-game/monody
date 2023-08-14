@@ -79,6 +79,10 @@
 							: ''
 					"
 				>
+					<div v-if="loading" class="auth-page__loading-group">
+						<div class="auth-page__loading-group-blur" />
+						<DotsSpinner />
+					</div>
 					<div class="profile-modal__connections-side-group">
 						<svg>
 							<use href="/sprite.svg#discord" />
@@ -123,11 +127,11 @@
 			</div>
 			<div class="profile-modal__switchers grid-3-7">
 				<div>
-					<label for="lang_switcher">Langue :</label>
+					<label for="lang_switcher">{{ $t('profile.language') }}</label>
 					<LangSwitcher />
 				</div>
 				<div class="profile-modal__theme-switcher">
-					<label for="theme_switcher">Thème :</label>
+					<label for="theme_switcher">{{ $t('profile.theme') }}</label>
 					<div class="profile-modal__switch-container">
 						<div>
 							<input
@@ -214,6 +218,7 @@ import LogoutWarnPopup from "./LogoutWarnPopup.vue";
 import { useCache } from "../../composables/cache.js";
 import { useI18n } from "vue-i18n";
 import LangSwitcher from "../LangSwitcher.vue";
+import DotsSpinner from "../Spinners/DotsSpinner.vue";
 
 const userStore = useStore();
 const modalStore = useModalStore();
@@ -222,12 +227,28 @@ const cache = useCache();
 const warnPopupStore = useWarnPopupStore();
 const { t } = useI18n();
 
+const loading = ref(true);
+const discordUsername = ref("N/A");
 const avatarInput = ref(null);
 const username = ref(userStore.username);
 const email = ref(userStore.email);
 const usernameErrors = ref({});
 const hasUploaded = ref(false);
 const storedTheme = ref(localStorage.getItem("theme") ?? "system");
+
+nextTick(async () => {
+	if (userStore.discord_linked_at !== null) {
+		loading.value = true;
+		const infos = await discordInfos()
+		loading.value = false
+
+		if (infos && "username" in infos) {
+			discordUsername.value = infos.username
+		}
+
+		return "N/A";
+	}
+})
 
 const setTheme = (theme) => {
 	localStorage.setItem("theme", theme);
@@ -252,9 +273,12 @@ const setTheme = (theme) => {
 };
 
 const discordInfos = async () => {
-	const res = await window.JSONFetch("/oauth/user/discord");
-
-	return res.data.user;
+	try {
+		const res = await window.JSONFetch("/oauth/user/discord");
+		return res.data.user;
+	} catch (e) {
+		return null;
+	}
 };
 
 const flushCache = () => {
@@ -267,12 +291,6 @@ const flushCache = () => {
 	});
 	modalStore.close();
 };
-
-const discordUsername = ref("n/a");
-
-if (userStore.discord_linked_at !== null) {
-	discordUsername.value = (await discordInfos()).username;
-}
 
 const formattedDate = computed(() => {
 	return new Date(userStore.email_verified_at).toLocaleDateString("fr-FR");

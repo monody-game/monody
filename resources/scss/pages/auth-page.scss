@@ -155,9 +155,8 @@
 	left: 0;
 	right: 0;
 
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	display: grid;
+	place-items: center;
 
 	& .spinner__dots-container,
 	.spinner__dots-container spinning-dots {
