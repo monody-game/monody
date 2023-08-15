@@ -24,7 +24,7 @@
 		"submit": "Submit",
 		"email_popup": {
 			"title": "Why do I need to give this information ?",
-			"content": "We need your email address if you lose your password. It is also a means of identification (connection, connection of your Discord account to Monody). Please enter a valid e-mail address, you'll have to check it."
+			"content": "This information is not mandatory! We use your email address to recover your account if you lose your password. You can also use it to log in. Please make sure you enter a valid e-mail address, as you'll need to check it."
 		},
 		"errors": {
 			"invalid_credentials": "Invalid credentials",

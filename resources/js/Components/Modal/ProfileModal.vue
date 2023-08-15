@@ -97,41 +97,24 @@
 						</p>
 					</div>
 					<a
-						v-if="
-							userStore.discord_linked_at === null &&
-							userStore.email_verified_at === null
-						"
-						class="btn medium disabled"
-					>
-						{{ $t("profile.link") }}
-					</a>
-					<a
-						v-if="
-							userStore.discord_linked_at === null &&
-							userStore.email_verified_at !== null
-						"
+						v-if="userStore.discord_linked_at === null"
 						class="btn medium"
 						href="/api/oauth/link/discord"
 					>
 						{{ $t("profile.link") }}
 					</a>
-					<button
-						v-else-if="userStore.discord_linked_at !== null"
-						class="btn medium"
-						:disabled="userStore.email_verified_at === null"
-						@click="unlink"
-					>
+					<button v-else class="btn medium" @click="unlink">
 						{{ $t("profile.unlink") }}
 					</button>
 				</div>
 			</div>
 			<div class="profile-modal__switchers grid-3-7">
 				<div>
-					<label for="lang_switcher">{{ $t('profile.language') }}</label>
+					<label for="lang_switcher">{{ $t("profile.language") }}</label>
 					<LangSwitcher />
 				</div>
 				<div class="profile-modal__theme-switcher">
-					<label for="theme_switcher">{{ $t('profile.theme') }}</label>
+					<label for="theme_switcher">{{ $t("profile.theme") }}</label>
 					<div class="profile-modal__switch-container">
 						<div>
 							<input
@@ -227,7 +210,7 @@ const cache = useCache();
 const warnPopupStore = useWarnPopupStore();
 const { t } = useI18n();
 
-const loading = ref(true);
+const loading = ref(false);
 const discordUsername = ref("N/A");
 const avatarInput = ref(null);
 const username = ref(userStore.username);
@@ -239,16 +222,16 @@ const storedTheme = ref(localStorage.getItem("theme") ?? "system");
 nextTick(async () => {
 	if (userStore.discord_linked_at !== null) {
 		loading.value = true;
-		const infos = await discordInfos()
-		loading.value = false
+		const infos = await discordInfos();
+		loading.value = false;
 
 		if (infos && "username" in infos) {
-			discordUsername.value = infos.username
+			discordUsername.value = infos.username;
 		}
 
 		return "N/A";
 	}
-})
+});
 
 const setTheme = (theme) => {
 	localStorage.setItem("theme", theme);

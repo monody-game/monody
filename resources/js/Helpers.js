@@ -22,6 +22,7 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 
 	const headers = {
 		"Content-type": "application/json; charset=UTF-8",
+		Accept: "application/json",
 	};
 
 	if (lang !== null) {
