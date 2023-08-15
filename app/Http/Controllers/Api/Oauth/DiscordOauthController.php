@@ -81,7 +81,8 @@ final class DiscordOauthController extends Controller
 
         $discordId = config('services.discord.client_id');
 
-        $user = $request->user() ?? User::firstOrCreate(['email' => $discordUser->email]);
+        /** @var User $user behind api guard */
+        $user = $request->user();
 
         $user->avatar = '/images/avatar/default.png' === $user->avatar && $discordUser->getAvatar() !== null ? $discordUser->getAvatar() : $user->avatar;
         $user->discord_linked_at = Carbon::now();
@@ -105,8 +106,6 @@ final class DiscordOauthController extends Controller
             );
 
         if ($res->successful()) {
-            Auth::login($user);
-
             // We force a cache flush for endpoint /user
             return new RedirectResponse('/play?flush=/user');
         }

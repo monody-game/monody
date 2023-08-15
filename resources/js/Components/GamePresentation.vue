@@ -3,12 +3,14 @@
 		tabindex="0"
 		class="game-show__container"
 		:class="
-			userStore.discord_linked_at === null && props.game.type === 0b00010
+			userStore.discord_linked_at === null &&
+			(props.game.type & (1 << 1)) === 1 << 1
 				? 'game-show__container-disabled'
 				: ''
 		"
 		:title="
-			userStore.discord_linked_at === null && props.game.type === 0b00010
+			userStore.discord_linked_at === null &&
+			(props.game.type & (1 << 1)) === 1 << 1
 				? $t('play.no_linked_discord')
 				: ''
 		"
@@ -49,7 +51,10 @@
 				</div>
 			</div>
 		</div>
-		<svg v-if="props.game.type === 0b00010" :title="$t('play.vocal_game')">
+		<svg
+			v-if="(props.game.type & (1 << 1)) === 1 << 1"
+			:title="$t('play.vocal_game')"
+		>
 			<use href="/sprite.svg#vocal" />
 		</svg>
 		<p>{{ props.game.users.length }} / {{ getUserCount() }}</p>
@@ -87,10 +92,13 @@ const getUserCount = function () {
 };
 
 const openGame = async function () {
-	if (props.game.type === 0b00010 && userStore.discord_linked_at === null)
+	if (
+		(props.game.type & (1 << 1)) === 1 << 1 &&
+		userStore.discord_linked_at === null
+	)
 		return;
 
-	if (props.game.type === 0b00010) {
+	if ((props.game.type & (1 << 1)) === 1 << 1) {
 		popupStore.setPopup({
 			warn: {
 				content: t("play.vocal_game_popup"),

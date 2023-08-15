@@ -24,7 +24,7 @@
 		"submit": "Soumettre la demande",
 		"email_popup": {
 			"title": "Pourquoi dois-je donner cette information ?",
-			"content": "Votre email nous est utile lorsque vous perdez votre mot de passe. C’est également un moyen d’identification (connection, connection de votre compte Discord à Monody). Veillez à rentrer une adresse mail valide, vous devrez la vérifier."
+			"content": "Cette information n'est pas obligatoire ! Votre email nous sert à récupérer votre compte lorsque vous perdez votre mot de passe. Vous pouvez également vous en servir pour vous connecter. Veillez à rentrer une adresse mail valide, vous devrez la vérifier."
 		},
 		"errors": {
 			"invalid_credentials": "Identifiant ou mot de passe invalide",

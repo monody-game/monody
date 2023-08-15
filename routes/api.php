@@ -3,7 +3,6 @@
 use App\Http\Middleware\OptionalAuthentication;
 use App\Http\Middleware\RestrictRequest;
 use App\Http\Middleware\RestrictToLocalNetwork;
-use App\Http\Middleware\VerifiedEmailNeeded;
 use App\Http\Responses\JsonApiResponse;
 use Illuminate\Support\Facades\Route;
 
@@ -14,16 +13,6 @@ Route::post('/auth/password/reset', 'Auth\PasswordController@reset');
 Route::post('/auth/password/validate', 'Auth\PasswordController@token');
 
 Route::get('/game/list/{type?}', 'Game\GameController@list');
-
-Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
-//Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
-
-Route::group(['middleware' => ['auth:api', VerifiedEmailNeeded::class]], function () {
-    Route::get('/oauth/link/discord', 'Oauth\DiscordOauthController@link');
-    Route::get('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
-    Route::get('/oauth/user/discord', 'Oauth\DiscordOauthController@user');
-    //Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
-});
 
 Route::get('/roles', 'RoleController@all');
 Route::get('/roles/list', 'RoleController@list');
@@ -53,6 +42,14 @@ Route::group(['middleware' => OptionalAuthentication::class], function () {
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('/oauth/check/discord', 'Oauth\DiscordOauthController@check');
+    Route::get('/oauth/link/discord', 'Oauth\DiscordOauthController@link');
+    Route::get('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
+    Route::get('/oauth/user/discord', 'Oauth\DiscordOauthController@user');
+
+    //Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
+    //Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
+
     Route::post('/interactions/use', 'Game\GameInteractionController@interact');
 
     Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
