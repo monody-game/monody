@@ -40,8 +40,8 @@ export const useStore = defineStore("user", {
 				exp: this.exp,
 				exp_needed: this.exp_needed,
 				elo: this.elo,
-				discord_linked_at: this.discord_linked_at
+				discord_linked_at: this.discord_linked_at,
 			};
-		}
-	}
+		},
+	},
 });

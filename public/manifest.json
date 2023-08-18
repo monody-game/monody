@@ -9,19 +9,34 @@
 	"offline_enabled": false,
 	"icons": [
 		{
-			"src": "/images/monody-512.png",
+			"src": "/images/monody_x512.png",
 			"type": "image/png",
-			"size": "512x512"
+			"sizes": "512x512",
+			"purpose": "any maskable"
 		},
 		{
-			"src": "/images/monody-192.png",
+			"src": "/images/monody_x192.png",
 			"type": "image/png",
-			"size": "192x192"
+			"sizes": "192x192",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/images/monody_x72.png",
+			"type": "image/png",
+			"sizes": "72x72",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "/images/monody_x48.png",
+			"type": "image/png",
+			"sizes": "48x48",
+			"purpose": "any maskable"
 		}
 	],
-	"start_url": "/play",
+	"start_url": "/play?pwa=true",
 	"homepage_url": "/",
 	"display": "standalone",
 	"background_color": "#0f1127",
+	"theme_color": "#0f1127",
 	"lang": "fr"
 }

@@ -1,66 +1,59 @@
 <template>
-  <BaseModal class="game-details">
-    <header>
-      <h3>Détails de la partie</h3>
-    </header>
-    <div class="modal__page game-details__wrapper">
-      <div class="game-details__group">
-        Créateur de la partie :
-        <div class="game-details__owner">
-          <img
-            :src="gameStore.owner.avatar + '?w=50&dpr=2'"
-            :alt="gameStore.owner.username + '\'s avatar'"
-          >
-          <div class="game-details__owner-right">
-            {{ gameStore.owner.username }}
-            <div class="game-details__owner-stats">
-              <div
-                title="Niveau"
-              >
-                <svg>
-                  <use href="/sprite.svg#level" />
-                </svg>
-                <p>{{ gameStore.owner.level }}</p>
-              </div>
-              <div
-                title="Elo"
-              >
-                <svg>
-                  <use href="/sprite.svg#elo" />
-                </svg>
-                <p>{{ gameStore.owner.elo }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="game-details__roles">
-        Liste des rôles :
-        <div class="roles__list">
-          <RoleSelector
-            v-for="role in roles"
-            :key="role.id"
-            :role="role"
-            class="roles__item"
-            :operations="false"
-            :presentable="true"
-            @role="(role) => present(role)"
-          />
-        </div>
-        <RolesBalance :selected-roles="roles" />
-      </div>
-    </div>
-    <div class="modal__buttons">
-      <div class="modal__buttons-right">
-        <button
-          class="btn medium"
-          @click="store.close()"
-        >
-          Fermer
-        </button>
-      </div>
-    </div>
-  </BaseModal>
+	<BaseModal class="game-details">
+		<header>
+			<h3>{{ $t("game_details.title") }}</h3>
+		</header>
+		<div class="modal__page game-details__wrapper">
+			<div class="game-details__group">
+				{{ $t("game_details.owner") }}
+				<div class="game-details__owner">
+					<img
+						:src="gameStore.owner.avatar + '?w=50&dpr=2'"
+						:alt="gameStore.owner.username + '\'s avatar'"
+					/>
+					<div class="game-details__owner-right">
+						{{ gameStore.owner.username }}
+						<div class="game-details__owner-stats">
+							<div title="Niveau">
+								<svg>
+									<use href="/sprite.svg#level" />
+								</svg>
+								<p>{{ gameStore.owner.level }}</p>
+							</div>
+							<div title="Elo">
+								<svg>
+									<use href="/sprite.svg#elo" />
+								</svg>
+								<p>{{ gameStore.owner.elo }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="game-details__roles">
+				{{ $t("game_details.roles") }}
+				<div class="roles__list">
+					<RoleSelector
+						v-for="role in roles"
+						:key="role.id"
+						:role="role"
+						class="roles__item"
+						:operations="false"
+						:presentable="true"
+						@role="(role) => present(role)"
+					/>
+				</div>
+				<RolesBalance :selected-roles="roles" />
+			</div>
+		</div>
+		<div class="modal__buttons">
+			<div class="modal__buttons-right">
+				<button class="btn medium" @click="store.close()">
+					{{ $t("modal.close") }}
+				</button>
+			</div>
+		</div>
+	</BaseModal>
 </template>
 
 <script setup>

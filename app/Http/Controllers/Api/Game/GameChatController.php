@@ -65,6 +65,7 @@ class GameChatController extends Controller
         $gameId = $request->validated('gameId');
         $game = Redis::get("game:$gameId");
         $deaths = Redis::get("game:$gameId:deaths") ?? [];
+        $state = Redis::get("game:$gameId:state");
 
         foreach ($deaths as $death) {
             $infected = array_key_exists('infected', $game) && $game['infected'] === $death['user'];
@@ -74,6 +75,15 @@ class GameChatController extends Controller
                 'gameId' => $gameId,
                 'context' => $death['context'],
                 'infected' => $infected,
+            ]);
+        }
+
+        if (count($deaths) === 0 && $state['status'] !== State::Vote->value) {
+            GameKill::broadcast([
+                'gameId' => $gameId,
+                'killedUser' => null,
+                'context' => '',
+                'infected' => false,
             ]);
         }
 
@@ -107,9 +117,10 @@ class GameChatController extends Controller
             broadcast(new ChatLock($gameId, ['lock' => $lock]));
             $game = Redis::get("game:$gameId");
 
-            if ($game['type'] === GameType::VOCAL->value) {
+            if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
                 broadcast(new TogglePlayersVoice([
                     'game_id' => $game['id'],
+                    'lock' => $lock,
                 ]));
             }
         }

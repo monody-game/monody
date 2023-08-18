@@ -41,7 +41,7 @@ class ParasiteAction implements ActionInterface
     {
         $game = Redis::get("game:$this->gameId");
         $state = Redis::get("game:$this->gameId:state");
-        $toContaminate = $this->additionnalData($this->gameId);
+        $toContaminate = $this->additionnalData();
         $contaminated = array_key_exists('contaminated', $game) ? $game['contaminated'] : [];
 
         $contaminated[] = $targetId;
@@ -77,9 +77,9 @@ class ParasiteAction implements ActionInterface
      * Returns the number of players the parasite can contaminate during the interaction.
      * If there is less than 8 players in game, the parasite can only contaminate 1 player per night, 2 otherwise.
      */
-    public function additionnalData(string $gameId): int
+    public function additionnalData(): int
     {
-        $game = Redis::get("game:$gameId");
+        $game = Redis::get("game:$this->gameId");
 
         return count($game['users']) < 8 ? 1 : 2;
     }
@@ -87,14 +87,14 @@ class ParasiteAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function close(string $gameId): void
+    public function close(): void
     {
     }
 
     /**
      * {@inheritDoc}
      */
-    public function status(string $gameId): null
+    public function status(): null
     {
         return null;
     }

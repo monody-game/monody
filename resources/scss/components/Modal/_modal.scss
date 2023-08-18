@@ -1,11 +1,11 @@
 .modal__background {
-  position: absolute;
+	position: absolute;
 	inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, .6);
-  z-index: 1000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	z-index: 1000;
 }
 
 .modal__overflow-wrapper {
@@ -26,9 +26,9 @@
 	overflow-x: hidden;
 
 	display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
 
 	padding: space(3);
 
@@ -45,7 +45,7 @@
 
 .modal-enter-active,
 .modal-leave-active {
-	transition: all .2s;
+	transition: all 0.2s;
 }
 
 .modal-enter-from,

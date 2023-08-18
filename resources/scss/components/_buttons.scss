@@ -1,28 +1,29 @@
 @use "sass:color";
 
 .btn {
-  padding: 0;
-  border-radius: 6px;
+	padding: 0;
+	border-radius: 6px;
 	border: var(--border-secondary) solid 2px;
 
 	color: var(--secondary);
-  cursor: pointer;
+	cursor: pointer;
 	background: var(--primary);
-	transition: all .2s;
+	transition: all 0.2s;
 
-  &:disabled {
-    cursor: not-allowed;
+	&:disabled {
+		cursor: not-allowed;
 		background-color: var(--primary);
 		color: var(--secondary-disabled);
-  }
+	}
 
-  &:not(.disable-hover):not(:disabled):hover, &:not(.disable-hover):not(:disabled):focus-visible {
+	&:not(.disable-hover):not(:disabled):hover,
+	&:not(.disable-hover):not(:disabled):focus-visible {
 		background-color: var(--primary-hover);
-  }
+	}
 
-  &.medium {
-    padding: space(.75) space(3);
-  }
+	&.medium {
+		padding: space(0.75) space(3);
+	}
 
 	&.large {
 		padding: space(1) space(3);
@@ -33,7 +34,8 @@
 		border: var(--border-danger) solid 2px;
 	}
 
-	&.btn-danger:not(.disable-hover):not(:disabled):hover, &.btn-danger:not(.disable-hover):not(:disabled):focus-visible {
+	&.btn-danger:not(.disable-hover):not(:disabled):hover,
+	&.btn-danger:not(.disable-hover):not(:disabled):focus-visible {
 		background-color: var(--dark-danger);
 		color: var(--light-background);
 	}

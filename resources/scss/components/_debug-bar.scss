@@ -14,7 +14,7 @@
 	color: var(--dark-background);
 	outline-color: var(--border-dark);
 
-	transition: outline-color .2s;
+	transition: outline-color 0.2s;
 	z-index: 999;
 
 	&:hover {
@@ -69,7 +69,7 @@
 .debug-bar__report {
 	cursor: pointer;
 	padding-inline: space(1);
-	transition: all .2s;
+	transition: all 0.2s;
 	outline: var(--border-dark) solid 1px;
 	border-radius: 4px;
 

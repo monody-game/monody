@@ -9,6 +9,6 @@ export const useStore = defineStore("logout-warn-popup", {
 	actions: {
 		close() {
 			this.isOpenned = false;
-		}
-	}
+		},
+	},
 });

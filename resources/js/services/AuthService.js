@@ -1,9 +1,14 @@
 import { useStore } from "../stores/user";
 
 export default class AuthService {
-
 	constructor() {
 		this.store = useStore();
+	}
+
+	async isLoggedIn() {
+		let res = await window.JSONFetch("/auth/logged", "POST");
+
+		return res.ok;
 	}
 
 	async getUser() {
@@ -36,7 +41,7 @@ export default class AuthService {
 			exp: data.exp,
 			exp_needed: data.next_level,
 			elo: data.elo,
-			discord_linked_at: data.discord_linked_at
+			discord_linked_at: data.discord_linked_at,
 		});
 
 		return true;

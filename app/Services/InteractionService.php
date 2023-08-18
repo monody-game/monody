@@ -21,7 +21,6 @@ use App\Enums\InteractionAction;
 use App\Enums\State;
 use App\Events\Websockets\TimeSkip;
 use App\Facades\Redis;
-use App\Traits\RegisterHelperTrait;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 
@@ -34,8 +33,6 @@ class InteractionService
     const USER_CANNOT_USE_THIS_INTERACTION = 3000;
 
     const INVALID_ACTION_ON_INTERACTION = 4000;
-
-    use RegisterHelperTrait;
 
     public function __construct(private readonly VoteService $voteService)
     {
@@ -62,7 +59,7 @@ class InteractionService
         ];
 
         $action = $this->getService($type, $gameId);
-        $data = $action->additionnalData($gameId);
+        $data = $action->additionnalData();
 
         if ($data !== null) {
             $interaction['data'] = $data;
@@ -76,7 +73,7 @@ class InteractionService
     /**
      * @param  string  $id Interaction id
      */
-    public function close(string $gameId, string $id): int|null
+    public function close(string $gameId, string $id): ?int
     {
         if (!Redis::exists("game:$gameId:interactions")) {
             return self::NOT_ANY_INTERACTION_STARTED;
@@ -91,7 +88,7 @@ class InteractionService
 
         $service = $this->getService($interactions[$interaction]['type'], $gameId);
 
-        $service->close($gameId);
+        $service->close();
 
         array_splice($interactions, $interaction, 1);
 
@@ -134,9 +131,8 @@ class InteractionService
     /**
      * @param  string  $id Interaction id
      */
-    public function call(InteractionAction $action, string $id, string $emitterId, string $targetId): mixed
+    public function call(InteractionAction $action, string $id, string $gameId, string $emitterId, string $targetId): mixed
     {
-        $gameId = $this->getCurrentUserGameActivity($emitterId);
         $interaction = $this->getInteraction($gameId, $id);
         $type = explode(':', $action->value)[0];
 
@@ -171,9 +167,7 @@ class InteractionService
 
         $skipDuration = $state->getTimeSkip();
 
-        /**
-         * Should not happen in production. Used to patch test cases
-         */
+        // Should not happen in production. Used to patch test cases
         if ($skipDuration === null) {
             return $status;
         }
@@ -195,7 +189,12 @@ class InteractionService
         $game = Redis::get("game:$gameId");
         $state = Redis::get("game:$gameId:state");
 
-        if ($service->isSingleUse() || (array_key_exists('used', $interaction) && $interaction['used']) && $state['startTimestamp'] - (Date::now()->timestamp - $state['counterDuration']) > 30) {
+        // Skip the time if the interaction has already been used, and if the time remaining is greater than 30s
+        if (
+            $service->isSingleUse() ||
+            (array_key_exists('used', $interaction) && $interaction['used']) &&
+            $state['startTimestamp'] - (Date::now()->timestamp - $state['counterDuration']) > 30
+        ) {
             return true;
         }
 
@@ -214,7 +213,7 @@ class InteractionService
     {
         $service = $this->getService($type, $gameId);
 
-        return $service->status($gameId);
+        return $service->status();
     }
 
     /**

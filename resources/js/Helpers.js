@@ -1,6 +1,10 @@
 import { useStore as useAlertStore } from "./stores/alerts.js";
 import { useStore as usePopupStore } from "./stores/modals/popup.js";
 import { useStore as useDebugStore } from "./stores/debug-bar.js";
+import { useCache } from "./composables/cache.js";
+
+const cache = useCache();
+const lang = localStorage.getItem("lang");
 
 /**
  * @param {String} url
@@ -8,11 +12,26 @@ import { useStore as useDebugStore } from "./stores/debug-bar.js";
  * @param {Object} body
  */
 window.JSONFetch = async (url, method = "GET", body = null) => {
+	if (
+		cache.exists(url) &&
+		Date.parse(cache.get(url).until) > Date.now() &&
+		method === "GET"
+	) {
+		return cache.get(url).response;
+	}
+
+	const headers = {
+		"Content-type": "application/json; charset=UTF-8",
+		Accept: "application/json",
+	};
+
+	if (lang !== null) {
+		headers["X-App-Locale"] = lang;
+	}
+
 	const params = {
 		method: method,
-		headers: {
-			"Content-type": "application/json; charset=UTF-8",
-		},
+		headers,
 		credentials: "include",
 	};
 	const res = {};
@@ -41,8 +60,8 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 				message: content.message,
 				exception: content.exception,
 				file: content.file,
-				line: content.line
-			}
+				line: content.line,
+			},
 		});
 	}
 
@@ -62,7 +81,26 @@ window.JSONFetch = async (url, method = "GET", body = null) => {
 
 	res.status = response.status;
 	res.ok = response.ok;
-	res.data = res.data.data;
+
+	if ("data" in res.data) {
+		res.data = res.data.data;
+	}
+
+	if (res.ok && content.meta.cache.cache === true) {
+		cache.set(url, {
+			until: content.meta.cache.until,
+			response: res,
+		});
+
+		if (content.meta.cache.flush === true) {
+			cache.clear();
+			return res;
+		}
+
+		for (const route of content.meta.cache.flush) {
+			cache.flush(route);
+		}
+	}
 
 	return res;
 };

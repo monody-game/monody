@@ -53,7 +53,7 @@ class HunterAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function additionnalData(string $gameId): mixed
+    public function additionnalData(): mixed
     {
         return null;
     }
@@ -61,7 +61,7 @@ class HunterAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function close(string $gameId): void
+    public function close(): void
     {
         Redis::update("game:$this->gameId:interactions:usedActions", function (array &$usedActions) {
             $usedActions[] = InteractionAction::Shoot->value;
@@ -71,7 +71,7 @@ class HunterAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function status(string $gameId): mixed
+    public function status(): mixed
     {
         return null;
     }

@@ -1,10 +1,10 @@
 .counter__main {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .counter__seconds {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 .counter__icon-container {
@@ -12,38 +12,37 @@
 	place-items: center;
 
 	color: #fff;
-  position: relative;
-  width: 45px;
-  height: 45px;
-  margin-right: space(1);
+	position: relative;
+	width: 45px;
+	height: 45px;
+	margin-right: space(1);
 }
 
 .counter__icon-circle {
-  transform: rotateZ(-90deg) rotateX(180deg);
-  stroke-width: 2px;
-  stroke-dashoffset: 1100;
+	transform: rotateZ(-90deg) rotateX(180deg);
+	stroke-width: 2px;
+	stroke-dashoffset: 1100;
 
-  & circle {
-    transition: stroke-dashoffset 1s linear;
-  }
+	& circle {
+		transition: stroke-dashoffset 1s linear;
+	}
 }
 
 .counter__icon {
-  position: absolute;
-  height: 30px;
-  width: 30px;
+	position: absolute;
+	height: 30px;
+	width: 30px;
 
-  &.counter__icon-rotate {
-    animation: rotate 30s linear infinite
-  }
+	&.counter__icon-rotate {
+		animation: rotate 30s linear infinite;
+	}
 }
 
-
 @keyframes rotate {
-  0% {
-    transform: rotate(0);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+	0% {
+		transform: rotate(0);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
 }

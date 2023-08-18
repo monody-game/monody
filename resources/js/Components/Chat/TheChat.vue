@@ -1,83 +1,95 @@
 <template>
-  <div class="chat__main">
-    <div
-      v-if="gameStore.couple.includes(userStore.id)"
-      class="chat__selector"
-    >
-      <div
-        :data-selected="chatSelected === 'main'"
-        :data-unread="store.unread.main"
-        @click="chatSelected = 'main'; store.unread.main = false"
-      >
-        Main
-      </div>
-      <span class="chat__selector-separator" />
-      <div
-        :data-selected="chatSelected === 'couple'"
-        :data-unread="store.unread.couple"
-        @click="chatSelected = 'couple'; store.unread.couple = false"
-      >
-        Couple
-      </div>
-    </div>
-    <div class="chat__messages">
-      <template
-        v-for="message in store.messages[chatSelected]"
-        :key="message.content + message.timestamp"
-      >
-        <InAndOutMessage
-          v-if="message.type === 'inandout_alert'"
-          :username="message.author"
-          :join="message.content"
-        />
-        <TimeSeparator
-          v-else-if="message.type === 'time_separator'"
-          :message="message.content"
-        />
-        <ChatMessage
-          v-else-if="message.type === 'message' || message.type === 'couple' || message.type === 'werewolf' || message.type === 'dead'"
-          :message="message"
-        />
-        <ChatAlert
-          v-else
-          :message="message.content"
-          :type="message.type"
-          :actions="message.actionList"
-        />
-      </template>
-    </div>
-    <div class="chat__submit-form">
-      <input
-        ref="input"
-        v-model="content"
-        :disabled="isLocked === true"
-        :class="{locked: isLocked}"
-        class="chat__send-input"
-        :placeholder="isLocked ? 'Chat verrouillé' : 'Envoyer un message' "
-        type="text"
-        @keyup.enter="sendMessage()"
-      >
-      <button
-        ref="button"
-        aria-label="Envoyer"
-        class="chat__send-button"
-        type="submit"
-        :class="content.length > 500 || isLocked ? 'locked' : ''"
-        @click.prevent="sendMessage()"
-        @keyup.stop
-      >
-        <svg class="chat__submit-icon">
-          <use
-            ref="icon"
-            :href="content.length > 500 || isLocked ? '/sprite.svg#lock' : '/sprite.svg#send'"
-          />
-        </svg>
-        <span v-if="content.length > 500">
-          {{ content.length }}/500
-        </span>
-      </button>
-    </div>
-  </div>
+	<div class="chat__main">
+		<div v-if="gameStore.couple.includes(userStore.id)" class="chat__selector">
+			<div
+				:data-selected="chatSelected === 'main'"
+				:data-unread="store.unread.main"
+				@click="
+					chatSelected = 'main';
+					store.unread.main = false;
+					messagesContainer.scrollTo(0, messagesContainer.scrollHeight);
+				"
+			>
+				Main
+			</div>
+			<span class="chat__selector-separator" />
+			<div
+				:data-selected="chatSelected === 'couple'"
+				:data-unread="store.unread.couple"
+				@click="
+					chatSelected = 'couple';
+					store.unread.couple = false;
+					messagesContainer.scrollTo(0, messagesContainer.scrollHeight);
+				"
+			>
+				Couple
+			</div>
+		</div>
+		<div class="chat__messages" ref="messagesContainer">
+			<template
+				v-for="message in store.messages[chatSelected]"
+				:key="message.content + message.timestamp"
+			>
+				<InAndOutMessage
+					v-if="message.type === 'inandout_alert'"
+					:username="message.author"
+					:join="message.content"
+				/>
+				<TimeSeparator
+					v-else-if="message.type === 'time_separator'"
+					:message="message.content"
+				/>
+				<ChatMessage
+					v-else-if="
+						message.type === 'message' ||
+						message.type === 'couple' ||
+						message.type === 'werewolf' ||
+						message.type === 'dead'
+					"
+					:message="message"
+				/>
+				<ChatAlert
+					v-else
+					:message="message.content"
+					:type="message.type"
+					:actions="message.actionList"
+				/>
+			</template>
+		</div>
+		<div class="chat__submit-form">
+			<input
+				ref="input"
+				v-model="content"
+				:disabled="isLocked"
+				:class="{ locked: isLocked }"
+				class="chat__send-input"
+				:placeholder="isLocked ? $t('chat.locked') : $t('chat.send')"
+				type="text"
+				@keyup.enter="sendMessage()"
+			/>
+			<button
+				ref="button"
+				aria-label="Envoyer"
+				class="chat__send-button"
+				type="submit"
+				:class="content.length > 500 || isLocked ? 'locked' : ''"
+				@click.prevent="sendMessage()"
+				@keyup.stop
+			>
+				<svg class="chat__submit-icon">
+					<use
+						ref="icon"
+						:href="
+							content.length > 500 || isLocked
+								? '/sprite.svg#lock'
+								: '/sprite.svg#send'
+						"
+					/>
+				</svg>
+				<span v-if="content.length > 500"> {{ content.length }}/500 </span>
+			</button>
+		</div>
+	</div>
 </template>
 
 <script setup>
@@ -92,25 +104,40 @@ import ChatAlert from "./ChatAlert.vue";
 import ChatMessage from "./ChatMessage.vue";
 import TimeSeparator from "./TimeSeparator.vue";
 import InAndOutMessage from "./InAndOutMessage.vue";
+import { useI18n } from "vue-i18n";
 
 const content = ref("");
 const input = ref(null);
 const button = ref(null);
 const icon = ref(null);
+const isLocked = ref(false);
 const gameStore = useGameStore();
 const userStore = useUserStore();
 const route = useRoute();
 const store = useStore();
 let interval = null;
-const isLocked = ref(false);
+const { t } = useI18n();
 
 const chatSelected = ref("main");
+const messagesContainer = ref(null);
 
-gameStore.$subscribe((mutation, state) => {
-	isLocked.value = state.chat_locked;
-});
+const messagesHistory = JSON.parse(localStorage.getItem("messages"));
 
-const sendMessage = async function() {
+if (messagesHistory) {
+	for (const gameId in messagesHistory) {
+		if (gameId !== route.params.id) {
+			delete messagesHistory[gameId];
+		}
+	}
+
+	localStorage.setItem("messages", JSON.stringify(messagesHistory));
+}
+
+if (messagesHistory && route.params.id in messagesHistory) {
+	store.messages = messagesHistory[route.params.id];
+}
+
+const sendMessage = async function () {
 	if (content.value.length < 500) {
 		await send(content.value, chatSelected.value);
 	}
@@ -137,57 +164,42 @@ window.Echo.join(`game.${route.params.id}`)
 
 		if (killed === null) {
 			if (context === "vote") {
-				store.send("Le village a décidé de ne tuer personne aujourd'hui !", "death");
+				store.send(t("chat.no_voted"), "death");
 			} else {
-				store.send("Personne n'a été tué cette nuit !", "death");
+				store.send(t("chat.no_killed_night"), "death");
 			}
 			return;
 		}
 
 		const user = gameStore.getPlayerByID(killed);
-		let role = await window.JSONFetch(`/game/${route.params.id}/user/${user.id}/role`, "GET");
+		let role = await window.JSONFetch(
+			`/game/${route.params.id}/user/${user.id}/role`,
+			"GET",
+		);
 		role = role.data.role.display_name;
 
 		if (payload.infected && payload.infected === true) {
-			role = role + " (infecté)";
+			role = role + ` (${t("chat.infected")})`;
 		}
 
 		if (context === "vote") {
-			store.send(`Le village a décidé de tuer ${user.username} qui était ${role}`, "death");
+			store.send(t("chat.vote", { user: user.username, role }), "death");
 		} else if (context === "bitten") {
-			store.send(`${user.username} a succombé à ses blessures. Il était ${role}`, "death");
+			store.send(t("chat.bitten", { user: user.username, role }), "death");
 		} else if (context === "couple") {
-			store.send(`Dans un élan de chagrin amoureux, ${user.username} rejoint son âme-soeur dans sa tombe, il était ${role}.`, "death");
+			store.send(t("chat.couple", { user: user.username, role }), "death");
 		} else if (context === "hunter") {
-			store.send(`Le chasseur à décider de tirer sa dernière balle sur ${user.username} qui était ${role}.`, "death");
+			store.send(t("chat.hunter", { user: user.username, role }), "death");
 		} else if (context === "disconnect") {
-			store.send(`${user.username} s'est déconnecté, il était ${role}`, "death");
+			store.send(t("chat.disconnect", { user: user.username, role }), "death");
 		} else {
-			store.send(`${user.username} a été tué cette nuit, il était ${role} !`, "death");
+			store.send(t("chat.death", { user: user.username, role }), "death");
 		}
 	})
 	.listen(".chat.lock", ({ data }) => {
 		isLocked.value = data.payload.lock;
 	})
-	.listen(".game.end", async (e) => {
-		const data = e.data.payload;
-		const winners = Object.keys(data.winners);
-		let message = `La partie a été remportée par ${winners.map(user => gameStore.getPlayerByID(user).username).join(", ")}`;
-
-		if (data.winningTeam === "couple") {
-			message += " qui étaient en couple.";
-		} else {
-			const team = await window.JSONFetch(`/team/${data.winningTeam}`, "GET");
-
-			if (team.data.team.name !== "loners") {
-				message += ` du camp des ${team.data.team.display_name}`;
-			} else {
-				message += ` qui était ${Object.values(data.winners)[0].display_name}`;
-			}
-		}
-
-		store.send(message, "info");
-
+	.listen(".game.end", async () => {
 		interval = setTimeout(() => {
 			useModalStore().open("activity-confirmation-modal");
 		}, 60000);

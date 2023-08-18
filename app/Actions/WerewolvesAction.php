@@ -9,11 +9,10 @@ use App\Events\InteractionUpdate;
 use App\Facades\Redis;
 use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
-use App\Traits\RegisterHelperTrait;
 
 class WerewolvesAction implements ActionInterface
 {
-    use MemberHelperTrait, RegisterHelperTrait;
+    use MemberHelperTrait;
 
     public function __construct(
         private readonly VoteService $service,
@@ -42,9 +41,9 @@ class WerewolvesAction implements ActionInterface
         ], true, [...$this->getUsersByTeam(Team::Werewolves, $this->gameId), ...array_keys($game['dead_users'])]));
     }
 
-    public function close(string $gameId): void
+    public function close(): void
     {
-        $this->service->afterVote($gameId, State::Werewolf->stringify());
+        $this->service->afterVote($this->gameId, State::Werewolf->stringify());
     }
 
     public function isSingleUse(): bool
@@ -52,12 +51,12 @@ class WerewolvesAction implements ActionInterface
         return false;
     }
 
-    public function additionnalData(string $gameId): null
+    public function additionnalData(): null
     {
         return null;
     }
 
-    public function status(string $gameId): null
+    public function status(): null
     {
         return null;
     }

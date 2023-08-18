@@ -1,27 +1,31 @@
 import { client } from "../Redis/Connection.js";
-import {getRounds, Hook, HookedState, Round, StateIdentifier} from "./RoundService.js";
-import { ChatService } from "./ChatService.js";
-import fetch from "../Helpers/fetch.js";
+import {
+	getRounds,
+	Hook,
+	HookedState,
+	Round,
+	StateIdentifier,
+} from "./RoundService.js";
 import { gameId } from "../Helpers/Functions.js";
-import {error, log, warn} from "../Logger.js";
+import { error, info, warn } from "../Logger.js";
 import { GameService } from "./GameService.js";
-import {Server} from "socket.io";
-import {EventEmitter} from "node:events";
+import { Server } from "socket.io";
+import { EventEmitter } from "node:events";
 
 type State = {
-	status: number
-	round: number | null
-	counterDuration: number
-	startTimestamp: number
-	counterId?: number
-	skipped?: boolean
-}
+	status: number;
+	round: number | null;
+	counterDuration: number;
+	startTimestamp: number;
+	counterId?: number;
+	skipped?: boolean;
+};
 
-export { State }
+export { State };
 
 export class StateManager {
-	private readonly io: Server
-	private emitter: EventEmitter
+	private readonly io: Server;
+	private emitter: EventEmitter;
 
 	constructor(io: Server, emitter: EventEmitter) {
 		this.io = io;
@@ -31,29 +35,26 @@ export class StateManager {
 	async setState(state: State, channel: string, isSkip = false) {
 		const id = gameId(channel);
 
-		log(`Setting state of game ${id} to ${state.status} in round ${state.round || 0} for a duration of ${state.counterDuration}`);
+		info(
+			`Setting state of game ${id} to ${state.status} in round ${
+				state.round || 0
+			} for a duration of ${state.counterDuration}`,
+		);
 		await client.set(`game:${id}:state`, JSON.stringify(state));
 
 		this.io.to(channel).emit("game.state", channel, {
 			status: state.status,
 			counterDuration: state.counterDuration,
 			startTimestamp: state.startTimestamp,
-			round: state.round || 0
+			round: state.round || 0,
+			skipped: isSkip,
 		});
-
-		if (!isSkip) {
-			const message = await fetch(`${process.env.API_URL}/state/${state.status}/message`);
-
-			if (state.status > 1 && message.status !== 404) {
-				ChatService.info(this.io, channel, message.json.data.state_message);
-			}
-		}
 
 		return this;
 	}
 
 	async getState(id: string): Promise<State> {
-		return JSON.parse(await client.get(`game:${id}:state`) as string);
+		return JSON.parse((await client.get(`game:${id}:state`)) as string);
 	}
 
 	async nextState(channel: string, counterId: number) {
@@ -76,10 +77,11 @@ export class StateManager {
 		const roundList = await getRounds(id);
 
 		if (roundList.length === 0) {
-			error(`Round list is empty for game ${id}`)
+			error(`Round list is empty for game ${id}`);
+			return;
 		}
 
-		let rounds: Round[] = roundList
+		let rounds: Round[] = roundList;
 
 		const loopingRoundIndex = rounds.length - 2;
 		let currentRound = state["round"] || 0;
@@ -89,22 +91,45 @@ export class StateManager {
 		}
 
 		let currentRoundObject = rounds[currentRound];
-		if(!currentRoundObject) return;
+		if (!currentRoundObject) return;
 
-		let stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
-		let currentState: StateIdentifier = typeof currentRoundObject[stateIndex] === "undefined" ? 0 : (currentRoundObject[stateIndex] as Hook).identifier;
+		let stateIndex =
+			currentRoundObject.findIndex(
+				(roundState) => roundState.identifier === state["status"],
+			) + 1;
+		let currentState: StateIdentifier =
+			typeof currentRoundObject[stateIndex] === "undefined"
+				? 0
+				: (currentRoundObject[stateIndex] as Hook).identifier;
 		let isLast = stateIndex === currentRoundObject.length;
 
-		halt = await this.handleAfter(isLast, currentRoundObject, stateIndex, channel)
+		halt = await this.handleAfter(
+			isLast,
+			currentRoundObject,
+			stateIndex,
+			channel,
+		);
 
 		if (currentState === 6) {
-			rounds = await getRounds(id)
+			rounds = await getRounds(id);
+
+			if (rounds.length === 0) {
+				error(`Round list is empty for game ${id}`);
+				return;
+			}
+
 			currentRoundObject = rounds[currentRound];
 
-			if(!currentRoundObject) return;
+			if (!currentRoundObject) return;
 
-			stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
-			currentState = typeof currentRoundObject[stateIndex] === "undefined" ? 0 : (currentRoundObject[stateIndex] as Hook).identifier;
+			stateIndex =
+				currentRoundObject.findIndex(
+					(roundState) => roundState.identifier === state["status"],
+				) + 1;
+			currentState =
+				typeof currentRoundObject[stateIndex] === "undefined"
+					? 0
+					: (currentRoundObject[stateIndex] as Hook).identifier;
 		}
 
 		if (
@@ -113,13 +138,16 @@ export class StateManager {
 		) {
 			// We are at the end of the current round
 			currentRound++;
-			const round = rounds[currentRound] as Hook[]
+			const round = rounds[currentRound] as Hook[];
 			currentState = (round[0] as Hook).identifier;
 			stateIndex = 0;
-		} else if (currentRound >= loopingRoundIndex && !currentRoundObject[stateIndex]) {
+		} else if (
+			currentRound >= loopingRoundIndex &&
+			!currentRoundObject[stateIndex]
+		) {
 			// We are at the end of the looping round
 			currentRound++;
-			const round = rounds[currentRound] as Hook[]
+			const round = rounds[currentRound] as Hook[];
 			currentState = (round[0] as Hook).identifier;
 			stateIndex = 0;
 		}
@@ -129,10 +157,12 @@ export class StateManager {
 		}
 
 		const currentUsedRound = rounds[currentRound] as Round;
-		const currentUsedState = currentUsedRound[stateIndex] as HookedState
+		const currentUsedState = currentUsedRound[stateIndex] as HookedState;
 		let duration = currentUsedState.duration;
 
-		halt = halt || await this.handleBefore(currentRoundObject, stateIndex, channel)
+		halt =
+			halt ||
+			(await this.handleBefore(currentRoundObject, stateIndex, channel));
 
 		if (halt) {
 			const lastRound = rounds.at(-1) as Round;
@@ -143,13 +173,16 @@ export class StateManager {
 			this.emitter.emit("time.halt", id);
 		}
 
-		await this.setState({
-			status: currentState,
-			startTimestamp: Date.now(),
-			counterDuration: duration,
-			counterId: counterId,
-			round: currentRound
-		}, channel);
+		await this.setState(
+			{
+				status: currentState,
+				startTimestamp: Date.now(),
+				counterDuration: duration,
+				counterId: counterId,
+				round: currentRound,
+			},
+			channel,
+		);
 	}
 
 	async getNextStateDuration(channel: string): Promise<number> {
@@ -166,7 +199,10 @@ export class StateManager {
 		}
 
 		const currentRoundObject = rounds[currentRound] as Round;
-		const stateIndex = currentRoundObject.findIndex(roundState => roundState.identifier === state["status"]) + 1;
+		const stateIndex =
+			currentRoundObject.findIndex(
+				(roundState) => roundState.identifier === state["status"],
+			) + 1;
 
 		if (
 			currentRound < loopingRoundIndex &&
@@ -174,14 +210,14 @@ export class StateManager {
 			typeof rounds[currentRound + 1] !== "undefined"
 		) {
 			// If we are at the end of the current round
-			const round = rounds[currentRound + 1] as Round
+			const round = rounds[currentRound + 1] as Round;
 			return (round[0] as HookedState).duration;
 		} else if (
 			currentRound >= loopingRoundIndex &&
 			typeof currentRoundObject[stateIndex] === "undefined"
 		) {
 			// If we are at the end of the looping round
-			const round = rounds[loopingRoundIndex] as Round
+			const round = rounds[loopingRoundIndex] as Round;
 			return (round[0] as HookedState).duration;
 		} else {
 			// Otherwise return the next duration
@@ -190,37 +226,42 @@ export class StateManager {
 		}
 	}
 
-	private async handleAfter(isLast: boolean, currentRoundObject: Round, stateIndex: number, channel: string) {
+	private async handleAfter(
+		isLast: boolean,
+		currentRoundObject: Round,
+		stateIndex: number,
+		channel: string,
+	) {
 		let halt = false;
 
-		if(!currentRoundObject[stateIndex - 1] && !currentRoundObject.at(-1)) {
+		if (!currentRoundObject[stateIndex - 1] && !currentRoundObject.at(-1)) {
 			return halt;
 		}
 
-		let hook = undefined
+		let hook = undefined;
 
-		if (
-			!isLast
-		) {
+		if (!isLast) {
 			hook = currentRoundObject[stateIndex - 1] as Hook;
-		} else if (
-			isLast
-		) {
-			hook = currentRoundObject.at(-1) as Hook
+		} else if (isLast) {
+			hook = currentRoundObject.at(-1) as Hook;
 		}
 
 		if (hook && hook.after) {
-			halt = await hook.after(this.io, channel)
+			halt = await hook.after(this.io, channel);
 		}
 
-		return halt
+		return halt;
 	}
 
-	private async handleBefore(currentRoundObject: Round, stateIndex: number, channel: string) {
+	private async handleBefore(
+		currentRoundObject: Round,
+		stateIndex: number,
+		channel: string,
+	) {
 		let halt = false;
 
 		if (!currentRoundObject[stateIndex]) {
-			return halt
+			return halt;
 		}
 
 		const hook = currentRoundObject[stateIndex] as Hook;
@@ -232,4 +273,3 @@ export class StateManager {
 		return halt;
 	}
 }
-

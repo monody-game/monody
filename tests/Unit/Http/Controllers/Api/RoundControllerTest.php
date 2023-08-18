@@ -168,10 +168,11 @@ class RoundControllerTest extends TestCase
         Redis::update("game:{$this->thirdGame['id']}", function (&$game) use ($users) {
             $game['users'] = [...array_map(fn ($user) => $user['id'], $users)];
             $game['assigned_roles'] = [
-                $users[0]['id'] => Role::Werewolf->value,
-                $users[1]['id'] => Role::InfectedWerewolf->value,
+                $users[0]['id'] => Role::InfectedWerewolf->value,
             ];
         });
+
+        Redis::set("game:{$this->thirdGame['id']}:deaths", [['user' => $users[1]['id']]]);
 
         $this
             ->get("/api/round/2/{$this->thirdGame['id']}")

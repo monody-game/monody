@@ -8,8 +8,8 @@ export const useStore = defineStore("game-creation-modal", {
 			roles: [],
 			teams: [],
 			gameId: null,
-			type: 0,
-			toPresent: {}
+			gameType: 0x1, // "Normal" game (site only)
+			toPresent: {},
 		};
 	},
 	getters: {
@@ -32,24 +32,20 @@ export const useStore = defineStore("game-creation-modal", {
 		},
 	},
 	actions: {
-		removeSelectedRole (roleId) {
+		removeSelectedRole(roleId) {
 			const selectedRoles = this.selectedRoles;
 			const index = selectedRoles.indexOf(roleId);
 			selectedRoles.splice(index, 1);
 		},
-		close () {
+		close() {
 			this.isOpenned = false;
 			this.selectedRoles = [];
 			this.gameId = null;
 			this.type = 0;
-			this.roles.map(role => role.count = 0);
+			this.roles.map((role) => (role.count = 0));
 
-			document.documentElement.style.removeProperty(
-				"--villager-balance-width"
-			);
-			document.documentElement.style.removeProperty(
-				"--werewolf-balance-width"
-			);
-		}
-	}
+			document.documentElement.style.removeProperty("--villager-balance-width");
+			document.documentElement.style.removeProperty("--werewolf-balance-width");
+		},
+	},
 });

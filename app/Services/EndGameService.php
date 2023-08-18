@@ -31,7 +31,7 @@ class EndGameService
     /**
      * @param  string[]|null  $winners
      */
-    public function end(string $gameId, ?array $winners = null): void
+    public function end(string $gameId, array $winners = null): void
     {
         $winningTeam = $this->getWinningTeam($gameId);
         $winners = $winners ?? $this->getWinningUsers($gameId, $winningTeam);
@@ -185,7 +185,7 @@ class EndGameService
 
         if (in_array(Role::WhiteWerewolf->value, array_keys($game['roles']), true)) {
             return !in_array($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], array_keys($game['dead_users']), true) &&
-                count($werewolves) > 1;
+                count($werewolves) > 1 && count($villagers) >= 1;
         }
 
         if (in_array(Role::Parasite->value, array_keys($game['roles']), true)) {

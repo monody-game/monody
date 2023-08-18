@@ -1,10 +1,12 @@
 import { InteractionService } from "../Services/InteractionService.js";
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 import fetch from "../Helpers/fetch.js";
-import {gameId} from "../Helpers/Functions.js";
+import { gameId } from "../Helpers/Functions.js";
 
 const baseUrl = `${process.env.API_URL}/game`;
-const body = (channel: string) => { return { gameId: gameId(channel) } };
+const body = (channel: string) => {
+	return { gameId: gameId(channel) };
+};
 
 export default {
 	identifier: 17,
@@ -29,5 +31,5 @@ export default {
 		}
 
 		return false;
-	}
+	},
 };

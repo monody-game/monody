@@ -12,5 +12,5 @@ export default {
 		await InteractionService.closeInteraction(io, channel, "guard");
 
 		return false;
-	}
+	},
 };

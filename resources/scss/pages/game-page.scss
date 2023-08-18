@@ -1,31 +1,31 @@
 .day {
-  background-image: url("../../public/images/monody_day.webp");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+	background-image: url("../../public/images/monody_day.webp");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
 
-  --chat-background: var(--light-background);
-  --chat-send-background: var(--light-background);
-  --chat-send-text: rgba(0, 0, 0, 20%);
-  --unchanged-color: 0, 0, 0;
+	--chat-background: var(--light-background);
+	--chat-send-background: var(--light-background);
+	--chat-send-text: rgba(0, 0, 0, 20%);
+	--unchanged-color: 0, 0, 0;
 }
 
 .night {
-  background-image: url("../../public/images/monody_night.webp");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+	background-image: url("../../public/images/monody_night.webp");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
 
-  --chat-background: var(--dark-background);
-  --chat-send-background: var(--dark-background-hover);
-  --chat-send-text: rgba(255, 255, 255, 30%);
-  --unchanged-color: 255, 255, 255;
+	--chat-background: var(--dark-background);
+	--chat-send-background: var(--dark-background-hover);
+	--chat-send-text: rgba(255, 255, 255, 30%);
+	--unchanged-color: 255, 255, 255;
 }
 
 .game-page__container {
-  display: flex;
-  flex-direction: column;
-  height: 100svh;
+	display: flex;
+	flex-direction: column;
+	height: 100svh;
 	color: var(--light-background);
 }
 
@@ -36,29 +36,31 @@
 }
 
 .game-page__header {
-  display: flex;
+	display: grid;
 	align-items: center;
-	justify-content: space-between;
-  margin-top: space(3);
-  margin-inline: space(4);
+	justify-items: center;
+	grid-template-columns: 120px 1fr repeat(2, 28px);
+	gap: space(3);
+	margin-top: space(3);
+	margin-inline: space(4);
 }
 
 .game-page__home-link {
-  color: rgba(255, 255, 255, 60%);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  transition: color 0.3s;
-  cursor: pointer;
+	color: rgba(255, 255, 255, 60%);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	transition: color 0.3s;
+	cursor: pointer;
 
-  &:hover {
-    color: #fff;
+	&:hover {
+		color: #fff;
 		text-decoration: none;
-  }
+	}
 
-  & p {
-    margin-left: space(1);
-  }
+	& p {
+		margin-left: space(1);
+	}
 }
 
 .game-page__role {
@@ -70,9 +72,9 @@
 }
 
 .game-page__main {
-  display: flex;
-  height: 100%;
-  max-height: calc(100% - 45px - space(3));
+	display: flex;
+	height: 100%;
+	max-height: calc(100% - 45px - space(3));
 }
 
 .game-page__details {
@@ -93,6 +95,8 @@
 	}
 
 	.game-page__header {
+		grid-template-columns: 40px 1fr repeat(2, 28px);
 		margin-inline: space(2);
+		gap: space(1);
 	}
 }

@@ -1,14 +1,14 @@
 import { GameChannel } from "./GameChannel.js";
 import { PrivateChannel } from "./PrivateChannel.js";
-import { error, log } from "../Logger.js";
-import {Server, Socket} from "socket.io";
-import {EventEmitter} from "node:events";
-import {DataPayload} from "../IoServer.js";
+import { error, info } from "../Logger.js";
+import { Server, Socket } from "socket.io";
+import { EventEmitter } from "node:events";
+import { DataPayload } from "../IoServer.js";
 
 export class Channel {
 	private privateChannels = ["private-*", "presence-*"];
-	private private: PrivateChannel
-	private presence: GameChannel
+	private private: PrivateChannel;
+	private presence: GameChannel;
 
 	constructor(io: Server, emitter: EventEmitter) {
 		this.private = new PrivateChannel();
@@ -35,14 +35,14 @@ export class Channel {
 		socket.leave(channel);
 
 		if (process.env.APP_DEBUG) {
-			log(`${socket.id} left channel: ${channel} (${reason})`);
+			info(`${socket.id} left channel: ${channel} (${reason})`);
 		}
 	}
 
 	isPrivate(channel: string): boolean {
 		let isPrivate = false;
 
-		this.privateChannels.forEach(privateChannel => {
+		this.privateChannels.forEach((privateChannel) => {
 			const regex = new RegExp(privateChannel.replace("*", ".*"));
 			if (regex.test(channel)) isPrivate = true;
 		});
@@ -52,7 +52,9 @@ export class Channel {
 
 	async joinPrivate(socket: Socket, data: DataPayload) {
 		try {
-			const res = JSON.parse(await this.private.authenticate(socket, data));
+			const res = JSON.parse(
+				await this.private.authenticate(socket, data),
+			);
 			socket.join(data.channel);
 
 			if (this.isPresence(data.channel)) {
@@ -75,6 +77,8 @@ export class Channel {
 				error(`Error during user joining channel ${data.channel}`);
 				error(e);
 			}
+
+			socket.emit("subscription_error", data.channel, e);
 		}
 	}
 
@@ -84,7 +88,7 @@ export class Channel {
 
 	onJoin(socket: Socket, channel: string) {
 		if (process.env.APP_DEBUG) {
-			log(`${socket.id} joined channel: ${channel}`);
+			info(`${socket.id} joined channel: ${channel}`);
 		}
 	}
 

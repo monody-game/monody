@@ -9,7 +9,7 @@ class AvatarUploadRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'avatar' => 'required|file|max:2048|mimes:jpg,png,webp,bmp|dimensions:min_width=100,min_height=100,max_width=2500,max_height=2500',
+            'avatar' => 'required|file|max:4096|mimes:jpg,png,webp,bmp|dimensions:min_width=100,min_height=100,max_width=2500,max_height=2500',
         ];
     }
 }

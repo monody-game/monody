@@ -4,12 +4,12 @@ export const useStore = defineStore("badges", {
 	state: () => {
 		return {
 			isOpenned: false,
-			badges: []
+			badges: [],
 		};
 	},
 	actions: {
 		close() {
 			this.isOpenned = false;
-		}
-	}
+		},
+	},
 });

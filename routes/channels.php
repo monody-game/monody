@@ -14,7 +14,7 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
     $members = Redis::get("game:$gameId:members") ?? [];
     $member = array_filter($members, fn ($member) => $member['user_id'] === $user->id);
 
-    if ($game === null || ($game['is_started'] && count($member) >= 1)) {
+    if (!is_array($game) || ($game['is_started'] && count($member) >= 1)) {
         return false;
     }
 
@@ -22,7 +22,7 @@ Broadcast::channel('game.{gameId}', function (User $user, $gameId) {
         return false;
     }
 
-    if ($game['type'] === GameType::VOCAL->value && $user->discord_linked_at === null) {
+    if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value && $user->discord_linked_at === null) {
         return false;
     }
 

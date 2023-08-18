@@ -1,6 +1,6 @@
 <x-mail::message>
 {{-- Greeting --}}
-# Bonjour !
+# {{ __('mail.hi') }}
 
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)
@@ -28,14 +28,13 @@
 @endforeach
 
 {{-- Salutation --}}
-Bon jeu sur Monody.<br>
+{{ __('mail.salutation') }}<br>
 
 {{-- Subcopy --}}
 @isset($actionText)
 <x-slot:subcopy>
 @lang(
-    "Si vous avez des problèmes pour cliquer sur le bouton \":actionText\", copiez et collez l'URL ci-dessous\n".
-    'dans votre navigateur :',
+    __('mail.subcopy'),
     [
         'actionText' => $actionText,
     ]

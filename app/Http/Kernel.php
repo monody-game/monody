@@ -7,6 +7,7 @@ use App\Http\Middleware\AddTokenToRequests;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\ForceJsonResponse;
+use App\Http\Middleware\Localization;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
@@ -37,6 +38,7 @@ class Kernel extends HttpKernel
     protected $middleware = [
         HandleCors::class,
         TrustProxies::class,
+        Localization::class,
         PreventRequestsDuringMaintenance::class,
         AddContentSecurityPolicyHeaders::class,
         ValidatePostSize::class,
@@ -55,6 +57,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
+            ForceJsonResponse::class,
         ],
 
         'api' => [

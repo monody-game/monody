@@ -1,21 +1,21 @@
 .spinner #cloud {
 	transform: translateX(100%);
-  animation: animateCloud 5s alternate infinite ease-in-out;
+	animation: animateCloud 5s alternate infinite ease-in-out;
 	fill: var(--light-background);
+}
 
-	@media screen and (prefers-color-scheme: dark) {
-		fill: var(--dark-background);
-	}
+html.dark .spinner #cloud {
+	fill: var(--dark-background);
 }
 
 .spinner #moon {
-    stroke-dasharray: 120;
-    stroke-dashoffset: 120;
-    animation: animateMoon 5s alternate infinite ease-in-out;
+	stroke-dasharray: 120;
+	stroke-dashoffset: 120;
+	animation: animateMoon 5s alternate infinite ease-in-out;
 }
 
 .spinner__cloud-white #cloud {
-    stroke: #fff;
+	stroke: #fff;
 }
 
 .spinner__dots-container {
@@ -25,45 +25,45 @@
 }
 
 @keyframes animateCloud {
-    20% {
-        transform: translateX(100%);
-    }
+	20% {
+		transform: translateX(100%);
+	}
 
-    40% {
-        transform: translateX(0);
-    }
+	40% {
+		transform: translateX(0);
+	}
 
-    50% {
-        transform: translateX(0);
-    }
+	50% {
+		transform: translateX(0);
+	}
 
-    70% {
-        transform: translateX(-100%);
-    }
+	70% {
+		transform: translateX(-100%);
+	}
 
-    100% {
-        transform: translateX(-100%);
-    }
+	100% {
+		transform: translateX(-100%);
+	}
 }
 
 @keyframes animateMoon {
-    10% {
-        stroke-dashoffset: 120;
-    }
+	10% {
+		stroke-dashoffset: 120;
+	}
 
-    30% {
-        stroke-dashoffset: 0;
-    }
+	30% {
+		stroke-dashoffset: 0;
+	}
 
-    70% {
-        stroke-dashoffset: 0;
-    }
+	70% {
+		stroke-dashoffset: 0;
+	}
 
-    90% {
-        stroke-dashoffset: 120;
-    }
+	90% {
+		stroke-dashoffset: 120;
+	}
 
-    100% {
-        stroke-dashoffset: 120;
-    }
+	100% {
+		stroke-dashoffset: 120;
+	}
 }

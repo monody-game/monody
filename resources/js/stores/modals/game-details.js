@@ -9,12 +9,8 @@ export const useStore = defineStore("game-details", {
 	actions: {
 		close() {
 			this.isOpenned = false;
-			document.documentElement.style.removeProperty(
-				"--villager-balance-width"
-			);
-			document.documentElement.style.removeProperty(
-				"--werewolf-balance-width"
-			);
-		}
-	}
+			document.documentElement.style.removeProperty("--villager-balance-width");
+			document.documentElement.style.removeProperty("--werewolf-balance-width");
+		},
+	},
 });

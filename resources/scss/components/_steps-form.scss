@@ -1,0 +1,14 @@
+.steps-form__count {
+	font-weight: normal;
+	font-size: 1.25rem;
+}
+
+.steps-form__advancement {
+	background-color: var(--primary-hover);
+	border-bottom: var(--border-secondary) 1px solid;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 16px;
+}

@@ -42,37 +42,39 @@ enum Badge: int
     public function stringify(): string
     {
         return match ($this) {
-            self::Graphist => 'Graphiste',
-            self::Beta => 'Beta-testeur',
-            self::Owner => 'L\'Originel',
-            self::Wins => 'Gagnant inarrêtable',
-            self::Losses => 'Perdant inépuisable',
-            self::Level => 'Haut classé',
-            self::Rank => 'Fou de l\'ELO'
+            self::Graphist => __('enums.badges.graphist.name'),
+            self::Beta => __('enums.badges.beta.name'),
+            self::Owner => __('enums.badges.owner.name'),
+            self::Wins => __('enums.badges.wins.name'),
+            self::Losses => __('enums.badges.losses.name'),
+            self::Level => __('enums.badges.level.name'),
+            self::Rank => __('enums.badges.rank.name'),
         };
     }
 
     public function describe(): string
     {
         return match ($this) {
-            self::Graphist => 'Graphiste de Monody',
-            self::Beta => 'A participé à la beta de Monody',
-            self::Owner => 'Créateur de Monody !',
-            self::Wins => 'A gagné de nombreuses fois',
-            self::Losses => 'A perdu de nombreuses fois',
-            self::Level => 'A gravi de nombreux niveaux',
-            self::Rank => "S'est classé en ELO"
+            self::Graphist => __('enums.badges.graphist.describe'),
+            self::Beta => __('enums.badges.beta.describe'),
+            self::Owner => __('enums.badges.owner.describe'),
+            self::Wins => __('enums.badges.wins.describe'),
+            self::Losses => __('enums.badges.losses.describe'),
+            self::Level => __('enums.badges.level.describe'),
+            self::Rank => __('enums.badges.rank.describe'),
         };
     }
 
-    public function description(): ?string
+    public function description(): string
     {
         return match ($this) {
-            default => null,
-            self::Wins => 'Remportez la victoire de nombreuses fois afin de débloquer ce badge.',
-            self::Losses => 'Perdez de nombreuses fois afin de déloquer ce badge.',
-            self::Level => 'Acquérez de nombreux niveaux afin de débloquer ce badge.',
-            self::Rank => 'Atteignez les sommets des classements ELO afin de débloquer ce badge !'
+            self::Graphist => __('enums.badges.graphist.description'),
+            self::Owner => __('enums.badges.owner.description'),
+            self::Beta => __('enums.badges.beta.description'),
+            self::Wins => __('enums.badges.wins.description'),
+            self::Losses => __('enums.badges.losses.description'),
+            self::Level => __('enums.badges.level.description'),
+            self::Rank => __('enums.badges.rank.description'),
         };
     }
 

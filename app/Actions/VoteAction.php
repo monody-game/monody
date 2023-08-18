@@ -36,9 +36,9 @@ class VoteAction implements ActionInterface
         ]));
     }
 
-    public function close(string $gameId): void
+    public function close(): void
     {
-        $this->service->afterVote($gameId);
+        $this->service->afterVote($this->gameId);
     }
 
     public function isSingleUse(): bool
@@ -46,12 +46,12 @@ class VoteAction implements ActionInterface
         return false;
     }
 
-    public function additionnalData(string $gameId): null
+    public function additionnalData(): null
     {
         return null;
     }
 
-    public function status(string $gameId): null
+    public function status(): null
     {
         return null;
     }

@@ -66,7 +66,7 @@ class ExpService
      */
     public function nextLevelExp(int $level): int
     {
-        // Using intval because floor return a float
+        // Using intval because floor returns a float
         return intval(floor(10 * (pow($level, self::DIFFICULTY))));
     }
 }

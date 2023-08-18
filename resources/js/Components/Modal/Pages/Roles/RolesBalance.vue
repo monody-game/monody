@@ -1,27 +1,34 @@
 <template>
-  <div class="roles-balance__container">
-    <div
-      class="roles-balance__balance"
-      :title="'La partie est ' + currentStatus"
-    >
-      <span class="roles-balance__villagers" />
-      <span class="roles-balance__bubble">{{ roleCount }}</span>
-      <span class="roles-balance__werewolf" />
-    </div>
-  </div>
+	<div class="roles-balance__container">
+		<div
+			class="roles-balance__balance"
+			:title="$t('new_game.balance', [currentStatus])"
+		>
+			<span class="roles-balance__villagers" />
+			<span class="roles-balance__bubble">{{ roleCount }}</span>
+			<span class="roles-balance__werewolf" />
+		</div>
+	</div>
 </template>
 
 <script setup>
 import { computed, nextTick, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 
 const props = defineProps({
 	selectedRoles: {
 		type: Array,
-		required: true
-	}
+		required: true,
+	},
 });
 
-const roleCount = ref(props.selectedRoles.reduce((accumulator, current) => accumulator + current.count, 0));
+const roleCount = ref(
+	props.selectedRoles.reduce(
+		(accumulator, current) => accumulator + current.count,
+		0,
+	),
+);
+const { t } = useI18n();
 const werewolfWidth = ref(50);
 const villagerWidth = ref(50);
 const varContainer = computed(() => document.documentElement.style);
@@ -34,13 +41,13 @@ const getCurrentStatus = function () {
 		werewolfWidth.value >= 40 &&
 		werewolfWidth.value <= 50
 	) {
-		return "équilibrée";
+		return t("new_game.balanced");
 	}
 	if (werewolfWidth.value >= 40) {
-		return "avantagée aux loups-garous";
+		return t("new_game.werewolves_advantage");
 	}
 	if (villagerWidth.value >= 60) {
-		return "avantagée aux villageois";
+		return t("new_game.werewolves_advantage");
 	}
 };
 
@@ -48,18 +55,15 @@ const render = (roles) => {
 	let villagerWeight = 0;
 	let werewolfWeight = 0;
 
-	roleCount.value = roles.reduce((accumulator, current) => accumulator + current.count, 0);
+	roleCount.value = roles.reduce(
+		(accumulator, current) => accumulator + current.count,
+		0,
+	);
 
 	if (roles.length === 0) {
-		varContainer.value.setProperty(
-			"--villager-balance-width",
-			"50%"
-		);
+		varContainer.value.setProperty("--villager-balance-width", "50%");
 
-		varContainer.value.setProperty(
-			"--werewolf-balance-width",
-			"50%"
-		);
+		varContainer.value.setProperty("--werewolf-balance-width", "50%");
 
 		return;
 	}
@@ -88,16 +92,19 @@ const render = (roles) => {
 
 	varContainer.value.setProperty(
 		"--villager-balance-width",
-		villagerWidth.value + "%"
+		villagerWidth.value + "%",
 	);
 
 	varContainer.value.setProperty(
 		"--werewolf-balance-width",
-		werewolfWidth.value + "%"
+		werewolfWidth.value + "%",
 	);
 };
 
 nextTick(() => render(props.selectedRoles));
 
-watch(() => props.selectedRoles, (roles) => render(roles));
+watch(
+	() => props.selectedRoles,
+	(roles) => render(roles),
+);
 </script>

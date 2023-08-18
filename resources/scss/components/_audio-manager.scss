@@ -1,0 +1,45 @@
+.audio-manager_wrapper {
+	display: grid;
+	place-items: center;
+	cursor: pointer;
+}
+
+.audio-manager_wrapper svg {
+	height: 28px;
+	width: 28px;
+}
+
+.audio-manager__range {
+	width: 100%;
+}
+
+.audio-manager__slider-group {
+	display: grid;
+	gap: space(1);
+	width: 100%;
+
+	.audio-manager__side-group {
+		display: flex;
+		gap: space(1);
+	}
+
+	svg {
+		height: 24px;
+		width: 24px;
+	}
+}
+
+.audio-manager__sliders {
+	display: grid;
+	gap: space(2);
+}
+
+.audio-manager__content {
+	display: grid;
+	gap: space(2);
+	width: 100%;
+
+	h3 {
+		text-align: center;
+	}
+}

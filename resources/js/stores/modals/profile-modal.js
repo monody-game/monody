@@ -9,6 +9,6 @@ export const useStore = defineStore("profile-modal", {
 	actions: {
 		close() {
 			this.isOpenned = false;
-		}
-	}
+		},
+	},
 });

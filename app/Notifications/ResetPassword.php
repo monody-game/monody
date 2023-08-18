@@ -34,10 +34,10 @@ class ResetPassword extends Notification
     public function toMail(): MailMessage
     {
         return (new MailMessage)
-            ->subject('Monody | Réinitialiser votre mot de passe')
-            ->line('Cliquez sur le bouton ci-dessous afin de changer votre mot de passe.')
-            ->action('Réinitialiser le mot de passe', config('app.url') . '/forgot/' . $this->token)
-            ->line('Ce lien va expirer dans ' . config('auth.passwords.users.expire') . ' minutes.')
-            ->line('Vous n\'êtes pas à l\'origine de cette demande ? Ignorez simplement ce mail.');
+            ->subject(__('mail.reset.title'))
+            ->line(__('mail.reset.content'))
+            ->action(__('mail.reset.action'), config('app.url') . '/forgot/' . $this->token)
+            ->line(__('mail.reset.expire_time', ['time' => config('auth.passwords.users.expire')]))
+            ->line(__('mail.reset.note'));
     }
 }
