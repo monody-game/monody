@@ -1,3 +1,5 @@
+@use "../../tools/functions" as *;
+
 .game-type__wrapper {
 	display: flex;
 	justify-content: space-around;
@@ -15,13 +17,14 @@
 
 		border: var(--border-secondary) 2px solid;
 		border-radius: 8px;
-		transition: background-color .2s;
+		transition: background-color 0.2s;
 
 		max-width: 230px;
 		cursor: pointer;
 	}
 
-	div:not(.disabled):hover, div.active {
+	div:not(.disabled):hover,
+	div.active {
 		background-color: var(--primary-hover);
 
 		@media (prefers-color-scheme: light) {
@@ -46,13 +49,13 @@
 	}
 }
 
-.game-type__wrapper .note {
-	font-size: .85rem;
+html.light .game-type__wrapper .note {
+	font-size: 0.85rem;
 	color: #0f112780;
+}
 
-	@media (prefers-color-scheme: dark) {
-		color: #fffcf180;
-	}
+html.dark .game-type__wrapper .note {
+	color: #fffcf180;
 }
 
 .game-type__vocal-icon {
@@ -63,4 +66,15 @@
 .game-type__monody-icon {
 	width: 48px;
 	height: 54px;
+}
+
+@media screen and (max-width: 700px) {
+	.game-type__wrapper {
+		flex-direction: column;
+		gap: space(2);
+
+		div {
+			max-width: unset;
+		}
+	}
 }

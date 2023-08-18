@@ -19,7 +19,7 @@ class VoteService
     /**
      * @return array<string, array<string>>
      */
-    public function vote(string $userId, string $gameId, ?string $votingUser = null): array
+    public function vote(string $userId, string $gameId, string $votingUser = null): array
     {
         if (!$this->alive($userId, $gameId)) {
             return [];
@@ -45,7 +45,7 @@ class VoteService
     /**
      * @return array<string, array<string>>
      */
-    public function unvote(string $userId, string $gameId, ?string $votingUser = null): array
+    public function unvote(string $userId, string $gameId, string $votingUser = null): array
     {
         $votes = self::getVotes($gameId);
         $authUserId = $votingUser ?? Auth::user()?->getAuthIdentifier();
@@ -67,7 +67,7 @@ class VoteService
     public function elect(string $gameId): string
     {
         $game = Redis::get("game:$gameId");
-        $gameUsers = $game['users'];
+        $gameUsers = array_diff($game['users'], array_keys($game['dead_users']));
         $votes = self::getVotes($gameId);
 
         if ($votes === []) {

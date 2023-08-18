@@ -16,6 +16,8 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
+        $this->withHeader('Accept-Language', 'fr');
+
         app()->singleton(RedisMock::class, function () {
             return new RedisMock();
         });

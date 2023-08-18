@@ -1,3 +1,3 @@
-@function space ($i) {
-  @return calc(#{$i} * var(--space));
+@function space($i) {
+	@return calc(#{$i} * var(--space));
 }

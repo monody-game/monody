@@ -1,29 +1,29 @@
 .time-separator__main {
-  border-top: thin solid rgba(var(--unchanged-color), 20%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-top: space(1);
-  margin-bottom: space(1);
-  position: relative;
-  height: 0;
+	border-top: thin solid rgba(var(--unchanged-color), 20%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	margin-top: space(1);
+	margin-bottom: space(1);
+	position: relative;
+	height: 0;
 }
 
 .time-separator__message {
-  position: absolute;
-  color: rgba(var(--unchanged-color), 40%);
-  background-color: var(--chat-background);
-  padding-block: space(1);
+	position: absolute;
+	color: rgba(var(--unchanged-color), 40%);
+	background-color: var(--chat-background);
+	padding-block: space(1);
 	padding-inline: space(2);
-  font-size: 14px;
-  user-select: none;
+	font-size: 14px;
+	user-select: none;
 }
 
 .day {
-  --separator-border-color: rgba(var(--unchanged-color), 20%)
+	--separator-border-color: rgba(var(--unchanged-color), 20%);
 }
 
 .night {
-  --separator-border-color: rgba(var(--unchanged-color), 50%)
+	--separator-border-color: rgba(var(--unchanged-color), 50%);
 }

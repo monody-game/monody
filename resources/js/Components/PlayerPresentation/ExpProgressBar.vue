@@ -1,10 +1,10 @@
 <template>
-  <div
-    class="progress-bar"
-    :style="`background-image: conic-gradient(from 201deg at 50% 50%, var(--accent-primary) 0 ${progress}%, var(--primary) 0);`"
-  >
-    <slot />
-  </div>
+	<div
+		class="progress-bar"
+		:style="`background-image: conic-gradient(from 201deg at 50% 50%, var(--accent-primary) 0 ${progress}%, var(--primary) 0);`"
+	>
+		<slot />
+	</div>
 </template>
 
 <script setup>

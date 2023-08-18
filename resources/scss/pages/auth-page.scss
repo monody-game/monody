@@ -9,13 +9,11 @@
 .auth-page__wrapper {
 	display: grid;
 	place-items: center;
-	position: relative;
+	grid-template-rows: 32px 1fr 32px;
 
 	height: 100%;
 	width: 100%;
 	backdrop-filter: blur(7.5px);
-
-	padding-inline: space(8);
 
 	@media screen and (max-width: 630px) {
 		padding-inline: 0;
@@ -25,12 +23,12 @@
 .auth-page__home-link {
 	display: flex;
 	align-items: center;
+	justify-self: flex-start;
 	gap: space(1);
 	color: var(--secondary);
 
-	position: absolute;
-	top: space(3);
-	left: space(3);
+	margin-top: space(6);
+	margin-left: space(3);
 }
 
 .auth-page__home-link svg {
@@ -96,7 +94,7 @@
 	}
 }
 
-.auth-page__form-group[data-is-invalid=true] input {
+.auth-page__form-group[data-is-invalid="true"] input {
 	border: var(--border-danger) solid 2px;
 }
 
@@ -114,7 +112,7 @@
 	height: 24px;
 	width: 24px;
 	right: 10px;
-	top: 34px;
+	top: 32px;
 }
 
 .auth-page__show-password {
@@ -143,7 +141,9 @@
 		padding-block: space(1) !important;
 	}
 
-	& button:hover, button:disabled, button:disabled:hover {
+	& button:hover,
+	button:disabled,
+	button:disabled:hover {
 		background-color: var(--primary-hover) !important;
 	}
 }
@@ -155,11 +155,11 @@
 	left: 0;
 	right: 0;
 
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	display: grid;
+	place-items: center;
 
-	& .spinner__dots-container, .spinner__dots-container spinning-dots {
+	& .spinner__dots-container,
+	.spinner__dots-container spinning-dots {
 		z-index: 100;
 		margin: 0;
 		height: 48px;

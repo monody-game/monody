@@ -21,7 +21,9 @@ return [
 
     'locale' => env('APP_LOCALE', 'fr'),
 
-    'fallback_locale' => 'fr',
+    'fallback_locale' => 'en',
+
+    'supported_locales' => ['en', 'fr'],
 
     'faker_locale' => 'fr_FR',
 
@@ -58,6 +60,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\MacroServiceProvider::class,
 
         Intervention\Image\ImageServiceProvider::class,
     ],

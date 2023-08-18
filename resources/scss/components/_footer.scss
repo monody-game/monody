@@ -4,15 +4,16 @@
 	align-items: center;
 	gap: space(2);
 	height: 32px;
-	margin-bottom: space(1);
 	color: var(--secondary);
+	margin-bottom: space(1);
 
 	& div {
 		display: flex;
 		gap: space(1.5);
 	}
 
-	& a, a svg {
+	& a,
+	a svg {
 		color: inherit;
 		height: 24px;
 		width: 24px;
@@ -24,4 +25,9 @@
 		flex-direction: column;
 		height: auto;
 	}
+}
+
+.lang-switcher__flag {
+	height: 24px;
+	width: 24px;
 }

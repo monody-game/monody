@@ -6,6 +6,6 @@ export async function send(message, selectedChat) {
 	await window.JSONFetch("/game/message/send", "POST", {
 		content: message,
 		gameId,
-		couple: selectedChat === "couple"
+		couple: selectedChat === "couple",
 	});
 }

@@ -9,6 +9,6 @@ export const useStore = defineStore("leaderboards", {
 	actions: {
 		close() {
 			this.isOpenned = false;
-		}
-	}
+		},
+	},
 });

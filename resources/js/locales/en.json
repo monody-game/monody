@@ -1,0 +1,242 @@
+{
+	"home": {
+		"howtoplay": "How to play (french)",
+		"play": "Play"
+	},
+	"auth": {
+		"signin": "Sign in",
+		"signup": "Sign up",
+		"logout": "Sign out",
+		"identifier": "Email or username",
+		"username": "Username",
+		"username_limitations": "between 3 et 16 characters",
+		"mandatory": "mandatory",
+		"optional": "optional",
+		"linked_email": "Email linked to your account",
+		"password": "Password",
+		"password_confirmation": "Confirm your password",
+		"password_limitations": "more than 8 characters",
+		"forgot_password": "Forgot password ?",
+		"forgot_success": "Please log in again to confirm the change",
+		"no_account": "New here ? Create an account.",
+		"have_account": "Already have an account ?",
+		"remind_password": "Nevermind, I remember my password !",
+		"submit": "Submit",
+		"email_popup": {
+			"title": "Why do I need to give this information ?",
+			"content": "This information is not mandatory! We use your email address to recover your account if you lose your password. You can also use it to log in. Please make sure you enter a valid e-mail address, as you'll need to check it."
+		},
+		"errors": {
+			"invalid_credentials": "Invalid credentials",
+			"fields_empty": "Please fill in all fields",
+			"field_too_short": "Your {field} must be longer than {length} characters",
+			"field_too_long": "Your {field} must be less than {length} characters long",
+			"password_confirmation": "Password confirmation must be identical to password",
+			"username_no_spaces": "There should be no spaces in your username",
+			"valid_email": "Please enter a valid email address",
+			"account_exists": "An account using this value already exists"
+		}
+	},
+	"play": {
+		"list": "Games list:",
+		"create": "Create",
+		"vocal_game": "This part takes place in voice",
+		"vocal_game_popup": "This is a voice game. You'll have to join a voice channel on Discord, continue?",
+		"no_linked_discord": "You must link your Discord account to Monody to join this game."
+	},
+	"leaderboards": {
+		"leaderboards": "Leaderboards",
+		"select": "Select leaderboard:",
+		"level": "Level",
+		"wins": "Wins"
+	},
+	"modal": {
+		"if_yes": "If yes, ",
+		"click_here": "click here.",
+		"previous": "Previous",
+		"back": "Back",
+		"next": "Next",
+		"pass": "Pass",
+		"confirm": "Confirm",
+		"finish": "Finish",
+		"close": "Close",
+		"yes": "Yes",
+		"leave": "Leave",
+		"cancel": "Cancel",
+		"update": "Update",
+		"no_changes_made": "No changes made",
+		"activity": "Still here ?"
+	},
+	"new_game": {
+		"balance": "The game is {0}",
+		"balanced": "balanced",
+		"werewolves_advantage": "in the werewolves' favor",
+		"villagers_advantage": "in the villagers' favor",
+		"title": "Game creation",
+		"roles_selection": "Role selection : ",
+		"roles_note": "(Click on a role to find out more)",
+		"villagers": "Villagers",
+		"werewolves": "Werewolves",
+		"loners": "Loners",
+		"classic_game": "Classic game",
+		"classic_game_desc": "A classic Monody game played entirely on site",
+		"vocal_game": "Voice game",
+		"vocal_game_desc": "A Monody game taking place on the site and in a voice channel on Discord",
+		"vocal_game_note": "Requires a linked Discord account to join the game",
+		"no_linked_discord": "You must link a Discord account to Monody in order to use this feature."
+	},
+	"vocal_invitation": {
+		"title": "Please join the vocal channel",
+		"content": "Go to Monody's Discord server, and join the vocal channel:",
+		"note": "this popup will close by itself once the salon has been reached"
+	},
+	"share": {
+		"title": "Share your profile",
+		"level": "Level",
+		"copy_link": "Copy link",
+		"copy_image": "Copy image",
+		"link_copied": "The link to the profile has been copied to the clipboard",
+		"profile_copied": "The profile has been copied to the clipboard",
+		"unsupported_fonctionnality": "Your browser does not support this functionality"
+	},
+	"popup": {
+		"warn": "Caution!",
+		"info": "Information",
+		"success": "Success!",
+		"error": "Error",
+		"logout_warn_content": "You will be disconnected from all devices to which this account is connected, including this device"
+	},
+	"profile": {
+		"title": "Profile modification",
+		"verified": "Verified on {0}",
+		"unverified": "Unverified",
+		"connections": "Connections",
+		"send_mail": "Resend verification email",
+		"verified_email_needed": "You must have a verified email address",
+		"discord_account": "Discord account",
+		"linked": "Linked",
+		"unlinked": "Unlinked",
+		"link": "Link",
+		"unlink": "Unlink",
+		"discord_unlink_success": "Discord account successfully dissociated!",
+		"discord_unlink_error": "An unexpected error has occurred while disassociating your Discord account",
+		"global_logout": "Log out from all devices",
+		"empty_cache": "Clear cache (may resolve bugs)",
+		"empty_cache_successful": "Successfully emptied cache",
+		"avatar_upload_failure": "Avatar upload failed, error : ",
+		"profile_edit_success": "Profile successfully modified!",
+		"avatar_too_large": "Your avatar must be less than 4Mb (actual size: {0}Mb)",
+		"language": "Language:",
+		"theme": "Theme:",
+		"theme_sync": "Sync with computer",
+		"theme_dark": "Dark theme",
+		"theme_light": "Light theme"
+	},
+	"footer": {
+		"copyright": "© Monody {0} — All rights reserved"
+	},
+	"game": {
+		"home": "Home",
+		"you_are": "You are:",
+		"loner_goal": "you have to win alone.",
+		"role_see_more": "Click on the image to find out more",
+		"of_team": "of the",
+		"leave": "Do you really want to leave the game?"
+	},
+	"game_info_bubble": {
+		"first": "The surly werewolf is easily angered and can bite one player per game, who will succumb to his wounds the following night!",
+		"second": "The white wolf is a traitor among wolves, he must win alone.",
+		"third": "The guard cannot protect the same player two rounds in a row.",
+		"fourth": "The infected werewolf can only infect one player per game.",
+		"fifth": "In the event of a tie during the vote, the player voted by the mayor is designated."
+	},
+	"audio_management": {
+		"title": "Audio management",
+		"sounds_volume": "Sound volume",
+		"music_volume": "Music volume"
+	},
+	"share_game": {
+		"title": "Share your game!",
+		"twitter": "Share on Twitter",
+		"discord": "Share on Discord",
+		"link": "Copy link",
+		"copied": "The link has been copied to the clipboard",
+		"shared": "Your game has been shared on Discord!",
+		"share_error": "An error has occurred... Has the game already been shared?",
+		"twitter_content": "%0AJoin%20me%20in%20my%20Monody%20game!%20%F0%9F%8C%99%20"
+	},
+	"game_details": {
+		"title": "Game details",
+		"owner": "Game owner:",
+		"roles": "List of roles:"
+	},
+	"chat": {
+		"locked": "Chat locked",
+		"send": "Send a message",
+		"no_voted": "The village decided not to kill anyone today!",
+		"no_killed_night": "No one was killed last night!",
+		"infected": "infected",
+		"vote": "The village decided to kill {user} who was {role}",
+		"bitten": "{user} succumbed to his wounds. He was {role}",
+		"couple": "In a fit of heartbreak, {user} joined his soulmate in his grave, he was {role}.",
+		"hunter": "The hunter decided to fire his last bullet at {user} who was {role}.",
+		"disconnect": "{user} disconnected, he was {role}",
+		"death": "{user} was killed last night, he was {role}!",
+		"join": "joined the game!",
+		"leave": "left the game",
+		"night_separator": "Nightfall",
+		"day_separator": "Sunrise",
+		"cupid": "Click on two players to pair them up.",
+		"hunter_action": "Click on one player to take your revenge.",
+		"angel_desc": "Your target is: {0}. If your target dies before the next night, you'll win the game instantly.",
+		"been_bitten": "You've been bitten by the surly werewolf. Your wounds look serious and you won't survive the next night.",
+		"contaminated": "You've been contaminated by the parasite.",
+		"role": "Your role is: {0}"
+	},
+	"end_game": {
+		"victory": "Victory",
+		"defeat": "Defeat",
+		"content": "Victory was won by",
+		"close": "Click anywhere to close this window",
+		"couple": "the couple.",
+		"le": "the",
+		"les": "the",
+		"l": "the "
+	},
+	"role": {
+		"none": "None",
+		"limit": "Limit per game : ",
+		"team": "Team : "
+	},
+	"player": {
+		"yes": "Yes",
+		"no": "No",
+		"mayor": "This player is the mayor",
+		"werewolf": "This player is your ally",
+		"couple": "You are a couple",
+		"guarded": "You have protected this player",
+		"contaminated": "This player is contaminated",
+		"target": "This player is your target",
+		"disconnected": "This player has disconnected",
+		"owner": "This player has created the game",
+		"disconnect_warn": "{0} has disconnected, he has 30 seconds to reconnect.",
+		"guard": "Click on a player to protect him from the werewolves.",
+		"spec": "Click on a player to find out his role!",
+		"spec_response": "You have chosen to spy on {username}'s role which is {role}",
+		"infect": "Do you want to infect {0}?",
+		"bite": "Click on a player to bite him",
+		"bite_response": "You have chosen to bite {0}. He will succumb to his wounds next night.",
+		"contaminate": "Click on a player to contaminate him",
+		"revive": "Revive a player",
+		"revive_desc": "Click on a player to resurrect him",
+		"kill": "Eliminate a player",
+		"kill_desc": "Click on a player to eliminate him",
+		"skip": "Do nothing",
+		"choose_action": "Choose the action to perform tonight"
+	},
+	"404": {
+		"title": "Oh no !",
+		"content": "Page not found ...",
+		"back": "Go back"
+	}
+}

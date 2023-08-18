@@ -61,7 +61,7 @@ class GuardAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function additionnalData(string $gameId): ?string
+    public function additionnalData(): ?string
     {
         $game = Redis::get("game:$this->gameId");
 
@@ -75,14 +75,14 @@ class GuardAction implements ActionInterface
     /**
      * {@inheritDoc}
      */
-    public function close(string $gameId): void
+    public function close(): void
     {
     }
 
     /**
      * {@inheritDoc}
      */
-    public function status(string $gameId): null
+    public function status(): null
     {
         return null;
     }

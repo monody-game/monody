@@ -1,24 +1,20 @@
 <template>
-  <div
-    ref="modal-background"
-    class="modal__background"
-    @click="closeModal()"
-  >
-    <div class="modal__overflow-wrapper">
-      <div
-        ref="modal"
-        aria-modal="true"
-        role="dialog"
-        :class="props.wrapper"
-        tabindex="-1"
-        aria-labelledby="modal__title"
-        @click.stop=""
-        @keyup.esc="closeModal()"
-      >
-        <slot />
-      </div>
-    </div>
-  </div>
+	<div ref="modal-background" class="modal__background" @click="closeModal()">
+		<div class="modal__overflow-wrapper">
+			<div
+				ref="modal"
+				aria-modal="true"
+				role="dialog"
+				:class="props.wrapper"
+				tabindex="-1"
+				aria-labelledby="modal__title"
+				@click.stop=""
+				@keyup.esc="closeModal()"
+			>
+				<slot />
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup>
@@ -28,8 +24,8 @@ import { useStore } from "../../stores/modals/modal.js";
 const props = defineProps({
 	wrapper: {
 		type: String,
-		default: "modal__main"
-	}
+		default: "modal__main",
+	},
 });
 
 const store = useStore();

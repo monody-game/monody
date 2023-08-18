@@ -17,7 +17,9 @@
 	padding: space(1) space(2);
 	margin-top: space(3);
 
-	transition: background-color .2s, outline-width .2s;
+	transition:
+		background-color 0.2s,
+		outline-width 0.2s;
 	border-radius: 6px;
 	border: var(--border-secondary) 2px solid;
 
@@ -46,7 +48,8 @@
 		font-size: 1.25em;
 	}
 
-	&:hover:not(.game-show__container-disabled), &:focus-visible:not(.game-show__container-disabled),  {
+	&:hover:not(.game-show__container-disabled),
+	&:focus-visible:not(.game-show__container-disabled) {
 		background-color: var(--primary-hover);
 		text-decoration: none;
 	}
@@ -86,4 +89,3 @@
 	flex-direction: column;
 	flex: 1;
 }
-

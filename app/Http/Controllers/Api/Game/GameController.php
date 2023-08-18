@@ -24,7 +24,6 @@ use App\Models\Elo;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
-use App\Traits\RegisterHelperTrait;
 use function array_key_exists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -32,7 +31,7 @@ use Illuminate\Support\Str;
 
 class GameController extends Controller
 {
-    use RegisterHelperTrait, GameHelperTrait, MemberHelperTrait;
+    use GameHelperTrait, MemberHelperTrait;
 
     public function check(Request $request): JsonApiResponse
     {
@@ -47,20 +46,20 @@ class GameController extends Controller
         }
 
         return JsonApiResponse::make(['message' => "Game {$request->get('gameId')} not found"], Status::NOT_FOUND)
-            ->withAlert(AlertType::Error, "La partie demandée n'existe pas (ou plus) ...");
+            ->withAlert(AlertType::Error, __('errors.game_not_found'));
     }
 
-    public function list(?string $type = null): JsonApiResponse
+    public function list(?string $type = '*'): JsonApiResponse
     {
         $games = $this->getGames();
         $list = [];
 
         if ($games === []) {
-            return new JsonApiResponse(['games' => []]);
+            return JsonApiResponse::make(['games' => []])->withoutCache();
         }
 
         foreach ($games as $game) {
-            if (!(bool) preg_match('/^game:[^:]+$/', $game)) {
+            if (!preg_match('/^game:[^:]+$/', $game)) {
                 continue;
             }
 
@@ -78,11 +77,11 @@ class GameController extends Controller
                 continue;
             }
 
-            if ($this->fromLocalNetwork() && $gameData['type'] !== (int) $type && $type !== '*') {
+            if ($type !== '*' && $this->fromLocalNetwork() && !($gameData['type'] & (int) decbin((int) $type))) {
                 continue;
             }
 
-            if ($type !== null && $gameData['type'] !== (int) $type && $type !== '*') {
+            if ($type !== '*' && $type !== null && !($gameData['type'] & (int) decbin((int) $type))) {
                 continue;
             }
 
@@ -105,7 +104,7 @@ class GameController extends Controller
             $list[] = $gameData;
         }
 
-        return new JsonApiResponse(['games' => $list]);
+        return JsonApiResponse::make(data: ['games' => $list])->withoutCache();
     }
 
     public function new(CreateGameRequest $request): JsonApiResponse
@@ -114,7 +113,7 @@ class GameController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        if ($request->get('type') === GameType::VOCAL->value && ($user->discord_id === null || $user->discord_linked_at === null)) {
+        if (($request->get('type') & GameType::VOCAL->value) === GameType::VOCAL->value && ($user->discord_id === null || $user->discord_linked_at === null)) {
             return new JsonApiResponse([
                 'message' => 'You must link your Discord account to Monody in order to create a vocal game.',
             ], Status::BAD_REQUEST);
@@ -128,9 +127,9 @@ class GameController extends Controller
         $data['dead_users'] = [];
         $id = Str::random(12);
         $data['id'] = $id;
-        $data['type'] = $request->get('type') ?: GameType::NORMAL;
+        $data['type'] = $request->get('type') ?: GameType::NORMAL->value;
 
-        if ($data['type'] === GameType::VOCAL->value) {
+        if (($data['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
             $size = array_reduce($data['roles'], fn ($previous, $role) => $previous + $role, 0);
 
             broadcast(new CreateVoiceChannel(
@@ -166,7 +165,7 @@ class GameController extends Controller
         ]);
         Redis::set("game:$id:votes", []);
 
-        return new JsonApiResponse(['game' => $data]);
+        return JsonApiResponse::make(['game' => $data])->withoutCache();
     }
 
     public function delete(GameIdRequest $request): JsonApiResponse
@@ -180,12 +179,15 @@ class GameController extends Controller
 
         $game = Redis::get("game:$gameId");
 
-        if ($game['type'] === GameType::VOCAL->value) {
+        if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
             $discordData = Redis::get("game:$gameId:discord");
-            broadcast(new ClearVoiceChannels([
-                'channel_id' => $discordData['voice_channel'],
-                'game_id' => $gameId,
-            ]));
+
+            if ($discordData) {
+                broadcast(new ClearVoiceChannels([
+                    'channel_id' => $discordData['voice_channel'],
+                    'game_id' => $gameId,
+                ]));
+            }
         }
 
         $this->clearRedisKeys($gameId);
@@ -222,7 +224,7 @@ class GameController extends Controller
 
         broadcast(new ClearGameInvitations);
 
-        if ($game['type'] === GameType::VOCAL->value) {
+        if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
             broadcast(new UpdateVoiceChannelPermissions([
                 'game_id' => $gameId,
                 'discord_id' => $user->discord_id ?? '',
@@ -299,9 +301,10 @@ class GameController extends Controller
             'type' => $game['type'],
             'chat_locked' => $chatLocked,
             'contaminated' => $contaminated,
+            'mayor' => array_key_exists('mayor', $game) ? $game['mayor'] : null,
         ];
 
-        if ($game['type'] === GameType::VOCAL->value) {
+        if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
             $payload['discord'] = Redis::get("game:$gameId:discord");
         }
 
@@ -310,7 +313,7 @@ class GameController extends Controller
 
     public function discord(string $gameId): JsonApiResponse
     {
-        return new JsonApiResponse([
+        return JsonApiResponse::make([
             'data' => Redis::get("game:$gameId:discord"),
         ]);
     }

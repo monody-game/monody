@@ -27,10 +27,10 @@
 	}
 }
 
-.game-details__owner-right{
+.game-details__owner-right {
 	display: flex;
 	flex-direction: column;
-	gap: space(.5);
+	gap: space(0.5);
 }
 
 .game-details__owner-stats {
@@ -39,7 +39,7 @@
 
 	& div {
 		display: flex;
-		gap: space(.5);
+		gap: space(0.5);
 		align-items: center;
 	}
 

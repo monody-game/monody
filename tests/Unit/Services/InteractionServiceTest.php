@@ -14,6 +14,7 @@ use App\Services\VoteService;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Lottery;
 use Tests\TestCase;
 
 class InteractionServiceTest extends TestCase
@@ -74,25 +75,27 @@ class InteractionServiceTest extends TestCase
 
     public function testUsingInteraction()
     {
+        $gameId = $this->game['id'];
+
         // Psychic
         $id = $this->service->create($this->game['id'], Interaction::Psychic)['id'];
-        $spectate = $this->service->call(InteractionAction::Spectate, $id, $this->psychic->id, $this->user->id);
+        $spectate = $this->service->call(InteractionAction::Spectate, $id, $gameId, $this->psychic->id, $this->user->id);
         $this->assertSame(Role::SimpleVillager->value, $spectate);
 
         // Witch
         $id = $this->service->create($this->game['id'], Interaction::Witch)['id'];
-        $witchNone = $this->service->call(InteractionAction::WitchSkip, $id, $this->witch->id, '');
+        $witchNone = $this->service->call(InteractionAction::WitchSkip, $id, $gameId, $this->witch->id, '');
         $this->assertNull($witchNone);
 
         $id = $this->service->create($this->game['id'], Interaction::Witch)['id'];
-        $this->service->call(InteractionAction::KillPotion, $id, $this->witch->id, $this->user->id);
+        $this->service->call(InteractionAction::KillPotion, $id, $gameId, $this->witch->id, $this->user->id);
         $this->assertFalse($this->alive($this->user->id, $this->game['id']));
 
         $interaction = $this->service->create($this->game['id'], Interaction::Witch, $this->witch->id);
         $id = $interaction['id'];
 
         $this->assertSame([
-            'gameId' => $this->game['id'],
+            'gameId' => $gameId,
             'id' => $id,
             'authorizedCallers' => $this->witch->id,
             'type' => 'witch',
@@ -100,23 +103,23 @@ class InteractionServiceTest extends TestCase
                 $this->user->id,
             ],
         ], $interaction);
-        $this->service->call(InteractionAction::RevivePotion, $id, $this->witch->id, $this->user->id);
+        $this->service->call(InteractionAction::RevivePotion, $id, $gameId, $this->witch->id, $this->user->id);
         $this->assertTrue($this->alive($this->user->id, $this->game['id']));
 
         // Werewolves
         $id = $this->service->create($this->game['id'], Interaction::Werewolves)['id'];
-        $this->service->call(InteractionAction::Kill, $id, $this->werewolf->id, $this->psychic->id);
+        $this->service->call(InteractionAction::Kill, $id, $gameId, $this->werewolf->id, $this->psychic->id);
         $this->service->close($this->game['id'], $id);
         $this->assertFalse($this->alive($this->psychic->id, $this->game['id']));
 
         // Infected Werewolf
         $id = $this->service->create($this->game['id'], Interaction::InfectedWerewolf)['id'];
-        $this->service->call(InteractionAction::InfectedSkip, $id, $this->infectedWerewolf->id, $this->psychic->id);
+        $this->service->call(InteractionAction::InfectedSkip, $id, $gameId, $this->infectedWerewolf->id, $this->psychic->id);
         $this->service->close($this->game['id'], $id);
         $this->assertFalse($this->alive($this->psychic->id, $this->game['id']));
 
         $id = $this->service->create($this->game['id'], Interaction::InfectedWerewolf)['id'];
-        $this->service->call(InteractionAction::Infect, $id, $this->infectedWerewolf->id, $this->psychic->id);
+        $this->service->call(InteractionAction::Infect, $id, $gameId, $this->infectedWerewolf->id, $this->psychic->id);
         $this->service->close($this->game['id'], $id);
         $this->assertTrue($this->alive($this->psychic->id, $this->game['id']));
         $this->assertContains($this->psychic->id, Redis::get("game:{$this->game['id']}")['werewolves']);
@@ -124,52 +127,58 @@ class InteractionServiceTest extends TestCase
 
         // Vote
         $id = $this->service->create($this->game['id'], Interaction::Vote)['id'];
-        $vote = $this->service->call(InteractionAction::Vote, $id, $this->user->id, $this->witch->id);
+        $vote = $this->service->call(InteractionAction::Vote, $id, $gameId, $this->user->id, $this->witch->id);
         $this->assertSame([$this->witch->id => [$this->user->id]], $vote);
-        $vote = $this->service->call(InteractionAction::Vote, $id, $this->user->id, $this->witch->id);
+        $vote = $this->service->call(InteractionAction::Vote, $id, $gameId, $this->user->id, $this->witch->id);
         $this->assertSame([], $vote);
 
         // Guard
         $id = $this->service->create($this->game['id'], Interaction::Guard)['id'];
-        $this->service->call(InteractionAction::Guard, $id, $this->guard->id, $this->witch->id);
+        $this->service->call(InteractionAction::Guard, $id, $gameId, $this->guard->id, $this->witch->id);
         $this->assertSame($this->witch->id, Redis::get("game:{$this->game['id']}")['guarded']);
         $this->service->close($this->game['id'], $id);
         $id = $this->service->create($this->game['id'], Interaction::Guard)['id'];
-        $res = $this->service->call(InteractionAction::Guard, $id, $this->guard->id, $this->witch->id);
+        $res = $this->service->call(InteractionAction::Guard, $id, $gameId, $this->guard->id, $this->witch->id);
         $this->assertSame($this->service::USER_CANNOT_USE_THIS_INTERACTION, $res);
-        $this->service->call(InteractionAction::Guard, $id, $this->guard->id, $this->psychic->id);
+        $this->service->call(InteractionAction::Guard, $id, $gameId, $this->guard->id, $this->psychic->id);
         $this->assertSame($this->psychic->id, Redis::get("game:{$this->game['id']}")['guarded']);
     }
 
     public function testBeingUnAllowedToUseInteraction()
     {
+        $gameId = $this->game['id'];
+
         $id = $this->service->create($this->game['id'], Interaction::Witch)['id'];
         $this->assertSame(
             $this->service::USER_CANNOT_USE_THIS_INTERACTION,
-            $this->service->call(InteractionAction::WitchSkip, $id, $this->werewolf->id, '')
+            $this->service->call(InteractionAction::WitchSkip, $id, $gameId, $this->werewolf->id, '')
         );
     }
 
     public function testUsingAOneUseInteraction()
     {
+        $gameId = $this->game['id'];
+
         $id = $this->service->create($this->game['id'], Interaction::Psychic)['id'];
-        $res = $this->service->call(InteractionAction::Spectate, $id, $this->psychic->id, $this->werewolf->id);
+        $res = $this->service->call(InteractionAction::Spectate, $id, $gameId, $this->psychic->id, $this->werewolf->id);
         $this->assertSame(Role::Werewolf->value, $res);
-        $res = $this->service->call(InteractionAction::Spectate, $id, $this->psychic->id, $this->witch->id);
+        $res = $this->service->call(InteractionAction::Spectate, $id, $gameId, $this->psychic->id, $this->witch->id);
         $this->assertSame($this->service::USER_CANNOT_USE_THIS_INTERACTION, $res);
     }
 
     public function testElectingAMayor()
     {
+        $gameId = $this->game['id'];
+
         Event::fake();
 
         $userId = $this->werewolf->id;
         $gameId = $this->game['id'];
 
         $id = $this->service->create($gameId, Interaction::Mayor)['id'];
-        $this->service->call(InteractionAction::Elect, $id, $this->psychic->id, $userId);
-        $this->service->call(InteractionAction::Elect, $id, $userId, $userId);
-        $this->service->call(InteractionAction::Elect, $id, $this->witch->id, $userId);
+        $this->service->call(InteractionAction::Elect, $id, $gameId, $this->psychic->id, $userId);
+        $this->service->call(InteractionAction::Elect, $id, $gameId, $userId, $userId);
+        $this->service->call(InteractionAction::Elect, $id, $gameId, $this->witch->id, $userId);
         $this->service->close($gameId, $id);
 
         Event::assertDispatched(function (MayorElected $event) use ($userId, $gameId) {
@@ -187,39 +196,41 @@ class InteractionServiceTest extends TestCase
 
     public function testShouldSkipTimer()
     {
+        $gameId = $this->game['id'];
+
         $id = $this->service->create($this->game['id'], Interaction::Psychic)['id'];
-        $this->service->call(InteractionAction::Spectate, $id, $this->psychic->id, $this->werewolf->id);
+        $this->service->call(InteractionAction::Spectate, $id, $gameId, $this->psychic->id, $this->werewolf->id);
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
 
         $id = $this->service->create($this->game['id'], Interaction::Vote)['id'];
-        $this->service->call(InteractionAction::Vote, $id, $this->psychic->id, $this->werewolf->id);
+        $this->service->call(InteractionAction::Vote, $id, $gameId, $this->psychic->id, $this->werewolf->id);
         $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
 
-        $this->service->call(InteractionAction::Vote, $id, $this->user->id, $this->werewolf->id);
+        $this->service->call(InteractionAction::Vote, $id, $gameId, $this->user->id, $this->werewolf->id);
         $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
 
-        $this->service->call(InteractionAction::Vote, $id, $this->infectedWerewolf->id, $this->werewolf->id);
+        $this->service->call(InteractionAction::Vote, $id, $gameId, $this->infectedWerewolf->id, $this->werewolf->id);
         $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
 
-        $this->service->call(InteractionAction::Vote, $id, $this->guard->id, $this->werewolf->id);
+        $this->service->call(InteractionAction::Vote, $id, $gameId, $this->guard->id, $this->werewolf->id);
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
 
-        $this->service->call(InteractionAction::Vote, $id, $this->witch->id, $this->werewolf->id);
+        $this->service->call(InteractionAction::Vote, $id, $gameId, $this->witch->id, $this->werewolf->id);
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id'])); // Time is already skipped so in reality, it will not skip the time
 
         Redis::set("game:{$this->game['id']}:votes", []);
 
         $id = $this->service->create($this->game['id'], Interaction::Mayor)['id'];
-        $this->service->call(InteractionAction::Elect, $id, $this->psychic->id, $this->werewolf->id);
+        $this->service->call(InteractionAction::Elect, $id, $gameId, $this->psychic->id, $this->werewolf->id);
         $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
 
-        $this->service->call(InteractionAction::Elect, $id, $this->user->id, $this->werewolf->id);
+        $this->service->call(InteractionAction::Elect, $id, $gameId, $this->user->id, $this->werewolf->id);
         $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
 
-        $this->service->call(InteractionAction::Elect, $id, $this->guard->id, $this->werewolf->id);
+        $this->service->call(InteractionAction::Elect, $id, $gameId, $this->guard->id, $this->werewolf->id);
         $this->assertFalse($this->service->shouldSkipTime($id, $this->game['id']));
 
-        $this->service->call(InteractionAction::Elect, $id, $this->infectedWerewolf->id, $this->werewolf->id);
+        $this->service->call(InteractionAction::Elect, $id, $gameId, $this->infectedWerewolf->id, $this->werewolf->id);
         $this->assertTrue($this->service->shouldSkipTime($id, $this->game['id']));
     }
 
@@ -239,6 +250,35 @@ class InteractionServiceTest extends TestCase
         $this->assertNotSame($this->angel->id, $interaction['data']);
         $this->assertContains($interaction['data'], $this->game['users']);
         $this->assertSame(Redis::get("game:$gameId")['angel_target'], $interaction['data']);
+    }
+
+    public function testCreatingPsychicInteractionWithoutPassivePower()
+    {
+        Lottery::alwaysLose();
+        $gameId = $this->game['id'];
+        $interaction = $this->service->create($gameId, Interaction::Psychic, $this->getUserIdByRole(Role::Psychic, $gameId));
+
+        $this->assertSame([
+            'gameId' => $gameId,
+            'id' => $interaction['id'],
+            'authorizedCallers' => json_encode([$this->psychic->id]),
+            'type' => Interaction::Psychic->value,
+        ], $interaction);
+    }
+
+    public function testCreatingPsychicInteractionWithPassivePower()
+    {
+        Lottery::alwaysWin();
+        $gameId = $this->game['id'];
+        $interaction = $this->service->create($gameId, Interaction::Psychic, $this->getUserIdByRole(Role::Psychic, $gameId));
+
+        $this->assertSame([
+            'gameId' => $gameId,
+            'id' => $interaction['id'],
+            'authorizedCallers' => json_encode([$this->psychic->id]),
+            'type' => Interaction::Psychic->value,
+            'data' => $this->user->id,
+        ], $interaction);
     }
 
     protected function setUp(): void

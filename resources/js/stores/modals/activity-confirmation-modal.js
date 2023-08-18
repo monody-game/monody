@@ -9,6 +9,6 @@ export const useStore = defineStore("activity-confirmation-modal", {
 	actions: {
 		close() {
 			this.isOpenned = false;
-		}
-	}
+		},
+	},
 });

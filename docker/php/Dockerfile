@@ -1,4 +1,4 @@
-FROM php:8.3.0alpha1-fpm-alpine3.18
+FROM php:fpm-alpine
 
 COPY ./php.ini /usr/local/etc/php/php.ini
 COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini

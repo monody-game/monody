@@ -9,6 +9,6 @@ export const useStore = defineStore("role-assignation", {
 	actions: {
 		close() {
 			this.isOpenned = false;
-		}
-	}
+		},
+	},
 });

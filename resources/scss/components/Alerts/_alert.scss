@@ -1,4 +1,9 @@
-$alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'error' var(--danger), 'level' var(--level);
+$alerts:
+	"success" var(--success),
+	"info" var(--info),
+	"warn" var(--warn),
+	"error" var(--danger),
+	"level" var(--level);
 
 .alert__container {
 	position: relative;
@@ -21,25 +26,27 @@ $alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 
 .alert__content {
 	min-width: 125px;
+	flex: 1;
 }
 
 .alert__close {
 	height: 16px;
 	width: 16px;
 	cursor: pointer;
-	transition: color .2s;
+	transition: color 0.2s;
+
+	color: #fffcf140;
+
+	&:hover {
+		color: #fffcf180;
+	}
+}
+
+html.light .alert__close {
 	color: #0f112740;
 
 	&:hover {
 		color: #0f112780;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		color: #fffcf140;
-
-		&:hover {
-			color: #fffcf180;
-		}
 	}
 }
 
@@ -48,7 +55,7 @@ $alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 		background-color: nth($alert, 2);
 	}
 
-	.alert__container[data-alert-type=#{nth($alert, 1)}] .alert__icon {
+	.alert__container[data-alert-type="#{nth($alert, 1)}"] .alert__icon {
 		color: nth($alert, 2);
 	}
 }
@@ -71,7 +78,7 @@ $alerts: 'success' var(--success), 'info' var(--info), 'warn' var(--warn), 'erro
 }
 
 .alert__out {
-	animation: alertOut .5s both;
+	animation: alertOut 0.5s both;
 }
 
 @keyframes alertOut {

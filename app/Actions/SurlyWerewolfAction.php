@@ -47,7 +47,7 @@ class SurlyWerewolfAction implements ActionInterface
 
     public function bite(string $targetId, string $gameId): void
     {
-        if ($this->isUsed(InteractionAction::Bite, $gameId)) {
+        if ($this->isUsed(InteractionAction::Bite)) {
             return;
         }
 
@@ -74,23 +74,23 @@ class SurlyWerewolfAction implements ActionInterface
     {
     }
 
-    public function additionnalData(string $gameId): null
+    public function additionnalData(): null
     {
         return null;
     }
 
-    public function close(string $gameId): void
+    public function close(): void
     {
     }
 
-    public function status(string $gameId): null
+    public function status(): null
     {
         return null;
     }
 
-    private function isUsed(InteractionAction $action, string $gameId): bool
+    private function isUsed(InteractionAction $action): bool
     {
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+        $usedActions = Redis::get("game:$this->gameId:interactions:usedActions") ?? [];
 
         return in_array($action->value, $usedActions, true);
     }

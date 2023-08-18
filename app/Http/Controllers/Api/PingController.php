@@ -9,8 +9,8 @@ class PingController extends Controller
 {
     public function ping(): JsonApiResponse
     {
-        return new JsonApiResponse([
+        return JsonApiResponse::make(data: [
             'message' => 'Alive 🌙',
-        ]);
+        ])->withoutCache();
     }
 }

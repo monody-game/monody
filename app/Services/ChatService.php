@@ -35,7 +35,7 @@ class ChatService
         MessageSent::dispatch($message);
     }
 
-    public function alert(string $content, string $type, string $gameId, array|null $recievers = null): void
+    public function alert(string $content, string $type, string $gameId, array $recievers = null): void
     {
         $message = new Message([
             'gameId' => $gameId,
@@ -71,7 +71,7 @@ class ChatService
         if ($littleGirl !== []) {
             $message->set('author', [
                 'id' => '',
-                'username' => 'Loup-garou',
+                'username' => __('game.werewolf'),
                 'avatar' => '/assets/roles/werewolf.png',
             ]);
 

@@ -60,7 +60,7 @@ class InfectedWerewolfAction implements ActionInterface
                 break;
         }
 
-        $this->setUsed(InteractionAction::Infect, $this->gameId);
+        $this->setUsed(InteractionAction::Infect);
 
         return null;
     }
@@ -70,7 +70,7 @@ class InfectedWerewolfAction implements ActionInterface
         $game = Redis::get("game:$this->gameId");
         $deaths = Redis::get("game:$this->gameId:deaths") ?? [];
 
-        if ($this->isUsed(InteractionAction::Infect, $this->gameId)) {
+        if ($this->isUsed(InteractionAction::Infect)) {
             return;
         }
 
@@ -86,7 +86,7 @@ class InfectedWerewolfAction implements ActionInterface
         $game['infected'] = $targetId;
 
         $chat = new ChatService();
-        $chat->alert('Vous avez été infecté ! Vous devez désormais gagner avec les loup-garous', 'info', $this->gameId, [$targetId]);
+        $chat->alert(__('game.infected'), 'info', $this->gameId, [$targetId]);
 
         broadcast(
             new WerewolvesList(
@@ -107,14 +107,14 @@ class InfectedWerewolfAction implements ActionInterface
     {
     }
 
-    public function additionnalData(string $gameId): mixed
+    public function additionnalData(): array
     {
-        $deaths = Redis::get("game:$gameId:deaths") ?? [];
+        $deaths = Redis::get("game:$this->gameId:deaths") ?? [];
 
         return array_map(fn ($death) => $death['user'], $deaths);
     }
 
-    public function close(string $gameId): void
+    public function close(): void
     {
     }
 
@@ -123,21 +123,21 @@ class InfectedWerewolfAction implements ActionInterface
         return $this->getRoleByUserId($userId, $this->gameId);
     }
 
-    private function setUsed(InteractionAction $action, string $gameId): void
+    private function setUsed(InteractionAction $action): void
     {
-        Redis::update("game:$gameId:interactions:usedActions", function (array &$usedActions) use ($action) {
+        Redis::update("game:$this->gameId:interactions:usedActions", function (array &$usedActions) use ($action) {
             $usedActions[] = $action->value;
         });
     }
 
-    private function isUsed(InteractionAction $action, string $gameId): bool
+    private function isUsed(InteractionAction $action): bool
     {
-        $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
+        $usedActions = Redis::get("game:$this->gameId:interactions:usedActions") ?? [];
 
         return in_array($action->value, $usedActions, true);
     }
 
-    public function status(string $gameId): null
+    public function status(): null
     {
         return null;
     }

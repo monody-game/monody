@@ -14,7 +14,7 @@ class RoundController extends Controller
 {
     use MemberHelperTrait;
 
-    public function all(?string $gameId = null): JsonApiResponse
+    public function all(string $gameId = null): JsonApiResponse
     {
         $rounds = [];
 
@@ -22,17 +22,17 @@ class RoundController extends Controller
             $rounds[] = $this->getRound($round->value, $gameId);
         }
 
-        return new JsonApiResponse(['rounds' => $rounds]);
+        return JsonApiResponse::make(['rounds' => $rounds])->withoutCache();
     }
 
-    public function get(int $round, ?string $gameId = null): JsonApiResponse
+    public function get(int $round, string $gameId = null): JsonApiResponse
     {
-        return new JsonApiResponse([
+        return JsonApiResponse::make([
             'round' => $this->getRound($round, $gameId),
-        ]);
+        ])->withoutCache();
     }
 
-    private function getRound(int $round, ?string $gameId = null): array
+    private function getRound(int $round, string $gameId = null): array
     {
         $round = Round::tryFrom($round);
         $removedStates = [];
@@ -55,6 +55,7 @@ class RoundController extends Controller
             }, $roles);
 
             foreach ($round as $key => $state) {
+                // No checks needed if the state is not a role one
                 if (!$state->isRoleState()) {
                     continue;
                 }
@@ -66,26 +67,42 @@ class RoundController extends Controller
                 /** @var Role $role, the state is a role state by the condition above */
                 $role = Role::fromName($state->stringify());
 
+                // If the role's user is not in the game anymore
                 if (
                     !in_array(
                         array_search($role->value, $game['assigned_roles'], true),
-                        $game['users'], true
-                    )
+                        array_diff($game['users'], array_keys($game['dead_users'])), true
+                    ) &&
+                    $state !== State::Werewolf &&
+                    $state !== State::Hunter
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
                     continue;
                 }
 
+                // If the role just is not in roles list
                 if (
                     !in_array($state->stringify(), $roles, true) &&
-                    count(array_filter($roles, fn ($role) => str_contains($role, $state->stringify()))) === 0
+                    count(array_filter($roles, fn ($role) => str_contains($role, $state->stringify()))) === 0 &&
+                    $state !== State::Werewolf
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
                     continue;
                 }
 
+                // If the infected werewolf doesn't have anyone to infect
+                if (
+                    $state === State::InfectedWerewolf &&
+                    count($deaths) === 0
+                ) {
+                    $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
+                }
+
+                // If the hunter does not need to / cannot shoot
                 if (
                     $state === State::Hunter &&
                     in_array(Role::Hunter->value, array_values($game['assigned_roles']), true) &&
@@ -101,11 +118,12 @@ class RoundController extends Controller
                     continue;
                 }
 
+                // If the role does not have any action left
                 if (
                     !$state->hasActionsLeft($gameId) ||
-                    /** Remove dead users' role states */
+                    // Remove dead users' role states
                     (
-                        /** @phpstan-ignore-next-line $state is a role state (line 56), so it must not return null */
+                        /** @phpstan-ignore-next-line $state is a role state (line 56), so fromName cannot return null */
                         count($this->getUserIdByRole(Role::fromName($state->stringify()), $gameId)) > 0 &&
                         /** @phpstan-ignore-next-line */
                         !$this->alive($this->getUserIdByRole(Role::fromName($state->stringify()), $gameId)[0], $gameId) &&
@@ -115,6 +133,7 @@ class RoundController extends Controller
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
                 }
 
+                // If it's not an even round number for the white werewolf
                 if ($state === State::WhiteWerewolf && ($gameState['round'] % 2 === 0 || $gameState['round'] === 0)) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
                 }

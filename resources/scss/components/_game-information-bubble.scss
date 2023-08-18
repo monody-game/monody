@@ -3,7 +3,7 @@
 .information-bubble_main {
 	background-color: var(--light-background);
 	color: var(--dark-background);
-	opacity: .8;
+	opacity: 0.8;
 
 	display: flex;
 	gap: space(2);
@@ -17,7 +17,7 @@
 	left: space(2);
 	bottom: space(2);
 
-	animation: informationBubbleEntry .6s;
+	animation: informationBubbleEntry 0.6s;
 
 	svg {
 		height: 32px;
@@ -25,8 +25,14 @@
 	}
 }
 
+@media screen and (max-width: 750px) {
+	.information-bubble_main {
+		display: none;
+	}
+}
+
 .information-bubble_main_out {
-	animation: informationBubbleOut .6s;
+	animation: informationBubbleOut 0.6s;
 }
 
 @keyframes informationBubbleEntry {
@@ -36,14 +42,14 @@
 	}
 
 	100% {
-		opacity: .8;
+		opacity: 0.8;
 		transform: translateY(0);
 	}
 }
 
 @keyframes informationBubbleOut {
 	from {
-		opacity: .8;
+		opacity: 0.8;
 		transform: translateY(0);
 	}
 

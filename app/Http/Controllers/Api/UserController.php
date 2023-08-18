@@ -9,14 +9,20 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
     public function user(Request $request): JsonApiResponse
     {
-        return new JsonApiResponse([
-            'user' => $request->user(),
-        ]);
+        return JsonApiResponse::make([
+            'user' => $request->user()?->makeVisible([
+                'email',
+                'email_verified_at',
+                'discord_linked_at',
+            ]),
+        ])->withCache(Carbon::now()->addHour());
     }
 
     public function update(UserUpdateRequest $request): JsonApiResponse
@@ -26,6 +32,7 @@ class UserController extends Controller
 
         if ($request->has('email') && $request->get('email') !== $user->email) {
             $user->email_verified_at = null;
+            $user->clearDiscord();
         }
 
         foreach ($request->validated() as $field => $value) {
@@ -34,20 +41,36 @@ class UserController extends Controller
 
         $user->save();
 
-        if ($request->has('email') && $user->hasVerifiedEmail() === false) {
+        $userResponse = $user->makeVisible([
+            'email',
+            'email_verified_at',
+            'discord_linked_at',
+        ])->toArray();
+
+        $userResponse['email'] = $user->email !== null ? Str::obfuscateEmail($user->email ?? $request->get('email')) : '';
+
+        if ($request->has('email') && $user->hasVerifiedEmail() === false && $user->email !== null) {
             $user->sendEmailVerificationNotification();
 
-            return JsonApiResponse::make(['user' => $user])
-                ->withPopup(
-                    AlertType::Info,
-                    "Un mail de vérification vient de vous être envoyé à l'adresse {$user['email']}. Veuillez vérifier votre email en cliquant sur le lien",
-                    "Il peut s'écouler quelques minutes avant de recevoir le mail. Si vous ne le recevez pas, cliquez ",
-                    route('verification.send', [], false),
-                    'ici pour renvoyer le lien.'
-                );
+            return JsonApiResponse::make([
+                'user' => $user->makeVisible([
+                    'email',
+                    'email_verified_at',
+                    'discord_linked_at',
+                ]),
+            ])->withPopup(
+                AlertType::Info,
+                __('mail.sent', ['email' => $userResponse['email']]),
+                __('mail.wait'),
+                route('verification.send', [], false),
+                __('mail.send_link')
+            )
+                ->flushCacheFor('/user');
         }
 
-        return new JsonApiResponse(['user' => $user]);
+        return JsonApiResponse::make([
+            'user' => $user,
+        ])->flushCacheFor('/user');
     }
 
     public function discord(string $discordId): JsonApiResponse

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
 use App\Models\UserBadge as BadgeModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class BadgeController extends Controller
 {
@@ -31,8 +32,8 @@ class BadgeController extends Controller
             $list[$userBadge->badge_id->value]['obtained_at'] = $userBadge->obtained_at;
         }
 
-        return new JsonApiResponse([
+        return JsonApiResponse::make([
             'badges' => [...$list],
-        ]);
+        ])->withCache(Carbon::now()->addMinutes(10));
     }
 }

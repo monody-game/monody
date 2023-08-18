@@ -11,6 +11,8 @@ import { useStore as useBadgesModalStore } from "./badges.js";
 import { useStore as useLeaderboardsModalStore } from "./leaderboards.js";
 import { useStore as useLogoutWarnPopupStore } from "./logout-warn-popup.js";
 import { useStore as useRolePresentationStore } from "./role-presentation.js";
+import { useStore as useEndGameModalStore } from "./end-game-modal.js";
+import { useStore as useAudioManagementModalStore } from "./audio-modal.js";
 
 export const useStore = defineStore("modal", {
 	state: () => {
@@ -21,32 +23,36 @@ export const useStore = defineStore("modal", {
 	getters: {
 		getModalStore: () => (modalName) => {
 			switch (modalName) {
-			case "game-creation-modal":
-				return useGameCreationStore();
-			case "profile-modal":
-				return useProfileStore();
-			case "popup":
-				return usePopupStore();
-			case "role-assignation":
-				return useRoleAssignationStore();
-			case "share-game-modal":
-				return useGameShareStore();
-			case "activity-confirmation-modal":
-				return useActivityConfirmationModalStore();
-			case "game-details":
-				return useGameDetailsModalStore();
-			case "share-profile":
-				return useShareProfileStore();
-			case "badges":
-				return useBadgesModalStore();
-			case "leaderboards":
-				return useLeaderboardsModalStore();
-			case "logout-warn-popup":
-				return useLogoutWarnPopupStore();
-			case "role-presentation":
-				return useRolePresentationStore();
+				case "game-creation-modal":
+					return useGameCreationStore();
+				case "profile-modal":
+					return useProfileStore();
+				case "popup":
+					return usePopupStore();
+				case "role-assignation":
+					return useRoleAssignationStore();
+				case "share-game-modal":
+					return useGameShareStore();
+				case "activity-confirmation-modal":
+					return useActivityConfirmationModalStore();
+				case "game-details":
+					return useGameDetailsModalStore();
+				case "share-profile":
+					return useShareProfileStore();
+				case "badges":
+					return useBadgesModalStore();
+				case "leaderboards":
+					return useLeaderboardsModalStore();
+				case "logout-warn-popup":
+					return useLogoutWarnPopupStore();
+				case "role-presentation":
+					return useRolePresentationStore();
+				case "end-game-modal":
+					return useEndGameModalStore();
+				case "audio-management":
+					return useAudioManagementModalStore();
 			}
-		}
+		},
 	},
 	actions: {
 		close() {
@@ -66,6 +72,6 @@ export const useStore = defineStore("modal", {
 			this.getModalStore(type).isOpenned = true;
 			this.opennedModal = type;
 			document.body.classList.add("overflow-hidden");
-		}
-	}
+		},
+	},
 });

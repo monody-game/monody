@@ -110,7 +110,7 @@
 		height: 50px;
 		width: 50px;
 		background-color: #000000;
-		opacity: .45;
+		opacity: 0.45;
 		border-radius: 50%;
 	}
 
@@ -141,7 +141,8 @@
 	position: relative;
 }
 
-.message__avatar, .message__avatar img {
+.message__avatar,
+.message__avatar img {
 	height: 50px;
 	width: 50px;
 	border-radius: 50%;
@@ -153,7 +154,7 @@
 
 .message__content {
 	padding-top: space(1);
-	padding-left: space(.5);
+	padding-left: space(0.5);
 	overflow-wrap: anywhere;
 	line-height: 1.2rem;
 }
@@ -185,10 +186,10 @@
 		margin-left: space(1);
 	}
 
-	 & svg {
-		 height: 24px;
-		 width: 24px;
-	 }
+	& svg {
+		height: 24px;
+		width: 24px;
+	}
 }
 
 .day .innout__message {

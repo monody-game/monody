@@ -49,20 +49,20 @@ final class DiscordOauthController extends Controller
         try {
             $user = $driver->userFromToken($user->discord_token);
         } catch (ClientException $e) {
-            $payload = $this->refreshToken($user->discord_refresh_token);
+            $payload = $this->refreshAccessToken($user->discord_refresh_token);
             $user->discord_token = $payload['access_token'];
             $user->discord_refresh_token = $payload['refresh_token'];
             $user->save();
             $user = $driver->userFromToken($payload['access_token']);
         }
 
-        return new JsonApiResponse([
+        return JsonApiResponse::make([
             'user' => [
                 'id' => $user->getId(),
                 'username' => $user->getNickname(),
                 'avatar' => $user->getAvatar(),
             ],
-        ]);
+        ])->withCache(Carbon::now()->addHour());
     }
 
     public function check(Request $request): RedirectResponse|JsonApiResponse
@@ -81,7 +81,8 @@ final class DiscordOauthController extends Controller
 
         $discordId = config('services.discord.client_id');
 
-        $user = $request->user() ?? User::firstOrCreate(['email' => $discordUser->email]);
+        /** @var User $user behind api guard */
+        $user = $request->user();
 
         $user->avatar = '/images/avatar/default.png' === $user->avatar && $discordUser->getAvatar() !== null ? $discordUser->getAvatar() : $user->avatar;
         $user->discord_linked_at = Carbon::now();
@@ -105,9 +106,8 @@ final class DiscordOauthController extends Controller
             );
 
         if ($res->successful()) {
-            Auth::login($user);
-
-            return new RedirectResponse('/play');
+            // We force a cache flush for endpoint /user
+            return new RedirectResponse('/play?flush=/user');
         }
 
         return new JsonApiResponse([
@@ -146,10 +146,11 @@ final class DiscordOauthController extends Controller
         $user->discord_linked_at = null;
         $user->save();
 
-        return new JsonApiResponse(status: Status::NO_CONTENT);
+        return JsonApiResponse::make(status: Status::NO_CONTENT)
+            ->flushCacheFor('/user');
     }
 
-    private function refreshToken(string $refreshToken): array
+    private function refreshAccessToken(string $refreshToken): array
     {
         $url = self::API_ENDPOINT . '/oauth2/token';
         $data = [

@@ -49,17 +49,19 @@ class GameUsersController extends Controller
     {
         $game = $this->getGame($gameId);
 
-        return new JsonApiResponse(['users' => $game['users']]);
+        return JsonApiResponse::make(['users' => $game['users']])->withoutCache();
     }
 
     public function role(UserRoleRequest $request, string $gameId): JsonApiResponse
     {
-        if ($this->alive($request->input('id'), $gameId)) {
+        $game = $this->getGame($gameId);
+
+        if (
+            $this->alive($request->input('id'), $gameId) &&
+            (array_key_exists('ended', $game) && $game['ended'] === false)
+        ) {
             return new JsonApiResponse(data: ['message' => 'Player is alive'], status: Status::BAD_REQUEST);
         }
-
-        /** @var string[] $game */
-        $game = $this->getGame($gameId);
 
         $userRole = $game['assigned_roles'][$request->validated('id')];
         $role = Role::from($userRole)->full();
@@ -93,7 +95,7 @@ class GameUsersController extends Controller
                     'infected' => $infected,
                 ]);
 
-                Redis::update("game:$gameId:deaths", fn (array $deaths) => array_diff($deaths, [$death]));
+                Redis::update("game:$gameId:deaths", fn (array $deaths) => array_filter($deaths, fn ($storedDeath) => $storedDeath !== $death));
 
                 break;
             }

@@ -9,3 +9,9 @@
 img {
 	object-fit: cover;
 }
+
+.grid-3-7 {
+	display: grid;
+	grid-template-columns: calc(30% - space(1)) calc(70% - space(1));
+	gap: space(2);
+}

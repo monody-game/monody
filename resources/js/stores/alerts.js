@@ -4,7 +4,7 @@ export const useStore = defineStore("alerts", {
 	state: () => {
 		return {
 			alerts: {},
-			popups: {}
+			popups: {},
 		};
 	},
 	actions: {
@@ -13,14 +13,14 @@ export const useStore = defineStore("alerts", {
 				const id = Math.random().toString(36);
 				this.alerts[id] = {
 					type,
-					content: alerts[type]
+					content: alerts[type],
 				};
 			}
 		},
 		dropAlert(id) {
 			setTimeout(() => {
 				delete this.alerts[id];
-			}, 1000);
-		}
-	}
+			}, 500);
+		},
+	},
 });

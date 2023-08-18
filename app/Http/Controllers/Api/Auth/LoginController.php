@@ -36,10 +36,11 @@ class LoginController extends Controller
 
         $ip = $request->getClientIp() ?? $user->id;
         $accessToken = $user->createToken($ip)->plainTextToken;
-        $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Strict');
+        $cookie = Cookie::make('monody_access_token', $accessToken, 60 * 24 * 30, '/', '', true, true, false, 'Lax');
 
         return JsonApiResponse::make()
-            ->withAlert(AlertType::Success, 'Bon jeu !')
-            ->withCookie($cookie);
+            ->withAlert(AlertType::Success, __('auth.hi'))
+            ->withCookie($cookie)
+            ->withoutCache();
     }
 }

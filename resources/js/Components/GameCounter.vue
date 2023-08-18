@@ -1,43 +1,35 @@
 <template>
-  <div class="counter__main">
-    <span class="counter__icon-container">
-      <svg
-        class="counter__icon-circle"
-        height="45"
-        viewBox="0 0 45 45"
-        width="45"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle
-          cx="22.5"
-          cy="22.5"
-          fill="none"
-          r="21.5"
-          stroke="white"
-        />
-      </svg>
-      <svg
-        ref="counterIcon"
-        class="counter__icon"
-      >
-        <use :href="'/sprite.svg#' + icon" />
-      </svg>
-    </span>
-    <p class="counter__seconds">
-      {{ new Date(time * 1000).toISOString().substr(14, 5) }}
-    </p>
-    <p class="counter__round">
-      &nbsp;- {{ roundText }}
-    </p>
-  </div>
+	<div class="counter__main">
+		<span class="counter__icon-container">
+			<svg
+				class="counter__icon-circle"
+				height="45"
+				viewBox="0 0 45 45"
+				width="45"
+				xmlns="http://www.w3.org/2000/svg"
+			>
+				<circle cx="22.5" cy="22.5" fill="none" r="21.5" stroke="white" />
+			</svg>
+			<svg ref="counterIcon" class="counter__icon">
+				<use :href="'/sprite.svg#' + icon" />
+			</svg>
+		</span>
+		<p class="counter__seconds">
+			{{ new Date(time * 1000).toISOString().substr(14, 5) }}
+		</p>
+		<p class="counter__round">&nbsp;- {{ roundText }}</p>
+	</div>
 </template>
 
 <script setup>
+import { Howl } from "howler";
 import { onMounted, ref } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useStore } from "../stores/game.js";
 import { useStore as useChatStore } from "../stores/chat.js";
 import { useStore as useModalStore } from "../stores/modals/modal.js";
+import { useStore as useAudioStore } from "../stores/modals/audio-modal.js";
+import { useI18n } from "vue-i18n";
 
 const route = useRoute();
 const round = ref(0);
@@ -47,22 +39,32 @@ const totalTime = ref(0);
 const counterId = ref(0);
 const counterIcon = ref(null);
 const status = ref(0);
-const sound = new Audio("../sounds/bip.mp3");
 const roundText = ref("");
 const chatStore = useChatStore();
 const modalStore = useModalStore();
+const gameStore = useStore();
+const audioStore = useAudioStore();
 const halt = ref(false);
+const { t } = useI18n();
 
-const getState = async function(toRetrieveState = null) {
+const bip = new Howl({
+	src: ["../sounds/ding.mp3"],
+	volume: audioStore.volumes.ambient * 0.1,
+});
+
+audioStore.$subscribe((mutation, state) => {
+	bip.volume(state.volumes.ambient * 0.1);
+});
+
+const getState = async function (toRetrieveState = null) {
 	const parameter = toRetrieveState === null ? status.value : toRetrieveState;
 	const state = await window.JSONFetch(`/state/${parameter}`, "GET");
 	return state.data.state;
 };
 
-onMounted(() =>	updateCircle());
+onMounted(() => updateCircle());
 
 let state = await getState();
-sound.load();
 roundText.value = state.name;
 icon.value = state.icon;
 
@@ -88,13 +90,21 @@ onBeforeRouteLeave(() => {
 });
 
 const setData = async function (data) {
+	gameStore.currentState = data;
 	clearInterval(counterId.value);
-	time.value = data.counterDuration === -1 ? 0 : getDuration(data.counterDuration, data.startTimestamp);
+	time.value =
+		data.counterDuration === -1
+			? 0
+			: getDuration(data.counterDuration, data.startTimestamp);
 	totalTime.value = data.counterDuration === -1 ? 0 : data.counterDuration;
 
 	if (status.value !== data.status.value) {
 		status.value = data.status;
 		state = await getState(data.status.value);
+	}
+
+	if (state.message !== null && data.skipped !== true) {
+		chatStore.send(state.message, "info");
 	}
 
 	status.value = data.status;
@@ -147,17 +157,16 @@ const decount = function () {
 
 const soundManagement = function () {
 	switch (time.value) {
-	case 120:
-	case 60:
-	case 30:
-	case 10:
-	case 5:
-	case 3:
-	case 2:
-	case 1:
-		sound.currentTime = 0;
-		sound.play();
-		break;
+		case 120:
+		case 60:
+		case 30:
+		case 10:
+		case 5:
+		case 3:
+		case 2:
+		case 1:
+			bip.play();
+			break;
 	}
 };
 
@@ -180,22 +189,22 @@ const updateCircle = function () {
 
 const updateOverlay = function () {
 	switch (status.value) {
-	default:
-		break;
-	case 2:
-		chatStore.send("Tombée de la nuit", "time_separator");
-		break;
-	case 6:
-		chatStore.send("Lever du jour", "time_separator");
-		break;
+		default:
+			break;
+		case 2:
+			chatStore.send(t("chat.night_separator"), "time_separator");
+			break;
+		case 6:
+			chatStore.send(t("chat.day_separator"), "time_separator");
+			break;
 	}
 
 	switch (icon.value) {
-	default:
-		counterIcon.value.classList.remove("counter__icon-rotate");
-		break;
-	case "day":
-		counterIcon.value.classList.add("counter__icon-rotate");
+		default:
+			counterIcon.value.classList.remove("counter__icon-rotate");
+			break;
+		case "day":
+			counterIcon.value.classList.add("counter__icon-rotate");
 	}
 };
 

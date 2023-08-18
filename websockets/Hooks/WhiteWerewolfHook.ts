@@ -1,5 +1,5 @@
 import { InteractionService } from "../Services/InteractionService.js";
-import {Server} from "socket.io";
+import { Server } from "socket.io";
 
 export default {
 	identifier: 11,
@@ -9,8 +9,12 @@ export default {
 		return false;
 	},
 	async after(io: Server, channel: string) {
-		await InteractionService.closeInteraction(io, channel, "white_werewolf");
+		await InteractionService.closeInteraction(
+			io,
+			channel,
+			"white_werewolf",
+		);
 
 		return false;
-	}
+	},
 };

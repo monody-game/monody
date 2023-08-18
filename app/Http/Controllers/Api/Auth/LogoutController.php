@@ -21,14 +21,20 @@ class LogoutController extends Controller
         /** @var Collection<int, Model> $tokens User must be connected to access this route */
         $tokens = $user->tokens()->where('name', $request->getClientIp() ?? $user->id)->get();
 
+        if ($tokens->count() < 1) {
+            $tokens = [$user->tokens()->orderByDesc('created_at')->first()];
+        }
+
         foreach ($tokens as $token) {
+            /** @var Model $token */
             $token->delete();
         }
 
         Cookie::expire('monody_access_token');
 
         return JsonApiResponse::make()
-            ->withAlert(AlertType::Success, 'À bientôt !');
+            ->withAlert(AlertType::Success, __('auth.bye'))
+            ->flushCache();
     }
 
     public function all(Request $request): JsonApiResponse
@@ -38,6 +44,7 @@ class LogoutController extends Controller
         Cookie::expire('monody_access_token');
 
         return JsonApiResponse::make()
-            ->withAlert(AlertType::Success, 'À bientôt !');
+            ->withAlert(AlertType::Success, __('auth.bye'))
+            ->flushCache();
     }
 }

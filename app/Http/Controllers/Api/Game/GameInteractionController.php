@@ -77,7 +77,7 @@ class GameInteractionController extends Controller
         }
 
         $action = InteractionAction::from($action);
-        $result = $this->service->call($action, $id, $userId, $targetId);
+        $result = $this->service->call($action, $id, $gameId, $userId, $targetId);
 
         return match ($result) {
             $this->service::USER_CANNOT_USE_THIS_INTERACTION => new JsonApiResponse(['message' => "You cannot use the action $action->value."], Status::FORBIDDEN),
