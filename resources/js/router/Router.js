@@ -10,8 +10,9 @@ import GamePage from "../pages/GamePage.vue";
 import exists from "./middleware/gameExists.js";
 import user from "./middleware/user.js";
 import canJoin from "./middleware/canJoinGame.js";
+import CountdownPage from "../pages/CountdownPage.vue";
 
-const routes = [
+/**const routes = [
 	{
 		path: "/",
 		name: "home_page",
@@ -53,7 +54,14 @@ const routes = [
 		name: "e404",
 		component: NotFoundPage,
 	},
-];
+];*/
+
+const routes = [
+	{
+		path: "/:pathMatch(.*)*",
+		component: CountdownPage,
+	},
+]
 
 const router = createRouter({
 	history: createWebHistory(),
