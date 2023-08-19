@@ -2,7 +2,7 @@
 	<div v-once class="home-page">
 		<header class="home-page__header">
 			<a
-				href="https://monody.notion.site/monody/687a32def57740ddab27fa81124a6456"
+				href="https://docs.monody.fr"
 				target="_blank"
 			>
 				{{ $t("home.howtoplay") }}
