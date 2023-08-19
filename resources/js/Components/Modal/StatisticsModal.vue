@@ -1,3 +1,21 @@
-<template></template>
+<template>
+	<BaseModal>
+		<header>
+			<h3>Statistiques</h3>
+		</header>
+		<div class="modal__page">
+			<UserStatistics></UserStatistics>
+		</div>
+		<div class="modal__buttons">
+			<div class="modal__buttons-right">
+				<button class="btn medium" @click="useStore().close()">Fermer</button>
+			</div>
+		</div>
+	</BaseModal>
+</template>
 
-<script setup></script>
+<script setup>
+import BaseModal from "./BaseModal.vue";
+import UserStatistics from "../PlayerPresentation/UserStatistics.vue";
+import { useStore } from "../../stores/modals/modal.js";
+</script>
