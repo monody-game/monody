@@ -38,13 +38,6 @@ return [
             'description' => 'Reach the top of the ELO rankings to unlock this badge!',
         ],
     ],
-    'rank' => [
-        'villager' => 'Villager',
-        'healer' => 'Healer',
-        'oracle' => 'Oracle',
-        'elder' => 'Elder',
-        'archbishop' => 'Archbishop',
-    ],
     'team' => [
         'villagers' => [
             'name' => 'Villagers',

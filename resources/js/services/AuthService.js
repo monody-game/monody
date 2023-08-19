@@ -28,9 +28,6 @@ export default class AuthService {
 		data.exp = res.data.exp.exp;
 		data.next_level = res.data.exp.next_level;
 
-		res = await window.JSONFetch("/elo");
-		data.elo = res.data.elo.elo;
-
 		this.store.setUser({
 			id: data.id,
 			username: data.username,
@@ -40,7 +37,6 @@ export default class AuthService {
 			level: data.level,
 			exp: data.exp,
 			exp_needed: data.next_level,
-			elo: data.elo,
 			discord_linked_at: data.discord_linked_at,
 		});
 

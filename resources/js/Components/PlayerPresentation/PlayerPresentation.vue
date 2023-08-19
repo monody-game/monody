@@ -29,12 +29,6 @@
 						</svg>
 						<p>{{ store.level }}</p>
 					</div>
-					<div title="Elo">
-						<svg>
-							<use href="/sprite.svg#elo" />
-						</svg>
-						<p>{{ store.elo }}</p>
-					</div>
 				</div>
 			</ProgressBar>
 			<span class="pill pill-light player-presentation__name">{{

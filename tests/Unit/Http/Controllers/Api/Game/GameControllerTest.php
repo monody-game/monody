@@ -341,7 +341,6 @@ class GameControllerTest extends TestCase
                             'username' => $this->user->username,
                             'avatar' => $this->user->avatar,
                             'level' => $this->user->level,
-                            'elo' => null,
                         ],
                         'roles' => [
                             Role::Werewolf->value => 2,
