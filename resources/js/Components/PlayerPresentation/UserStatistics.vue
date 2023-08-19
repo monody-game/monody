@@ -1,4 +1,8 @@
 <template>
+	<div v-if="loading" class="auth-page__loading-group">
+		<div class="auth-page__loading-group-blur" />
+		<DotsSpinner />
+	</div>
 	<div class="stats__container">
 		<div class="stats__statistic" title="Nombre de victoires">
 			<svg>
@@ -68,7 +72,8 @@
 </template>
 
 <script setup>
-const apiStats = (await window.JSONFetch("/stats")).data.statistics;
+import DotsSpinner from "../Spinners/DotsSpinner.vue";
+import { nextTick, ref } from "vue";
 
 const stats = {
 	wins: "N/A",
@@ -84,36 +89,45 @@ const stats = {
 		image: "/assets/roles/default.png",
 	},
 };
+
 let winRate = "N/A";
 
-for (const stat in apiStats) {
-	stats[stat] = apiStats[stat] ?? stats[stat];
-}
+const loading = ref(true)
 
-if (stats.wins !== "N/A" && stats.losses !== "N/A") {
-	if (stats.losses === 0) {
-		winRate = stats.wins;
-	} else {
-		winRate = stats.wins / stats.losses;
+nextTick(async () => {
+	const apiStats = (await window.JSONFetch("/stats")).data.statistics;
 
-		if (!Number.isInteger(winRate)) {
-			winRate = winRate.toFixed(2);
+	for (const stat in apiStats) {
+		stats[stat] = apiStats[stat] ?? stats[stat];
+	}
+
+	if (stats.wins !== "N/A" && stats.losses !== "N/A") {
+		if (stats.losses === 0) {
+			winRate = stats.wins;
+		} else {
+			winRate = stats.wins / stats.losses;
+
+			if (!Number.isInteger(winRate)) {
+				winRate = winRate.toFixed(2);
+			}
 		}
 	}
-}
 
-if (apiStats.most_possessed_role !== null) {
-	const role = await JSONFetch(
-		`/roles/get/${apiStats.most_possessed_role.role}`,
-	);
-	stats.most_possessed_role = role.data.role;
-	stats.most_possessed_role.occurences =
-		apiStats.most_possessed_role.occurences;
-}
+	if (apiStats.most_possessed_role !== null) {
+		const role = await JSONFetch(
+			`/roles/get/${apiStats.most_possessed_role.role}`,
+		);
+		stats.most_possessed_role = role.data.role;
+		stats.most_possessed_role.occurences =
+			apiStats.most_possessed_role.occurences;
+	}
 
-if (apiStats.highest_win_role !== null) {
-	const role = await JSONFetch(`/roles/get/${apiStats.highest_win_role.role}`);
-	stats.highest_win_role = role.data.role;
-	stats.highest_win_role.occurences = apiStats.highest_win_role.occurences;
-}
+	if (apiStats.highest_win_role !== null) {
+		const role = await JSONFetch(`/roles/get/${apiStats.highest_win_role.role}`);
+		stats.highest_win_role = role.data.role;
+		stats.highest_win_role.occurences = apiStats.highest_win_role.occurences;
+	}
+
+	loading.value = false
+})
 </script>
