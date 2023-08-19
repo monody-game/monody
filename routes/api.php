@@ -36,7 +36,6 @@ Route::get('/leaderboard/{leaderboard}', 'LeaderboardController@index');
 
 Route::group(['middleware' => OptionalAuthentication::class], function () {
     Route::get('/stats/{userId?}', 'StatisticsController@show');
-    Route::get('/elo/{userId?}', 'EloController@show');
 
     Route::get('/badges/{userId?}', 'BadgeController@get');
 });

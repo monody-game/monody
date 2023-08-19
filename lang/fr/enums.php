@@ -38,13 +38,6 @@ return [
             'description' => 'Atteignez les sommets des classements ELO afin de débloquer ce badge !',
         ],
     ],
-    'rank' => [
-        'villager' => 'Villageois',
-        'healer' => 'Guérisseur',
-        'oracle' => 'Oracle',
-        'elder' => 'Ancien',
-        'archbishop' => 'Archevêque',
-    ],
     'team' => [
         'villagers' => [
             'name' => 'Villageois',

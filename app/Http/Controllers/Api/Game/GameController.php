@@ -20,7 +20,6 @@ use App\Http\Requests\CreateGameRequest;
 use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\JoinGameRequest;
 use App\Http\Responses\JsonApiResponse;
-use App\Models\Elo;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
@@ -291,7 +290,6 @@ class GameController extends Controller
                 'username' => $owner->username,
                 'avatar' => $owner->avatar,
                 'level' => $owner->level,
-                'elo' => Elo::select('elo')->where('user_id', $owner->id)->firstOrCreate(['user_id' => $owner->id])->elo,
             ],
             'roles' => $game['roles'],
             'role' => array_key_exists($owner->id, $game['assigned_roles']) ? Role::from($game['assigned_roles'][$userId])->full() : null,
