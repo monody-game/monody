@@ -35,7 +35,7 @@
 				store.username
 			}}</span>
 			<button class="btn large" @click="modalStore.open('statistics-modal')">
-				Voir mes statistiques
+				{{ $t("stats.button") }}
 			</button>
 			<div class="player-presentation__footer">
 				<svg @click="modalStore.open('profile-modal')">

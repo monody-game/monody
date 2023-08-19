@@ -2,6 +2,7 @@
 	display: grid;
 	grid-template-columns: repeat(2, auto);
 	gap: space(2);
+	width: 100%;
 
 	@media screen and (max-width: 600px) {
 		grid-template-columns: 1fr;

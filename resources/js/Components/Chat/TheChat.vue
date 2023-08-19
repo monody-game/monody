@@ -123,15 +123,14 @@ const messagesContainer = ref(null);
 
 const messagesHistory = JSON.parse(localStorage.getItem("messages"));
 
-
 if (messagesHistory && Object.keys(messagesHistory).length > 3) {
-	delete messagesHistory[Object.keys(messagesHistory)[0]]
+	delete messagesHistory[Object.keys(messagesHistory)[0]];
 
 	localStorage.setItem("messages", JSON.stringify(messagesHistory));
 }
 
-if(store.id !== route.params.id) {
-	store.$reset()
+if (store.id !== route.params.id) {
+	store.$reset();
 }
 
 if (messagesHistory && route.params.id in messagesHistory) {

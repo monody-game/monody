@@ -238,5 +238,16 @@
 		"title": "Oh no !",
 		"content": "Page not found ...",
 		"back": "Go back"
+	},
+	"stats": {
+		"button": "See my statistics",
+		"title": "Statistics",
+		"wins": "Wins: {0}",
+		"losses": "Losses: {0}",
+		"ratio": "Win rate: {0}",
+		"streak": "Winning streak: {0}",
+		"longest_streak": "Longest winning streak: {0}",
+		"most_possessed_role": "Most owned role: {name} ({occurences} times)",
+		"highest_win_role": "Most successful role: {name} ({occurences} times)"
 	}
 }
