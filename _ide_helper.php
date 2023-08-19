@@ -4,7 +4,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 10.18.0.
+ * Generated for Laravel 10.19.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -16329,6 +16329,18 @@
         {
                         /** @var \Illuminate\Routing\UrlGenerator $instance */
                         return $instance->withKeyResolver($keyResolver);
+        }
+                    /**
+         * Set the callback that should be used to attempt to resolve missing named routes.
+         *
+         * @param callable $missingNamedRouteResolver
+         * @return \Illuminate\Routing\UrlGenerator 
+         * @static 
+         */ 
+        public static function resolveMissingNamedRoutesUsing($missingNamedRouteResolver)
+        {
+                        /** @var \Illuminate\Routing\UrlGenerator $instance */
+                        return $instance->resolveMissingNamedRoutesUsing($missingNamedRouteResolver);
         }
                     /**
          * Get the root controller namespace.

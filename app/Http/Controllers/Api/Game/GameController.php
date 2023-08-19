@@ -24,10 +24,11 @@ use App\Models\Elo;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
-use function array_key_exists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+
+use function array_key_exists;
 
 class GameController extends Controller
 {
