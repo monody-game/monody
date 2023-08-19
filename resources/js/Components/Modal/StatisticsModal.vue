@@ -1,14 +1,16 @@
 <template>
 	<BaseModal>
 		<header>
-			<h3>Statistiques</h3>
+			<h3>{{ $t("stats.title") }}</h3>
 		</header>
 		<div class="modal__page">
 			<UserStatistics></UserStatistics>
 		</div>
 		<div class="modal__buttons">
 			<div class="modal__buttons-right">
-				<button class="btn medium" @click="useStore().close()">Fermer</button>
+				<button class="btn medium" @click="useStore().close()">
+					{{ $t("modal.close") }}
+				</button>
 			</div>
 		</div>
 	</BaseModal>

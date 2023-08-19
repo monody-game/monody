@@ -8,25 +8,25 @@
 			<svg>
 				<use href="/sprite.svg#trophy" />
 			</svg>
-			<p>Victoires : {{ stats.wins }}</p>
+			<p>{{ $t("stats.wins", [stats.wins]) }}</p>
 		</div>
 		<div class="stats__statistic" title="Ratio de victoires">
 			<svg>
 				<use href="/sprite.svg#win_rate" />
 			</svg>
-			<p>Ratio de victoires : {{ winRate }}</p>
+			<p>{{ $t("stats.ratio", [winRate]) }}</p>
 		</div>
 		<div class="stats__statistic" title="Nombre de défaites">
 			<svg>
 				<use href="/sprite.svg#losses" />
 			</svg>
-			<p>Défaites : {{ stats.losses }}</p>
+			<p>{{ $t("stats.losses", [stats.losses]) }}</p>
 		</div>
 		<div class="stats__statistic" title="Série de victoires">
 			<svg>
 				<use href="/sprite.svg#win_streak" />
 			</svg>
-			<p>Série de victoires : {{ stats.win_streak }}</p>
+			<p>{{ $t("stats.streak", [stats.win_streak]) }}</p>
 		</div>
 		<div
 			class="stats__statistic stats__statistic-large"
@@ -52,21 +52,41 @@
 					fill="var(--dark-background)"
 				/>
 			</svg>
-			<p>Plus longue série de victoires : {{ stats.longest_streak }}</p>
+			<p>{{ $t("stats.longest_streak", [stats.longest_streak]) }}</p>
 		</div>
-		<div class="stats__statistic" title="Rôle le plus possédé">
+		<div
+			class="stats__statistic stats__statistic-large"
+			title="Rôle le plus possédé"
+		>
 			<img
 				:src="stats.most_possessed_role.image"
 				:alt="stats.most_possessed_role.display_name"
 			/>
-			<p>Rôle le plus possédé : {{ stats.most_possessed_role.display_name }}</p>
+			<p>
+				{{
+					$t("stats.most_possessed_role", {
+						name: stats.most_possessed_role.display_name,
+						occurences: stats.most_possessed_role.occurences,
+					})
+				}}
+			</p>
 		</div>
-		<div class="stats__statistic" title="Rôle le plus victorieux">
+		<div
+			class="stats__statistic stats__statistic-large"
+			title="Rôle le plus victorieux"
+		>
 			<img
 				:src="stats.highest_win_role.image"
 				:alt="stats.highest_win_role.display_name"
 			/>
-			<p>Rôle le plus victorieux : {{ stats.highest_win_role.display_name }}</p>
+			<p>
+				{{
+					$t("stats.highest_win_role", {
+						name: stats.highest_win_role.display_name,
+						occurences: stats.highest_win_role.occurences,
+					})
+				}}
+			</p>
 		</div>
 	</div>
 </template>
@@ -92,7 +112,7 @@ const stats = {
 
 let winRate = "N/A";
 
-const loading = ref(true)
+const loading = ref(true);
 
 nextTick(async () => {
 	const apiStats = (await window.JSONFetch("/stats")).data.statistics;
@@ -123,11 +143,13 @@ nextTick(async () => {
 	}
 
 	if (apiStats.highest_win_role !== null) {
-		const role = await JSONFetch(`/roles/get/${apiStats.highest_win_role.role}`);
+		const role = await JSONFetch(
+			`/roles/get/${apiStats.highest_win_role.role}`,
+		);
 		stats.highest_win_role = role.data.role;
 		stats.highest_win_role.occurences = apiStats.highest_win_role.occurences;
 	}
 
-	loading.value = false
-})
+	loading.value = false;
+});
 </script>

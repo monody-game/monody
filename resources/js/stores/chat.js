@@ -32,7 +32,10 @@ export const useStore = defineStore("chat", () => {
 				timestamp: Date.now(),
 			});
 
-			stored[id.value].couple = [...stored[id.value].couple, this.messages.couple.at(-1)];
+			stored[id.value].couple = [
+				...stored[id.value].couple,
+				this.messages.couple.at(-1),
+			];
 		} else {
 			this.unread.main =
 				author !== null ? author.id !== useUserStore().id : false;
@@ -44,7 +47,10 @@ export const useStore = defineStore("chat", () => {
 				timestamp: Date.now(),
 			});
 
-			stored[id.value].main = [...stored[id.value].main, this.messages.main.at(-1)];
+			stored[id.value].main = [
+				...stored[id.value].main,
+				this.messages.main.at(-1),
+			];
 		}
 
 		localStorage.setItem("messages", JSON.stringify(stored));

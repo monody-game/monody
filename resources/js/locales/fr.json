@@ -238,5 +238,16 @@
 		"title": "Oh non !",
 		"content": "Page introuvable ...",
 		"back": "Retourner en arrière"
+	},
+	"stats": {
+		"button": "Voir mes statistiques",
+		"title": "Statistiques",
+		"wins": "Victoires : {0}",
+		"losses": "Défaites : {0}",
+		"ratio": "Ratio de victoires : {0}",
+		"streak": "Série de victoires : {0}",
+		"longest_streak": "Plus longue série de victoires : {0}",
+		"most_possessed_role": "Rôle le plus possédé : {name} ({occurences} fois)",
+		"highest_win_role": "Rôle le plus victorieux : {name} ({occurences} fois)"
 	}
 }
