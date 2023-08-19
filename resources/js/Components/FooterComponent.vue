@@ -22,8 +22,8 @@
 					<use href="/sprite.svg#discord" />
 				</svg>
 			</a>
+			<LangSwitcher />
 		</div>
-		<LangSwitcher />
 	</footer>
 </template>
 
