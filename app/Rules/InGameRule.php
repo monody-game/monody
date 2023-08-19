@@ -6,6 +6,7 @@ use App\Facades\Redis;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+
 use function in_array;
 
 class InGameRule implements Rule, DataAwareRule

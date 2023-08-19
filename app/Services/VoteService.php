@@ -7,9 +7,10 @@ use App\Events\GameKill;
 use App\Events\MayorElected;
 use App\Facades\Redis;
 use App\Traits\MemberHelperTrait;
+use Illuminate\Support\Facades\Auth;
+
 use function array_key_exists;
 use function count;
-use Illuminate\Support\Facades\Auth;
 use function in_array;
 
 class VoteService

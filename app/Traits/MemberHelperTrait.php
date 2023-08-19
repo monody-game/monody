@@ -8,9 +8,10 @@ use App\Enums\Team;
 use App\Events\MessageSent;
 use App\Facades\Redis;
 use App\Models\Message;
+use Exception;
+
 use function array_key_exists;
 use function count;
-use Exception;
 
 trait MemberHelperTrait
 {
