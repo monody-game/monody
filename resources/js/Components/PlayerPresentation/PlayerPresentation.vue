@@ -22,19 +22,21 @@
 					alt=""
 					class="player-presentation__avatar"
 				/>
-				<div class="player-presentation__levels">
-					<div title="Niveau">
-						<svg>
-							<use href="/sprite.svg#level" />
-						</svg>
-						<p>{{ store.level }}</p>
-					</div>
-				</div>
 			</ProgressBar>
+			<div class="player-presentation__levels">
+				<div title="Niveau">
+					<svg>
+						<use href="/sprite.svg#level" />
+					</svg>
+					<p>Niveau {{ store.level }}</p>
+				</div>
+			</div>
 			<span class="pill pill-light player-presentation__name">{{
 				store.username
 			}}</span>
-			<UserStatistics />
+			<button class="btn large" @click="modalStore.open('statistics-modal')">
+				Voir mes statistiques
+			</button>
 			<div class="player-presentation__footer">
 				<svg @click="modalStore.open('profile-modal')">
 					<use href="/sprite.svg#wheel" />

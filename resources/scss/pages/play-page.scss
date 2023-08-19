@@ -36,6 +36,7 @@
 	}
 
 	@media screen and (max-width: 600px) {
+		padding-bottom: space(4);
 		grid-template-columns: initial;
 		grid-template-rows: 1fr 1fr;
 		gap: space(3);
@@ -56,15 +57,25 @@
 }
 
 .play-page__header {
-	display: grid;
-	grid-template-columns: 1fr 0.75fr;
-	place-items: center flex-end;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	padding: space(4) space(4);
 	color: var(--secondary);
 
 	@media screen and (max-width: 600px) {
 		grid-template-columns: initial;
 		place-items: center;
+	}
+
+	& a {
+		color: var(--secondary);
+
+		@media screen and (max-width: 600px) {
+			display: none;
+			font-size: 0;
+			gap: 0;
+		}
 	}
 
 	& button {
@@ -104,6 +115,11 @@
 	& svg {
 		height: 50px;
 		width: 45px;
+	}
+
+	@media screen and (max-width: 600px) {
+		flex: 1;
+		justify-content: center;
 	}
 }
 

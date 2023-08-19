@@ -31,7 +31,6 @@
 
 .player-presentation__main {
 	width: 100%;
-	height: 480px;
 
 	padding: space(3) space(2) space(2);
 
@@ -45,6 +44,7 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
+	gap: space(2);
 
 	& .player-presentation__avatar {
 		border-radius: 50%;
@@ -75,21 +75,6 @@
 		height: 35px;
 		min-width: 100px;
 		width: min-content;
-	}
-}
-
-.player-presentation__levels {
-	position: absolute;
-	bottom: 0;
-
-	display: flex;
-	justify-content: space-between;
-
-	width: 115%;
-
-	@media screen and (max-width: 960px) {
-		place-self: flex-start;
-		width: 105%;
 	}
 }
 
