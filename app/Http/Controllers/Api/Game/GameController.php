@@ -25,6 +25,7 @@ use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 use function array_key_exists;
@@ -225,9 +226,11 @@ class GameController extends Controller
         broadcast(new ClearGameInvitations);
 
         if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
+			Log::debug("Should update voice channel permissions");
             broadcast(new UpdateVoiceChannelPermissions([
                 'game_id' => $gameId,
                 'discord_id' => $user->discord_id ?? '',
+                'join' => true
             ]));
         }
 
@@ -255,6 +258,14 @@ class GameController extends Controller
             // We remove the user id from saved users to prevent issues with roles that rely on the number of players
             $game['users'] = array_diff($game['users'], [$user->id]);
             Redis::set("game:$gameId", $game);
+        }
+
+        if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
+            broadcast(new UpdateVoiceChannelPermissions([
+                'game_id' => $gameId,
+                'discord_id' => $user->discord_id ?? '',
+                'join' => false
+            ]));
         }
 
         /** @var array $list */
