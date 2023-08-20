@@ -132,7 +132,7 @@ const isOwner = ref(false);
 
 const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
-const player = ref(null);
+const player = ref();
 const gamePlayer = gameStore.getPlayerByID(props.player.id);
 
 onMounted(() => {
@@ -352,6 +352,10 @@ window.Echo.join(`game.${gameId.value}`)
 		}
 	})
 	.listen(".game.end", () => {
+		isVoted.value = false;
+	})
+	.listen(".game.state", () => {
+		votedBy.value = [];
 		isVoted.value = false;
 	});
 
