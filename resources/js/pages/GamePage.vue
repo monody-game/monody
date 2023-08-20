@@ -106,6 +106,7 @@ import GameInformationBubble from "../Components/GameInformationBubble.vue";
 import EndGameModal from "../Components/Modal/EndGameModal.vue";
 import AudioManager from "../Components/AudioManager.vue";
 import AudioManagementModal from "../Components/Modal/AudioManagementModal.vue";
+import { useCache } from "../composables/cache.js";
 
 const route = useRoute();
 const store = useStore();
@@ -250,9 +251,27 @@ window.Echo.join(`game.${gameId}`)
 	.listen(".game.state", async (data) => {
 		store.state = data.status;
 	})
-	.listen(".subscription_error", () => {
-		location.reload();
-	});
+  .listen(".subscription_error", () => {
+    setTimeout(async () => {
+      useCache().flush("/user");
+      const res = await JSONFetch("/user");
+      const user = res.data.user;
+
+      userStore.setUser({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        email_verified_at: user.email_verified_at,
+        avatar: user.avatar,
+        level: user.level,
+        exp: user.exp,
+        exp_needed: user.next_level,
+        discord_linked_at: user.discord_linked_at,
+      });
+
+      location.reload();
+    }, 250)
+  });
 
 const leave = () => {
 	window.Echo.leave(`game.${gameId}`);
