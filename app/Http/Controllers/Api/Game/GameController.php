@@ -25,7 +25,6 @@ use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 use function array_key_exists;
@@ -226,11 +225,10 @@ class GameController extends Controller
         broadcast(new ClearGameInvitations);
 
         if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
-			Log::debug("Should update voice channel permissions");
             broadcast(new UpdateVoiceChannelPermissions([
                 'game_id' => $gameId,
                 'discord_id' => $user->discord_id ?? '',
-                'join' => true
+                'join' => true,
             ]));
         }
 
@@ -264,7 +262,7 @@ class GameController extends Controller
             broadcast(new UpdateVoiceChannelPermissions([
                 'game_id' => $gameId,
                 'discord_id' => $user->discord_id ?? '',
-                'join' => false
+                'join' => false,
             ]));
         }
 

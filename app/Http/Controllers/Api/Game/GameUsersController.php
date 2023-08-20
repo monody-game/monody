@@ -16,7 +16,6 @@ use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class GameUsersController extends Controller
 {
@@ -35,7 +34,8 @@ class GameUsersController extends Controller
 
         Redis::update("game:$gameId:discord", function (array $discordData) use ($request, $user) {
             $discordData['members'][$request->validated('discord_id')] = $user->id;
-			return $discordData;
+
+            return $discordData;
         });
 
         broadcast(new CloseVoiceChannelNotice($gameId, true, [$user->id]));
