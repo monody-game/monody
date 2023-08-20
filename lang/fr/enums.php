@@ -32,11 +32,6 @@ return [
             'describe' => 'A gravi de nombreux niveaux',
             'description' => 'Acquérez de nombreux niveaux afin de débloquer ce badge.',
         ],
-        'rank' => [
-            'name' => 'Fou de l\'ELO',
-            'describe' => 'S\'est classé en ELO',
-            'description' => 'Atteignez les sommets des classements ELO afin de débloquer ce badge !',
-        ],
     ],
     'team' => [
         'villagers' => [

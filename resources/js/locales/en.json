@@ -240,6 +240,7 @@
 		"back": "Go back"
 	},
 	"stats": {
+		"none": "None",
 		"button": "See my statistics",
 		"title": "Statistics",
 		"wins": "Wins: {0}",

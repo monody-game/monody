@@ -11,7 +11,6 @@ enum Badge: int
     case Wins = 3;
     case Losses = 4;
     case Level = 5;
-    case Rank = 6;
 
     // One-level badges
     case Owner = 0;
@@ -26,8 +25,7 @@ enum Badge: int
             self::Owner => 'owner',
             self::Wins => 'win',
             self::Losses => 'loose',
-            self::Level => 'lvl',
-            self::Rank => 'rank'
+            self::Level => 'lvl'
         };
     }
 
@@ -48,7 +46,6 @@ enum Badge: int
             self::Wins => __('enums.badges.wins.name'),
             self::Losses => __('enums.badges.losses.name'),
             self::Level => __('enums.badges.level.name'),
-            self::Rank => __('enums.badges.rank.name'),
         };
     }
 
@@ -61,7 +58,6 @@ enum Badge: int
             self::Wins => __('enums.badges.wins.describe'),
             self::Losses => __('enums.badges.losses.describe'),
             self::Level => __('enums.badges.level.describe'),
-            self::Rank => __('enums.badges.rank.describe'),
         };
     }
 
@@ -74,7 +70,6 @@ enum Badge: int
             self::Wins => __('enums.badges.wins.description'),
             self::Losses => __('enums.badges.losses.description'),
             self::Level => __('enums.badges.level.description'),
-            self::Rank => __('enums.badges.rank.description'),
         };
     }
 
@@ -82,7 +77,7 @@ enum Badge: int
     {
         return match ($this) {
             default => -1,
-            self::Wins, self::Losses, self::Level, self::Rank => 5
+            self::Wins, self::Losses, self::Level => 5
         };
     }
 
