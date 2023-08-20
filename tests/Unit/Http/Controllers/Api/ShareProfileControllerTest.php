@@ -18,15 +18,16 @@ class ShareProfileControllerTest extends TestCase
         $exp->exp = 10;
         $exp->save();
 
-        Storage::assertMissing("profiles/{$user->id}.png");
+        Storage::assertMissing("profiles/$user->id.png");
 
         $this
             ->actingAs($user)
             ->get('/api/user/share')
             ->assertNoContent();
 
-        Storage::assertExists("profiles/{$user->id}.png");
-        Storage::assertMissing("profiles/{$user->id}-avatar.temp.png");
+        Storage::assertExists("profiles/$user->id.png");
+        Storage::assertMissing("profiles/$user->id-avatar.temp.png");
+        Storage::delete("profiles/$user->id.png");
     }
 
     protected function setUp(): void
@@ -35,6 +36,6 @@ class ShareProfileControllerTest extends TestCase
 
         Storage::fake();
         Storage::putFileAs('profiles', new File(storage_path('app/public/profiles/template-light.png')), 'template-light.png');
-        Storage::putFileAs('avatars', new File(storage_path('app/public/avatars/default.png')), 'default.png');
+        Storage::putFileAs('avatars', new File(storage_path('app/public/avatars/default_1.png')), 'default_1.png');
     }
 }

@@ -45,6 +45,6 @@ export default class AuthService {
 
 	async logout() {
 		await window.JSONFetch("/auth/logout", "POST");
-		await this.store.$reset;
+		await this.store.$reset();
 	}
 }
