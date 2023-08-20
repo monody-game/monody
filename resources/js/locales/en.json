@@ -103,8 +103,7 @@
 		"warn": "Caution!",
 		"info": "Information",
 		"success": "Success!",
-		"error": "Error",
-		"logout_warn_content": "You will be disconnected from all devices to which this account is connected, including this device"
+		"error": "Error"
 	},
 	"profile": {
 		"title": "Profile modification",
@@ -130,7 +129,10 @@
 		"theme": "Theme:",
 		"theme_sync": "Sync with computer",
 		"theme_dark": "Dark theme",
-		"theme_light": "Light theme"
+		"theme_light": "Light theme",
+		"logout_warn_content": "You will be disconnected from all devices to which this account is connected, including this device",
+		"avatar_warn_content": "You are about to delete your avatar",
+		"avatar_delete_success": "Your avatar has been deleted"
 	},
 	"footer": {
 		"copyright": "© Monody {0} — All rights reserved"

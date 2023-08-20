@@ -249,6 +249,9 @@
 		<path d="M17.5625 2.25C9.10872 2.25 2.25 9.10872 2.25 17.5625C2.25 26.0163 9.10872 32.875 17.5625 32.875C26.0163 32.875 32.875 26.0163 32.875 17.5625C32.875 9.10872 26.0163 2.25 17.5625 2.25Z" stroke="currentColor" stroke-width="3" stroke-miterlimit="10"/>
 		<path d="M19.25 24.5L12.25 17.5L19.25 10.5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 	</symbol>
+	<symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 40" id="delete">
+		<path d="M6.66667 40C5.44444 40 4.39778 39.5644 3.52667 38.6933C2.65556 37.8222 2.22074 36.7763 2.22222 35.5556V6.66667H0V2.22222H11.1111V0H24.4444V2.22222H35.5556V6.66667H33.3333V35.5556C33.3333 36.7778 32.8978 37.8244 32.0267 38.6956C31.1556 39.5667 30.1096 40.0015 28.8889 40H6.66667ZM28.8889 6.66667H6.66667V35.5556H28.8889V6.66667ZM11.1111 31.1111H15.5556V11.1111H11.1111V31.1111ZM20 31.1111H24.4444V11.1111H20V31.1111Z" fill="currentColor"/>
+	</symbol>
 
 	<!-- Debug bar -->
 	<symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" id="beta">
