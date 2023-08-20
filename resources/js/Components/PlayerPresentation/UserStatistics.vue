@@ -66,7 +66,7 @@
 				{{
 					$t("stats.most_possessed_role", {
 						name: stats.most_possessed_role.display_name,
-						occurences: stats.most_possessed_role.occurences,
+						occurences: stats.most_possessed_role.occurences ?? 0,
 					})
 				}}
 			</p>
@@ -83,7 +83,7 @@
 				{{
 					$t("stats.highest_win_role", {
 						name: stats.highest_win_role.display_name,
-						occurences: stats.highest_win_role.occurences,
+						occurences: stats.highest_win_role.occurences ?? 0,
 					})
 				}}
 			</p>

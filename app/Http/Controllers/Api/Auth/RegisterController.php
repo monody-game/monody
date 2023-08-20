@@ -17,8 +17,10 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request): JsonApiResponse
     {
         $data = $request->validated();
+        $index = rand(1, 10);
 
         $data['password'] = Hash::make($request->password);
+        $data['avatar'] = "/assets/avatars/default_$index.png";
 
         $user = User::create($data);
 
