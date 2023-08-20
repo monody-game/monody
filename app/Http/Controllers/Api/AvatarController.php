@@ -45,7 +45,10 @@ class AvatarController extends Controller
         $path = str_replace('/assets/', '', $user->avatar);
         $index = rand(1, 10);
 
-        Storage::delete($path);
+        if (!preg_match_all("/^avatars\/default_[0-9]+\.png$/", $path)) {
+            Storage::delete($path);
+        }
+
         $user->avatar = str_replace('storage', 'assets', Storage::url("avatars/default_$index.png"));
         $user->save();
 
