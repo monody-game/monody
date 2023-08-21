@@ -166,6 +166,10 @@ window.Echo.join(`game.${gameId}`)
 		store.currentState = e.state;
 		store.mayor = e.mayor;
 
+		if ("couple" in e) {
+			store.couple = e.couple;
+		}
+
 		if ((e.type & (1 << 1)) === 1 << 1 && e.discord === null) {
 			const res = await window.JSONFetch(`/game/${gameId}/discord`);
 			store.discord = res.data.data;
