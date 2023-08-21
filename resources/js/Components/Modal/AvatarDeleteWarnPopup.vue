@@ -19,7 +19,7 @@
 				<use href="/sprite.svg#cross" />
 			</svg>
 		</header>
-		<p class="popup__content">{{ $t("popup.avatar_warn_content") }}</p>
+		<p class="popup__content">{{ $t("profile.avatar_warn_content") }}</p>
 		<div class="modal__buttons" style="">
 			<button class="btn medium" @click="no()">
 				{{ $t("modal.cancel") }}
@@ -48,6 +48,7 @@ const userStore = useUserStore();
 
 const yes = async () => {
 	popupStore.close();
+	modalStore.opennedModal = "profile-modal";
 
 	const res = await window.JSONFetch("/avatars", "DELETE");
 
