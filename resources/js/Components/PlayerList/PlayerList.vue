@@ -1,6 +1,5 @@
 <template>
 	<div ref="playerListNode" class="player-list__wrapper">
-		<LogoSpinner v-if="loading.value === true" />
 		<GamePlayer
 			v-for="player in playerList"
 			:key="player.id"
@@ -24,12 +23,10 @@ import { useStore } from "../../stores/game.js";
 import { useStore as useChatStore } from "../../stores/chat.js";
 import { useStore as useRolePresentationStore } from "../../stores/modals/role-presentation.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
-import LogoSpinner from "../Spinners/LogoSpinner.vue";
 import GamePlayer from "./GamePlayer.vue";
 
 const playerList = ref([]);
 const playerListNode = ref(null);
-const loading = ref(false);
 const gameStore = useStore();
 const route = useRoute();
 const chatStore = useChatStore();

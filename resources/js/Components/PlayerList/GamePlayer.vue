@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useChatStore } from "../../stores/chat.js";
@@ -135,10 +135,8 @@ const interactionType = ref("");
 const player = ref();
 const gamePlayer = gameStore.getPlayerByID(props.player.id);
 
-onMounted(() => {
-	if (player.value !== null) {
-		gameStore.playerRefs.push(player);
-	}
+nextTick(() => {
+	gameStore.playerRefs.push(player);
 });
 
 gameStore.$subscribe((mutation, state) => {

@@ -24,7 +24,7 @@ export default class AuthService {
 			return false;
 		}
 
-		res = await window.JSONFetch("/exp/get");
+		res = await window.JSONFetch("/exp");
 		data.exp = res.data.exp.exp;
 		data.next_level = res.data.exp.next_level;
 

@@ -77,7 +77,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/game/message/send', 'Game\GameChatController@send');
 
-    Route::get('/exp/get', 'ExpController@get');
+    Route::get('/exp', 'ExpController@get');
 
     Route::get('/email/verify/{id}/{hash}', "Auth\VerifyEmailController@verify")
         ->middleware(['signed'])
