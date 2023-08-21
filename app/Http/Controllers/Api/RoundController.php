@@ -19,7 +19,7 @@ class RoundController extends Controller
         $rounds = [];
 
         foreach (Round::cases() as $round) {
-            $rounds[] = $this->getRound($round->value, $gameId);
+            $rounds[$round->value] = $this->getRound($round->value, $gameId);
         }
 
         return JsonApiResponse::make(['rounds' => $rounds])->withoutCache();
