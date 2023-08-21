@@ -168,14 +168,14 @@
 				</div>
 			</div>
 			<div class="profile-modal__danger-buttons">
+				<button class="btn medium btn-danger" @click="flushCache()">
+					{{ $t("profile.empty_cache") }}
+				</button>
 				<button
 					class="btn medium btn-danger"
 					@click="modalStore.open('logout-warn-popup')"
 				>
 					{{ $t("profile.global_logout") }}
-				</button>
-				<button class="btn medium btn-danger" @click="flushCache()">
-					{{ $t("profile.empty_cache") }}
 				</button>
 			</div>
 		</div>
