@@ -48,7 +48,6 @@ const userStore = useUserStore();
 
 const yes = async () => {
 	popupStore.close();
-	modalStore.opennedModal = "profile-modal";
 
 	const res = await window.JSONFetch("/avatars", "DELETE");
 
@@ -77,6 +76,5 @@ const yes = async () => {
 
 const no = () => {
 	popupStore.close();
-	modalStore.opennedModal = "profile-modal";
 };
 </script>
