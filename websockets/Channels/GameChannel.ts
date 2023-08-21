@@ -226,6 +226,12 @@ export class GameChannel {
 					},
 					channel,
 				);
+
+				this.io
+					.to(channel)
+					.emit("chat.lock", channel, {
+						data: { payload: { lock: false } },
+					});
 			}
 		}, 30_000);
 	}

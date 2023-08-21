@@ -99,9 +99,21 @@ class GameUsersController extends Controller
                     'infected' => $infected,
                 ]);
 
-                Redis::update("game:$gameId:deaths", fn (array $deaths) => array_filter($deaths, fn ($storedDeath) => $storedDeath !== $death));
+                if (array_key_exists('couple', $game) && in_array($userId, $game['couple'], true)) {
+                    $deathReport = array_values(array_filter($deaths, fn ($death) => $death['context'] === 'couple'))[0];
+                    $infected = array_key_exists('infected', $game) && $game['infected'] === $deathReport['user'];
 
-                break;
+                    GameKill::broadcast([
+                        'killedUser' => $deathReport['user'],
+                        'gameId' => $gameId,
+                        'context' => $deathReport['context'],
+                        'infected' => $infected,
+                    ]);
+
+                    Redis::update("game:$gameId:deaths", fn (array $deaths) => array_filter($deaths, fn ($storedDeath) => $storedDeath['context'] !== 'couple'));
+                }
+
+                Redis::update("game:$gameId:deaths", fn (array $deaths) => array_filter($deaths, fn ($storedDeath) => $storedDeath !== $death));
             }
         }
 
