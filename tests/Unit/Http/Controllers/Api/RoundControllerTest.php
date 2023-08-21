@@ -41,10 +41,16 @@ class RoundControllerTest extends TestCase
             }, $states);
         }, $rounds);
 
+        $roundList = [];
+
+        foreach ($rounds as $index => $round) {
+            $roundList[Round::cases()[$index]->value] = $round;
+        }
+
         $this
             ->get('/api/rounds')
             ->assertOk()
-            ->assertJson(['data' => ['rounds' => $rounds]]);
+            ->assertJson(['data' => ['rounds' => $roundList]]);
     }
 
     public function testGettingOneRound()
@@ -58,7 +64,7 @@ class RoundControllerTest extends TestCase
         }, Round::FirstRound->stateify());
 
         $this
-            ->get('/api/round/1')
+            ->get('/api/round/0')
             ->assertOk()
             ->assertJson(['data' => ['round' => $round]]);
     }
@@ -77,7 +83,7 @@ class RoundControllerTest extends TestCase
         });
 
         $round = $this
-            ->get("/api/round/1/{$this->game['id']}")
+            ->get("/api/round/0/{$this->game['id']}")
             ->assertOk()
             ->json('data.round');
 
@@ -103,10 +109,10 @@ class RoundControllerTest extends TestCase
             ->assertJson([
                 'data' => [
                     'rounds' => [
-                        $this->firstRound,
-                        $this->secondRound,
-                        $this->loopRound,
-                        [
+                        Round::FirstRound->value => $this->firstRound,
+                        Round::SecondRound->value => $this->secondRound,
+                        Round::LoopRound->value => $this->loopRound,
+                        Round::EndingRound->value => [
                             [
                                 'duration' => State::End->duration(),
                                 'identifier' => State::End->value,
@@ -131,7 +137,7 @@ class RoundControllerTest extends TestCase
         });
 
         $this
-            ->get("/api/round/2/{$this->secondGame['id']}")
+            ->get("/api/round/1/{$this->secondGame['id']}")
             ->assertOk()
             ->assertJson([
                 'data' => [
@@ -156,6 +162,11 @@ class RoundControllerTest extends TestCase
                             'raw_name' => State::Mayor->stringify(),
                             'duration' => State::Mayor->duration(),
                         ],
+                        [
+                            'identifier' => State::Vote->value,
+                            'raw_name' => State::Vote->stringify(),
+                            'duration' => State::Vote->duration(),
+                        ],
                     ],
                 ],
             ]);
@@ -175,7 +186,7 @@ class RoundControllerTest extends TestCase
         Redis::set("game:{$this->thirdGame['id']}:deaths", [['user' => $users[1]['id']]]);
 
         $this
-            ->get("/api/round/2/{$this->thirdGame['id']}")
+            ->get("/api/round/1/{$this->thirdGame['id']}")
             ->assertOk()
             ->assertJson([
                 'data' => [
@@ -205,6 +216,11 @@ class RoundControllerTest extends TestCase
                             'raw_name' => State::Mayor->stringify(),
                             'duration' => State::Mayor->duration(),
                         ],
+                        [
+                            'identifier' => State::Vote->value,
+                            'raw_name' => State::Vote->stringify(),
+                            'duration' => State::Vote->duration(),
+                        ],
                     ],
                 ],
             ]);
@@ -232,7 +248,7 @@ class RoundControllerTest extends TestCase
         });
 
         $this
-            ->get("/api/round/2/{$game['id']}")
+            ->get("/api/round/1/{$game['id']}")
             ->assertJsonPath('data.round', [
                 [
                     'identifier' => State::Night->value,
@@ -254,12 +270,17 @@ class RoundControllerTest extends TestCase
                     'raw_name' => State::Mayor->stringify(),
                     'duration' => State::Mayor->duration(),
                 ],
+                [
+                    'identifier' => State::Vote->value,
+                    'raw_name' => State::Vote->stringify(),
+                    'duration' => State::Vote->duration(),
+                ],
             ]);
 
         $this->kill($user2->id, $game['id'], 'werewolves');
 
         $this
-            ->get("/api/round/2/{$game['id']}")
+            ->get("/api/round/1/{$game['id']}")
             ->assertJsonPath('data.round', [
                 [
                     'identifier' => State::Night->value,
@@ -285,6 +306,16 @@ class RoundControllerTest extends TestCase
                     'identifier' => State::Mayor->value,
                     'raw_name' => State::Mayor->stringify(),
                     'duration' => State::Mayor->duration(),
+                ],
+                [
+                    'identifier' => State::Vote->value,
+                    'raw_name' => State::Vote->stringify(),
+                    'duration' => State::Vote->duration(),
+                ],
+                [
+                    'identifier' => State::Hunter->value,
+                    'raw_name' => State::Hunter->stringify(),
+                    'duration' => State::Hunter->duration(),
                 ],
             ]);
     }
@@ -345,6 +376,11 @@ class RoundControllerTest extends TestCase
                 'identifier' => State::Mayor->value,
                 'raw_name' => State::Mayor->stringify(),
                 'duration' => State::Mayor->duration(),
+            ],
+            [
+                'identifier' => State::Vote->value,
+                'raw_name' => State::Vote->stringify(),
+                'duration' => State::Vote->duration(),
             ],
         ];
 
