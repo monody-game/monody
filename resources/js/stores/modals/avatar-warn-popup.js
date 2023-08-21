@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useStore } from "./modal.js";
 
 export const useAvatarWarnPopupStore = defineStore("avatar-warn-popup", {
 	state: () => {
@@ -9,6 +10,9 @@ export const useAvatarWarnPopupStore = defineStore("avatar-warn-popup", {
 	actions: {
 		close() {
 			this.isOpenned = false;
+			useStore().opennedModal = "profile-modal";
+
+			return false;
 		},
 	},
 });
