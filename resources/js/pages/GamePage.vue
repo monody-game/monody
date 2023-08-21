@@ -166,7 +166,7 @@ window.Echo.join(`game.${gameId}`)
 		store.currentState = e.state;
 		store.mayor = e.mayor;
 
-		if (e.type === 0b00010 && e.discord === null) {
+		if ((e.type & (1 << 1)) === 1 << 1 && e.discord === null) {
 			const res = await window.JSONFetch(`/game/${gameId}/discord`);
 			store.discord = res.data.data;
 		} else {
@@ -175,6 +175,7 @@ window.Echo.join(`game.${gameId}`)
 
 		if (e.current_interactions.length > 0) {
 			store.currentInteractionId = e.current_interactions[0].id;
+			store.interactionType = e.current_interactions[0].type;
 		}
 	})
 	.listen(".game.role-assign", async (role_id) => {

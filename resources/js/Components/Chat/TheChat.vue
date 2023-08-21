@@ -110,8 +110,8 @@ const content = ref("");
 const input = ref(null);
 const button = ref(null);
 const icon = ref(null);
-const isLocked = ref(false);
 const gameStore = useGameStore();
+const isLocked = ref(false);
 const userStore = useUserStore();
 const route = useRoute();
 const store = useStore();
@@ -198,10 +198,15 @@ window.Echo.join(`game.${route.params.id}`)
 	})
 	.listen(".chat.lock", ({ data }) => {
 		isLocked.value = data.payload.lock;
+		gameStore.chat_locked = isLocked.value;
 	})
 	.listen(".game.end", async () => {
 		interval = setTimeout(() => {
 			useModalStore().open("activity-confirmation-modal");
 		}, 60000);
 	});
+
+gameStore.$subscribe((mutation, state) => {
+	isLocked.value = state.chat_locked;
+});
 </script>

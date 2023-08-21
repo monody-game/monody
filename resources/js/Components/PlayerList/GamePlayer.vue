@@ -172,6 +172,8 @@ gameStore.$subscribe((mutation, state) => {
 	if (state.owner.id === props.player.id) {
 		isOwner.value = true;
 	}
+
+	interactionType.value = state.interactionType;
 });
 
 const gameId = computed(() => {
@@ -199,6 +201,7 @@ window.Echo.join(`game.${gameId.value}`)
 	})
 	.listen(".interaction.open", ({ interaction }) => {
 		interactionType.value = interaction.type;
+		gameStore.interactionType = interaction.type;
 		gameStore.currentInteractionId = interaction.id;
 
 		if (
@@ -344,7 +347,10 @@ window.Echo.join(`game.${gameId.value}`)
 		votedBy.value = [];
 		isVoted.value = false;
 
-		if (Object.values(pairArray)[0].includes(props.player.id)) {
+		if (
+			Object.values(pairArray).length > 0 &&
+			Object.values(pairArray)[0].includes(props.player.id)
+		) {
 			votedBy.value = props.player;
 			isVoted.value = true;
 		}
@@ -352,9 +358,11 @@ window.Echo.join(`game.${gameId.value}`)
 	.listen(".game.end", () => {
 		isVoted.value = false;
 	})
-	.listen(".game.state", () => {
-		votedBy.value = [];
-		isVoted.value = false;
+	.listen(".game.state", (state) => {
+		if (state.skipped === false) {
+			votedBy.value = [];
+			isVoted.value = false;
+		}
 	});
 
 const send = async function (votingUser, votedUser) {
