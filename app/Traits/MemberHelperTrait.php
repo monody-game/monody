@@ -167,8 +167,7 @@ trait MemberHelperTrait
         if (
             array_key_exists('couple', $game) &&
             in_array($userId, $game['couple'], true) &&
-            $context !== 'couple' &&
-            $context !== 'disconnect'
+            $context !== 'couple'
         ) {
             Redis::update("game:$gameId:deaths", fn (array &$deaths) => [...$deaths, ['user' => $userId, 'context' => $context]]);
 
