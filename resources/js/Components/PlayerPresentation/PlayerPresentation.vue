@@ -28,7 +28,7 @@
 					<svg>
 						<use href="/sprite.svg#level" />
 					</svg>
-					<p>Niveau {{ store.level }}</p>
+					<p>{{ $t('leaderboards.level') }} {{ store.level }}</p>
 				</div>
 			</div>
 			<span class="pill pill-light player-presentation__name">{{
