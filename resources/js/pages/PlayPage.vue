@@ -2,6 +2,12 @@
 	<div class="play-page">
 		<div class="play-page__wrapper">
 			<header v-once class="play-page__header">
+				<a href="https://docs.monody.fr" target="_blank">
+					{{ $t("home.howtoplay") }}
+					<svg class="link__external">
+						<use href="/sprite.svg#external" />
+					</svg>
+				</a>
 				<div class="play-page__header-title">
 					<svg>
 						<use href="/sprite.svg#monody" />
@@ -63,6 +69,9 @@
 			<Transition name="modal">
 				<LeaderboardsModal v-if="leaderboardsModalStore.isOpenned" />
 			</Transition>
+			<Transition name="modal">
+				<StatisticsModal v-if="statisticsModalStore.isOpenned" />
+			</Transition>
 			<Footer />
 		</div>
 	</div>
@@ -87,6 +96,8 @@ import ShareProfileModal from "../Components/Modal/ShareProfileModal.vue";
 import BadgesModal from "../Components/Modal/BadgesModal.vue";
 import LeaderboardsModal from "../Components/Modal/LeaderboardsModal.vue";
 import { useCache } from "../composables/cache.js";
+import StatisticsModal from "../Components/Modal/StatisticsModal.vue";
+import { useStatisticsModal } from "../stores/modals/statistics-modal.js";
 
 const games = ref([]);
 const roles = ref([]);
@@ -98,6 +109,7 @@ const profileModalStore = useProfileModalStore();
 const shareProfileModalStore = useShareProfileModalStore();
 const badgesModalStore = useBadgesModalStore();
 const leaderboardsModalStore = useLeaderboardsModalStore();
+const statisticsModalStore = useStatisticsModal();
 
 onBeforeRouteLeave(() => {
 	window.Echo.leave("home");

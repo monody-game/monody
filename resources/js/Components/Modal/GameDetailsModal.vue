@@ -20,12 +20,6 @@
 								</svg>
 								<p>{{ gameStore.owner.level }}</p>
 							</div>
-							<div title="Elo">
-								<svg>
-									<use href="/sprite.svg#elo" />
-								</svg>
-								<p>{{ gameStore.owner.elo }}</p>
-							</div>
 						</div>
 					</div>
 				</div>

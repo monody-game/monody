@@ -178,7 +178,23 @@ const subscribeToChannel = () => {
 					}
 			}
 		})
-		.listen(".subscription_error", () => {
+		.listen(".subscription_error", async () => {
+			useCache().flush("/user");
+			const res = await JSONFetch("/user");
+			const user = res.data.user;
+
+			userStore.setUser({
+				id: user.id,
+				username: user.username,
+				email: user.email,
+				email_verified_at: user.email_verified_at,
+				avatar: user.avatar,
+				level: user.level,
+				exp: user.exp,
+				exp_needed: user.next_level,
+				discord_linked_at: user.discord_linked_at,
+			});
+
 			location.reload();
 		});
 };

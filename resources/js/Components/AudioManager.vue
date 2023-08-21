@@ -29,16 +29,19 @@ store.volumes.music = storage.music;
 const rooster = new Howl({
 	src: ["../sounds/rooster.webm", "../sounds/rooster.mp3"],
 	volume: storage.ambient * 0.1,
+	loop: true,
 });
 
 const day = new Howl({
 	src: ["../sounds/day.webm", "../sounds/day.mp3"],
 	volume: storage.music * 0.1,
+	loop: true,
 });
 
 const night = new Howl({
 	src: ["../sounds/night.webm", "../sounds/night.mp3"],
 	volume: storage.music * 0.1,
+	loop: true,
 });
 
 store.$subscribe((mutation, state) => {

@@ -3,7 +3,7 @@
 		<p>
 			{{ $t("footer.copyright", [new Date().getFullYear()]) }}
 		</p>
-		<div class="footer__socials">
+		<div>
 			<a
 				href="https://www.instagram.com/monody_game"
 				target="_blank"
@@ -22,8 +22,8 @@
 					<use href="/sprite.svg#discord" />
 				</svg>
 			</a>
+			<LangSwitcher />
 		</div>
-		<LangSwitcher />
 	</footer>
 </template>
 

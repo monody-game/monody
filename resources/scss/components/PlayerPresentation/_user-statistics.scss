@@ -1,7 +1,12 @@
 .stats__container {
 	display: grid;
-	grid-template-columns: repeat(3, auto);
+	grid-template-columns: repeat(2, auto);
 	gap: space(2);
+	width: 100%;
+
+	@media screen and (max-width: 600px) {
+		grid-template-columns: 1fr;
+	}
 }
 
 .stats__statistic {
@@ -16,5 +21,18 @@
 	& > svg {
 		height: 32px;
 		width: 32px;
+	}
+
+	img {
+		height: 32px;
+		aspect-ratio: 1;
+	}
+}
+
+.stats__statistic-large {
+	grid-column: 1 / span 2;
+
+	@media screen and (max-width: 600px) {
+		grid-column: 1;
 	}
 }

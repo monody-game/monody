@@ -32,12 +32,6 @@
 								</svg>
 								<p>{{ $t("share.level") }} : N/A</p>
 							</div>
-							<div title="Elo">
-								<svg>
-									<use href="/sprite.svg#elo" />
-								</svg>
-								<p>Elo : N/A</p>
-							</div>
 						</div>
 						<div class="share-profile__template-progress-bar">
 							<span />

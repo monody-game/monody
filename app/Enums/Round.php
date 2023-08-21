@@ -4,9 +4,9 @@ namespace App\Enums;
 
 enum Round: int
 {
-    case FirstRound = 1;
-    case SecondRound = 2;
-    case LoopRound = 3;
+    case FirstRound = 0;
+    case SecondRound = 1;
+    case LoopRound = 2;
     case EndingRound = 999999;
 
     /**
@@ -46,6 +46,8 @@ enum Round: int
                 State::Hunter,
                 State::Day,
                 State::Mayor,
+                State::Vote,
+                State::Hunter,
             ],
             self::LoopRound => [
                 State::Night,

@@ -22,7 +22,7 @@ class AvatarController extends Controller
         $avatarName = explode('/', $user->avatar);
         $avatarName = $avatarName[array_key_last($avatarName)];
 
-        if ($avatarName !== 'default.png') {
+        if (!preg_match_all("/^default_[0-9]+\.png$/", $avatarName)) {
             Storage::delete("avatars/$avatarName");
         }
 
@@ -43,9 +43,13 @@ class AvatarController extends Controller
         /** @var User $user */
         $user = $request->user();
         $path = str_replace('/assets/', '', $user->avatar);
+        $index = rand(1, 10);
 
-        Storage::delete($path);
-        $user->avatar = str_replace('storage', 'assets', Storage::url('avatars/default.png'));
+        if (!preg_match_all("/^avatars\/default_[0-9]+\.png$/", $path)) {
+            Storage::delete($path);
+        }
+
+        $user->avatar = str_replace('storage', 'assets', Storage::url("avatars/default_$index.png"));
         $user->save();
 
         return new JsonApiResponse(status: Status::NO_CONTENT);

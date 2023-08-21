@@ -59,6 +59,7 @@
 	}
 
 	div img {
+		outline: 2px solid var(--border-secondary);
 		height: 116px;
 		aspect-ratio: 1;
 		border-radius: 50%;
@@ -152,6 +153,7 @@
 
 	img {
 		height: 42px;
+		outline: 2px solid var(--border-secondary);
 		aspect-ratio: 1;
 		border-radius: 50%;
 	}

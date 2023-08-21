@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
-use App\Models\Elo;
 use App\Models\Exp;
 use App\Models\User;
 use App\Services\ExpService;
@@ -94,14 +93,6 @@ class ShareProfileController extends Controller
             $exp = Exp::where('user_id', $user->id)->get()[0]?->exp;
             $neededExp = $expService->nextLevelExp($user->level);
 
-            $elo = Elo::where('user_id', $user->id)->get();
-
-            if ($elo->count() > 0) {
-                $elo = $elo[0]?->elo;
-            } else {
-                $elo = 2000;
-            }
-
             $senBold = public_path('fonts/Sen-Bold.ttf');
             $senRegular = public_path('fonts/Sen-Regular.ttf');
 
@@ -112,7 +103,6 @@ class ShareProfileController extends Controller
 
             $profile->text($user->username, 1570, 160 + 190, fn (AbstractFont $font) => $font->file($senBold)->size(200)->color($this->color));
             $profile->text("$user->level", 2340, 630 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
-            $profile->text("$elo", 3150, 630 + 110, fn (AbstractFont $font) => $font->file($senRegular)->size(120)->color($this->color));
 
             // Progress bar container
             $profile->rectangle(1570, 970, 1570 + 2055, 970 + 240, fn (AbstractShape $shape) => $shape->border(10, $this->border));

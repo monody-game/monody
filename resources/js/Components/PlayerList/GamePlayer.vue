@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useChatStore } from "../../stores/chat.js";
@@ -132,13 +132,11 @@ const isOwner = ref(false);
 
 const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
-const player = ref(null);
+const player = ref();
 const gamePlayer = gameStore.getPlayerByID(props.player.id);
 
-onMounted(() => {
-	if (player.value !== null) {
-		gameStore.playerRefs.push(player);
-	}
+nextTick(() => {
+	gameStore.playerRefs.push(player);
 });
 
 gameStore.$subscribe((mutation, state) => {
@@ -174,6 +172,8 @@ gameStore.$subscribe((mutation, state) => {
 	if (state.owner.id === props.player.id) {
 		isOwner.value = true;
 	}
+
+	interactionType.value = state.interactionType;
 });
 
 const gameId = computed(() => {
@@ -201,6 +201,7 @@ window.Echo.join(`game.${gameId.value}`)
 	})
 	.listen(".interaction.open", ({ interaction }) => {
 		interactionType.value = interaction.type;
+		gameStore.interactionType = interaction.type;
 		gameStore.currentInteractionId = interaction.id;
 
 		if (
@@ -346,13 +347,22 @@ window.Echo.join(`game.${gameId.value}`)
 		votedBy.value = [];
 		isVoted.value = false;
 
-		if (Object.values(pairArray)[0].includes(props.player.id)) {
+		if (
+			Object.values(pairArray).length > 0 &&
+			Object.values(pairArray)[0].includes(props.player.id)
+		) {
 			votedBy.value = props.player;
 			isVoted.value = true;
 		}
 	})
 	.listen(".game.end", () => {
 		isVoted.value = false;
+	})
+	.listen(".game.state", (state) => {
+		if (state.skipped === false) {
+			votedBy.value = [];
+			isVoted.value = false;
+		}
 	});
 
 const send = async function (votingUser, votedUser) {

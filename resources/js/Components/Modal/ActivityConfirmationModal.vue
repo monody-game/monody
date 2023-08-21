@@ -19,10 +19,10 @@
 		</header>
 
 		<div class="modal__buttons popup__content">
-			<button class="btn medium" style="width: 47.5%" @click="no()">
+			<button class="btn medium" @click="no()">
 				{{ $t("modal.leave") }}
 			</button>
-			<button class="btn medium" style="width: 47.5%" @click="yes()">
+			<button class="btn medium" @click="yes()">
 				{{ $t("modal.yes") }}
 			</button>
 		</div>

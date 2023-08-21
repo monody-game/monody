@@ -103,8 +103,7 @@
 		"warn": "Attention !",
 		"info": "Information",
 		"success": "Succès !",
-		"error": "Erreur",
-		"logout_warn_content": "Vous allez être déconnecté de tous les appareils auquel ce compte est connecté, cela comprend cet appareil"
+		"error": "Erreur"
 	},
 	"profile": {
 		"title": "Modification du profil",
@@ -130,7 +129,10 @@
 		"theme": "Thème :",
 		"theme_sync": "Synchronisé avec l'ordinateur",
 		"theme_dark": "Thème sombre",
-		"theme_light": "Thème clair"
+		"theme_light": "Thème clair",
+		"logout_warn_content": "Vous allez être déconnecté de tous les appareils auquel ce compte est connecté, cela comprend cet appareil",
+		"avatar_warn_content": "Vous êtes sur le point de supprimer votre avatar",
+		"avatar_delete_success": "Votre avatar a été supprimé"
 	},
 	"footer": {
 		"copyright": "© Monody {0} — Tous droits réservés."
@@ -171,7 +173,7 @@
 		"roles": "Liste des rôles :"
 	},
 	"chat": {
-		"locked": "Chat verrouilé",
+		"locked": "Chat verrouillé",
 		"send": "Envoyer un message",
 		"no_voted": "Le village a décidé de ne tuer personne aujourd'hui !",
 		"no_killed_night": "Personne n'a été tué cette nuit !",
@@ -238,5 +240,17 @@
 		"title": "Oh non !",
 		"content": "Page introuvable ...",
 		"back": "Retourner en arrière"
+	},
+	"stats": {
+		"none": "Aucun",
+		"button": "Voir mes statistiques",
+		"title": "Statistiques",
+		"wins": "Victoires : {0}",
+		"losses": "Défaites : {0}",
+		"ratio": "Ratio de victoires : {0}",
+		"streak": "Série de victoires : {0}",
+		"longest_streak": "Plus longue série de victoires : {0}",
+		"most_possessed_role": "Rôle le plus possédé : {name} ({occurences} fois)",
+		"highest_win_role": "Rôle le plus victorieux : {name} ({occurences} fois)"
 	}
 }

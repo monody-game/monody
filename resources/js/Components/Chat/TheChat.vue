@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
@@ -110,8 +110,9 @@ const content = ref("");
 const input = ref(null);
 const button = ref(null);
 const icon = ref(null);
-const isLocked = ref(false);
 const gameStore = useGameStore();
+const isLocked = ref(false);
+const lastLockedState = ref(isLocked.value);
 const userStore = useUserStore();
 const route = useRoute();
 const store = useStore();
@@ -121,16 +122,26 @@ const { t } = useI18n();
 const chatSelected = ref("main");
 const messagesContainer = ref(null);
 
+watch(chatSelected, (value, oldValue) => {
+	if (value === "couple") {
+		lastLockedState.value = isLocked.value;
+		isLocked.value = false;
+	} else {
+		isLocked.value = lastLockedState.value;
+		gameStore.chat_locked = lastLockedState.value;
+	}
+});
+
 const messagesHistory = JSON.parse(localStorage.getItem("messages"));
 
-if (messagesHistory) {
-	for (const gameId in messagesHistory) {
-		if (gameId !== route.params.id) {
-			delete messagesHistory[gameId];
-		}
-	}
+if (messagesHistory && Object.keys(messagesHistory).length > 3) {
+	delete messagesHistory[Object.keys(messagesHistory)[0]];
 
 	localStorage.setItem("messages", JSON.stringify(messagesHistory));
+}
+
+if (store.id !== route.params.id) {
+	store.$reset();
 }
 
 if (messagesHistory && route.params.id in messagesHistory) {
@@ -197,11 +208,24 @@ window.Echo.join(`game.${route.params.id}`)
 		}
 	})
 	.listen(".chat.lock", ({ data }) => {
-		isLocked.value = data.payload.lock;
+		if (chatSelected.value === "couple") {
+			lastLockedState.value = data.payload.lock;
+		} else {
+			isLocked.value = data.payload.lock;
+			gameStore.chat_locked = data.payload.lock;
+		}
 	})
 	.listen(".game.end", async () => {
 		interval = setTimeout(() => {
 			useModalStore().open("activity-confirmation-modal");
 		}, 60000);
 	});
+
+gameStore.$subscribe((mutation, state) => {
+	if (chatSelected.value === "couple") {
+		lastLockedState.value = state.chat_locked;
+	} else {
+		isLocked.value = state.chat_locked;
+	}
+});
 </script>

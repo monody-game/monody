@@ -17,15 +17,8 @@ jobs:
       - name: 💻 Check out repository code
         uses: actions/checkout@v3
 
-      - name: 🔢 Extract version name
-        shell: bash
-        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-        id: extract_tag
-
       - name: ⬆️ Deploying
         uses: appleboy/ssh-action@master
-        env:
-          APP_VERSION: ${{ steps.extract_tag.outputs.tag }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}

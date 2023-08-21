@@ -19,12 +19,12 @@
 				<use href="/sprite.svg#cross" />
 			</svg>
 		</header>
-		<p class="popup__content">{{ $t("popup.logout_warn_content") }}</p>
-		<div class="modal__buttons" style="margin-top: 16px">
-			<button class="btn medium" style="width: 47.5%" @click="no()">
+		<p class="popup__content">{{ $t("profile.logout_warn_content") }}</p>
+		<div class="modal__buttons">
+			<button class="btn medium" @click="no()">
 				{{ $t("modal.cancel") }}
 			</button>
-			<button class="btn medium" style="width: 47.5%" @click="yes()">
+			<button class="btn medium" @click="yes()">
 				{{ $t("modal.confirm") }}
 			</button>
 		</div>

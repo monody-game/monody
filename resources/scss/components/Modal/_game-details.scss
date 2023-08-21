@@ -19,7 +19,8 @@
 	gap: space(1);
 
 	& img {
-		height: 50px;
+		outline: 2px solid var(--border-secondary);
+		height: 56px;
 		aspect-ratio: 1 / 1;
 		object-fit: cover;
 

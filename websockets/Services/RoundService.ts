@@ -33,9 +33,9 @@ export async function getRounds(gameId = ""): Promise<RoundList | []> {
 		return [];
 	}
 
-	const apiRounds = await fetch(`${process.env.API_URL}/rounds/${gameId}`);
+	const response = await fetch(`${process.env.API_URL}/rounds/${gameId}`);
 
-	if (!apiRounds.ok) {
+	if (!response.ok) {
 		return [];
 	}
 
@@ -55,20 +55,22 @@ export async function getRounds(gameId = ""): Promise<RoundList | []> {
 		hookedStates.push(hook.identifier);
 	}
 
+	const apiRounds: { [key: string]: any } = response.json.data.rounds;
+
 	try {
-		for (const round of apiRounds.json.data.rounds) {
+		for (const round in apiRounds) {
 			const roundStates: Round = [];
-			for (let state of round) {
+			for (let state of apiRounds[round]) {
 				if (hookedStates.includes(state.identifier)) {
 					state = { ...state, ...hooks[state.identifier] };
 				}
 				roundStates.push(state);
 			}
-			rounds.push(roundStates);
+			rounds[parseInt(round)] = roundStates;
 		}
 	} catch (e) {
 		error("Error retrieving rounds", e);
-		log("Current rounds " + JSON.stringify(apiRounds));
+		log("Current rounds " + JSON.stringify(apiRounds.json.data));
 	}
 
 	return rounds;

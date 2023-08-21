@@ -21,7 +21,7 @@ class ExpControllerTest extends TestCase
 
         $this
             ->actingAs($user, 'api')
-            ->get('/api/exp/get')
+            ->get('/api/exp')
             ->assertJsonPath('data.exp', [
                 'user_id' => $user->id,
                 'exp' => 15,
@@ -35,7 +35,7 @@ class ExpControllerTest extends TestCase
 
         $this->assertNull(Exp::select('*')->where('user_id', $user->id)->get()->first());
 
-        $response = $this->actingAs($user, 'api')->getJson('/api/exp/get');
+        $response = $this->actingAs($user, 'api')->getJson('/api/exp');
         $response
             ->assertJsonPath('data.exp', [
                 'user_id' => $user->id,

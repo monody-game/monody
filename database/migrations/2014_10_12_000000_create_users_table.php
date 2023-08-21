@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('avatar')->default('/assets/avatars/default.png');
+            $table->string('avatar')->default('/assets/avatars/default_1.png');
             $table->string('password');
             $table->smallInteger('level', false, true)->default(1);
             $table->string('current_game')->nullable();
