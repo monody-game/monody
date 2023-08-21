@@ -32,7 +32,11 @@ class GameUsersController extends Controller
             return new JsonApiResponse(status: Status::BAD_REQUEST);
         }
 
-        Redis::update("game:$gameId:discord", fn (array &$discordData) => $discordData['members'][$request->validated('discord_id')] = $user->id);
+        Redis::update("game:$gameId:discord", function (array $discordData) use ($request, $user) {
+            $discordData['members'][$request->validated('discord_id')] = $user->id;
+
+            return $discordData;
+        });
 
         broadcast(new CloseVoiceChannelNotice($gameId, true, [$user->id]));
 
@@ -95,9 +99,21 @@ class GameUsersController extends Controller
                     'infected' => $infected,
                 ]);
 
-                Redis::update("game:$gameId:deaths", fn (array $deaths) => array_filter($deaths, fn ($storedDeath) => $storedDeath !== $death));
+                if (array_key_exists('couple', $game) && in_array($userId, $game['couple'], true)) {
+                    $deathReport = array_values(array_filter($deaths, fn ($death) => $death['context'] === 'couple'))[0];
+                    $infected = array_key_exists('infected', $game) && $game['infected'] === $deathReport['user'];
 
-                break;
+                    GameKill::broadcast([
+                        'killedUser' => $deathReport['user'],
+                        'gameId' => $gameId,
+                        'context' => $deathReport['context'],
+                        'infected' => $infected,
+                    ]);
+
+                    Redis::update("game:$gameId:deaths", fn (array $deaths) => array_filter($deaths, fn ($storedDeath) => $storedDeath['context'] !== 'couple'));
+                }
+
+                Redis::update("game:$gameId:deaths", fn (array $deaths) => array_filter($deaths, fn ($storedDeath) => $storedDeath !== $death));
             }
         }
 

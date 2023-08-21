@@ -13,6 +13,8 @@ import { useStore as useLogoutWarnPopupStore } from "./logout-warn-popup.js";
 import { useStore as useRolePresentationStore } from "./role-presentation.js";
 import { useStore as useEndGameModalStore } from "./end-game-modal.js";
 import { useStore as useAudioManagementModalStore } from "./audio-modal.js";
+import { useStatisticsModal } from "./statistics-modal.js";
+import { useAvatarWarnPopupStore } from "./avatar-warn-popup.js";
 
 export const useStore = defineStore("modal", {
 	state: () => {
@@ -51,6 +53,10 @@ export const useStore = defineStore("modal", {
 					return useEndGameModalStore();
 				case "audio-management":
 					return useAudioManagementModalStore();
+				case "statistics-modal":
+					return useStatisticsModal();
+				case "avatar-warn-popup":
+					return useAvatarWarnPopupStore();
 			}
 		},
 	},

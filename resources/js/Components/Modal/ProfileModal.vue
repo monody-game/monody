@@ -6,6 +6,12 @@
 		<div class="profile-modal__wrapper">
 			<div class="profile-modal__side-group">
 				<div class="profile-modal__avatar-group" :data-edited="hasUploaded">
+					<div
+						class="profile-modal__avatar-delete"
+						@click="modalStore.open('avatar-warn-popup')"
+					>
+						<svg><use href="/sprite.svg#delete" /></svg>
+					</div>
 					<div class="profile-modal__avatar-shadow" />
 					<label for="profile-modal__avatar">
 						<svg><use href="/sprite.svg#edit" /></svg>
@@ -162,14 +168,14 @@
 				</div>
 			</div>
 			<div class="profile-modal__danger-buttons">
+				<button class="btn medium btn-danger" @click="flushCache()">
+					{{ $t("profile.empty_cache") }}
+				</button>
 				<button
 					class="btn medium btn-danger"
 					@click="modalStore.open('logout-warn-popup')"
 				>
 					{{ $t("profile.global_logout") }}
-				</button>
-				<button class="btn medium btn-danger" @click="flushCache()">
-					{{ $t("profile.empty_cache") }}
 				</button>
 			</div>
 		</div>
@@ -185,6 +191,9 @@
 		</div>
 		<Transition name="modal">
 			<LogoutWarnPopup v-if="warnPopupStore.isOpenned" />
+		</Transition>
+		<Transition name="modal">
+			<AvatarDeleteWarnPopup v-if="useAvatarWarnPopupStore().isOpenned" />
 		</Transition>
 	</BaseModal>
 </template>
@@ -202,6 +211,8 @@ import { useCache } from "../../composables/cache.js";
 import { useI18n } from "vue-i18n";
 import LangSwitcher from "../LangSwitcher.vue";
 import DotsSpinner from "../Spinners/DotsSpinner.vue";
+import AvatarDeleteWarnPopup from "./AvatarDeleteWarnPopup.vue";
+import { useAvatarWarnPopupStore } from "../../stores/modals/avatar-warn-popup.js";
 
 const userStore = useStore();
 const modalStore = useModalStore();

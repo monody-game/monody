@@ -8,8 +8,7 @@
 				<p>{{ $t("leaderboards.select") }}</p>
 				<div class="leaderboards__dropdown">
 					<select v-model.lazy="selected">
-						<option class="option" selected value="elo">ELO</option>
-						<option class="option" value="level">
+						<option class="option" selected value="level">
 							{{ $t("leaderboards.level") }}
 						</option>
 						<option class="option" value="wins">
@@ -110,7 +109,7 @@ import BaseModal from "./BaseModal.vue";
 import { useStore } from "../../stores/modals/modal.js";
 
 const modalStore = useStore();
-const selected = ref("elo");
+const selected = ref("level");
 const placeholder = { user: { username: "N/A", avatar: "" }, information: "" };
 const res = (await window.JSONFetch(`/leaderboard/${selected.value}`)).data
 	.board;

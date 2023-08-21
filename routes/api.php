@@ -36,7 +36,6 @@ Route::get('/leaderboard/{leaderboard}', 'LeaderboardController@index');
 
 Route::group(['middleware' => OptionalAuthentication::class], function () {
     Route::get('/stats/{userId?}', 'StatisticsController@show');
-    Route::get('/elo/{userId?}', 'EloController@show');
 
     Route::get('/badges/{userId?}', 'BadgeController@get');
 });
@@ -78,7 +77,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::post('/game/message/send', 'Game\GameChatController@send');
 
-    Route::get('/exp/get', 'ExpController@get');
+    Route::get('/exp', 'ExpController@get');
 
     Route::get('/email/verify/{id}/{hash}', "Auth\VerifyEmailController@verify")
         ->middleware(['signed'])

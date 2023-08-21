@@ -3,7 +3,6 @@ import { useStore as usePopupStore } from "./stores/modals/popup.js";
 import { useStore as useDebugStore } from "./stores/debug-bar.js";
 import { useCache } from "./composables/cache.js";
 
-const cache = useCache();
 const lang = localStorage.getItem("lang");
 
 /**
@@ -12,6 +11,8 @@ const lang = localStorage.getItem("lang");
  * @param {Object} body
  */
 window.JSONFetch = async (url, method = "GET", body = null) => {
+	const cache = useCache();
+
 	if (
 		cache.exists(url) &&
 		Date.parse(cache.get(url).until) > Date.now() &&

@@ -1,10 +1,7 @@
 <template>
 	<div v-once class="home-page">
 		<header class="home-page__header">
-			<a
-				href="https://monody.notion.site/monody/687a32def57740ddab27fa81124a6456"
-				target="_blank"
-			>
+			<a href="https://docs.monody.fr" target="_blank">
 				{{ $t("home.howtoplay") }}
 				<svg class="link__external">
 					<use href="/sprite.svg#external" />

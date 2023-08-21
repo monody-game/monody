@@ -134,6 +134,15 @@
 	opacity: 1;
 }
 
+.profile-modal__avatar-group:not([data-edited="true"])
+	.profile-modal__avatar-delete:hover
+	~ .profile-modal__avatar-shadow,
+.profile-modal__avatar-group:not([data-edited="true"])
+	.profile-modal__avatar-delete:hover
+	~ label {
+	opacity: 0;
+}
+
 .profile-modal__avatar-group:not([data-edited="true"]):hover {
 	label {
 		opacity: 1;
@@ -155,8 +164,8 @@
 }
 
 .profile-modal__avatar-group label svg {
-	height: 40px;
-	width: 40px;
+	height: 32px;
+	width: 32px;
 }
 
 .profile-modal__switch-container {
@@ -191,7 +200,7 @@
 	div input:focus,
 	div input:checked,
 	div input.checked {
-		background-color: var(--accent-primary);
+		background-color: var(--primary-hover);
 	}
 
 	div svg {
@@ -206,4 +215,32 @@
 	display: flex;
 	align-items: center;
 	gap: space(2);
+}
+
+.profile-modal__avatar-delete {
+	display: grid;
+	place-items: center;
+	cursor: pointer;
+
+	position: absolute;
+	bottom: -8px;
+	right: -8px;
+	z-index: 100;
+
+	transition: 0.2s all;
+	height: 32px;
+	aspect-ratio: 1;
+
+	border-radius: 50%;
+	outline: 2px var(--border-secondary) solid;
+	background-color: var(--primary);
+
+	svg {
+		height: 20px;
+		aspect-ratio: 1;
+	}
+
+	&:hover {
+		background-color: var(--primary-hover);
+	}
 }

@@ -124,17 +124,47 @@
 	}
 }
 
-.message__is-wolf {
+.message__badges {
 	position: absolute;
 	top: 0;
 	right: 0;
 
+	display: flex;
+	align-items: flex-start;
+	flex-direction: row-reverse;
+	flex-wrap: wrap;
+	gap: 2px;
+}
+
+.message__is-mayor svg {
+	height: 20px;
+	aspect-ratio: 4 / 6;
+}
+
+.message__is-wolf {
 	height: 14px;
 	width: 14px;
 
 	border-radius: 50%;
 
 	background-color: #e50000;
+}
+
+.message__is-couple {
+	color: var(--light-background);
+	background-color: var(--pink);
+
+	aspect-ratio: 1;
+	height: 16px;
+	border-radius: 50%;
+
+	display: grid;
+	place-items: center;
+
+	svg {
+		height: 11px;
+		aspect-ratio: 1;
+	}
 }
 
 .message__avatar {

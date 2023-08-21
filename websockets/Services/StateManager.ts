@@ -4,6 +4,7 @@ import {
 	Hook,
 	HookedState,
 	Round,
+	RoundList,
 	StateIdentifier,
 } from "./RoundService.js";
 import { gameId } from "../Helpers/Functions.js";
@@ -26,6 +27,8 @@ export { State };
 export class StateManager {
 	private readonly io: Server;
 	private emitter: EventEmitter;
+	private LOOP_ROUND = 2;
+	private END_ROUND = 999999;
 
 	constructor(io: Server, emitter: EventEmitter) {
 		this.io = io;
@@ -81,13 +84,13 @@ export class StateManager {
 			return;
 		}
 
-		let rounds: Round[] = roundList;
+		let rounds = roundList as RoundList;
 
-		const loopingRoundIndex = rounds.length - 2;
 		let currentRound = state["round"] || 0;
+		let roundIndex = state["round"] || 0;
 
-		if (currentRound >= loopingRoundIndex) {
-			currentRound = loopingRoundIndex;
+		if (currentRound >= this.LOOP_ROUND) {
+			currentRound = this.LOOP_ROUND;
 		}
 
 		let currentRoundObject = rounds[currentRound];
@@ -111,7 +114,7 @@ export class StateManager {
 		);
 
 		if (currentState === 6) {
-			rounds = await getRounds(id);
+			rounds = (await getRounds(id)) as RoundList;
 
 			if (rounds.length === 0) {
 				error(`Round list is empty for game ${id}`);
@@ -132,28 +135,27 @@ export class StateManager {
 					: (currentRoundObject[stateIndex] as Hook).identifier;
 		}
 
-		if (
-			currentRound < loopingRoundIndex &&
-			!currentRoundObject[stateIndex]
-		) {
+		if (currentRound < this.LOOP_ROUND && !currentRoundObject[stateIndex]) {
 			// We are at the end of the current round
 			currentRound++;
+			roundIndex++;
 			const round = rounds[currentRound] as Hook[];
 			currentState = (round[0] as Hook).identifier;
 			stateIndex = 0;
 		} else if (
-			currentRound >= loopingRoundIndex &&
+			currentRound >= this.LOOP_ROUND &&
 			!currentRoundObject[stateIndex]
 		) {
 			// We are at the end of the looping round
 			currentRound++;
-			const round = rounds[currentRound] as Hook[];
+			roundIndex++;
+			const round = rounds[this.LOOP_ROUND] as Hook[];
 			currentState = (round[0] as Hook).identifier;
 			stateIndex = 0;
 		}
 
-		if (currentRound >= loopingRoundIndex) {
-			currentRound = loopingRoundIndex;
+		if (currentRound >= this.LOOP_ROUND) {
+			currentRound = this.LOOP_ROUND;
 		}
 
 		const currentUsedRound = rounds[currentRound] as Round;
@@ -165,7 +167,7 @@ export class StateManager {
 			(await this.handleBefore(currentRoundObject, stateIndex, channel));
 
 		if (halt) {
-			const lastRound = rounds.at(-1) as Round;
+			const lastRound = rounds[this.END_ROUND] as Round;
 			const endState = lastRound[0] as HookedState;
 			currentState = endState.identifier;
 			duration = endState.duration;
@@ -179,7 +181,7 @@ export class StateManager {
 				startTimestamp: Date.now(),
 				counterDuration: duration,
 				counterId: counterId,
-				round: currentRound,
+				round: roundIndex,
 			},
 			channel,
 		);
@@ -188,14 +190,13 @@ export class StateManager {
 	async getNextStateDuration(channel: string): Promise<number> {
 		const id = gameId(channel);
 		const state = await this.getState(id);
-		const rounds = await getRounds(id);
+		const rounds = (await getRounds(id)) as RoundList;
 		if (!state) return 0;
 
 		let currentRound = state["round"] || 0;
-		const loopingRoundIndex = rounds.length - 2;
 
-		if (currentRound >= loopingRoundIndex) {
-			currentRound = loopingRoundIndex;
+		if (currentRound >= this.LOOP_ROUND) {
+			currentRound = this.LOOP_ROUND;
 		}
 
 		const currentRoundObject = rounds[currentRound] as Round;
@@ -205,7 +206,7 @@ export class StateManager {
 			) + 1;
 
 		if (
-			currentRound < loopingRoundIndex &&
+			currentRound < this.LOOP_ROUND &&
 			typeof currentRoundObject[stateIndex] === "undefined" &&
 			typeof rounds[currentRound + 1] !== "undefined"
 		) {
@@ -213,11 +214,11 @@ export class StateManager {
 			const round = rounds[currentRound + 1] as Round;
 			return (round[0] as HookedState).duration;
 		} else if (
-			currentRound >= loopingRoundIndex &&
+			currentRound >= this.LOOP_ROUND &&
 			typeof currentRoundObject[stateIndex] === "undefined"
 		) {
 			// If we are at the end of the looping round
-			const round = rounds[loopingRoundIndex] as Round;
+			const round = rounds[this.LOOP_ROUND] as Round;
 			return (round[0] as HookedState).duration;
 		} else {
 			// Otherwise return the next duration

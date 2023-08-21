@@ -45,7 +45,7 @@ class CupidAction implements ActionInterface
     public function call(string $targetId, InteractionAction $action, string $emitterId): array
     {
         $toPair = $this->service->vote($emitterId, $this->gameId, $targetId);
-        $canPair = count($toPair[$emitterId]) < 2;
+        $canPair = !array_key_exists($emitterId, $toPair) || count($toPair[$emitterId]) < 2;
 
         $this->canPair = $canPair;
 
@@ -103,6 +103,36 @@ class CupidAction implements ActionInterface
     public function close(): void
     {
         $this->service->clearVotes($this->gameId);
+        $game = Redis::get("game:$this->gameId");
+
+        // If couple wasn't designed, take it randomly
+        if (!array_key_exists('couple', $game)) {
+            $game['couple'] = [];
+            for ($i = 0; $i < 2; $i++) {
+                $userIndex = array_rand($game['users']);
+
+                while (in_array($game['users'][$userIndex], $game['couple'], true)) {
+                    $userIndex = array_rand($game['users']);
+                }
+
+                $game['couple'][] = $game['users'][$userIndex];
+            }
+
+            Redis::set("game:$this->gameId", $game);
+
+            broadcast(new CouplePaired(
+                payload: [
+                    'gameId' => $this->gameId,
+                    'type' => InteractionAction::Pair->value,
+                    'pairedPlayers' => $game['couple'],
+                ],
+                recipients: [...$game['couple'], $this->getUserIdByRole(Role::Cupid, $this->gameId)[0]]
+            ));
+
+            Redis::update("game:$this->gameId:interactions:usedActions", function (&$usedActions) {
+                $usedActions[] = Role::Cupid->name();
+            });
+        }
     }
 
     /**

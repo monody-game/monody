@@ -17,7 +17,7 @@ class AvatarControllerTest extends TestCase
 
     public function testUploadingAvatar(): void
     {
-        $this->assertSame('/assets/avatars/default.png', $this->user->avatar);
+        $this->assertSame('/assets/avatars/default_1.png', $this->user->avatar);
 
         $this
             ->actingAs($this->user, 'api')
@@ -27,7 +27,8 @@ class AvatarControllerTest extends TestCase
             ->assertStatus(Response::HTTP_CREATED);
 
         Storage::assertExists("avatars/{$this->user->id}.png");
-        Storage::assertExists('avatars/default.png');
+        Storage::assertExists('avatars/default_1.png');
+        Storage::delete("avatars/{$this->user->id}.png");
 
         $this->assertSame("/assets/avatars/{$this->user->id}.png", $this->user->avatar);
     }
@@ -50,7 +51,8 @@ class AvatarControllerTest extends TestCase
             ->assertStatus(Response::HTTP_NO_CONTENT);
 
         Storage::assertMissing("avatars/{$this->user->id}.png");
-        $this->assertSame('/assets/avatars/default.png', $this->user->avatar);
+
+        $this->assertMatchesRegularExpression('/^\/assets\/avatars\/default_[0-9]+\.png$/', $this->user->avatar);
     }
 
     protected function setUp(): void

@@ -4,25 +4,26 @@ import { useStore as useUserStore } from "./user.js";
 import { useRoute } from "vue-router";
 
 export const useStore = defineStore("chat", () => {
-	const id = useRoute().params.id;
-	let messages = reactive({ main: [], couple: [] });
-	let unread = reactive({ main: false, couple: true });
+	const id = ref(useRoute().params.id);
+	const messages = ref({ main: [], couple: [] });
+	const unread = ref({ main: false, couple: true });
 
 	function $reset() {
-		messages = { main: [], couple: [] };
-		unread = { main: false, couple: true };
+		id.value = useRoute().params.id;
+		messages.value = { main: [], couple: [] };
+		unread.value = { main: false, couple: true };
 	}
 
 	function send(content, type, author = null, actionList = []) {
 		const stored = JSON.parse(localStorage.getItem("messages")) ?? {};
 
-		if (!(id in stored)) {
-			stored[id] = { main: [], couple: [] };
+		if (!(id.value in stored)) {
+			stored[id.value] = { main: [], couple: [] };
 		}
 
 		if (type === "couple") {
 			this.unread.couple =
-				author !== null ? author.id !== useUserStore.id : false;
+				author !== null ? author.id !== useUserStore().id : false;
 			this.messages.couple.push({
 				content,
 				type: "message",
@@ -31,10 +32,13 @@ export const useStore = defineStore("chat", () => {
 				timestamp: Date.now(),
 			});
 
-			stored[id].couple = [...stored[id].couple, this.messages.couple.at(-1)];
+			stored[id.value].couple = [
+				...stored[id.value].couple,
+				this.messages.couple.at(-1),
+			];
 		} else {
 			this.unread.main =
-				author !== null ? author.id !== useUserStore.id : false;
+				author !== null ? author.id !== useUserStore().id : false;
 			this.messages.main.push({
 				content,
 				type,
@@ -43,7 +47,10 @@ export const useStore = defineStore("chat", () => {
 				timestamp: Date.now(),
 			});
 
-			stored[id].main = [...stored[id].main, this.messages.main.at(-1)];
+			stored[id.value].main = [
+				...stored[id.value].main,
+				this.messages.main.at(-1),
+			];
 		}
 
 		localStorage.setItem("messages", JSON.stringify(stored));
@@ -55,5 +62,5 @@ export const useStore = defineStore("chat", () => {
 		});
 	}
 
-	return { messages, unread, send, $reset };
+	return { id, messages, unread, send, $reset };
 });

@@ -106,6 +106,7 @@ import GameInformationBubble from "../Components/GameInformationBubble.vue";
 import EndGameModal from "../Components/Modal/EndGameModal.vue";
 import AudioManager from "../Components/AudioManager.vue";
 import AudioManagementModal from "../Components/Modal/AudioManagementModal.vue";
+import { useCache } from "../composables/cache.js";
 
 const route = useRoute();
 const store = useStore();
@@ -165,7 +166,11 @@ window.Echo.join(`game.${gameId}`)
 		store.currentState = e.state;
 		store.mayor = e.mayor;
 
-		if (e.type === 0b00010 && e.discord === null) {
+		if ("couple" in e) {
+			store.couple = e.couple;
+		}
+
+		if ((e.type & (1 << 1)) === 1 << 1 && e.discord === null) {
 			const res = await window.JSONFetch(`/game/${gameId}/discord`);
 			store.discord = res.data.data;
 		} else {
@@ -174,6 +179,7 @@ window.Echo.join(`game.${gameId}`)
 
 		if (e.current_interactions.length > 0) {
 			store.currentInteractionId = e.current_interactions[0].id;
+			store.interactionType = e.current_interactions[0].type;
 		}
 	})
 	.listen(".game.role-assign", async (role_id) => {
@@ -251,13 +257,32 @@ window.Echo.join(`game.${gameId}`)
 		store.state = data.status;
 	})
 	.listen(".subscription_error", () => {
-		location.reload();
+		setTimeout(async () => {
+			useCache().flush("/user");
+			const res = await JSONFetch("/user");
+			const user = res.data.user;
+
+			userStore.setUser({
+				id: user.id,
+				username: user.username,
+				email: user.email,
+				email_verified_at: user.email_verified_at,
+				avatar: user.avatar,
+				level: user.level,
+				exp: user.exp,
+				exp_needed: user.next_level,
+				discord_linked_at: user.discord_linked_at,
+			});
+
+			location.reload();
+		}, 250);
 	});
 
 const leave = () => {
 	window.Echo.leave(`game.${gameId}`);
 	vocalInvitationStore.$reset();
 	store.$reset();
+	useCache().flush("/exp", "/stats", "/user");
 };
 
 onBeforeRouteLeave(leave);

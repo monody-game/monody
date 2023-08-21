@@ -9,7 +9,7 @@ class UpdateVoiceChannelPermissions extends DiscordBotEvent
     protected string $event = 'game.voice.allow';
 
     /**
-     * @param  array{discord_id: string, game_id: string}  $payload
+     * @param  array{discord_id: string, game_id: string, join: bool}  $payload
      */
     public function __construct(
         public array $payload

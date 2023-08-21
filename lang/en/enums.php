@@ -32,18 +32,6 @@ return [
             'describe' => 'Climbed many levels',
             'description' => 'Acquire many levels in order to unlock this badge.',
         ],
-        'rank' => [
-            'name' => 'ELO demon',
-            'describe' => 'Is high ranked in ELO',
-            'description' => 'Reach the top of the ELO rankings to unlock this badge!',
-        ],
-    ],
-    'rank' => [
-        'villager' => 'Villager',
-        'healer' => 'Healer',
-        'oracle' => 'Oracle',
-        'elder' => 'Elder',
-        'archbishop' => 'Archbishop',
     ],
     'team' => [
         'villagers' => [

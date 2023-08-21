@@ -20,14 +20,14 @@ use App\Http\Requests\CreateGameRequest;
 use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\JoinGameRequest;
 use App\Http\Responses\JsonApiResponse;
-use App\Models\Elo;
 use App\Models\User;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
-use function array_key_exists;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+
+use function array_key_exists;
 
 class GameController extends Controller
 {
@@ -228,6 +228,7 @@ class GameController extends Controller
             broadcast(new UpdateVoiceChannelPermissions([
                 'game_id' => $gameId,
                 'discord_id' => $user->discord_id ?? '',
+                'join' => true,
             ]));
         }
 
@@ -255,6 +256,14 @@ class GameController extends Controller
             // We remove the user id from saved users to prevent issues with roles that rely on the number of players
             $game['users'] = array_diff($game['users'], [$user->id]);
             Redis::set("game:$gameId", $game);
+        }
+
+        if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
+            broadcast(new UpdateVoiceChannelPermissions([
+                'game_id' => $gameId,
+                'discord_id' => $user->discord_id ?? '',
+                'join' => false,
+            ]));
         }
 
         /** @var array $list */
@@ -290,7 +299,6 @@ class GameController extends Controller
                 'username' => $owner->username,
                 'avatar' => $owner->avatar,
                 'level' => $owner->level,
-                'elo' => Elo::select('elo')->where('user_id', $owner->id)->firstOrCreate(['user_id' => $owner->id])->elo,
             ],
             'roles' => $game['roles'],
             'role' => array_key_exists($owner->id, $game['assigned_roles']) ? Role::from($game['assigned_roles'][$userId])->full() : null,
@@ -307,6 +315,16 @@ class GameController extends Controller
         if (($game['type'] & GameType::VOCAL->value) === GameType::VOCAL->value) {
             $payload['discord'] = Redis::get("game:$gameId:discord");
         }
+
+		if (
+			array_key_exists('couple', $game) &&
+			(
+				in_array($userId, $game['couple']) ||
+				$this->getRoleByUserId($userId, $gameId) === Role::Cupid
+			)
+		) {
+			$payload['couple'] = $game['couple'];
+		}
 
         return new JsonApiResponse(['game' => $payload]);
     }

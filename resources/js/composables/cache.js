@@ -16,9 +16,11 @@ function set(key, value, storage) {
 	return storage;
 }
 
-function flush(key, storage) {
-	if (exists(key, storage)) {
-		delete storage[key];
+function flush(keys, storage) {
+	for (const key of keys) {
+		if (exists(key, storage)) {
+			delete storage[key];
+		}
 	}
 	return storage;
 }
@@ -33,8 +35,8 @@ export function useCache() {
 			sessionStorage.setItem("cache", JSON.stringify(set(key, value, storage)));
 		},
 		exists: (key) => exists(key, storage),
-		flush: (key) => {
-			sessionStorage.setItem("cache", JSON.stringify(flush(key, storage)));
+		flush: (...keys) => {
+			sessionStorage.setItem("cache", JSON.stringify(flush(keys, storage)));
 		},
 		clear: () => sessionStorage.removeItem("cache"),
 	};

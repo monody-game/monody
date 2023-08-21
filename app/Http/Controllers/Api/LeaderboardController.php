@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
-use App\Models\Elo;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -16,7 +15,6 @@ class LeaderboardController extends Controller
     public function index(string $leaderboard): JsonApiResponse
     {
         $leaderboards = [
-            'elo',
             'level',
             'wins',
         ];
@@ -26,30 +24,9 @@ class LeaderboardController extends Controller
         }
 
         return match ($leaderboard) {
-            'elo' => JsonApiResponse::make(['board' => $this->byElo()])->withCache(Carbon::now()->addMinutes(5)),
             'level' => JsonApiResponse::make(['board' => $this->byLevel()])->withCache(Carbon::now()->addMinutes(5)),
             'wins' => JsonApiResponse::make(['board' => $this->byWins()])->withCache(Carbon::now()->addMinutes(5)),
         };
-    }
-
-    /**
-     * @return Collection<int, array{information: int, user: User}>
-     */
-    private function byElo(): Collection
-    {
-        return Elo::limit(10)
-            ->orderBy('elo', 'desc')
-            ->get()
-            ->map(function (Elo $elo) {
-                /** @var User $user */
-                $user = User::select(['id', 'username', 'avatar', 'level'])->find($elo->user_id);
-                unset($elo['user_id']);
-
-                return [
-                    'information' => $elo->elo,
-                    'user' => $user,
-                ];
-            });
     }
 
     /**
