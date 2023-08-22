@@ -316,15 +316,15 @@ class GameController extends Controller
             $payload['discord'] = Redis::get("game:$gameId:discord");
         }
 
-		if (
-			array_key_exists('couple', $game) &&
-			(
-				in_array($userId, $game['couple']) ||
-				$this->getRoleByUserId($userId, $gameId) === Role::Cupid
-			)
-		) {
-			$payload['couple'] = $game['couple'];
-		}
+        if (
+            array_key_exists('couple', $game) &&
+            (
+                in_array($userId, $game['couple'], true) ||
+                $this->getRoleByUserId($userId, $gameId) === Role::Cupid
+            )
+        ) {
+            $payload['couple'] = $game['couple'];
+        }
 
         return new JsonApiResponse(['game' => $payload]);
     }
