@@ -126,9 +126,9 @@ return [
             'name' => 'Chasseur',
             'describe' => ' À votre mort, vous pourrez **tirer** sur un joueur pour l\'emporter dans la tombe avec vous.',
         ],
-		'investigator' => [
-			'name' => 'Enquêteur',
-			'describe' => " Chaque nuit, vous pouvez comparer deux joueurs, pour savoir s'ils font partie du même camp ou non. Vous ne pouvez comparer le même joueur que deux fois. Vous ne pouvez vous comparer avec un autre joueur qu'une seule fois.",
-		],
+        'investigator' => [
+            'name' => 'Enquêteur',
+            'describe' => " Chaque nuit, vous pouvez comparer deux joueurs, pour savoir s'ils font partie du même camp ou non. Vous ne pouvez comparer le même joueur que deux fois. Vous ne pouvez vous comparer avec un autre joueur qu'une seule fois.",
+        ],
     ],
 ];

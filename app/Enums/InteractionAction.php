@@ -43,6 +43,6 @@ enum InteractionAction: string
     // Hunter
     case Shoot = 'hunter:shoot';
 
-	// Investigator
-	case Compare = 'investigate:compare';
+    // Investigator
+    case Compare = 'investigate:compare';
 }

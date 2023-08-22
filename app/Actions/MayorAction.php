@@ -4,7 +4,7 @@ namespace App\Actions;
 
 use App\Enums\InteractionAction;
 use App\Events\InteractionUpdate;
-use App\Services\VoteService;
+use App\Services\MayorService;
 use App\Traits\MemberHelperTrait;
 
 class MayorAction implements ActionInterface
@@ -12,7 +12,7 @@ class MayorAction implements ActionInterface
     use MemberHelperTrait;
 
     public function __construct(
-        private readonly VoteService $service,
+        private readonly MayorService $service,
         private readonly string $gameId
     ) {
     }

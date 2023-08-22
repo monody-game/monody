@@ -18,7 +18,7 @@ enum Role: int
     case Cupid = 12;
     case Guard = 13;
     case Hunter = 14;
-	case Investigator = 15;
+    case Investigator = 15;
 
     // Loners
     case WhiteWerewolf = 8;
@@ -42,7 +42,7 @@ enum Role: int
             self::Cupid => __('enums.roles.cupid.name'),
             self::Guard => __('enums.roles.guard.name'),
             self::Hunter => __('enums.roles.hunter.name'),
-			self::Investigator => __('enums.roles.investigator.name')
+            self::Investigator => __('enums.roles.investigator.name')
         };
     }
 
@@ -107,7 +107,7 @@ enum Role: int
             self::Cupid => Team::Villagers->goal() . __('enums.roles.cupid.describe'),
             self::Guard => Team::Villagers->goal() . __('enums.roles.guard.describe'),
             self::Hunter => Team::Villagers->goal() . __('enums.roles.hunter.describe'),
-			self::Investigator => Team::Villagers->goal() . __('enums.roles.investigator.describe'),
+            self::Investigator => Team::Villagers->goal() . __('enums.roles.investigator.describe'),
 
             self::WhiteWerewolf => Team::Loners->goal() . __('enums.roles.white_werewolf.describe'),
             self::Angel => Team::Loners->goal() . __('enums.roles.angel.describe'),
