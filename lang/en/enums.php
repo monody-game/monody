@@ -126,5 +126,9 @@ return [
             'name' => 'Hunter',
             'describe' => ' When you die, you can **shoot** on a player to take with you to the grave.',
         ],
+		'investigator' => [
+			'name' => 'Investigator',
+			'describe' => " Each night, you can compare two players, to find out whether they're on the same side or not. You can only compare the same player twice. You can only compare yourself with another player once.",
+		],
     ],
 ];
