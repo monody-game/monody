@@ -176,6 +176,10 @@ export class GameChannel {
 		const game = JSON.parse((await client.get(`game:${id}`)) as string);
 		const state = await this.stateManager.getState(id);
 
+		if (!state || !game) {
+			return;
+		}
+
 		if (
 			!game.is_started ||
 			state.status === EndState.data.state.id ||

@@ -39,7 +39,7 @@ export class CounterService {
 				await this.cycle(channel, socket);
 			},
 			duration ??
-				((await this.manager.getNextStateDuration(channel)) + 1) * 1000,
+				(await this.manager.getNextStateDuration(channel)) * 1000,
 		);
 
 		this.emitter.on("time.skip", async (data) => {
