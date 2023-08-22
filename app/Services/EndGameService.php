@@ -189,7 +189,7 @@ class EndGameService
                 count($game['contaminated']) < (count(array_diff($game['users'], array_keys($game['dead_users']))) - 1);
         }
 
-        return $villagers !== [] && $werewolves !== [];
+        return array_diff($aliveUsers, $villagers) !== [] && array_diff($aliveUsers, $werewolves) !== [];
     }
 
     private function getWinningUsers(string $gameId, Team|string $winningTeam): array
