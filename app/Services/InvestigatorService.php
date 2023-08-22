@@ -7,13 +7,13 @@ use App\Traits\MemberHelperTrait;
 
 class InvestigatorService extends VoteService
 {
-    const SAME_TEAM = 1;
+    const SAME_TEAM = true;
 
-    const DIFFERENT_TEAM = 2;
+    const DIFFERENT_TEAM = false;
 
     use MemberHelperTrait;
 
-    public function compare(string $gameId): int
+    public function compare(string $gameId): bool
     {
         $toCompare = array_values(self::getVotes($gameId))[0];
 
