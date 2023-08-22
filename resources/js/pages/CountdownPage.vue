@@ -15,7 +15,7 @@ import { ref } from "vue";
 import confetti from "canvas-confetti";
 
 // MM/DD/YYYY HH:MM
-const end = new Date("08/26/2023 17:00")
+const end = new Date("08/24/2023 17:00")
 let distance = end - Date.now()
 
 const second = 1000
