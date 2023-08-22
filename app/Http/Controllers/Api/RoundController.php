@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\InteractionAction;
 use App\Enums\Role;
 use App\Enums\Round;
 use App\Enums\State;
@@ -47,6 +48,7 @@ class RoundController extends Controller
             $game = Redis::get("game:$gameId");
             $gameState = Redis::get("game:$gameId:state");
             $deaths = (Redis::get("game:$gameId:deaths") ?? []);
+            $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
             $deaths = array_map(fn ($death) => $death['user'], $deaths);
             $roles = array_keys($game['roles']);
 
@@ -108,9 +110,18 @@ class RoundController extends Controller
                     in_array(Role::Hunter->value, array_values($game['assigned_roles']), true) &&
                     count($this->getUserIdByRole(Role::Hunter, $gameId)) > 0 &&
                     (
-                        in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], array_keys($game['dead_users']), true) &&
-                        !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $deaths, true) ||
-                        !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], array_keys($game['dead_users']), true)
+                        (
+                            in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], array_keys($game['dead_users']), true) &&
+                            !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $deaths, true) &&
+                            in_array(InteractionAction::Shoot, $usedActions, true)
+                        ) || (
+                            !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], array_keys($game['dead_users']), true) &&
+                            in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $deaths, true) &&
+                            in_array(InteractionAction::Shoot, $usedActions, true)
+                        ) || (
+                            !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], array_keys($game['dead_users']), true) &&
+                            !in_array($this->getUserIdByRole(Role::Hunter, $gameId)[0], $deaths, true)
+                        )
                     )
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
