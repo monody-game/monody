@@ -78,7 +78,7 @@ class GameChatController extends Controller
             ]);
         }
 
-        if (count($deaths) === 0 && $state['status'] !== State::Vote->value) {
+        if (count($deaths) === 0 && $state['status'] !== State::Vote->value && $state['status'] !== State::End->value) {
             GameKill::broadcast([
                 'gameId' => $gameId,
                 'killedUser' => null,
