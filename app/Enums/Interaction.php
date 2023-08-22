@@ -17,7 +17,7 @@ enum Interaction: string
     case Cupid = 'cupid';
     case Guard = 'guard';
     case Hunter = 'hunter';
-	case Investigator = 'investigator';
+    case Investigator = 'investigator';
 
     public static function getActions(): array
     {
@@ -35,7 +35,7 @@ enum Interaction: string
             self::Cupid->value => InteractionAction::Pair->value,
             self::Guard->value => InteractionAction::Guard->value,
             self::Hunter->value => InteractionAction::Shoot->value,
-			self::Investigator->value => InteractionAction::Compare->value
+            self::Investigator->value => InteractionAction::Compare->value,
         ];
     }
 }

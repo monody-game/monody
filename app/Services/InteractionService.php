@@ -247,7 +247,7 @@ class InteractionService
             Interaction::Cupid => app(CupidAction::class, ['gameId' => $gameId]),
             Interaction::Guard => new GuardAction($gameId),
             Interaction::Hunter => new HunterAction($gameId),
-			Interaction::Investigator => new InvestigatorAction($gameId),
+            Interaction::Investigator => app(InvestigatorAction::class, ['gameId' => $gameId]),
         };
     }
 }
