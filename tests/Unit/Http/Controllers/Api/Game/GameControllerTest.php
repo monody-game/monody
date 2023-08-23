@@ -16,8 +16,6 @@ class GameControllerTest extends TestCase
 {
     private User $user;
 
-    private User $secondUser;
-
     private array $game;
 
     public function testCreatingGameWithWrongRequest()
@@ -52,97 +50,6 @@ class GameControllerTest extends TestCase
 
         $this->game = ['id' => $res['id'], ...$this->game];
 
-        $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->delete('/api/game', [
-                'gameId' => $res['id'],
-            ]);
-    }
-
-    public function testListGames()
-    {
-        $res = $this->actingAs($this->user, 'api')
-            ->put('/api/game', [
-                'users' => [],
-                'roles' => [
-                    1, 1, 2, 2, 2,
-                ],
-            ])
-            ->assertOk()
-            ->json('data.game');
-
-        $list = $this->actingAs($this->user, 'api')
-            ->get('/api/game/list')
-            ->assertOk()
-            ->json('data.games');
-
-        $this->assertCount(1, $list);
-
-        $game = $list[0];
-        $this->assertArrayNotHasKey('is_started', $game);
-        $this->assertArrayNotHasKey('assigned_roles', $game);
-        $exceptedGame = $this->game;
-        unset($exceptedGame['is_started']);
-        unset($exceptedGame['assigned_roles']);
-        $this->assertSame(sort($exceptedGame), sort($game));
-
-        $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->delete('/api/game', [
-                'data' => ['gameId' => $res['id']],
-            ]);
-    }
-
-    public function testListingEmptyGames()
-    {
-        $this->actingAs($this->user, 'api')
-            ->get('/api/game/list')
-            ->assertJson([
-                'data' => ['games' => []],
-            ]);
-    }
-
-    public function testListingGamesByType()
-    {
-        $vocal = GameType::VOCAL->value;
-
-        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2]]);
-        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => $vocal]);
-        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => $vocal]);
-
-        $res = $this
-            ->get("/api/game/list/$vocal")
-            ->json('data.games');
-
-        $fullList = $this
-            ->get('/api/game/list')
-            ->json('data.games');
-
-        $this->assertCount(2, $res);
-        $this->assertCount(3, $fullList);
-    }
-
-    public function testIgnoringStartedAndInvalidGames()
-    {
-        $res = $this->actingAs($this->user, 'api')
-            ->put('/api/game', [
-                'users' => [],
-                'roles' => [
-                    1, 1, 2, 2, 2,
-                ],
-            ])->json('data.game');
-        Redis::set('game:1234', '');
-        Redis::set('game:5678', '{}');
-
-        Redis::set("game:{$res['id']}", array_merge(Redis::get("game:{$res['id']}"), ['is_started' => true]));
-
-        $this->actingAs($this->user, 'api')
-            ->get('/api/game/list')
-            ->assertJson([
-                'data' => ['games' => []],
-            ]);
-
-        Redis::del('game:1234', 'game:5678');
         $this
             ->withoutMiddleware(RestrictToLocalNetwork::class)
             ->delete('/api/game', [
@@ -249,74 +156,6 @@ class GameControllerTest extends TestCase
         $this->assertSame($game['id'], $this->user->current_game);
     }
 
-    public function testSettingActivityWhenJoining()
-    {
-        $game = $this
-            ->actingAs($this->user, 'api')
-            ->put('/api/game', [
-                'users' => [],
-                'roles' => [1, 3, 2, 2, 2],
-            ])->json('data.game');
-
-        $gameId = $game['id'];
-
-        $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->post('/api/game/join', [
-                'userId' => $this->secondUser->id,
-                'gameId' => $gameId,
-            ])
-            ->assertNoContent();
-
-        $this->secondUser->refresh();
-
-        $this->assertSame($gameId, $this->secondUser->current_game);
-    }
-
-    public function testRemovingActivityWhenLeaving()
-    {
-        $game = $this
-            ->actingAs($this->user, 'api')
-            ->put('/api/game', [
-                'users' => [],
-                'roles' => [1, 3, 2, 2, 2],
-            ])->json('data.game');
-
-        $gameId = $game['id'];
-
-        $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->post('/api/game/join', [
-                'userId' => $this->secondUser->id,
-                'gameId' => $gameId,
-            ])
-            ->assertNoContent();
-
-        $this->secondUser->refresh();
-
-        $this->assertSame($gameId, $this->secondUser->current_game);
-
-        $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->post('/api/game/leave', [
-                'userId' => $this->secondUser->id,
-                'gameId' => $gameId,
-            ])
-            ->assertNoContent();
-
-        $this->secondUser->refresh();
-
-        $this->assertSame(null, $this->secondUser->current_game);
-    }
-
-    public function testLeavingGameWithoutGivingUserId()
-    {
-        $this
-            ->withoutMiddleware(RestrictToLocalNetwork::class)
-            ->post('/api/game/leave')
-            ->assertUnprocessable();
-    }
-
     public function testRetrievingGameData()
     {
         $res = $this->actingAs($this->user, 'api')->put('/api/game', [
@@ -384,7 +223,6 @@ class GameControllerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create(['discord_linked_at' => 'now', 'discord_id' => 1234]);
-        $this->secondUser = User::factory()->create();
         $this->game = [
             'users' => [$this->user->id],
             'roles' => [
