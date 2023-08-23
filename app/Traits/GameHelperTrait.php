@@ -25,6 +25,7 @@ trait GameHelperTrait
             "game:$gameId:votes",
             "game:$gameId:interactions",
             "game:$gameId:interactions:usedActions",
+            "game:$gameId:interactions:investigator",
             "game:$gameId:deaths",
             "game:$gameId:discord",
         );

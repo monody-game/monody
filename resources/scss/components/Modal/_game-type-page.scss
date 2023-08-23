@@ -1,30 +1,44 @@
 @use "../../tools/functions" as *;
 
 .game-type__wrapper {
-	display: flex;
-	justify-content: space-around;
+	display: grid;
+	gap: space(1);
+	flex: 1;
+}
+
+.game-type__selection-wrapper {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: space(2);
 	width: 100%;
 	text-align: center;
 
 	margin-block: space(1);
 
-	div {
-		display: flex;
-		flex-direction: column;
+	.game-type__item {
+		display: grid;
+		grid-template-columns: 40px 1fr;
 		align-items: center;
-		gap: space(2);
+		justify-items: center;
+		gap: space(1);
+		max-height: 140px;
+
 		padding: space(2);
 
-		border: var(--border-secondary) 2px solid;
+		outline: var(--border-secondary) 2px solid;
 		border-radius: 8px;
 		transition: background-color 0.2s;
 
-		max-width: 230px;
 		cursor: pointer;
 	}
 
-	div:not(.disabled):hover,
-	div.active {
+	.game-type__item .note {
+		grid-column: 1 / 2 span;
+	}
+
+	.game-type__item:not(.disabled):hover,
+	.game-type__item.active {
+		outline: var(--border-secondary) 3px solid;
 		background-color: var(--primary-hover);
 
 		@media (prefers-color-scheme: light) {
@@ -32,15 +46,15 @@
 		}
 	}
 
-	div.disabled {
+	.game-type__item.disabled {
 		cursor: not-allowed;
 	}
 
-	div.disabled > * {
+	.game-type__item.disabled > * {
 		color: var(--secondary-disabled);
 	}
 
-	div p {
+	.game-type__item p {
 		text-align: center;
 	}
 
@@ -55,25 +69,31 @@ html.light .game-type__wrapper .note {
 }
 
 html.dark .game-type__wrapper .note {
+	font-size: 0.85rem;
 	color: #fffcf180;
 }
 
 .game-type__vocal-icon {
-	height: 48px;
-	width: 48px;
+	height: 40px;
+	width: 40px;
 }
 
 .game-type__monody-icon {
-	width: 48px;
-	height: 54px;
+	width: 40px;
+	height: 45px;
+}
+
+.game-type__description-group {
+	display: grid;
+	gap: space(1);
 }
 
 @media screen and (max-width: 700px) {
-	.game-type__wrapper {
+	.game-type__selection-wrapper {
 		flex-direction: column;
 		gap: space(2);
 
-		div {
+		.game-type__item {
 			max-width: unset;
 		}
 	}

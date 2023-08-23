@@ -78,11 +78,23 @@
 		"villagers": "Villagers",
 		"werewolves": "Werewolves",
 		"loners": "Loners",
-		"classic_game": "Classic game",
-		"classic_game_desc": "A classic Monody game played entirely on site",
-		"vocal_game": "Voice game",
-		"vocal_game_desc": "A Monody game taking place on the site and in a voice channel on Discord",
-		"vocal_game_note": "Requires a linked Discord account to join the game",
+		"game_unique_types": "Game types:",
+		"game_combinable_types": "Additional (combinable) game types :",
+		"types": {
+			"classic_game": "Classic game",
+			"classic_game_desc": "A classic Monody game played entirely on site",
+			"vocal_game": "Voice game",
+			"vocal_game_desc": "A Monody game taking place on the site and in a voice channel on Discord",
+			"vocal_game_note": "Requires a linked Discord account.",
+			"private_game": "Private game",
+			"private_game_desc": "The game will not be listed on the home page",
+			"random_couple_game": "Random couple",
+			"random_couple_game_desc": "The couple is randomly selected",
+			"trouple_game": "Trouple",
+			"trouple_game_desc": "The couple consists of three players",
+			"hidden_comp_game": "Hidden composition",
+			"hidden_comp_game_desc": "The composition of the game is hidden from view"
+		},
 		"no_linked_discord": "You must link a Discord account to Monody in order to use this feature."
 	},
 	"vocal_invitation": {

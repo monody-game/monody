@@ -103,36 +103,36 @@ class GameListControllerTest extends TestCase
             ]);
     }
 
-	public function testListingGamesWithPrivateOnes()
-	{
-		$this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => GameType::VOCAL->value]);
-		$this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => GameType::VOCAL->value | GameType::PRIVATE_GAME->value]);
-		$this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => GameType::NORMAL->value | GameType::PRIVATE_GAME->value]);
+    public function testListingGamesWithPrivateOnes()
+    {
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => GameType::VOCAL->value]);
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => GameType::VOCAL->value | GameType::PRIVATE_GAME->value]);
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => GameType::NORMAL->value | GameType::PRIVATE_GAME->value]);
 
-		$fullList = $this
-			->get('/api/game/list')
-			->json('data.games');
+        $fullList = $this
+            ->get('/api/game/list')
+            ->json('data.games');
 
-		$this->assertCount(1, $fullList);
+        $this->assertCount(1, $fullList);
 
-		$vocalGames = $this
-			->get('/api/game/list')
-			->json('data.games');
+        $vocalGames = $this
+            ->get('/api/game/list')
+            ->json('data.games');
 
-		$this->assertCount(1, $vocalGames);
-	}
+        $this->assertCount(1, $vocalGames);
+    }
 
-	public function testListingOnlyPrivateGames()
-	{
-		$this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => GameType::VOCAL->value]);
-		$this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => GameType::NORMAL->value | GameType::PRIVATE_GAME->value]);
+    public function testListingOnlyPrivateGames()
+    {
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => GameType::VOCAL->value]);
+        $this->actingAs($this->user)->put('/api/game', ['roles' => [1, 1, 2, 2, 2], 'type' => GameType::NORMAL->value | GameType::PRIVATE_GAME->value]);
 
-		$list = $this
-			->get('/api/game/list/' . GameType::PRIVATE_GAME->value)
-			->json('data.games');
+        $list = $this
+            ->get('/api/game/list/' . GameType::PRIVATE_GAME->value)
+            ->json('data.games');
 
-		$this->assertCount(0, $list);
-	}
+        $this->assertCount(0, $list);
+    }
 
     protected function setUp(): void
     {

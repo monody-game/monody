@@ -38,6 +38,12 @@
 	}
 }
 
+.game-creation-modal__wrapper {
+	@extend .modal__main;
+
+	max-width: 650px;
+}
+
 .modal__page-status {
 	font-size: 1.1rem;
 	line-height: 1.5rem;
