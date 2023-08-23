@@ -30,4 +30,9 @@ trait GameHelperTrait
             "game:$gameId:discord",
         );
     }
+
+    public function isOfType(int $types, int $toTest): bool
+    {
+        return ($types & $toTest) === $toTest;
+    }
 }

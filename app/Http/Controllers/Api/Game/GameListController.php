@@ -15,7 +15,7 @@ class GameListController extends Controller
 
     public function list(string $type = '*'): JsonApiResponse
     {
-        $list = $this->service->list($type, $this->fromLocalNetwork());
+        $list = $this->service->list($type);
 
         return JsonApiResponse::make(['games' => $list])->withoutCache();
     }

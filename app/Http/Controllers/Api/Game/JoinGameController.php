@@ -50,7 +50,7 @@ class JoinGameController extends Controller
             )
         );
 
-        $list = $this->listGamesService->list('*', false);
+        $list = $this->listGamesService->list('*');
 
         broadcast(new GameListUpdate($list));
 
@@ -98,7 +98,7 @@ class JoinGameController extends Controller
             ]));
         }
 
-        $list = $this->listGamesService->list('*', false);
+        $list = $this->listGamesService->list('*');
 
         broadcast(new GameListUpdate($list));
 
