@@ -1,5 +1,5 @@
 <template>
-	<BaseModal>
+	<BaseModal wrapper="game-creation-modal__wrapper">
 		<header>
 			<h3>{{ $t("new_game.title") }}</h3>
 			<p class="modal__page-status">({{ currentPage }}/{{ totalPage }})</p>
@@ -108,7 +108,9 @@ const next = function () {
 const finish = async function () {
 	const res = await window.JSONFetch("/game", "PUT", {
 		roles: store.selectedRoles,
-		type: store.gameType,
+		type: [...store.combinablesTypes, store.gameType].reduce(
+			(previousValue, currentValue) => (previousValue |= currentValue),
+		),
 	});
 
 	gameId.value = res.data.game.id;
