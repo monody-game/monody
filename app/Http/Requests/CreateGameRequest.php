@@ -11,7 +11,7 @@ class CreateGameRequest extends FormRequest
 {
     public function rules(): array
     {
-        if (app()->runningUnitTests()) {
+        if (app()->runningUnitTests() || app()->isLocal()) {
             return [
                 'users' => 'array',
                 'roles' => ['array', 'required', new RejectMultipleUniqueRoles()],
