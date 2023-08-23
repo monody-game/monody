@@ -114,7 +114,7 @@ export class StateManager {
 		);
 
 		if (currentState === 6 || state["status"] === 7) {
-			console.log("should show this")
+			console.log("should show this");
 			rounds = (await getRounds(id)) as RoundList;
 
 			if (rounds.length === 0) {

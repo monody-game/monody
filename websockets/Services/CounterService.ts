@@ -39,7 +39,7 @@ export class CounterService {
 				try {
 					await this.cycle(channel, socket);
 				} catch (e) {
-					error(e)
+					error(e);
 				}
 			},
 			duration ??
