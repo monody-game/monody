@@ -60,14 +60,13 @@ class InvestigatorAction implements ActionInterface
 
         $this->canCompare = (count($votes) + 1) < 2;
 
-        //dump(in_array($targetId, $votes), $votes, $targetId);
-
         if (!in_array($targetId, $votes, true)) {
             // Emitter and target switched place in order to allow investigator to vote multiple players
             // We just have to take this in count in every places we use investigator's votes
             $this->service->vote($emitterId, $this->gameId, $targetId);
         } else {
             $this->service->unvote($emitterId, $this->gameId, $targetId);
+            $this->canCompare = (count($votes) + 1) < 2;
 
             Redis::update("game:$this->gameId:interactions:investigator", function (&$compared) use ($targetId) {
                 $compared[] = array_filter($compared, fn ($user) => $user !== $targetId);

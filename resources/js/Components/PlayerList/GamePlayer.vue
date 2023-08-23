@@ -203,10 +203,6 @@ window.Echo.join(`game.${gameId.value}`)
 	.listen(".list.disconnect", (user) => {
 		if (user.user_id === props.player.id) {
 			isDisconnected.value = true;
-			chatStore.send(
-				t("player.disconnect_warn", [user.user_info.username]),
-				"warn",
-			);
 		}
 	})
 	.listen(".interaction.open", ({ interaction }) => {
@@ -329,20 +325,22 @@ window.Echo.join(`game.${gameId.value}`)
 			case "cupid":
 				player.value.classList.add("player__pairable");
 				break;
-		case "investigator":
+			case "investigator":
 				if (gamePlayer.role && gamePlayer.role.name === "investigator") {
 					chatStore.send(t("player.investigator"), "info");
 				}
-				const isNotComparable = Object.values(interaction.data.not_comparable).includes(props.player.id);
+				const isNotComparable = Object.values(
+					interaction.data.not_comparable,
+				).includes(props.player.id);
 
 				if (isNotComparable) {
-					isCompared.value = true
+					isCompared.value = true;
 				}
 
 				if (isDead.value === false && !isNotComparable) {
 					player.value.classList.add("player__comparable");
 				} else {
-					player.value.classList.add("player__hover-disabled")
+					player.value.classList.add("player__hover-disabled");
 				}
 				break;
 		}
@@ -469,11 +467,14 @@ const send = async function (votingUser, votedUser) {
 		isGuarded.value = votedUser === props.player.id;
 	}
 
-	if (interactionType.value === "investigator" && res.data.interaction.response !== null) {
+	if (
+		interactionType.value === "investigator" &&
+		res.data.interaction.response !== null
+	) {
 		chatStore.send(
 			t(`player.compare_response_${res.data.interaction.response}`),
-			res.data.interaction.response ? "success": "warn"
-		)
+			res.data.interaction.response ? "success" : "warn",
+		);
 	}
 };
 

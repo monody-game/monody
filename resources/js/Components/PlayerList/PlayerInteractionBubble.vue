@@ -40,7 +40,9 @@ const props = defineProps({
 		type: String,
 		required: true,
 		validator(value) {
-			return ["vote", "werewolves", "mayor", "cupid", "investigator"].includes(value);
+			return ["vote", "werewolves", "mayor", "cupid", "investigator"].includes(
+				value,
+			);
 		},
 	},
 	data: [Object, Array],

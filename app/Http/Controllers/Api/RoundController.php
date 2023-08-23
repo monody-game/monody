@@ -94,24 +94,26 @@ class RoundController extends Controller
                     continue;
                 }
 
-                // If the infected werewolf doesn't have anyone to infect
+                // If the investigator can't compare anyone
                 if (
-                    $state === State::InfectedWerewolf &&
-                    count($deaths) === 0
+                    $state === State::Investigator &&
+                    in_array(Role::Investigator->value, array_values($game['assigned_roles']), true) &&
+                    count($this->getUserIdByRole(Role::Investigator, $gameId)) > 0 &&
+                    (
+                        count($game['users']) - count(array_keys($game['dead_users'])) <= 1 &&
+                        count($game['users']) - count(array_keys($game['dead_users'])) < count($this->getNotComparableUsers($gameId)) + 1 ||
+                        count($game['users']) - count(array_keys($game['dead_users'])) - count($this->getNotComparableUsers($gameId)) === 1
+                    )
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
                     continue;
                 }
 
-                // If the investigator can't compare anyone
+                // If the infected werewolf doesn't have anyone to infect
                 if (
-                    $state === State::Investigator &&
-                    in_array(Role::Investigator->value, array_values($game['assigned_roles']), true) &&
-                    count($this->getUserIdByRole(Role::Investigator, $gameId)) > 0 &&
-                    (count($game['users']) - count(array_keys($game['dead_users'])) <= 1 &&
-                    count($game['users']) - count(array_keys($game['dead_users'])) < count($this->getNotComparableUsers($gameId)) + 1 ||
-                    count($this->getNotComparableUsers($gameId)) === 1)
+                    $state === State::InfectedWerewolf &&
+                    count($deaths) === 0
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
@@ -156,6 +158,8 @@ class RoundController extends Controller
                     )
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
                 }
 
                 // If it's not an even round number for the white werewolf
@@ -174,7 +178,7 @@ class RoundController extends Controller
         }, $round);
     }
 
-    public function getNotComparableUsers(string $gameId): array
+    private function getNotComparableUsers(string $gameId): array
     {
         $compared = Redis::get("game:$gameId:interactions:investigator") ?? [];
         $investigator = $this->getUserIdByRole(Role::Investigator, $gameId)[0];
