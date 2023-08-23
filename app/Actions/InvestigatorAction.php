@@ -39,13 +39,15 @@ class InvestigatorAction implements ActionInterface
 
     private function canCompare(string $investigator, string $target): bool
     {
+        $votes = array_values($this->service::getVotes($this->gameId));
+        $votes = count($votes) === 0 ? [] : $votes[0];
         $compared = Redis::get("game:$this->gameId:interactions:investigator") ?? [];
 
         if ($investigator === $target) {
-            return !in_array($target, $compared, true);
+            return !in_array($target, $compared, true) || in_array($target, $votes, true);
         }
 
-        return count(array_filter($compared, fn ($user) => $user === $target)) < 2;
+        return count(array_filter($compared, fn ($user) => $user === $target)) < 2 || in_array($target, $votes, true);
     }
 
     /**
@@ -58,9 +60,21 @@ class InvestigatorAction implements ActionInterface
 
         $this->canCompare = (count($votes) + 1) < 2;
 
-        // Emitter and target switched place in order to allow investigator to vote multiple players
-        // We just have to take this in count in every places we use investigator's votes
-        $this->service->vote($emitterId, $this->gameId, $targetId);
+        //dump(in_array($targetId, $votes), $votes, $targetId);
+
+        if (!in_array($targetId, $votes, true)) {
+            // Emitter and target switched place in order to allow investigator to vote multiple players
+            // We just have to take this in count in every places we use investigator's votes
+            $this->service->vote($emitterId, $this->gameId, $targetId);
+        } else {
+            $this->service->unvote($emitterId, $this->gameId, $targetId);
+
+            Redis::update("game:$this->gameId:interactions:investigator", function (&$compared) use ($targetId) {
+                $compared[] = array_filter($compared, fn ($user) => $user !== $targetId);
+            });
+
+            return null;
+        }
 
         Redis::update("game:$this->gameId:interactions:investigator", function (&$compared) use ($targetId) {
             $compared[] = $targetId;
