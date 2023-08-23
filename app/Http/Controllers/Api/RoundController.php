@@ -104,6 +104,20 @@ class RoundController extends Controller
                     continue;
                 }
 
+                // If the investigator can't compare anyone
+                if (
+                    $state === State::Investigator &&
+                    in_array(Role::Investigator->value, array_values($game['assigned_roles']), true) &&
+                    count($this->getUserIdByRole(Role::Investigator, $gameId)) > 0 &&
+                    (count($game['users']) - count(array_keys($game['dead_users'])) <= 1 &&
+                    count($game['users']) - count(array_keys($game['dead_users'])) < count($this->getNotComparableUsers($gameId)) + 1 ||
+                    count($this->getNotComparableUsers($gameId)) === 1)
+                ) {
+                    $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
+                }
+
                 // If the hunter does not need to / cannot shoot
                 if (
                     $state === State::Hunter &&
@@ -158,5 +172,19 @@ class RoundController extends Controller
                 'duration' => $state->duration(),
             ];
         }, $round);
+    }
+
+    public function getNotComparableUsers(string $gameId): array
+    {
+        $compared = Redis::get("game:$gameId:interactions:investigator") ?? [];
+        $investigator = $this->getUserIdByRole(Role::Investigator, $gameId)[0];
+
+        $compared = array_filter(
+            $compared,
+            fn ($comparedUser) => $comparedUser === $investigator ||
+                count(array_filter($compared, fn ($user) => $user === $comparedUser)) === 2
+        );
+
+        return array_unique($compared);
     }
 }

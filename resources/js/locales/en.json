@@ -220,6 +220,7 @@
 		"contaminated": "This player is contaminated",
 		"target": "This player is your target",
 		"disconnected": "This player has disconnected",
+		"compared": "You can't compare his team anymore",
 		"owner": "This player has created the game",
 		"disconnect_warn": "{0} has disconnected, he has 30 seconds to reconnect.",
 		"guard": "Click on a player to protect him from the werewolves.",
@@ -234,7 +235,10 @@
 		"kill": "Eliminate a player",
 		"kill_desc": "Click on a player to eliminate him",
 		"skip": "Do nothing",
-		"choose_action": "Choose the action to perform tonight"
+		"choose_action": "Choose the action to perform tonight",
+		"investigator": "Click on two players to compare their side",
+		"compare_response_true": "The two players chosen belong to the same team",
+		"compare_response_false": "The two players chosen do not belong to the same team"
 	},
 	"404": {
 		"title": "Oh no !",

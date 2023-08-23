@@ -84,7 +84,7 @@ const notEnoughSelectedRoles = function () {
 		}
 	}
 
-	return selectedIds.length < 5 ||
+	return selectedIds.length < 2 ||
 	!(
 		selectedRoles.filter((role) => role.team.id === 1).length >= 1 &&
 		selectedRoles.filter((role) => role.team.id === 2).length >= 1

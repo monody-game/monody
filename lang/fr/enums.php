@@ -54,6 +54,7 @@ return [
         'night' => 'Nuit',
         'cupid' => 'Tour du cupidon',
         'guard' => 'Tour du garde',
+        'investigator' => 'Tour de l\'enquêteur',
         'psychic' => 'Tour de la voyante',
         'werewolf' => 'Tour des loups-garous',
         'infected_werewolf' => 'Tour du loup malade',

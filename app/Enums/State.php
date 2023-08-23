@@ -14,6 +14,7 @@ enum State: int
     case Cupid = 15;
     case Psychic = 5;
     case Guard = 16;
+    case Investigator = 18;
     case Werewolf = 3;
     case InfectedWerewolf = 10;
     case WhiteWerewolf = 11;
@@ -41,6 +42,7 @@ enum State: int
             self::Night => 'night',
             self::Cupid => Role::Cupid->name(),
             self::Guard => Role::Guard->name(),
+            self::Investigator => Role::Investigator->name(),
             self::Psychic => Role::Psychic->name(),
             self::Werewolf => Role::Werewolf->name(),
             self::InfectedWerewolf => Role::InfectedWerewolf->name(),
@@ -68,6 +70,7 @@ enum State: int
             self::Night => __('enums.state.night'),
             self::Cupid => __('enums.state.cupid'),
             self::Guard => __('enums.state.guard'),
+            self::Investigator => __('enums.state.investigator'),
             self::Psychic => __('enums.state.psychic'),
             self::Werewolf => __('enums.state.werewolf'),
             self::InfectedWerewolf => __('enums.state.infected_werewolf'),
@@ -118,6 +121,7 @@ enum State: int
             self::Guard => 'guard',
             self::Parasite => 'parasite',
             self::Cupid => 'heart',
+            self::Investigator => 'investigator',
             default => 'night',
         };
     }
