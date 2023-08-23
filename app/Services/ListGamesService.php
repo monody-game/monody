@@ -5,10 +5,13 @@ namespace App\Services;
 use App\Enums\GameType;
 use App\Facades\Redis;
 use App\Models\User;
+use App\Traits\GameHelperTrait;
 
 class ListGamesService
 {
-    public function list(string $type, bool $isFromLocalNetwork): array
+    use GameHelperTrait;
+
+    public function list(string $type): array
     {
         $games = $this->getGames();
         $list = [];
@@ -41,12 +44,12 @@ class ListGamesService
             }
 
             // The game is private ? Ignore it before user can sneak in and retrieve only private games 👀
-            if ($this->areTypeEquals($gameData['type'], GameType::PRIVATE_GAME->value)) {
+            if ($this->isOfType($gameData['type'], GameType::PRIVATE_GAME->value)) {
                 continue;
             }
 
             // Game type is not the one wanted
-            if ($type !== '*' && !$this->areTypeEquals($gameData['type'], (int) $type)) {
+            if ($type !== '*' && !$this->isOfType($gameData['type'], (int) $type)) {
                 continue;
             }
 
@@ -70,11 +73,6 @@ class ListGamesService
         }
 
         return $list;
-    }
-
-    private function areTypeEquals(int $firstType, int $secondType): bool
-    {
-        return ($firstType & $secondType) === $secondType;
     }
 
     /**

@@ -192,6 +192,17 @@ trait MemberHelperTrait
 
         Redis::update("game:$gameId:deaths", fn (array &$deaths) => [...$deaths, ['user' => $userId, 'context' => $context]]);
 
+        if (
+            array_key_exists('couple', $game) &&
+            in_array($userId, $game['couple'], true) &&
+            $context === 'couple' &&
+            count(array_diff($game['couple'], array_keys($game['dead_users']))) >= 1
+        ) {
+            $game['couple'] = array_values(array_diff($game['couple'], array_keys($game['dead_users'])));
+
+            return $this->kill($game['couple'][0], $gameId, 'couple');
+        }
+
         return true;
     }
 
