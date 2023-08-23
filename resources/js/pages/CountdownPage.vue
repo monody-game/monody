@@ -77,6 +77,10 @@ const startParty = () => {
 </script>
 
 <style scoped>
+.footer__main {
+	color: var(--light-background);
+}
+
 .countdown__wrapper {
 	display: flex;
 	justify-content: center;
