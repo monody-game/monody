@@ -41,7 +41,7 @@ class ListGamesService
             }
 
             // The game is private ? Ignore it before user can sneak in and retrieve only private games 👀
-            if ($type !== '*' && $this->areTypeEquals($gameData['type'], GameType::PRIVATE_GAME)) {
+            if ($this->areTypeEquals($gameData['type'], GameType::PRIVATE_GAME->value)) {
                 continue;
             }
 
@@ -72,10 +72,8 @@ class ListGamesService
         return $list;
     }
 
-    private function areTypeEquals(int $firstType, int|GameType $secondType): bool
+    private function areTypeEquals(int $firstType, int $secondType): bool
     {
-        $secondType = is_a($secondType, GameType::class) ? $secondType->value : $secondType;
-
         return ($firstType & $secondType) === $secondType;
     }
 
