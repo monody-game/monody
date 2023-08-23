@@ -201,6 +201,9 @@ export class StateManager {
 		}
 
 		const currentRoundObject = rounds[currentRound] as Round;
+
+		if (!currentRoundObject) return 0;
+
 		const stateIndex =
 			currentRoundObject.findIndex(
 				(roundState) => roundState.identifier === state["status"],

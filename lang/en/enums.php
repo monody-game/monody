@@ -54,6 +54,7 @@ return [
         'night' => 'Night',
         'cupid' => 'Cupid\'s turn',
         'guard' => 'Guard\'s turn',
+        'investigator' => 'Investigator\'s turn',
         'psychic' => 'Psychic\'s turn',
         'werewolf' => 'Werewolves\' turn',
         'infected_werewolf' => 'Infected wolf\'s turn',

@@ -82,8 +82,8 @@ class InvestigatorAction implements ActionInterface
         broadcast(new InteractionUpdate([
             'gameId' => $this->gameId,
             'type' => InteractionAction::Compare->value,
-            //'comparedPlayers' => [], // provide compared players, maybe through VoteService
-        ]));
+            'comparedPlayers' => $this->service::getVotes($this->gameId),
+        ], true, $this->getUserIdByRole(Role::Investigator, $this->gameId)));
     }
 
     /**

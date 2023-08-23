@@ -36,7 +36,11 @@ export class CounterService {
 
 		const counterId = setTimeout(
 			async () => {
-				await this.cycle(channel, socket);
+				try {
+					await this.cycle(channel, socket);
+				} catch (e) {
+					error(e)
+				}
 			},
 			duration ??
 				(await this.manager.getNextStateDuration(channel)) * 1000,

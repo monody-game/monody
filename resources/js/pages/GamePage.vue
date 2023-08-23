@@ -282,6 +282,7 @@ const leave = () => {
 	window.Echo.leave(`game.${gameId}`);
 	vocalInvitationStore.$reset();
 	store.$reset();
+	modalStore.close()
 	useCache().flush("/exp", "/stats", "/user");
 };
 

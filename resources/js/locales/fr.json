@@ -220,6 +220,7 @@
 		"contaminated": "Ce joueur est contaminé",
 		"target": "Ce joueur est votre cible",
 		"disconnected": "Ce joueur s'est déconnecté",
+		"compared": "Vous ne pouvez plus comparer son camp",
 		"owner": "Ce joueur a créé la partie",
 		"disconnect_warn": "{0} s'est déconnecté, il a 30 secondes pour se reconnecter.",
 		"guard": "Cliquez sur un joueur pour le protéger des loups.",
@@ -234,7 +235,10 @@
 		"kill": "Éliminer un joueur",
 		"kill_desc": "Cliquez sur un joueur pour l'éliminer",
 		"skip": "Ne rien faire",
-		"choose_action": "Choisissez l'action à effectuer cette nuit"
+		"choose_action": "Choisissez l'action à effectuer cette nuit",
+		"investigator": "Cliquez sur deux joueurs pour comparer leur camp",
+		"compare_response_true": "Les deux joueurs choisis appartiennent au même camp",
+		"compare_response_false": "Les deux joueurs choisis n'appartiennent pas au même camp"
 	},
 	"404": {
 		"title": "Oh non !",
