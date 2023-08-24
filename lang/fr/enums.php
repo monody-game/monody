@@ -52,6 +52,7 @@ return [
         'starting' => 'Démarrage',
         'roles' => 'Distribution des rôles',
         'night' => 'Nuit',
+        'random_couple' => 'Sélection du couple',
         'cupid' => 'Tour du cupidon',
         'guard' => 'Tour du garde',
         'investigator' => 'Tour de l\'enquêteur',

@@ -110,6 +110,7 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
 
     Route::post('/game/vocal/joined', 'Game\GameUsersController@joined');
     Route::post('/game/kill', 'Game\GameUsersController@eliminate');
+    Route::post('/game/couple', 'Game\GameUsersController@randomCouple');
 
     Route::get('/user/discord/{discordId}', 'UserController@discord');
     Route::get('/user/discord/{discordId}/share/{theme?}', 'ShareProfileController@discord');

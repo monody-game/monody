@@ -52,6 +52,7 @@ return [
         'starting' => 'Starting',
         'roles' => 'Distribution of roles',
         'night' => 'Night',
+        'random_couple' => 'Couple selection',
         'cupid' => 'Cupid\'s turn',
         'guard' => 'Guard\'s turn',
         'investigator' => 'Investigator\'s turn',
