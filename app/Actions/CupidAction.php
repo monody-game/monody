@@ -130,6 +130,8 @@ class CupidAction implements ActionInterface
     public function makeRandomCouple(): void
     {
         $game = Redis::get("game:$this->gameId");
+        $cupid = $this->getUserIdByRole(Role::Cupid, $this->gameId);
+        $cupid = count($cupid) === 1 ? $cupid[0] : null;
 
         // If couple wasn't designed, take it randomly
         $game['couple'] = [];
@@ -151,7 +153,7 @@ class CupidAction implements ActionInterface
                 'type' => InteractionAction::Pair->value,
                 'pairedPlayers' => $game['couple'],
             ],
-            recipients: [...$game['couple'], $this->getUserIdByRole(Role::Cupid, $this->gameId)[0]]
+            recipients: [...$game['couple'], $cupid]
         ));
 
         Redis::update("game:$this->gameId:interactions:usedActions", function (&$usedActions) {

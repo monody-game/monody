@@ -21,6 +21,7 @@ enum Round: int
                 State::Roles,
                 State::Night,
                 State::Cupid,
+                State::RandomCoupleSelection,
                 State::Guard,
                 State::Investigator,
                 State::Psychic,

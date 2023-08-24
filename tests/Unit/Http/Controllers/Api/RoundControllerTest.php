@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Http\Controllers\Api;
 
+use App\Enums\GameType;
 use App\Enums\Interaction;
 use App\Enums\InteractionAction;
 use App\Enums\Role;
@@ -576,6 +577,75 @@ class RoundControllerTest extends TestCase
                     'identifier' => State::Mayor->value,
                     'raw_name' => State::Mayor->stringify(),
                     'duration' => State::Mayor->duration(),
+                ],
+                [
+                    'identifier' => State::Vote->value,
+                    'raw_name' => State::Vote->stringify(),
+                    'duration' => State::Vote->duration(),
+                ],
+            ]);
+    }
+
+    public function testRoundsWithRandomCoupleAndCupid()
+    {
+        $user = User::factory()->createOne();
+        $interactionService = app(InteractionService::class);
+
+        $game = $this
+            ->actingAs($user)
+            ->put('/api/game', [
+                'roles' => [Role::SimpleVillager->value, Role::Werewolf->value, Role::Cupid->value],
+                'type' => GameType::NORMAL->value | GameType::RANDOM_COUPLE->value,
+            ])
+            ->json('data.game');
+
+        Redis::update("game:{$game['id']}", function (array &$game) {
+            $game['assigned_roles'] = [
+                'werewolf' => Role::Werewolf,
+                'sv' => Role::SimpleVillager,
+                'cupid' => Role::Cupid,
+            ];
+
+            $game['users'] = ['werewolf', 'sv', 'cupid'];
+        });
+
+        $this
+            ->get("/api/round/0/{$game['id']}")
+            ->assertJsonPath('data.round', [
+                [
+                    'identifier' => State::Waiting->value,
+                    'raw_name' => State::Waiting->stringify(),
+                    'duration' => State::Waiting->duration(),
+                ],
+                [
+                    'identifier' => State::Starting->value,
+                    'raw_name' => State::Starting->stringify(),
+                    'duration' => State::Starting->duration(),
+                ],
+                [
+                    'identifier' => State::Roles->value,
+                    'raw_name' => State::Roles->stringify(),
+                    'duration' => State::Roles->duration(),
+                ],
+                [
+                    'identifier' => State::Night->value,
+                    'raw_name' => State::Night->stringify(),
+                    'duration' => State::Night->duration(),
+                ],
+                [
+                    'identifier' => State::RandomCoupleSelection->value,
+                    'raw_name' => State::RandomCoupleSelection->stringify(),
+                    'duration' => State::RandomCoupleSelection->duration(),
+                ],
+                [
+                    'identifier' => State::Werewolf->value,
+                    'raw_name' => State::Werewolf->stringify(),
+                    'duration' => State::Werewolf->duration(),
+                ],
+                [
+                    'identifier' => State::Day->value,
+                    'raw_name' => State::Day->stringify(),
+                    'duration' => State::Day->duration(),
                 ],
                 [
                     'identifier' => State::Vote->value,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\GameType;
 use App\Enums\InteractionAction;
 use App\Enums\Role;
 use App\Enums\Round;
@@ -9,11 +10,12 @@ use App\Enums\State;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
+use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 
 class RoundController extends Controller
 {
-    use MemberHelperTrait;
+    use MemberHelperTrait, GameHelperTrait;
 
     public function all(string $gameId = null): JsonApiResponse
     {
@@ -57,6 +59,15 @@ class RoundController extends Controller
             }, $roles);
 
             foreach ($round as $key => $state) {
+                if (
+                    $state === State::RandomCoupleSelection &&
+                    !$this->isOfType($game['type'], GameType::RANDOM_COUPLE->value)
+                ) {
+                    $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
+                }
+
                 // No checks needed if the state is not a role one
                 if (!$state->isRoleState()) {
                     continue;
@@ -88,6 +99,15 @@ class RoundController extends Controller
                     !in_array($state->stringify(), $roles, true) &&
                     count(array_filter($roles, fn ($role) => str_contains($role, $state->stringify()))) === 0 &&
                     $state !== State::Werewolf
+                ) {
+                    $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
+                }
+
+                if (
+                    $state === State::Cupid &&
+                    $this->isOfType($game['type'], GameType::RANDOM_COUPLE->value)
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
