@@ -4,22 +4,65 @@
 			<h3>{{ $t("game_details.title") }}</h3>
 		</header>
 		<div class="modal__page game-details__wrapper">
-			<div class="game-details__group">
-				{{ $t("game_details.owner") }}
-				<div class="game-details__owner">
-					<img
-						:src="gameStore.owner.avatar + '?w=50&dpr=2'"
-						:alt="gameStore.owner.username + '\'s avatar'"
-					/>
-					<div class="game-details__owner-right">
-						{{ gameStore.owner.username }}
-						<div class="game-details__owner-stats">
-							<div title="Niveau">
-								<svg>
-									<use href="/sprite.svg#level" />
-								</svg>
-								<p>{{ gameStore.owner.level }}</p>
+			<div class="game-details__side-group">
+				<div class="game-details__group">
+					{{ $t("game_details.owner") }}
+					<div class="game-details__owner">
+						<img
+							:src="gameStore.owner.avatar + '?w=50&dpr=2'"
+							:alt="gameStore.owner.username + '\'s avatar'"
+						/>
+						<div class="game-details__owner-right">
+							{{ gameStore.owner.username }}
+							<div class="game-details__owner-stats">
+								<div title="Niveau">
+									<svg>
+										<use href="/sprite.svg#level" />
+									</svg>
+									<p>{{ gameStore.owner.level }}</p>
+								</div>
 							</div>
+						</div>
+					</div>
+				</div>
+				<div class="game-details__group">
+					{{ $t("game_details.types") }}
+					<div class="game-details__types">
+						<div
+							:title="$t('new_game.types.random_couple_game')"
+							v-if="(gameStore.type & (1 << 3)) === 1 << 3"
+						>
+							<svg>
+								<use href="/sprite.svg#random_couple" />
+							</svg>
+							{{ $t("new_game.types.random_couple_game") }}
+						</div>
+						<div
+							:title="$t('new_game.types.trouple_game')"
+							v-if="(gameStore.type & (1 << 4)) === 1 << 4"
+						>
+							<svg>
+								<use href="/sprite.svg#trouple" />
+							</svg>
+							{{ $t("new_game.types.trouple_game") }}
+						</div>
+						<div
+							:title="$t('new_game.types.private_game')"
+							v-if="(gameStore.type & (1 << 3)) === 1 << 3"
+						>
+							<svg>
+								<use href="/sprite.svg#private" />
+							</svg>
+							{{ $t("new_game.types.private_game") }}
+						</div>
+						<div
+							:title="$t('new_game.types.vocal_game')"
+							v-if="(gameStore.type & (1 << 1)) === 1 << 1"
+						>
+							<svg>
+								<use href="/sprite.svg#vocal" />
+							</svg>
+							{{ $t("new_game.types.vocal_game") }}
 						</div>
 					</div>
 				</div>

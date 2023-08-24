@@ -5,6 +5,28 @@
 	gap: space(3);
 }
 
+.game-details__side-group {
+	display: grid;
+	gap: space(2);
+}
+
+.game-details__types {
+	display: flex;
+	gap: space(2);
+
+	> div {
+		flex: 1;
+		display: grid;
+		gap: space(1);
+		justify-items: center;
+	}
+
+	svg {
+		height: 32px;
+		width: 32px;
+	}
+}
+
 .game-details__group {
 	display: grid;
 	gap: space(2);
