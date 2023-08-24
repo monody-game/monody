@@ -52,6 +52,7 @@ export default {
 				userId: game["bitten"].target,
 				gameId: id,
 				context: "bitten",
+				instant: true
 			});
 		}
 
