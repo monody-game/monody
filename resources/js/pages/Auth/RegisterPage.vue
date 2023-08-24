@@ -215,8 +215,7 @@ const register = async function () {
 			payload.email = email.value;
 		}
 
-		const res = await window
-			.JSONFetch("/auth/register", "POST", payload);
+		const res = await window.JSONFetch("/auth/register", "POST", payload);
 
 		loading.value = false;
 

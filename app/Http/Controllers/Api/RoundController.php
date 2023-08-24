@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\GameType;
 use App\Enums\InteractionAction;
 use App\Enums\Role;
 use App\Enums\Round;
@@ -9,11 +10,12 @@ use App\Enums\State;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonApiResponse;
+use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 
 class RoundController extends Controller
 {
-    use MemberHelperTrait;
+    use MemberHelperTrait, GameHelperTrait;
 
     public function all(string $gameId = null): JsonApiResponse
     {
@@ -57,6 +59,15 @@ class RoundController extends Controller
             }, $roles);
 
             foreach ($round as $key => $state) {
+                if (
+                    $state === State::RandomCoupleSelection &&
+                    !$this->isOfType($game['type'], GameType::RANDOM_COUPLE->value)
+                ) {
+                    $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
+                }
+
                 // No checks needed if the state is not a role one
                 if (!$state->isRoleState()) {
                     continue;
@@ -88,6 +99,31 @@ class RoundController extends Controller
                     !in_array($state->stringify(), $roles, true) &&
                     count(array_filter($roles, fn ($role) => str_contains($role, $state->stringify()))) === 0 &&
                     $state !== State::Werewolf
+                ) {
+                    $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
+                }
+
+                if (
+                    $state === State::Cupid &&
+                    $this->isOfType($game['type'], GameType::RANDOM_COUPLE->value)
+                ) {
+                    $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
+                }
+
+                // If the investigator can't compare anyone
+                if (
+                    $state === State::Investigator &&
+                    in_array(Role::Investigator->value, array_values($game['assigned_roles']), true) &&
+                    count($this->getUserIdByRole(Role::Investigator, $gameId)) > 0 &&
+                    (
+                        count($game['users']) - count(array_keys($game['dead_users'])) <= 1 &&
+                        count($game['users']) - count(array_keys($game['dead_users'])) < count($this->getNotComparableUsers($gameId)) + 1 ||
+                        count($game['users']) - count(array_keys($game['dead_users'])) - count($this->getNotComparableUsers($gameId)) === 1
+                    )
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
@@ -142,6 +178,8 @@ class RoundController extends Controller
                     )
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
+
+                    continue;
                 }
 
                 // If it's not an even round number for the white werewolf
@@ -158,5 +196,19 @@ class RoundController extends Controller
                 'duration' => $state->duration(),
             ];
         }, $round);
+    }
+
+    private function getNotComparableUsers(string $gameId): array
+    {
+        $compared = Redis::get("game:$gameId:interactions:investigator") ?? [];
+        $investigator = $this->getUserIdByRole(Role::Investigator, $gameId)[0];
+
+        $compared = array_filter(
+            $compared,
+            fn ($comparedUser) => $comparedUser === $investigator ||
+                count(array_filter($compared, fn ($user) => $user === $comparedUser)) === 2
+        );
+
+        return array_unique($compared);
     }
 }

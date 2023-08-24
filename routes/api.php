@@ -12,7 +12,7 @@ Route::post('/auth/login', 'Auth\LoginController@login');
 Route::post('/auth/password/reset', 'Auth\PasswordController@reset');
 Route::post('/auth/password/validate', 'Auth\PasswordController@token');
 
-Route::get('/game/list/{type?}', 'Game\GameController@list');
+Route::get('/game/list/{type?}', 'Game\GameListController@list');
 
 Route::get('/roles', 'RoleController@all');
 Route::get('/roles/list', 'RoleController@list');
@@ -92,10 +92,10 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
     Route::post('/roles/assign', 'RoleController@assign');
 
     Route::delete('/game', 'Game\GameController@delete');
-    Route::post('/game/join', 'Game\GameController@join');
-    Route::post('/game/leave', 'Game\GameController@leave');
+    Route::post('/game/join', 'Game\JoinGameController@join');
+    Route::post('/game/leave', 'Game\JoinGameController@leave');
 
-    Route::get('/game/data/{gameId}/{userId}', 'Game\GameController@data');
+    Route::get('/game/data/{gameId}/{userId}', 'Game\GameDataController@data');
 
     Route::post('/interactions', 'Game\GameInteractionController@create');
     Route::delete('/interactions', 'Game\GameInteractionController@close');
@@ -110,6 +110,7 @@ Route::group(['middleware' => RestrictToLocalNetwork::class], function () {
 
     Route::post('/game/vocal/joined', 'Game\GameUsersController@joined');
     Route::post('/game/kill', 'Game\GameUsersController@eliminate');
+    Route::post('/game/couple', 'Game\GameUsersController@randomCouple');
 
     Route::get('/user/discord/{discordId}', 'UserController@discord');
     Route::get('/user/discord/{discordId}/share/{theme?}', 'ShareProfileController@discord');

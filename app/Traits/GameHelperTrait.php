@@ -25,8 +25,14 @@ trait GameHelperTrait
             "game:$gameId:votes",
             "game:$gameId:interactions",
             "game:$gameId:interactions:usedActions",
+            "game:$gameId:interactions:investigator",
             "game:$gameId:deaths",
             "game:$gameId:discord",
         );
+    }
+
+    public function isOfType(int $types, int $toTest): bool
+    {
+        return ($types & $toTest) === $toTest;
     }
 }

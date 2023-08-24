@@ -12,8 +12,10 @@ enum State: int
 
     case Night = 2;
     case Cupid = 15;
+    case RandomCoupleSelection = 19;
     case Psychic = 5;
     case Guard = 16;
+    case Investigator = 18;
     case Werewolf = 3;
     case InfectedWerewolf = 10;
     case WhiteWerewolf = 11;
@@ -40,7 +42,9 @@ enum State: int
             self::Roles => 'roles',
             self::Night => 'night',
             self::Cupid => Role::Cupid->name(),
+            self::RandomCoupleSelection => 'random_couple',
             self::Guard => Role::Guard->name(),
+            self::Investigator => Role::Investigator->name(),
             self::Psychic => Role::Psychic->name(),
             self::Werewolf => Role::Werewolf->name(),
             self::InfectedWerewolf => Role::InfectedWerewolf->name(),
@@ -67,7 +71,9 @@ enum State: int
             self::Roles => __('enums.state.roles'),
             self::Night => __('enums.state.night'),
             self::Cupid => __('enums.state.cupid'),
+            self::RandomCoupleSelection => __('enums.state.random_couple'),
             self::Guard => __('enums.state.guard'),
+            self::Investigator => __('enums.state.investigator'),
             self::Psychic => __('enums.state.psychic'),
             self::Werewolf => __('enums.state.werewolf'),
             self::InfectedWerewolf => __('enums.state.infected_werewolf'),
@@ -101,6 +107,7 @@ enum State: int
             self::Starting, self::Night => 10,
             self::Day => 60,
             self::Mayor, self::Werewolf, self::Vote => 90,
+            self::RandomCoupleSelection => 5,
             default => 30,
         };
     }
@@ -117,7 +124,8 @@ enum State: int
             self::Hunter => 'hunter',
             self::Guard => 'guard',
             self::Parasite => 'parasite',
-            self::Cupid => 'heart',
+            self::Cupid, self::RandomCoupleSelection => 'heart',
+            self::Investigator => 'investigator',
             default => 'night',
         };
     }
@@ -128,7 +136,7 @@ enum State: int
     public function message(): array|string|null
     {
         return match ($this) {
-            self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch, self::Parasite, self::Cupid, self::Guard => self::readeableStringify(),
+            self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch, self::Parasite, self::Cupid, self::Guard, self::RandomCoupleSelection => self::readeableStringify(),
             self::Vote => __('enums.state.vote_message'),
             self::Mayor => __('enums.state.mayor_message'),
             self::Hunter => __('enums.state.hunter_message'),
@@ -142,7 +150,7 @@ enum State: int
     public function isRoleState(): bool
     {
         return match ($this) {
-            self::Waiting, self::Starting, self::Roles, self::End, self::Day, self::Mayor, self::Night, self::Vote => false,
+            self::Waiting, self::Starting, self::Roles, self::End, self::Day, self::Mayor, self::Night, self::Vote, self::RandomCoupleSelection => false,
             default => true
         };
     }

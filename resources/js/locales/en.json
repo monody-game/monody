@@ -78,11 +78,23 @@
 		"villagers": "Villagers",
 		"werewolves": "Werewolves",
 		"loners": "Loners",
-		"classic_game": "Classic game",
-		"classic_game_desc": "A classic Monody game played entirely on site",
-		"vocal_game": "Voice game",
-		"vocal_game_desc": "A Monody game taking place on the site and in a voice channel on Discord",
-		"vocal_game_note": "Requires a linked Discord account to join the game",
+		"game_unique_types": "Game types:",
+		"game_combinable_types": "Additional (combinable) game types :",
+		"types": {
+			"classic_game": "Classic game",
+			"classic_game_desc": "A classic Monody game played entirely on site",
+			"vocal_game": "Voice game",
+			"vocal_game_desc": "A Monody game taking place on the site and in a voice channel on Discord",
+			"vocal_game_note": "Requires a linked Discord account.",
+			"private_game": "Private game",
+			"private_game_desc": "The game will not be listed on the home page",
+			"random_couple_game": "Random couple",
+			"random_couple_game_desc": "The couple is randomly selected",
+			"trouple_game": "Trouple",
+			"trouple_game_desc": "The couple consists of three players",
+			"hidden_comp_game": "Hidden composition",
+			"hidden_comp_game_desc": "The composition of the game is hidden from view"
+		},
 		"no_linked_discord": "You must link a Discord account to Monody in order to use this feature."
 	},
 	"vocal_invitation": {
@@ -170,7 +182,8 @@
 	"game_details": {
 		"title": "Game details",
 		"owner": "Game owner:",
-		"roles": "List of roles:"
+		"roles": "List of roles:",
+		"types": "Enabled types:"
 	},
 	"chat": {
 		"locked": "Chat locked",
@@ -200,7 +213,7 @@
 		"defeat": "Defeat",
 		"content": "Victory was won by",
 		"close": "Click anywhere to close this window",
-		"couple": "the couple.",
+		"couple": "the couple",
 		"le": "the",
 		"les": "the",
 		"l": "the "
@@ -220,6 +233,7 @@
 		"contaminated": "This player is contaminated",
 		"target": "This player is your target",
 		"disconnected": "This player has disconnected",
+		"compared": "You can't compare his team anymore",
 		"owner": "This player has created the game",
 		"disconnect_warn": "{0} has disconnected, he has 30 seconds to reconnect.",
 		"guard": "Click on a player to protect him from the werewolves.",
@@ -234,7 +248,10 @@
 		"kill": "Eliminate a player",
 		"kill_desc": "Click on a player to eliminate him",
 		"skip": "Do nothing",
-		"choose_action": "Choose the action to perform tonight"
+		"choose_action": "Choose the action to perform tonight",
+		"investigator": "Click on two players to compare their side",
+		"compare_response_true": "The two players chosen belong to the same team",
+		"compare_response_false": "The two players chosen do not belong to the same team"
 	},
 	"404": {
 		"title": "Oh no !",

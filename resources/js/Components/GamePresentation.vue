@@ -51,12 +51,32 @@
 				</div>
 			</div>
 		</div>
-		<svg
-			v-if="(props.game.type & (1 << 1)) === 1 << 1"
-			:title="$t('play.vocal_game')"
-		>
-			<use href="/sprite.svg#vocal" />
-		</svg>
+		<div class="game-show__types">
+			<span
+				:title="$t('new_game.types.random_couple_game')"
+				v-if="(props.game.type & (1 << 3)) === 1 << 3"
+			>
+				<svg>
+					<use href="/sprite.svg#random_couple" />
+				</svg>
+			</span>
+			<span
+				:title="$t('new_game.types.trouple_game')"
+				v-if="(props.game.type & (1 << 4)) === 1 << 4"
+			>
+				<svg>
+					<use href="/sprite.svg#trouple" />
+				</svg>
+			</span>
+			<span
+				:title="$t('play.vocal_game')"
+				v-if="(props.game.type & (1 << 1)) === 1 << 1"
+			>
+				<svg>
+					<use href="/sprite.svg#vocal" />
+				</svg>
+			</span>
+		</div>
 		<p>{{ props.game.users.length }} / {{ getUserCount() }}</p>
 	</div>
 </template>
