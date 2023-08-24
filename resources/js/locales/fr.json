@@ -182,7 +182,8 @@
 	"game_details": {
 		"title": "Détails de la partie",
 		"owner": "Créateur de la partie :",
-		"roles": "Liste des rôles :"
+		"roles": "Liste des rôles :",
+		"types": "Types activés :"
 	},
 	"chat": {
 		"locked": "Chat verrouillé",

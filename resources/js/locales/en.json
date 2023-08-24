@@ -182,7 +182,8 @@
 	"game_details": {
 		"title": "Game details",
 		"owner": "Game owner:",
-		"roles": "List of roles:"
+		"roles": "List of roles:",
+		"types": "Enabled types:"
 	},
 	"chat": {
 		"locked": "Chat locked",
