@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\Http\Controllers\Api\Game;
 
+use App\Enums\GameType;
 use App\Enums\Role;
 use App\Facades\Redis;
+use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -42,6 +44,29 @@ class GameUsersControllerTest extends TestCase
             ->json('data.role');
 
         $this->assertSame(Role::from(1)->full(), $response);
+    }
+
+    public function testRandomCoupleEndpoint()
+    {
+        $this->user = User::factory()->createOne();
+
+        $game = $this->actingAs($this->user, 'api')->put('/api/game', [
+            'roles' => [Role::Hunter->value, Role::Investigator->value, Role::Werewolf->value],
+            'users' => ['boi1', 'boi2', 'boi3'],
+            'type' => GameType::NORMAL->value | GameType::RANDOM_COUPLE->value,
+        ])->json('data.game');
+
+        $this->assertArrayNotHasKey('couple', $game);
+
+        $this
+            ->withoutMiddleware(RestrictToLocalNetwork::class)
+            ->post('/api/game/couple', [
+                'gameId' => $game['id'],
+            ]);
+
+        $game = Redis::get("game:{$game['id']}");
+        $this->assertArrayHasKey('couple', $game);
+        $this->assertCount(2, $game['couple']);
     }
 
     protected function setUp(): void

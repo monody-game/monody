@@ -78,11 +78,23 @@
 		"villagers": "Villageois",
 		"werewolves": "Loups-garous",
 		"loners": "Solitaires",
-		"classic_game": "Partie classique",
-		"classic_game_desc": "Une partie Monody classique se déroulant entièrement sur le site",
-		"vocal_game": "Partie vocale",
-		"vocal_game_desc": "Une partie Monody se déroulant sur le site et en vocal sur Discord",
-		"vocal_game_note": "Nécessite un compte Discord lié pour rejoindre la partie",
+		"game_unique_types": "Types de parties :",
+		"game_combinable_types": "Types de parties supplémentaires (combinables) :",
+		"types": {
+			"classic_game": "Partie classique",
+			"classic_game_desc": "Une partie Monody classique se déroulant entièrement sur le site",
+			"vocal_game": "Partie vocale",
+			"vocal_game_desc": "Une partie Monody se déroulant sur le site et en vocal sur Discord",
+			"vocal_game_note": "Nécessite un compte Discord lié.",
+			"private_game": "Partie privée",
+			"private_game_desc": "La partie ne sera pas listée sur la page d’accueil",
+			"random_couple_game": "Couple aléatoire",
+			"random_couple_game_desc": "Le couple est choisi aléatoirement",
+			"trouple_game": "Trouple",
+			"trouple_game_desc": "Le couple est composé de trois joueurs",
+			"hidden_comp_game": "Composition cachée",
+			"hidden_comp_game_desc": "La composition de la partie est cachée aux yeux de tous"
+		},
 		"no_linked_discord": "Vous devez lier un compte Discord à Monody afin d'utiliser cette fonctionnalité"
 	},
 	"vocal_invitation": {
@@ -170,7 +182,8 @@
 	"game_details": {
 		"title": "Détails de la partie",
 		"owner": "Créateur de la partie :",
-		"roles": "Liste des rôles :"
+		"roles": "Liste des rôles :",
+		"types": "Types activés :"
 	},
 	"chat": {
 		"locked": "Chat verrouillé",
@@ -200,7 +213,7 @@
 		"defeat": "Défaite",
 		"content": "La victoire a été remportée par",
 		"close": "Cliquez n'importe où pour fermer cette fenêtre",
-		"couple": "le couple.",
+		"couple": "le couple",
 		"le": "le",
 		"les": "les",
 		"l": "l'"
@@ -220,6 +233,7 @@
 		"contaminated": "Ce joueur est contaminé",
 		"target": "Ce joueur est votre cible",
 		"disconnected": "Ce joueur s'est déconnecté",
+		"compared": "Vous ne pouvez plus comparer son camp",
 		"owner": "Ce joueur a créé la partie",
 		"disconnect_warn": "{0} s'est déconnecté, il a 30 secondes pour se reconnecter.",
 		"guard": "Cliquez sur un joueur pour le protéger des loups.",
@@ -234,7 +248,10 @@
 		"kill": "Éliminer un joueur",
 		"kill_desc": "Cliquez sur un joueur pour l'éliminer",
 		"skip": "Ne rien faire",
-		"choose_action": "Choisissez l'action à effectuer cette nuit"
+		"choose_action": "Choisissez l'action à effectuer cette nuit",
+		"investigator": "Cliquez sur deux joueurs pour comparer leur camp",
+		"compare_response_true": "Les deux joueurs choisis appartiennent au même camp",
+		"compare_response_false": "Les deux joueurs choisis n'appartiennent pas au même camp"
 	},
 	"404": {
 		"title": "Oh non !",

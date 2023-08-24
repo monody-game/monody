@@ -48,7 +48,8 @@
 	width: 12px;
 }
 
-.player-interaction-bubble__mayor-color {
+.player-interaction-bubble__mayor-color,
+.player-interaction-bubble__investigator-color {
 	& > span {
 		background: var(--level);
 	}

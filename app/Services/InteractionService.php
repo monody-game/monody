@@ -8,6 +8,7 @@ use App\Actions\CupidAction;
 use App\Actions\GuardAction;
 use App\Actions\HunterAction;
 use App\Actions\InfectedWerewolfAction;
+use App\Actions\InvestigatorAction;
 use App\Actions\MayorAction;
 use App\Actions\ParasiteAction;
 use App\Actions\PsychicAction;
@@ -246,6 +247,7 @@ class InteractionService
             Interaction::Cupid => app(CupidAction::class, ['gameId' => $gameId]),
             Interaction::Guard => new GuardAction($gameId),
             Interaction::Hunter => new HunterAction($gameId),
+            Interaction::Investigator => app(InvestigatorAction::class, ['gameId' => $gameId]),
         };
     }
 }

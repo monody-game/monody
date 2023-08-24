@@ -276,12 +276,19 @@ window.Echo.join(`game.${gameId}`)
 
 			location.reload();
 		}, 250);
+	})
+	.listen(".list.disconnect", (user) => {
+		chatStore.send(
+			t("player.disconnect_warn", [user.user_info.username]),
+			"warn",
+		);
 	});
 
 const leave = () => {
 	window.Echo.leave(`game.${gameId}`);
 	vocalInvitationStore.$reset();
 	store.$reset();
+	modalStore.close();
 	useCache().flush("/exp", "/stats", "/user");
 };
 

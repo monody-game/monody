@@ -85,6 +85,15 @@
 					<use href="/sprite.svg#websockets" />
 				</svg>
 			</span>
+			<span
+				v-if="isCompared === true"
+				:title="$t('player.compared')"
+				class="player__is-compared"
+			>
+				<svg>
+					<use href="/sprite.svg#investigator_crossed" />
+				</svg>
+			</span>
 		</div>
 		<p
 			class="player__username"
@@ -129,6 +138,7 @@ const isPaired = ref(false);
 const isGuarded = ref(false);
 const isDisconnected = ref(false);
 const isOwner = ref(false);
+const isCompared = ref(false);
 
 const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
@@ -193,10 +203,6 @@ window.Echo.join(`game.${gameId.value}`)
 	.listen(".list.disconnect", (user) => {
 		if (user.user_id === props.player.id) {
 			isDisconnected.value = true;
-			chatStore.send(
-				t("player.disconnect_warn", [user.user_info.username]),
-				"warn",
-			);
 		}
 	})
 	.listen(".interaction.open", ({ interaction }) => {
@@ -318,6 +324,25 @@ window.Echo.join(`game.${gameId.value}`)
 				break;
 			case "cupid":
 				player.value.classList.add("player__pairable");
+				break;
+			case "investigator":
+				if (gamePlayer.role && gamePlayer.role.name === "investigator") {
+					chatStore.send(t("player.investigator"), "info");
+				}
+				const isNotComparable = Object.values(
+					interaction.data.not_comparable,
+				).includes(props.player.id);
+
+				if (isNotComparable) {
+					isCompared.value = true;
+				}
+
+				if (isDead.value === false && !isNotComparable) {
+					player.value.classList.add("player__comparable");
+				} else {
+					player.value.classList.add("player__hover-disabled");
+				}
+				break;
 		}
 	})
 	.listen(".interaction.close", () => {
@@ -333,6 +358,7 @@ window.Echo.join(`game.${gameId.value}`)
 				"player__guardable",
 				"player__disabled",
 				"player__hover-disabled",
+				"player__comparable",
 			);
 		}
 
@@ -344,6 +370,19 @@ window.Echo.join(`game.${gameId.value}`)
 	.listen(".interaction.werewolves:kill", ({ data }) => addVote(data))
 	.listen(".interaction.cupid:pair", ({ data }) => {
 		const pairArray = data.payload.votedPlayers;
+		votedBy.value = [];
+		isVoted.value = false;
+
+		if (
+			Object.values(pairArray).length > 0 &&
+			Object.values(pairArray)[0].includes(props.player.id)
+		) {
+			votedBy.value = props.player;
+			isVoted.value = true;
+		}
+	})
+	.listen(".interaction.investigator:compare", ({ data }) => {
+		const pairArray = data.payload.comparedPlayers;
 		votedBy.value = [];
 		isVoted.value = false;
 
@@ -426,6 +465,16 @@ const send = async function (votingUser, votedUser) {
 
 	if (interactionType.value === "guard") {
 		isGuarded.value = votedUser === props.player.id;
+	}
+
+	if (
+		interactionType.value === "investigator" &&
+		res.data.interaction.response !== null
+	) {
+		chatStore.send(
+			t(`player.compare_response_${res.data.interaction.response}`),
+			res.data.interaction.response ? "success" : "warn",
+		);
 	}
 };
 

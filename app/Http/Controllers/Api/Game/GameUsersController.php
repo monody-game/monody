@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Game;
 
+use App\Actions\CupidAction;
 use App\Enums\Role;
 use App\Enums\Status;
 use App\Events\CloseVoiceChannelNotice;
@@ -9,10 +10,12 @@ use App\Events\GameKill;
 use App\Events\Websockets\GameStart;
 use App\Facades\Redis;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GameIdRequest;
 use App\Http\Requests\UserJoinedVocalChannelRequest;
 use App\Http\Requests\UserRoleRequest;
 use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
+use App\Services\VoteService;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\Request;
@@ -118,5 +121,14 @@ class GameUsersController extends Controller
         }
 
         return new JsonApiResponse(status: $status);
+    }
+
+    public function randomCouple(GameIdRequest $request, VoteService $voteService): JsonApiResponse
+    {
+        $gameId = $request->input('gameId');
+        $action = new CupidAction($voteService, $gameId);
+        $action->makeRandomCouple();
+
+        return new JsonApiResponse();
     }
 }

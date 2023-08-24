@@ -12,7 +12,7 @@ import user from "./middleware/user.js";
 import canJoin from "./middleware/canJoinGame.js";
 import CountdownPage from "../pages/CountdownPage.vue";
 
-/**const routes = [
+const routes = [
 	{
 		path: "/",
 		name: "home_page",
@@ -54,14 +54,14 @@ import CountdownPage from "../pages/CountdownPage.vue";
 		name: "e404",
 		component: NotFoundPage,
 	},
-];*/
+];
 
-const routes = [
+/* const routes = [
 	{
 		path: "/:pathMatch(.*)*",
 		component: CountdownPage,
 	},
-]
+] */
 
 const router = createRouter({
 	history: createWebHistory(),

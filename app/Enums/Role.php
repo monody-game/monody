@@ -18,6 +18,7 @@ enum Role: int
     case Cupid = 12;
     case Guard = 13;
     case Hunter = 14;
+    case Investigator = 15;
 
     // Loners
     case WhiteWerewolf = 8;
@@ -41,6 +42,7 @@ enum Role: int
             self::Cupid => __('enums.roles.cupid.name'),
             self::Guard => __('enums.roles.guard.name'),
             self::Hunter => __('enums.roles.hunter.name'),
+            self::Investigator => __('enums.roles.investigator.name')
         };
     }
 
@@ -61,6 +63,7 @@ enum Role: int
             'cupid' => self::Cupid,
             'guard' => self::Guard,
             'hunter' => self::Hunter,
+            'investigator' => self::Investigator,
             default => null,
         };
     }
@@ -82,6 +85,7 @@ enum Role: int
             self::Cupid => 'cupid',
             self::Guard => 'guard',
             self::Hunter => 'hunter',
+            self::Investigator => 'investigator',
         };
     }
 
@@ -103,6 +107,7 @@ enum Role: int
             self::Cupid => Team::Villagers->goal() . __('enums.roles.cupid.describe'),
             self::Guard => Team::Villagers->goal() . __('enums.roles.guard.describe'),
             self::Hunter => Team::Villagers->goal() . __('enums.roles.hunter.describe'),
+            self::Investigator => Team::Villagers->goal() . __('enums.roles.investigator.describe'),
 
             self::WhiteWerewolf => Team::Loners->goal() . __('enums.roles.white_werewolf.describe'),
             self::Angel => Team::Loners->goal() . __('enums.roles.angel.describe'),
@@ -114,7 +119,7 @@ enum Role: int
     {
         return match ($this) {
             self::InfectedWerewolf, self::WhiteWerewolf => 5,
-            self::Werewolf, self::SurlyWerewolf, self::Parasite, self::Cupid, self::Guard, self::Hunter => 4,
+            self::Werewolf, self::SurlyWerewolf, self::Parasite, self::Cupid, self::Guard, self::Hunter, self::Investigator => 4,
             self::LittleGirl, self::Elder, self::Psychic, self::Witch, self::Angel => 2,
             self::SimpleVillager => 1,
         };
@@ -144,6 +149,7 @@ enum Role: int
             self::Cupid => [InteractionAction::Pair],
             self::Guard => [InteractionAction::Guard],
             self::Hunter => [InteractionAction::Shoot],
+            self::Investigator => [InteractionAction::Compare],
             default => [],
         };
     }

@@ -1,5 +1,5 @@
 <template>
-	<BaseModal>
+	<BaseModal wrapper="game-creation-modal__wrapper">
 		<header>
 			<h3>{{ $t("new_game.title") }}</h3>
 			<p class="modal__page-status">({{ currentPage }}/{{ totalPage }})</p>
@@ -84,10 +84,12 @@ const notEnoughSelectedRoles = function () {
 		}
 	}
 
-	return selectedIds.length < 5 ||
-	!(
-		selectedRoles.filter((role) => role.team.id === 1).length >= 1 &&
-		selectedRoles.filter((role) => role.team.id === 2).length >= 1
+	return (
+		selectedIds.length < 2 ||
+		!(
+			selectedRoles.filter((role) => role.team.id === 1).length >= 1 &&
+			selectedRoles.filter((role) => role.team.id === 2).length >= 1
+		)
 	);
 };
 
@@ -106,7 +108,9 @@ const next = function () {
 const finish = async function () {
 	const res = await window.JSONFetch("/game", "PUT", {
 		roles: store.selectedRoles,
-		type: store.gameType,
+		type: [...store.combinablesTypes, store.gameType].reduce(
+			(previousValue, currentValue) => (previousValue |= currentValue),
+		),
 	});
 
 	gameId.value = res.data.game.id;
