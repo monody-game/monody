@@ -126,6 +126,14 @@ trait MemberHelperTrait
         $state = Redis::get("game:$gameId:state");
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
 
+		if (
+			$context === State::Werewolf->stringify() &&
+			array_key_exists('guarded', $game) &&
+			$userId === $game['guarded']
+		) {
+			return true;
+		}
+
         if (
             $context === State::Werewolf->stringify() &&
             $this->getRoleByUserId($userId, $gameId) === Role::Elder &&
@@ -143,14 +151,6 @@ trait MemberHelperTrait
 
             broadcast(new MessageSent($content, true, [$userId]));
 
-            return true;
-        }
-
-        if (
-            $context === State::Werewolf->stringify() &&
-            array_key_exists('guarded', $game) &&
-            $userId === $game['guarded']
-        ) {
             return true;
         }
 
