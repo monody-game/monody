@@ -29,9 +29,9 @@ class GuardAction implements ActionInterface
      */
     public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
-        $game = Redis::get("game:$this->gameId");
+        $usedActions = Redis::get("game:$this->gameId:interactions:usedActions");
 
-        if (array_key_exists('guarded', $game) && $game['guarded'] === $targetId) {
+        if (in_array(InteractionAction::Guard->value, $usedActions, true)) {
             return false;
         }
 
@@ -46,6 +46,10 @@ class GuardAction implements ActionInterface
     {
         Redis::update("game:$this->gameId", function (array &$game) use ($targetId) {
             $game['guarded'] = $targetId;
+        });
+
+        Redis::update("game:$this->gameId:interactions:usedActions", function (array &$usedActions) {
+            $usedActions[] = InteractionAction::Guard->value;
         });
 
         return $targetId;
@@ -64,6 +68,10 @@ class GuardAction implements ActionInterface
     public function additionnalData(): ?string
     {
         $game = Redis::get("game:$this->gameId");
+
+        Redis::update("game:$this->gameId:interactions:usedActions", function (array $usedActions) {
+            return array_filter($usedActions, fn ($action) => $action !== InteractionAction::Guard->value);
+        });
 
         if (array_key_exists('guarded', $game)) {
             return $game['guarded'];
