@@ -11,7 +11,7 @@ const body = (channel: string) => {
 export default {
 	identifier: 17,
 	async before(io: Server, channel: string) {
-		await fetch(`${baseUrl}/chat/lock/false`, "POST", body);
+		await fetch(`${baseUrl}/chat/lock/false`, "POST", body(channel));
 
 		await InteractionService.openInteraction(io, channel, "hunter");
 
@@ -21,12 +21,12 @@ export default {
 		await InteractionService.closeInteraction(io, channel, "hunter");
 
 		await fetch(`${baseUrl}/message/deaths`, "POST", body(channel));
-		await fetch(`${baseUrl}/chat/lock/false`, "POST", body);
+		await fetch(`${baseUrl}/chat/lock/false`, "POST", body(channel));
 
-		const res = await fetch(`${baseUrl}/end/check`, "POST", body);
+		const res = await fetch(`${baseUrl}/end/check`, "POST", body(channel));
 
 		if (res.status === 204) {
-			await fetch(`${baseUrl}/end`, "POST", body);
+			await fetch(`${baseUrl}/end`, "POST", body(channel));
 
 			return true;
 		}

@@ -8,6 +8,7 @@ export default {
 		await fetch(`${process.env.API_URL}/game/chat/lock/true`, "POST", {
 			gameId: gameId(channel),
 		});
+
 		return false;
 	},
 };
