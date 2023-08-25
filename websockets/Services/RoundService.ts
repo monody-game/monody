@@ -2,9 +2,9 @@ import fetch from "../Helpers/fetch.js";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
 import { readdirSync } from "node:fs";
-import { GameService } from "./GameService.js";
 import { error, log } from "../Logger.js";
 import { Server } from "socket.io";
+import { GameService } from "./GameService.js";
 
 type StateIdentifier = number;
 
@@ -70,7 +70,7 @@ export async function getRounds(gameId = ""): Promise<RoundList | []> {
 		}
 	} catch (e) {
 		error("Error retrieving rounds", e);
-		log("Current rounds " + JSON.stringify(apiRounds.json.data));
+		log("Current rounds " + JSON.stringify(apiRounds));
 	}
 
 	return rounds;
