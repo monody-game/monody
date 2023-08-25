@@ -31,6 +31,11 @@ const rooster = new Howl({
 	volume: storage.ambient * 0.1,
 });
 
+const hunter = new Howl({
+	src: ["../sounds/hunter.webm", "../sounds/hunter.mp3"],
+	volume: storage.ambient * 0.1,
+});
+
 const day = new Howl({
 	src: ["../sounds/day.webm", "../sounds/day.mp3"],
 	volume: storage.music * 0.1,
@@ -50,11 +55,13 @@ store.$subscribe((mutation, state) => {
 		night.mute();
 		day.mute();
 		rooster.mute();
+		hunter.mute();
 	}
 
 	night.volume(state.volumes.music * 0.1);
 	day.volume(state.volumes.music * 0.1);
 	rooster.volume(state.volumes.ambient * 0.1);
+	hunter.volume(state.volumes.ambient * 0.1);
 });
 
 window.Echo.join(`game.${route.params.id}`).listen(

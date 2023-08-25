@@ -98,6 +98,7 @@ import { onBeforeRouteLeave, useRoute } from "vue-router";
 import { useStore as useGameStore } from "../../stores/game.js";
 import { useStore as useUserStore } from "../../stores/user.js";
 import { useStore as useModalStore } from "../../stores/modals/modal.js";
+import { useStore as useAudioModalStore } from "../../stores/modals/audio-modal.js";
 import { useStore } from "../../stores/chat.js";
 import { send } from "../../services/sendMessage.js";
 import ChatAlert from "./ChatAlert.vue";
@@ -105,6 +106,7 @@ import ChatMessage from "./ChatMessage.vue";
 import TimeSeparator from "./TimeSeparator.vue";
 import InAndOutMessage from "./InAndOutMessage.vue";
 import { useI18n } from "vue-i18n";
+import { Howl } from "howler";
 
 const content = ref("");
 const input = ref(null);
@@ -121,6 +123,26 @@ const { t } = useI18n();
 
 const chatSelected = ref("main");
 const messagesContainer = ref(null);
+
+const storage = JSON.parse(
+	localStorage.getItem("volume") ?? JSON.stringify({ ambient: 5, music: 7 }),
+);
+
+const hunter = new Howl({
+	src: ["../sounds/hunter.webm", "../sounds/hunter.mp3"],
+	volume: storage.ambient * 0.1,
+});
+
+useAudioModalStore().$subscribe((mutation, state) => {
+	localStorage.setItem("volume", JSON.stringify(state.volumes));
+
+	if (state.volumes.music === 0) {
+		hunter.mute();
+	}
+
+	hunter.volume(state.volumes.ambient * 0.1);
+});
+
 
 watch(chatSelected, (value, oldValue) => {
 	if (value === "couple") {
@@ -200,6 +222,7 @@ window.Echo.join(`game.${route.params.id}`)
 		} else if (context === "couple") {
 			store.send(t("chat.couple", { user: user.username, role }), "death");
 		} else if (context === "hunter") {
+			hunter.play();
 			store.send(t("chat.hunter", { user: user.username, role }), "death");
 		} else if (context === "disconnect") {
 			store.send(t("chat.disconnect", { user: user.username, role }), "death");
