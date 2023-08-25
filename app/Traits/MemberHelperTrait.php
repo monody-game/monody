@@ -126,13 +126,13 @@ trait MemberHelperTrait
         $state = Redis::get("game:$gameId:state");
         $usedActions = Redis::get("game:$gameId:interactions:usedActions") ?? [];
 
-		if (
-			$context === State::Werewolf->stringify() &&
-			array_key_exists('guarded', $game) &&
-			$userId === $game['guarded']
-		) {
-			return true;
-		}
+        if (
+            $context === State::Werewolf->stringify() &&
+            array_key_exists('guarded', $game) &&
+            $userId === $game['guarded']
+        ) {
+            return true;
+        }
 
         if (
             $context === State::Werewolf->stringify() &&

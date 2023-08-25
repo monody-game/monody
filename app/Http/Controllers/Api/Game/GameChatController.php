@@ -47,7 +47,9 @@ class GameChatController extends Controller
             return new JsonApiResponse(status: Status::NO_CONTENT);
         }
 
-        if ($state === State::Werewolf->value && $this->isWerewolf($user['id'], $gameId)) {
+        if (!$this->alive($user->id, $gameId) && array_key_exists('ended', $game) && $game['ended'] === false) {
+            $this->service->send($request->validated(), $user);
+        } elseif ($state === State::Werewolf->value && $this->isWerewolf($user['id'], $gameId)) {
             $this->service->werewolf($request->validated(), $user);
         } elseif ($state === State::Werewolf->value && !$this->isWerewolf($user['id'], $gameId)) {
             return new JsonApiResponse(status: Status::FORBIDDEN);
