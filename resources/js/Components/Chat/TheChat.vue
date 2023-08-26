@@ -143,7 +143,6 @@ useAudioModalStore().$subscribe((mutation, state) => {
 	hunter.volume(state.volumes.ambient * 0.1);
 });
 
-
 watch(chatSelected, (value, oldValue) => {
 	if (value === "couple") {
 		lastLockedState.value = isLocked.value;

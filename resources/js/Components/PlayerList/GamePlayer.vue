@@ -463,7 +463,7 @@ const send = async function (votingUser, votedUser) {
 		gameStore.contaminated.push(votedUser);
 	}
 
-	if (interactionType.value === "guard") {
+	if (interactionType.value === "guard" && res.ok) {
 		isGuarded.value = votedUser === props.player.id;
 	}
 
