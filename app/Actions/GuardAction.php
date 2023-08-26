@@ -29,14 +29,17 @@ class GuardAction implements ActionInterface
      */
     public function canInteract(InteractionAction $action, string $userId, string $targetId = ''): bool
     {
-        $usedActions = Redis::get("game:$this->gameId:interactions:usedActions");
+        $usedActions = Redis::get("game:$this->gameId:interactions:usedActions") ?? [];
+        $game = Redis::get("game:$this->gameId");
+        $guarded = array_key_exists('guarded', $game) ? $game['guarded'] : '';
 
         if (in_array(InteractionAction::Guard->value, $usedActions, true)) {
             return false;
         }
 
         return $this->getRoleByUserId($userId, $this->gameId) === Role::Guard &&
-            $this->alive($targetId, $this->gameId);
+            $this->alive($targetId, $this->gameId) &&
+            $guarded !== $targetId;
     }
 
     /**
@@ -44,8 +47,10 @@ class GuardAction implements ActionInterface
      */
     public function call(string $targetId, InteractionAction $action, string $emitterId): string
     {
-        Redis::update("game:$this->gameId", function (array &$game) use ($targetId) {
+        Redis::update("game:$this->gameId", function (array $game) use ($targetId) {
             $game['guarded'] = $targetId;
+
+            return $game;
         });
 
         Redis::update("game:$this->gameId:interactions:usedActions", function (array &$usedActions) {
@@ -69,10 +74,6 @@ class GuardAction implements ActionInterface
     {
         $game = Redis::get("game:$this->gameId");
 
-        Redis::update("game:$this->gameId:interactions:usedActions", function (array $usedActions) {
-            return array_filter($usedActions, fn ($action) => $action !== InteractionAction::Guard->value);
-        });
-
         if (array_key_exists('guarded', $game)) {
             return $game['guarded'];
         }
@@ -85,6 +86,9 @@ class GuardAction implements ActionInterface
      */
     public function close(): void
     {
+        Redis::update("game:$this->gameId:interactions:usedActions", function (array $usedActions) {
+            return array_filter($usedActions, fn ($action) => $action !== InteractionAction::Guard->value);
+        });
     }
 
     /**
