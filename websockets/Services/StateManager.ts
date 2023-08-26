@@ -132,15 +132,16 @@ export class StateManager {
 			currentState =
 				typeof currentRoundObject[stateIndex] === "undefined"
 					? 0
-					: (currentRoundObject[stateIndex] as Hook).identifier;
+					: (currentRoundObject[stateIndex] as HookedState)
+							.identifier;
 		}
 
 		if (currentRound < this.LOOP_ROUND && !currentRoundObject[stateIndex]) {
 			// We are at the end of the current round
 			currentRound++;
 			roundIndex++;
-			const round = rounds[currentRound] as Hook[];
-			currentState = (round[0] as Hook).identifier;
+			const round = rounds[currentRound] as HookedState[];
+			currentState = (round[0] as HookedState).identifier;
 			stateIndex = 0;
 		} else if (
 			currentRound >= this.LOOP_ROUND &&
@@ -149,8 +150,8 @@ export class StateManager {
 			// We are at the end of the looping round
 			currentRound++;
 			roundIndex++;
-			const round = rounds[this.LOOP_ROUND] as Hook[];
-			currentState = (round[0] as Hook).identifier;
+			const round = rounds[this.LOOP_ROUND] as HookedState[];
+			currentState = (round[0] as HookedState).identifier;
 			stateIndex = 0;
 		}
 
