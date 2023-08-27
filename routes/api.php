@@ -46,13 +46,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
     Route::get('/oauth/user/discord', 'Oauth\DiscordOauthController@user');
 
-    //Route::get('/oauth/check/google', 'Oauth\GoogleOauthController@check');
-    //Route::get('/oauth/link/google', 'Oauth\GoogleOauthController@link');
-
     Route::post('/interactions/use', 'Game\GameInteractionController@interact');
 
     Route::post('/oauth/unlink/discord', 'Oauth\DiscordOauthController@unlink');
-    Route::post('/oauth/unlink/google', 'Oauth\GoogleOauthController@unlink');
 
     Route::post('/avatars', 'AvatarController@upload');
     Route::delete('/avatars', 'AvatarController@delete');

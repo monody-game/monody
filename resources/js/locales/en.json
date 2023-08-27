@@ -78,7 +78,7 @@
 		"villagers": "Villagers",
 		"werewolves": "Werewolves",
 		"loners": "Loners",
-		"game_unique_types": "Game types:",
+		"game_unique_types": "Game type:",
 		"game_combinable_types": "Additional (combinable) game types :",
 		"types": {
 			"classic_game": "Classic game",

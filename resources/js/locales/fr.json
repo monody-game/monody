@@ -78,7 +78,7 @@
 		"villagers": "Villageois",
 		"werewolves": "Loups-garous",
 		"loners": "Solitaires",
-		"game_unique_types": "Types de parties :",
+		"game_unique_types": "Type de partie :",
 		"game_combinable_types": "Types de parties supplémentaires (combinables) :",
 		"types": {
 			"classic_game": "Partie classique",

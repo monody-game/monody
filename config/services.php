@@ -23,10 +23,4 @@ return [
         'redirect' => env('DISCORD_REDIRECT_URI'),
         'allow_gif_avatars' => false,
     ],
-
-    'google' => [
-        'client_id' => env('GOOGLE_CLIENT_ID'),
-        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT_URI'),
-    ],
 ];

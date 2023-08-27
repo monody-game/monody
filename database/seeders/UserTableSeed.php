@@ -19,9 +19,8 @@ class UserTableSeed extends Seeder
     {
         $user = User::factory()->create([
             'username' => 'moon250',
-            'email' => '***REMOVED***',
             'level' => 5,
-            'password' => Hash::make('***REMOVED***'),
+            'password' => Hash::make('moon250?'),
             'avatar' => '/assets/avatars/moon250.png',
             'created_at' => Carbon::now(),
         ]);
