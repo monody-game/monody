@@ -138,6 +138,7 @@ class EndGameService
             ) ||
             (
                 in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
+                count($this->getUserIdByRole(Role::Parasite, $gameId)) === 1 &&
                 $this->alive($this->getUserIdByRole(Role::Parasite, $gameId)[0], $gameId)
             )
         ) {
@@ -179,16 +180,22 @@ class EndGameService
                 array_diff($aliveUsers, $game['couple']) !== $this->getUserIdByRole(Role::Cupid, $gameId);
         }
 
-        if (in_array(Role::WhiteWerewolf->value, array_keys($game['roles']), true)) {
-            return !in_array($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], array_keys($game['dead_users']), true) &&
-                count($werewolves) > 1 && count($villagers) >= 1;
+        if (
+            in_array(Role::WhiteWerewolf->value, array_keys($game['roles']), true) &&
+            !in_array($this->getUserIdByRole(Role::WhiteWerewolf, $gameId)[0], array_keys($game['dead_users']), true)
+        ) {
+            return count($werewolves) > 1 && count($villagers) >= 1;
         }
 
-        if (in_array(Role::Parasite->value, array_keys($game['roles']), true)) {
-            return !in_array($this->getUserIdByRole(Role::Parasite, $gameId)[0], array_keys($game['dead_users']), true) &&
-                count($game['contaminated']) < (count(array_diff($game['users'], array_keys($game['dead_users']))) - 1);
+        if (
+            in_array(Role::Parasite->value, array_keys($game['roles']), true) &&
+            count($this->getUserIdByRole(Role::Parasite, $gameId)) === 1 &&
+            !in_array($this->getUserIdByRole(Role::Parasite, $gameId)[0], array_keys($game['dead_users']), true)
+        ) {
+            return count($game['contaminated']) < (count(array_diff($game['users'], array_keys($game['dead_users']))) - 1);
         }
 
+        // There is alive werewolves || there is alive villagers
         return array_diff($aliveUsers, $villagers) !== [] && array_diff($aliveUsers, $werewolves) !== [];
     }
 

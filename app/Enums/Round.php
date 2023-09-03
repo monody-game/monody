@@ -5,8 +5,7 @@ namespace App\Enums;
 enum Round: int
 {
     case FirstRound = 0;
-    case SecondRound = 1;
-    case LoopRound = 2;
+    case LoopRound = 1;
     case EndingRound = 999999;
 
     /**
@@ -29,22 +28,6 @@ enum Round: int
                 State::InfectedWerewolf,
                 State::SurlyWerewolf,
                 State::Witch,
-                State::Parasite,
-                State::Hunter,
-                State::Day,
-                State::Vote,
-                State::Hunter,
-            ],
-            self::SecondRound => [
-                State::Night,
-                State::Guard,
-                State::Investigator,
-                State::Psychic,
-                State::Werewolf,
-                State::InfectedWerewolf,
-                State::SurlyWerewolf,
-                State::Witch,
-                State::WhiteWerewolf,
                 State::Parasite,
                 State::Hunter,
                 State::Day,

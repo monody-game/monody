@@ -27,7 +27,7 @@ export { State };
 export class StateManager {
 	private readonly io: Server;
 	private emitter: EventEmitter;
-	private LOOP_ROUND = 2;
+	private LOOP_ROUND = 1;
 	private END_ROUND = 999999;
 
 	constructor(io: Server, emitter: EventEmitter) {

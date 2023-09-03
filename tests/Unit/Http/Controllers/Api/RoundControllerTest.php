@@ -24,8 +24,6 @@ class RoundControllerTest extends TestCase
 
     private array $firstRound;
 
-    private array $secondRound;
-
     private array $loopRound;
 
     use MemberHelperTrait;
@@ -114,7 +112,6 @@ class RoundControllerTest extends TestCase
                 'data' => [
                     'rounds' => [
                         Round::FirstRound->value => $this->firstRound,
-                        Round::SecondRound->value => $this->secondRound,
                         Round::LoopRound->value => $this->loopRound,
                         Round::EndingRound->value => [
                             [
@@ -160,11 +157,6 @@ class RoundControllerTest extends TestCase
                             'identifier' => State::Day->value,
                             'raw_name' => State::Day->stringify(),
                             'duration' => State::Day->duration(),
-                        ],
-                        [
-                            'identifier' => State::Mayor->value,
-                            'raw_name' => State::Mayor->stringify(),
-                            'duration' => State::Mayor->duration(),
                         ],
                         [
                             'identifier' => State::Vote->value,
@@ -216,11 +208,6 @@ class RoundControllerTest extends TestCase
                             'duration' => State::Day->duration(),
                         ],
                         [
-                            'identifier' => State::Mayor->value,
-                            'raw_name' => State::Mayor->stringify(),
-                            'duration' => State::Mayor->duration(),
-                        ],
-                        [
                             'identifier' => State::Vote->value,
                             'raw_name' => State::Vote->stringify(),
                             'duration' => State::Vote->duration(),
@@ -270,11 +257,6 @@ class RoundControllerTest extends TestCase
                     'duration' => State::Day->duration(),
                 ],
                 [
-                    'identifier' => State::Mayor->value,
-                    'raw_name' => State::Mayor->stringify(),
-                    'duration' => State::Mayor->duration(),
-                ],
-                [
                     'identifier' => State::Vote->value,
                     'raw_name' => State::Vote->stringify(),
                     'duration' => State::Vote->duration(),
@@ -307,11 +289,6 @@ class RoundControllerTest extends TestCase
                     'duration' => State::Day->duration(),
                 ],
                 [
-                    'identifier' => State::Mayor->value,
-                    'raw_name' => State::Mayor->stringify(),
-                    'duration' => State::Mayor->duration(),
-                ],
-                [
                     'identifier' => State::Vote->value,
                     'raw_name' => State::Vote->stringify(),
                     'duration' => State::Vote->duration(),
@@ -342,11 +319,6 @@ class RoundControllerTest extends TestCase
                     'identifier' => State::Day->value,
                     'raw_name' => State::Day->stringify(),
                     'duration' => State::Day->duration(),
-                ],
-                [
-                    'identifier' => State::Mayor->value,
-                    'raw_name' => State::Mayor->stringify(),
-                    'duration' => State::Mayor->duration(),
                 ],
                 [
                     'identifier' => State::Vote->value,
@@ -396,11 +368,6 @@ class RoundControllerTest extends TestCase
                     'duration' => State::Day->duration(),
                 ],
                 [
-                    'identifier' => State::Mayor->value,
-                    'raw_name' => State::Mayor->stringify(),
-                    'duration' => State::Mayor->duration(),
-                ],
-                [
                     'identifier' => State::Vote->value,
                     'raw_name' => State::Vote->stringify(),
                     'duration' => State::Vote->duration(),
@@ -433,11 +400,6 @@ class RoundControllerTest extends TestCase
                     'identifier' => State::Day->value,
                     'raw_name' => State::Day->stringify(),
                     'duration' => State::Day->duration(),
-                ],
-                [
-                    'identifier' => State::Mayor->value,
-                    'raw_name' => State::Mayor->stringify(),
-                    'duration' => State::Mayor->duration(),
                 ],
                 [
                     'identifier' => State::Vote->value,
@@ -498,11 +460,6 @@ class RoundControllerTest extends TestCase
                     'duration' => State::Day->duration(),
                 ],
                 [
-                    'identifier' => State::Mayor->value,
-                    'raw_name' => State::Mayor->stringify(),
-                    'duration' => State::Mayor->duration(),
-                ],
-                [
                     'identifier' => State::Vote->value,
                     'raw_name' => State::Vote->stringify(),
                     'duration' => State::Vote->duration(),
@@ -538,11 +495,6 @@ class RoundControllerTest extends TestCase
                     'duration' => State::Day->duration(),
                 ],
                 [
-                    'identifier' => State::Mayor->value,
-                    'raw_name' => State::Mayor->stringify(),
-                    'duration' => State::Mayor->duration(),
-                ],
-                [
                     'identifier' => State::Vote->value,
                     'raw_name' => State::Vote->stringify(),
                     'duration' => State::Vote->duration(),
@@ -574,11 +526,6 @@ class RoundControllerTest extends TestCase
                     'duration' => State::Day->duration(),
                 ],
                 [
-                    'identifier' => State::Mayor->value,
-                    'raw_name' => State::Mayor->stringify(),
-                    'duration' => State::Mayor->duration(),
-                ],
-                [
                     'identifier' => State::Vote->value,
                     'raw_name' => State::Vote->stringify(),
                     'duration' => State::Vote->duration(),
@@ -589,7 +536,6 @@ class RoundControllerTest extends TestCase
     public function testRoundsWithRandomCoupleAndCupid()
     {
         $user = User::factory()->createOne();
-        $interactionService = app(InteractionService::class);
 
         $game = $this
             ->actingAs($user)
@@ -646,6 +592,11 @@ class RoundControllerTest extends TestCase
                     'identifier' => State::Day->value,
                     'raw_name' => State::Day->stringify(),
                     'duration' => State::Day->duration(),
+                ],
+                [
+                    'identifier' => State::Mayor->value,
+                    'raw_name' => State::Mayor->stringify(),
+                    'duration' => State::Mayor->duration(),
                 ],
                 [
                     'identifier' => State::Vote->value,
@@ -705,8 +656,24 @@ class RoundControllerTest extends TestCase
             ],
         ];
 
-        $this->secondRound = [
+        $this->firstRound = [
+            [
+                'identifier' => State::Waiting->value,
+                'raw_name' => State::Waiting->stringify(),
+                'duration' => State::Waiting->duration(),
+            ],
+            [
+                'identifier' => State::Starting->value,
+                'raw_name' => State::Starting->stringify(),
+                'duration' => State::Starting->duration(),
+            ],
+            [
+                'identifier' => State::Roles->value,
+                'raw_name' => State::Roles->stringify(),
+                'duration' => State::Roles->duration(),
+            ],
             ...$this->loopRound,
+
             [
                 'identifier' => State::Mayor->value,
                 'raw_name' => State::Mayor->stringify(),
@@ -726,25 +693,6 @@ class RoundControllerTest extends TestCase
                 'raw_name' => State::Vote->stringify(),
                 'duration' => State::Vote->duration(),
             ],
-        ];
-
-        $this->firstRound = [
-            [
-                'identifier' => State::Waiting->value,
-                'raw_name' => State::Waiting->stringify(),
-                'duration' => State::Waiting->duration(),
-            ],
-            [
-                'identifier' => State::Starting->value,
-                'raw_name' => State::Starting->stringify(),
-                'duration' => State::Starting->duration(),
-            ],
-            [
-                'identifier' => State::Roles->value,
-                'raw_name' => State::Roles->stringify(),
-                'duration' => State::Roles->duration(),
-            ],
-            ...$this->loopRound,
         ];
     }
 }
