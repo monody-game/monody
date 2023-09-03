@@ -48,7 +48,7 @@
 						</div>
 						<div
 							:title="$t('new_game.types.private_game')"
-							v-if="(gameStore.type & (1 << 3)) === 1 << 3"
+							v-if="(gameStore.type & (1 << 2)) === 1 << 2"
 						>
 							<svg>
 								<use href="/sprite.svg#private" />
