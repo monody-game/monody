@@ -162,7 +162,8 @@
 		"second": "Le loup blanc est un traître parmi les loups, il doit gagner seul.",
 		"third": "Le garde ne peut protéger le même joueur deux tours d'affilée.",
 		"fourth": "Le loup malade ne peut infecter qu'un joueur par partie.",
-		"fifth": "En cas d'égalité pendant le vote, le joueur voté par le maire est désigné."
+		"fifth": "En cas d'égalité pendant le vote, le joueur voté par le maire est désigné.",
+		"death": "Vous êtes mort, les joueurs encore en vie ne voient pas vos messages."
 	},
 	"audio_management": {
 		"title": "Gestion de l'audio",

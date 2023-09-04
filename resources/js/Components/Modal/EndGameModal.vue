@@ -14,10 +14,7 @@
 		</h3>
 		<p>
 			{{ $t("end_game.content") }}
-			<span class="bold">{{ stringifiedTeam.toLowerCase() }}</span> :
-			{{
-				winners.map((user) => gameStore.getPlayerByID(user).username).join(", ")
-			}}
+			<span class="bold">{{ stringifiedTeam.toLowerCase() }}</span>
 		</p>
 		<p class="muted">{{ $t("end_game.close") }}</p>
 	</BaseModal>
@@ -29,7 +26,6 @@ import { useStore } from "../../stores/game.js";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
-const gameStore = useStore();
 const { t } = useI18n();
 const route = useRoute();
 

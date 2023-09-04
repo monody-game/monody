@@ -5,7 +5,7 @@
 		:class="{ 'information-bubble_main_out': out }"
 	>
 		<svg>
-			<use href="/sprite.svg#info" />
+			<use :href="'/sprite.svg#' + (gameStore.dead_users.includes(userStore.id) ? 'death' : 'info')" />
 		</svg>
 		<p>{{ content }}</p>
 	</div>
@@ -15,6 +15,8 @@
 import { onDeactivated, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
+import { useStore as useGameStore } from "../stores/game.js";
+import { useStore as useUserStore } from "../stores/user.js";
 
 const { t } = useI18n();
 
@@ -31,6 +33,8 @@ const out = ref(false);
 let timeout = null;
 let halt = false;
 const route = useRoute();
+const gameStore = useGameStore();
+const userStore = useUserStore();
 
 function cycle(
 	contentList,
@@ -88,6 +92,12 @@ window.Echo.join(`game.${route.params.id}`)
 	.listen(".game.data", async ({ data }) => {
 		startCycle(data.payload.state.status);
 	});
+
+gameStore.$subscribe((mutation, state) => {
+	if (state.dead_users.includes(userStore.id)) {
+		content.value = t('game_info_bubble.death')
+	}
+})
 
 onDeactivated(() => clearTimeout(timeout));
 </script>

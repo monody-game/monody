@@ -162,7 +162,8 @@
 		"second": "The white wolf is a traitor among wolves, he must win alone.",
 		"third": "The guard cannot protect the same player two rounds in a row.",
 		"fourth": "The infected werewolf can only infect one player per game.",
-		"fifth": "In the event of a tie during the vote, the player voted by the mayor is designated."
+		"fifth": "In the event of a tie during the vote, the player voted by the mayor is designated.",
+		"death": "You're dead, living players can't see your messages."
 	},
 	"audio_management": {
 		"title": "Audio management",

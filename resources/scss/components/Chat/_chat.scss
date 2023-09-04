@@ -78,9 +78,11 @@
 	flex-direction: column;
 	align-items: center;
 	flex: 1;
+
 	padding-top: space(2);
 	padding-left: space(2);
 	padding-right: space(2);
+
 	overflow-y: scroll;
 	overflow-anchor: auto;
 	scrollbar-width: thin;
@@ -103,6 +105,7 @@
 	border-top: solid 2px rgba(var(--unchanged-color), 10%);
 	justify-content: space-between;
 	background: var(--chat-send-background);
+	color: var(--chat-send-text);
 
 	& input {
 		font-family: inherit;
@@ -144,7 +147,7 @@
 	border: none;
 	border-left: solid 2px rgba(var(--unchanged-color), 10%);
 	cursor: pointer;
-	color: rgba(var(--unchanged-color), 60%);
+	color: var(--chat-send-text);
 	transition: all 0.2s;
 
 	&.locked {
@@ -161,7 +164,7 @@
 	color: rgba(var(--unchanged-color), 80%);
 }
 
-.night .chat__send-button:hover {
+.night .chat__send-button:not(.locked):hover {
 	background-color: var(--dark-background-hover);
 	color: rgba(var(--unchanged-color), 100%);
 }

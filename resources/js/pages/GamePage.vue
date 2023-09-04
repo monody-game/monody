@@ -1,5 +1,5 @@
 <template>
-	<div class="game-page__container day">
+	<div class="game-page__container day" ref="gamePageContainer">
 		<div class="game-page__header">
 			<a class="game-page__home-link" @click.prevent="disconnect()">
 				<svg
@@ -130,6 +130,7 @@ const assignedRole = ref(0);
 const win = ref(true);
 const winners = ref([]);
 const winningTeam = ref("1");
+const gamePageContainer = ref();
 
 const actions = await window.JSONFetch("/interactions/actions", "GET");
 store.availableActions = actions.data.actions;
@@ -207,6 +208,10 @@ window.Echo.join(`game.${gameId}`)
 		}
 
 		store.dead_users.push(killed);
+
+		if (killed === userStore.id && gamePageContainer !== null) {
+			gamePageContainer.value.dataset.isDead = "true";
+		}
 	})
 	.listen(".game.mayor", (e) => {
 		store.mayor = e.data.payload.mayor;

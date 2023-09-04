@@ -1,14 +1,12 @@
 @use "../../tools/functions" as *;
 
 .share-page__header {
-	position: relative;
 	width: 100%;
-
-	svg {
-		position: absolute;
-		right: 0;
-		top: 0;
-	}
+	padding-inline: space(2);
+	display: grid;
+	grid-template-columns: 1fr 16px;
+	gap: space(3);
+	align-items: center;
 }
 
 .share-page__container {
