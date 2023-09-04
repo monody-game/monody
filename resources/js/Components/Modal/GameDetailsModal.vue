@@ -25,7 +25,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="game-details__group">
+				<div class="game-details__group" v-if="!(gameStore.type === 1 << 0)">
 					{{ $t("game_details.types") }}
 					<div class="game-details__types">
 						<div
