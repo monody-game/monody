@@ -5,7 +5,12 @@
 		:class="{ 'information-bubble_main_out': out }"
 	>
 		<svg>
-			<use :href="'/sprite.svg#' + (gameStore.dead_users.includes(userStore.id) ? 'death' : 'info')" />
+			<use
+				:href="
+					'/sprite.svg#' +
+					(gameStore.dead_users.includes(userStore.id) ? 'death' : 'info')
+				"
+			/>
 		</svg>
 		<p>{{ content }}</p>
 	</div>
@@ -95,9 +100,9 @@ window.Echo.join(`game.${route.params.id}`)
 
 gameStore.$subscribe((mutation, state) => {
 	if (state.dead_users.includes(userStore.id)) {
-		content.value = t('game_info_bubble.death')
+		content.value = t("game_info_bubble.death");
 	}
-})
+});
 
 onDeactivated(() => clearTimeout(timeout));
 </script>

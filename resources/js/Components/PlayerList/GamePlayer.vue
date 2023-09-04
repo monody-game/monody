@@ -94,6 +94,13 @@
 					<use href="/sprite.svg#investigator_crossed" />
 				</svg>
 			</span>
+			<span
+				v-if="playerRole !== null"
+				:title="playerRole.display_name"
+				class="player__role"
+			>
+				<img :src="playerRole.image" alt="" />
+			</span>
 		</div>
 		<p
 			class="player__username"
@@ -140,6 +147,7 @@ const isDisconnected = ref(false);
 const isOwner = ref(false);
 const isCompared = ref(false);
 
+const playerRole = ref(null);
 const votedBy = ref(props.player.voted_by);
 const interactionType = ref("");
 const player = ref();
@@ -443,6 +451,7 @@ const send = async function (votingUser, votedUser) {
 			`/roles/get/${res.data.interaction.response}`,
 			"GET",
 		);
+		playerRole.value = role.data.role;
 		chatStore.send(
 			t("player.spec_response", {
 				username: props.player.username,

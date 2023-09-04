@@ -133,6 +133,17 @@
 	}
 }
 
+.player__role {
+	position: absolute;
+	left: 2px;
+	bottom: 0;
+
+	img {
+		height: 24px;
+		width: 24px;
+	}
+}
+
 .player__is-wolf {
 	@extend .player__badge;
 	background-color: #e50000;

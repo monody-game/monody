@@ -82,7 +82,7 @@ class GameInteractionController extends Controller
         return match ($result) {
             $this->service::USER_CANNOT_USE_THIS_INTERACTION => new JsonApiResponse(['message' => "You cannot use the action $action->value."], Status::FORBIDDEN),
             $this->service::INVALID_ACTION_ON_INTERACTION => new JsonApiResponse(['message' => "You cannot use the action $action->value on the interaction $id."], Status::BAD_REQUEST),
-            $this->service::INTERACTION_DOES_NOT_EXISTS => new JsonApiResponse(['message' => "Interaction {$id} does not exist."], Status::BAD_REQUEST),
+            $this->service::INTERACTION_DOES_NOT_EXISTS => new JsonApiResponse(['message' => "Interaction $id does not exist."], Status::BAD_REQUEST),
             default => new JsonApiResponse([
                 'interaction' => [
                     'action' => $action->value,
