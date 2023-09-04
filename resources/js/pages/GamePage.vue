@@ -188,7 +188,7 @@ window.Echo.join(`game.${gameId}`)
 		const role = res.data.role;
 		store.setRole(userStore.id, role);
 		assignedRole.value = role.id;
-		modalStore.close()
+		modalStore.close();
 		modalStore.opennedModal = "role-assignation";
 		assignationPopupStore.isOpenned = true;
 

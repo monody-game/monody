@@ -323,7 +323,7 @@ class InteractionServiceTest extends TestCase
         Redis::set("game:{$this->game['id']}:members", $members);
         Redis::set("game:{$this->game['id']}:state", [
             'status' => State::Vote->value,
-            'startTimestamp' => Date::now()->subSeconds(50)->timestamp,
+            'startTimestamp' => Date::now()->subSeconds(50)->timestamp * 1000,
             'counterDuration' => State::Vote->duration(),
             'round' => 1,
         ]);

@@ -84,6 +84,10 @@ class JoinGameController extends Controller
 
         $game = Redis::get("game:$gameId");
 
+        if (!$game) {
+            return new JsonApiResponse(status: Status::NO_CONTENT);
+        }
+
         if ($game['is_started'] === false) {
             // We remove the user id from saved users to prevent issues with roles that rely on the number of players
             $game['users'] = array_diff($game['users'], [$user->id]);

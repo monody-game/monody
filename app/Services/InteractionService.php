@@ -190,16 +190,22 @@ class InteractionService
         $game = Redis::get("game:$gameId");
         $state = Redis::get("game:$gameId:state");
 
-        // Skip the time if the interaction has already been used, and if the time remaining is greater than 30s
+        // Skip the time if the interaction has already been used, and if the time remaining is greater than skip duration
         if (
             $service->isSingleUse() ||
             (array_key_exists('used', $interaction) && $interaction['used']) &&
-            $state['startTimestamp'] - (Date::now()->timestamp - $state['counterDuration']) > 30
+            /** @phpstan-ignore-next-line Date::now()->timestamp can be false but like, hey... when would it */
+            $state['counterDuration'] - (Date::now()->timestamp - $state['startTimestamp'] / 1000) > State::from($state['status'])->getTimeSkip()
         ) {
             return true;
         }
 
-        if (in_array($interaction['type'], [Interaction::Vote->value, Interaction::Mayor->value, Interaction::Werewolves->value], true)) {
+        // If majority has voted and the time remaining is greater than skip duration
+        if (
+            in_array($interaction['type'], [Interaction::Vote->value, Interaction::Mayor->value, Interaction::Werewolves->value], true) &&
+            /** @phpstan-ignore-next-line Date::now()->timestamp can be false but like, hey... when would it */
+            $state['counterDuration'] - (Date::now()->timestamp - $state['startTimestamp'] / 1000) > State::from($state['status'])->getTimeSkip()
+        ) {
             return $this->voteService->hasMajorityVoted($game, $interaction['type']);
         }
 
