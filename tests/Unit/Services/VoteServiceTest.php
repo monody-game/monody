@@ -7,7 +7,7 @@ use App\Events\GameKill;
 use App\Facades\Redis;
 use App\Http\Middleware\RestrictToLocalNetwork;
 use App\Models\User;
-use App\Services\VoteService;
+use App\Services\Vote\VoteService;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;

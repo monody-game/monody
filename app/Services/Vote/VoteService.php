@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Vote;
 
 use App\Enums\Team;
 use App\Events\GameKill;

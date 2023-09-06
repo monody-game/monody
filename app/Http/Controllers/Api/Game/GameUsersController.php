@@ -15,7 +15,7 @@ use App\Http\Requests\UserJoinedVocalChannelRequest;
 use App\Http\Requests\UserRoleRequest;
 use App\Http\Responses\JsonApiResponse;
 use App\Models\User;
-use App\Services\VoteService;
+use App\Services\Vote\VoteService;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Http\Request;

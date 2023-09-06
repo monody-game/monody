@@ -45,4 +45,7 @@ enum InteractionAction: string
 
     // Investigator
     case Compare = 'investigator:compare';
+
+    // Skip
+    case Skip = 'skip:skip';
 }

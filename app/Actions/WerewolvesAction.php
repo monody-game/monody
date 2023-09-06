@@ -7,7 +7,7 @@ use App\Enums\State;
 use App\Enums\Team;
 use App\Events\InteractionUpdate;
 use App\Facades\Redis;
-use App\Services\VoteService;
+use App\Services\Vote\VoteService;
 use App\Traits\MemberHelperTrait;
 
 class WerewolvesAction implements ActionInterface

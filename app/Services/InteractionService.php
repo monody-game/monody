@@ -12,6 +12,7 @@ use App\Actions\InvestigatorAction;
 use App\Actions\MayorAction;
 use App\Actions\ParasiteAction;
 use App\Actions\PsychicAction;
+use App\Actions\SkipAction;
 use App\Actions\SurlyWerewolfAction;
 use App\Actions\VoteAction;
 use App\Actions\WerewolvesAction;
@@ -22,6 +23,7 @@ use App\Enums\InteractionAction;
 use App\Enums\State;
 use App\Events\Websockets\TimeSkip;
 use App\Facades\Redis;
+use App\Services\Vote\VoteService;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Str;
 
@@ -254,6 +256,7 @@ class InteractionService
             Interaction::Guard => new GuardAction($gameId),
             Interaction::Hunter => new HunterAction($gameId),
             Interaction::Investigator => app(InvestigatorAction::class, ['gameId' => $gameId]),
+            Interaction::Skip => app(SkipAction::class, ['gameId' => $gameId])
         };
     }
 }

@@ -8,7 +8,7 @@ use App\Enums\Role;
 use App\Facades\Redis;
 use App\Models\User;
 use App\Services\InteractionService;
-use App\Services\VoteService;
+use App\Services\Vote\VoteService;
 use Tests\TestCase;
 
 class InvestigatorActionTest extends TestCase

@@ -64,6 +64,13 @@ export default {
 			return true;
 		}
 
+		await InteractionService.openInteraction(io, channel, "skip");
+
+		return false;
+	},
+	async after(io: Server, channel: string) {
+		await InteractionService.closeInteraction(io, channel, "skip");
+
 		return false;
 	},
 };

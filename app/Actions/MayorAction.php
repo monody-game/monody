@@ -4,7 +4,7 @@ namespace App\Actions;
 
 use App\Enums\InteractionAction;
 use App\Events\InteractionUpdate;
-use App\Services\MayorService;
+use App\Services\Vote\MayorService;
 use App\Traits\MemberHelperTrait;
 
 class MayorAction implements ActionInterface

@@ -6,7 +6,7 @@ use App\Enums\InteractionAction;
 use App\Enums\Role;
 use App\Events\InteractionUpdate;
 use App\Facades\Redis;
-use App\Services\InvestigatorService;
+use App\Services\Vote\InvestigatorService;
 use App\Traits\MemberHelperTrait;
 
 class InvestigatorAction implements ActionInterface

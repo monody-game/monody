@@ -8,7 +8,7 @@ use App\Enums\Role;
 use App\Events\CouplePaired;
 use App\Events\InteractionUpdate;
 use App\Facades\Redis;
-use App\Services\VoteService;
+use App\Services\Vote\VoteService;
 use App\Traits\GameHelperTrait;
 use App\Traits\MemberHelperTrait;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Vote;
 
 use App\Events\MayorElected;
 use App\Facades\Redis;

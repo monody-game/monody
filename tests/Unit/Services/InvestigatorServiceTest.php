@@ -5,7 +5,7 @@ namespace Services;
 use App\Enums\Role;
 use App\Facades\Redis;
 use App\Models\User;
-use App\Services\InvestigatorService;
+use App\Services\Vote\InvestigatorService;
 use Tests\TestCase;
 
 class InvestigatorServiceTest extends TestCase

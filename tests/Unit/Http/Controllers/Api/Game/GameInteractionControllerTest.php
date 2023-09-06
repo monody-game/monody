@@ -97,6 +97,7 @@ class GameInteractionControllerTest extends TestCase
         $expectedAuthorized = [
             Interaction::Vote->name => '*',
             Interaction::Mayor->name => '*',
+            Interaction::Skip->name => '*',
             Interaction::Witch->name => json_encode(['superWitch']),
             Interaction::Psychic->name => json_encode([$this->user->id]),
             Interaction::Werewolves->name => json_encode(['surlyWerewolf', 'whiteWerewolf', 'superSickWerewolf', $this->secondUser->id, 'superWerewolf']),

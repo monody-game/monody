@@ -4,7 +4,7 @@ namespace App\Actions;
 
 use App\Enums\InteractionAction;
 use App\Events\InteractionUpdate;
-use App\Services\VoteService;
+use App\Services\Vote\VoteService;
 use App\Traits\MemberHelperTrait;
 
 class VoteAction implements ActionInterface

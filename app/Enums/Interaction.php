@@ -18,6 +18,7 @@ enum Interaction: string
     case Guard = 'guard';
     case Hunter = 'hunter';
     case Investigator = 'investigator';
+    case Skip = 'skip';
 
     public static function getActions(): array
     {

@@ -10,7 +10,7 @@ use App\Events\MayorElected;
 use App\Facades\Redis;
 use App\Models\User;
 use App\Services\InteractionService;
-use App\Services\VoteService;
+use App\Services\Vote\VoteService;
 use App\Traits\MemberHelperTrait;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
