@@ -90,8 +90,7 @@ html.dark .game-type__wrapper .note {
 
 @media screen and (max-width: 700px) {
 	.game-type__selection-wrapper {
-		flex-direction: column;
-		gap: space(2);
+		grid-template-columns: 1fr;
 
 		.game-type__item {
 			max-width: unset;
