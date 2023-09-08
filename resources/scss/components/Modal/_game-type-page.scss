@@ -27,7 +27,9 @@
 
 		outline: var(--border-secondary) 2px solid;
 		border-radius: 8px;
-		transition: background-color 0.2s;
+		transition:
+			background-color 0.2s,
+			outline 0.2s;
 
 		cursor: pointer;
 	}
