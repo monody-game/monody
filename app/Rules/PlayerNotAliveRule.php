@@ -7,7 +7,7 @@ use App\Traits\RegisterHelperTrait;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\Rule;
 
-class PlayerNotAliveRule implements Rule, DataAwareRule
+class PlayerNotAliveRule implements DataAwareRule, Rule
 {
     use MemberHelperTrait;
     use RegisterHelperTrait;

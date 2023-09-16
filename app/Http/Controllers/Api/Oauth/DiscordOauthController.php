@@ -84,7 +84,7 @@ final class DiscordOauthController extends Controller
         /** @var User $user behind api guard */
         $user = $request->user();
 
-        $user->avatar = '/images/avatar/default.png' === $user->avatar && $discordUser->getAvatar() !== null ? $discordUser->getAvatar() : $user->avatar;
+        $user->avatar = $user->avatar === '/images/avatar/default.png' && $discordUser->getAvatar() !== null ? $discordUser->getAvatar() : $user->avatar;
         $user->discord_linked_at = Carbon::now();
         $user->discord_id = $discordUser->getId();
         $user->discord_token = $discordUser->accessTokenResponseBody['access_token'];

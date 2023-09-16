@@ -55,7 +55,7 @@ class VoteService
 
         array_splice($votes[$userId], $userIndex, 1);
 
-        if ([] === $votes[$userId]) {
+        if ($votes[$userId] === []) {
             unset($votes[$userId]);
         }
 
@@ -78,7 +78,7 @@ class VoteService
             $mayor = $game['mayor'];
         }
 
-        if ([] === $votes) {
+        if ($votes === []) {
             if ($context === 'vote') {
                 GameKill::dispatch([
                     'killedUser' => null,

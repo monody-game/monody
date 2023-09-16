@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 
 class GameSharingController extends Controller
 {
-    use RegisterHelperTrait, GameHelperTrait;
+    use GameHelperTrait, RegisterHelperTrait;
 
     public function index(Request $request): JsonApiResponse
     {

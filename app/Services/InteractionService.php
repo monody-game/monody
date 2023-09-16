@@ -197,7 +197,7 @@ class InteractionService
             $service->isSingleUse() ||
             (array_key_exists('used', $interaction) && $interaction['used']) &&
             /** @phpstan-ignore-next-line Date::now()->timestamp can be false but like, hey... when would it */
-            $state['counterDuration'] - (Date::now()->timestamp - $state['startTimestamp'] / 1000) > State::from($state['status'])->getTimeSkip()
+            State::from($state['status'])->getTimeSkip() < $state['counterDuration'] - (Date::now()->timestamp - $state['startTimestamp'] / 1000)
         ) {
             return true;
         }
@@ -206,7 +206,7 @@ class InteractionService
         if (
             in_array($interaction['type'], [Interaction::Vote->value, Interaction::Mayor->value, Interaction::Werewolves->value], true) &&
             /** @phpstan-ignore-next-line Date::now()->timestamp can be false but like, hey... when would it */
-            $state['counterDuration'] - (Date::now()->timestamp - $state['startTimestamp'] / 1000) > State::from($state['status'])->getTimeSkip()
+            State::from($state['status'])->getTimeSkip() < $state['counterDuration'] - (Date::now()->timestamp - $state['startTimestamp'] / 1000)
         ) {
             return $this->voteService->hasMajorityVoted($game, $interaction['type']);
         }

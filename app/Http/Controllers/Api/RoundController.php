@@ -15,7 +15,7 @@ use App\Traits\MemberHelperTrait;
 
 class RoundController extends Controller
 {
-    use MemberHelperTrait, GameHelperTrait;
+    use GameHelperTrait, MemberHelperTrait;
 
     public function all(string $gameId = null): JsonApiResponse
     {

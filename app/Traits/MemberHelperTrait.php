@@ -37,7 +37,7 @@ trait MemberHelperTrait
         $members = $this->getMembers($gameId);
         $members = array_filter($members, fn ($member) => $member['user_id'] === $userId);
 
-        if (0 === count($members)) {
+        if (count($members) === 0) {
             return false;
         }
 

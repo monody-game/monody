@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 use function in_array;
 
-class InGameRule implements Rule, DataAwareRule
+class InGameRule implements DataAwareRule, Rule
 {
     /**
      * @var string[]
@@ -31,13 +31,13 @@ class InGameRule implements Rule, DataAwareRule
      */
     public function passes($attribute, $value): bool
     {
-        $gameId = 'gameId' === $attribute ? $value : $this->data['gameId'];
+        $gameId = $attribute === 'gameId' ? $value : $this->data['gameId'];
 
         if (!Redis::exists("game:$gameId")) {
             return false;
         }
 
-        if (null === $this->userIdField) {
+        if ($this->userIdField === null) {
             $userId = Auth::user()?->getAuthIdentifier();
         } else {
             $userId = $attribute === $this->userIdField ? $value : $this->data[$this->userIdField];

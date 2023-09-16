@@ -19,7 +19,7 @@ use Illuminate\Foundation\Testing\Concerns\InteractsWithRedis;
 
 class EndGameService
 {
-    use MemberHelperTrait, GameHelperTrait, InteractsWithRedis;
+    use GameHelperTrait, InteractsWithRedis, MemberHelperTrait;
 
     public function __construct(
         private readonly ExpService $expService,

@@ -14,7 +14,7 @@ use App\Traits\MemberHelperTrait;
 
 class CupidAction implements ActionInterface
 {
-    use MemberHelperTrait, GameHelperTrait;
+    use GameHelperTrait, MemberHelperTrait;
 
     private bool $canPair = true;
 
