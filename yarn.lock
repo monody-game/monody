@@ -932,10 +932,10 @@ keyv@^4.5.3:
   dependencies:
     json-buffer "3.0.1"
 
-laravel-echo@^1.15.1:
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/laravel-echo/-/laravel-echo-1.15.2.tgz#f7ed0719862ede7c701e510956d0b48613d5377c"
-  integrity sha512-FpbYv4hnAE/ck1ow2aLlx3wBuDRMNWBcSCpFmh9EkUxxBYZoaRt8rB4pKPnfAESvcaguohEesQ1naNM81zCWPQ==
+laravel-echo@^1.15.3:
+  version "1.15.3"
+  resolved "https://registry.yarnpkg.com/laravel-echo/-/laravel-echo-1.15.3.tgz#462aea1e6930731c95af2eaac136a3c01aa984fe"
+  integrity sha512-SRXzccaat6w4qKgZ4/rjFKr3nJfVxB+ly4V0MEJNIF1/TpERNXepo3uk7NnOjBGsiV/np1fl2XitAzW4Sa1s/w==
 
 laravel-vite-plugin@^0.8.0:
   version "0.8.0"
