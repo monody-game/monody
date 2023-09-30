@@ -25,6 +25,7 @@ enum State: int
 
     case Day = 6;
     case Mayor = 12;
+    case MayorSuccession = 20;
     case Vote = 7;
 
     case End = 8;
@@ -54,6 +55,7 @@ enum State: int
             self::Parasite => Role::Parasite->name(),
             self::Day => 'day',
             self::Mayor => 'mayor',
+            self::MayorSuccession => 'mayor_succession',
             self::Vote => 'vote',
             self::End => 'end',
             self::Hunter => Role::Hunter->name(),
@@ -83,6 +85,7 @@ enum State: int
             self::Parasite => __('enums.state.parasite'),
             self::Day => __('enums.state.day'),
             self::Mayor => __('enums.state.mayor'),
+            self::MayorSuccession => __('enums.state.mayor_succession'),
             self::Vote => __('enums.state.vote'),
             self::End => __('enums.state.end'),
             self::Hunter => __('enums.state.hunter'),
@@ -95,7 +98,7 @@ enum State: int
     public function background(): string
     {
         return match ($this) {
-            self::Waiting, self::Starting, self::Roles, self::Day, self::Mayor, self::Vote, self::End, self::Hunter => 'day',
+            self::Waiting, self::Starting, self::Roles, self::Day, self::Mayor, self::MayorSuccession, self::Vote, self::End, self::Hunter => 'day',
             default => 'night',
         };
     }
@@ -139,6 +142,7 @@ enum State: int
             self::Roles, self::Werewolf, self::InfectedWerewolf, self::WhiteWerewolf, self::Psychic, self::Witch, self::Parasite, self::Cupid, self::Guard, self::RandomCoupleSelection => self::readeableStringify(),
             self::Vote => __('enums.state.vote_message'),
             self::Mayor => __('enums.state.mayor_message'),
+            self::MayorSuccession => __('enums.state.mayor_succession_message'),
             self::Hunter => __('enums.state.hunter_message'),
             default => null
         };
@@ -150,7 +154,7 @@ enum State: int
     public function isRoleState(): bool
     {
         return match ($this) {
-            self::Waiting, self::Starting, self::Roles, self::End, self::Day, self::Mayor, self::Night, self::Vote, self::RandomCoupleSelection => false,
+            self::Waiting, self::Starting, self::Roles, self::End, self::Day, self::Mayor, self::MayorSuccession, self::Night, self::Vote, self::RandomCoupleSelection => false,
             default => true
         };
     }

@@ -119,6 +119,7 @@ class GameInteractionController extends Controller
             Interaction::Guard => $this->getUserIdByRole(Role::Guard, $gameId),
             Interaction::Hunter => $this->getUserIdByRole(Role::Hunter, $gameId),
             Interaction::Investigator => $this->getUserIdByRole(Role::Investigator, $gameId),
+            Interaction::MayorSuccession => [$game['mayor']],
             default => '*'
         };
     }

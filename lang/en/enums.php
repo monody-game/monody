@@ -65,12 +65,14 @@ return [
         'parasite' => 'Parasite\'s turn',
         'day' => 'Day',
         'mayor' => 'Mayor\'s election',
+        'mayor_message' => 'Start of the mayor\'s election. Introduce yourself!',
+        'mayor_succession' => 'Mayor\'s designation',
+        'mayor_succession_message' => 'The mayor will choose his successor ...',
         'vote' => 'Vote',
+        'vote_message' => 'Start of voting',
         'end' => 'End of game',
         'hunter' => 'Hunter\'s turn',
         'hunter_message' => 'Hunter will shoot a player for revenge!',
-        'mayor_message' => 'Start of the mayor\'s election. Introduce yourself!',
-        'vote_message' => 'Start of voting',
     ],
     'roles' => [
         'werewolf' => [
