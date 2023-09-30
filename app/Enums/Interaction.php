@@ -13,6 +13,7 @@ enum Interaction: string
     case SurlyWerewolf = 'surly_werewolf';
     case Parasite = 'parasite';
     case Mayor = 'mayor';
+    case MayorSuccession = 'mayor_succession';
     case Angel = 'angel';
     case Cupid = 'cupid';
     case Guard = 'guard';
@@ -25,6 +26,7 @@ enum Interaction: string
         return [
             self::Vote->value => InteractionAction::Vote->value,
             self::Mayor->value => InteractionAction::Elect->value,
+            self::MayorSuccession->value => InteractionAction::Designate->value,
             self::Witch->value => [InteractionAction::RevivePotion->value, InteractionAction::KillPotion->value, InteractionAction::WitchSkip->value],
             self::Psychic->value => InteractionAction::Spectate->value,
             self::Werewolves->value => InteractionAction::Kill->value,

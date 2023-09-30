@@ -8,6 +8,7 @@ enum InteractionAction: string
     case Vote = 'vote';
 
     case Elect = 'mayor:vote';
+    case Designate = 'mayor_succession:designate';
 
     // Psychic
     case Spectate = 'psychic:spectate';

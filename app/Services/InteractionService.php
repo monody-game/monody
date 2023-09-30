@@ -10,6 +10,7 @@ use App\Actions\HunterAction;
 use App\Actions\InfectedWerewolfAction;
 use App\Actions\InvestigatorAction;
 use App\Actions\MayorAction;
+use App\Actions\MayorSuccessionAction;
 use App\Actions\ParasiteAction;
 use App\Actions\PsychicAction;
 use App\Actions\SkipAction;
@@ -249,6 +250,7 @@ class InteractionService
             Interaction::InfectedWerewolf => new InfectedWerewolfAction($gameId),
             Interaction::WhiteWerewolf => new WhiteWerewolfAction($gameId),
             Interaction::Mayor => app(MayorAction::class, ['gameId' => $gameId]),
+            Interaction::MayorSuccession => new MayorSuccessionAction($gameId),
             Interaction::Angel => app(AngelAction::class, ['gameId' => $gameId]),
             Interaction::SurlyWerewolf => new SurlyWerewolfAction($gameId),
             Interaction::Parasite => new ParasiteAction($gameId),
@@ -256,7 +258,7 @@ class InteractionService
             Interaction::Guard => new GuardAction($gameId),
             Interaction::Hunter => new HunterAction($gameId),
             Interaction::Investigator => app(InvestigatorAction::class, ['gameId' => $gameId]),
-            Interaction::Skip => app(SkipAction::class, ['gameId' => $gameId])
+            Interaction::Skip => app(SkipAction::class, ['gameId' => $gameId]),
         };
     }
 }
