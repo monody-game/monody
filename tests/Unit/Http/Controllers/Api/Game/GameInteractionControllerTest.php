@@ -110,6 +110,7 @@ class GameInteractionControllerTest extends TestCase
             Interaction::Guard->name => json_encode(['guard']),
             Interaction::Hunter->name => json_encode(['hunter']),
             Interaction::Investigator->name => json_encode(['investigator']),
+            Interaction::MayorSuccession->name => json_encode(['mayor']),
         ];
 
         foreach (Interaction::cases() as $interaction) {
@@ -284,6 +285,7 @@ class GameInteractionControllerTest extends TestCase
         $this->secondUser->save();
 
         $additionnalKeys = array_merge($this->game, [
+            'mayor' => 'mayor',
             'assigned_roles' => [
                 $this->secondUser->id => Role::Werewolf,
                 'superWerewolf' => Role::Werewolf,
@@ -313,6 +315,7 @@ class GameInteractionControllerTest extends TestCase
                 'guard',
                 'hunter',
                 'investigator',
+                'mayor',
             ],
             'is_started' => true,
         ]);

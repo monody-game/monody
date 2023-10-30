@@ -65,12 +65,14 @@ return [
         'parasite' => 'Tour du parasite',
         'day' => 'Jour',
         'mayor' => 'Élection du maire',
+        'mayor_message' => 'Début de l\'élection du maire. Présentez vous !',
+        'mayor_succession' => 'Désignation du maire',
+        'mayor_succession_message' => 'Le maire va choisir son successeur ...',
         'vote' => 'Vote',
+        'vote_message' => 'Début du vote',
         'end' => 'Fin de la partie',
         'hunter' => 'Tour du chasseur',
         'hunter_message' => 'Le chasseur va tirer sur un joueur pour se venger !',
-        'mayor_message' => 'Début de l\'élection du maire. Présentez vous !',
-        'vote_message' => 'Début du vote',
     ],
     'roles' => [
         'werewolf' => [

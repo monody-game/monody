@@ -47,9 +47,11 @@ enum Round: int
                 State::WhiteWerewolf,
                 State::Parasite,
                 State::Hunter,
+                State::MayorSuccession,
                 State::Day,
                 State::Vote,
                 State::Hunter,
+                State::MayorSuccession,
             ],
             self::EndingRound => [
                 State::End,

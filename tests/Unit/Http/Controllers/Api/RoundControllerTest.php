@@ -606,6 +606,65 @@ class RoundControllerTest extends TestCase
             ]);
     }
 
+    public function testGettingRoundsWithMayorDead()
+    {
+        $user = User::factory()->createOne();
+
+        $game = $this
+            ->actingAs($user)
+            ->put('/api/game', [
+                'roles' => [Role::SimpleVillager->value, Role::Werewolf->value],
+            ])
+            ->json('data.game');
+
+        Redis::update("game:{$game['id']}", function (array &$game) {
+            $game['assigned_roles'] = [
+                'werewolf' => Role::Werewolf,
+                'sv' => Role::SimpleVillager,
+            ];
+
+            $game['users'] = ['werewolf', 'sv'];
+
+            $game['dead_users'] = ['sv' => []];
+            $game['mayor'] = 'sv';
+        });
+
+        $this
+            ->get("/api/round/1/{$game['id']}")
+            ->assertJsonPath('data.round', [
+                [
+                    'identifier' => State::Night->value,
+                    'raw_name' => State::Night->stringify(),
+                    'duration' => State::Night->duration(),
+                ],
+                [
+                    'identifier' => State::Werewolf->value,
+                    'raw_name' => State::Werewolf->stringify(),
+                    'duration' => State::Werewolf->duration(),
+                ],
+                [
+                    'identifier' => State::MayorSuccession->value,
+                    'raw_name' => State::MayorSuccession->stringify(),
+                    'duration' => State::MayorSuccession->duration(),
+                ],
+                [
+                    'identifier' => State::Day->value,
+                    'raw_name' => State::Day->stringify(),
+                    'duration' => State::Day->duration(),
+                ],
+                [
+                    'identifier' => State::Vote->value,
+                    'raw_name' => State::Vote->stringify(),
+                    'duration' => State::Vote->duration(),
+                ],
+                [
+                    'identifier' => State::MayorSuccession->value,
+                    'raw_name' => State::MayorSuccession->stringify(),
+                    'duration' => State::MayorSuccession->duration(),
+                ],
+            ]);
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
