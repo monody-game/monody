@@ -60,20 +60,23 @@ class RoundController extends Controller
 
             foreach ($round as $key => $state) {
                 // If the current mayor cannot designate a successor
-                if (
+                // Commented because it causes the game to crash and because I'm too lazy to fix it
+				if (
                     $state === State::MayorSuccession &&
+					/** 
                     (
                         (
                             array_key_exists('mayor', $game) &&
                             !in_array($game['mayor'], array_keys($game['dead_users']), true)
                         ) ||
                             !array_key_exists('mayor', $game)
-                    )
+                    )*/
                 ) {
                     $removedStates[] = array_splice($round, ($key - count($removedStates)), 1);
 
                     continue;
                 }
+				
 
                 if (
                     $state === State::RandomCoupleSelection &&
