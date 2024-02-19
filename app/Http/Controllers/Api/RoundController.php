@@ -62,8 +62,8 @@ class RoundController extends Controller
                 // If the current mayor cannot designate a successor
                 // Commented because it causes the game to crash and because I'm too lazy to fix it
 				if (
-                    $state === State::MayorSuccession &&
-					/** 
+                    $state === State::MayorSuccession /** &&
+					
                     (
                         (
                             array_key_exists('mayor', $game) &&
